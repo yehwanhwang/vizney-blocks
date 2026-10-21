@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Grid - Target · Vizney Blocks</title>
+<meta name="description" content="그리드 차트 · Grid - Target. 목표 · 실적 · 달성률을 한 줄에 적고 달성 여부를 표시한 표입니다. 목표와 실적 금액까지 숫자로 보고할 때 씁니다.">
+<link rel="canonical" href="https://blocks.vizney.com/cards/grid-target.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vizney Blocks">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="Grid - Target · Vizney Blocks">
+<meta property="og:description" content="그리드 차트 · Grid - Target. 목표 · 실적 · 달성률을 한 줄에 적고 달성 여부를 표시한 표입니다. 목표와 실적 금액까지 숫자로 보고할 때 씁니다.">
+<meta property="og:url" content="https://blocks.vizney.com/cards/grid-target.html">
+<meta property="og:image" content="https://blocks.vizney.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>body{margin:0;background:#eef0f4;font:14px/1.6 'Spoqa Han Sans Neo','Noto Sans KR',sans-serif;color:#4a4a4a}main{box-sizing:border-box;max-width:var(--w,640px);margin:0 auto;padding:40px 16px 24px}p{margin:16px 2px 0;font-size:13px}a{color:#1b1b1b}</style>
+</head>
+<body>
+<main style="--w:640px">
+<!-- Vizney Blocks v0.20 · 그리드 차트 · Grid - Target (grid-target)
+     https://blocks.vizney.com/cards/grid-target.html · © 2026 Vizney · MIT License
+     <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
+<link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
+<style>
+/* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
+   색은 Vizney 차트 가이드의 주황 · 분홍빨강 · 노랑과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다. */
+:where(:root) {
+  --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --vzb-card: #ffffff;
+  --vzb-edge: rgba(17, 24, 39, 0.05);
+  --vzb-ink: #1b1b1b;
+  --vzb-ink-2: #4a4a4a;
+  --vzb-muted: #737373;
+  --vzb-grid: #ebebeb;   /* 격자와 머리 아래 선. 바탕에서 한 단계 떨어진 회색 실선 */
+  --vzb-primary: #ff9500;
+  --vzb-primary-tint: #fff1de;
+  --vzb-primary-soft: #ffd9a6;   /* 이름을 얹는 바 리스트 막대 */
+  --vzb-secondary: #ff2d55;
+  --vzb-tertiary: #ffcc00;
+  --vzb-primary-mid: #ffb54d;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
+  --vzb-secondary-mid: #ff7a93;
+  --vzb-tertiary-mid: #ffdc4d;
+  --vzb-other-mid: #e3e3e3;
+  --vzb-line-3: #007aff;   /* 선의 셋째 색. 노랑은 흰 바탕의 가는 선으로는 잘 보이지 않아 파랑을 씁니다 */
+  --vzb-base: #c4c4c4;
+  --vzb-track: #f1f1f1;
+  --vzb-other: #d9d9d9;
+  --vzb-good: #12814a;
+  --vzb-good-tint: #e5f5ec;
+  --vzb-bad: #d42346;
+  --vzb-bad-tint: #fdebef;
+  --vzb-tip: #1b1b1b;
+  --vzb-radius: 18px;
+  --vzb-unit: 168px;   /* KPI - Number 높이. Line · Bar는 2배, 나머지는 1.5배 */
+  --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);
+}
+/* 카드: 놓인 자리의 폭을 채우고, 높이는 세 단계입니다(Number 1 · Line, Bar 2 · 나머지 1.5, 단위 --vzb-unit). */
+.vzb-card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: calc(var(--vzb-unit) * 1.5);
+  padding: 24px;
+  background: var(--vzb-card);
+  color: var(--vzb-ink);
+  border: 1px solid var(--vzb-edge);
+  border-radius: var(--vzb-radius);
+  box-shadow: var(--vzb-shadow);
+  font: 400 13px/18px var(--vzb-font);
+  text-align: left;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  -webkit-font-smoothing: antialiased;
+}
+.vzb-card *, .vzb-card *::before, .vzb-card *::after { box-sizing: border-box; }
+
+/* 머리: 제목과 기간 부제, 그 아래 대표 수치와 바로 뒤의 증감 배지 */
+.vzb-title { font-size: 17px; line-height: 24px; font-weight: 500; }
+.vzb-sub { margin-top: 2px; color: var(--vzb-muted); }
+.vzb-fig { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin-top: 20px; }
+.vzb-num { font-size: 34px; line-height: 40px; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap; }
+.vzb-unit { margin-left: 4px; font-size: 16px; letter-spacing: 0; color: var(--vzb-muted); }
+.vzb-delta { display: inline-flex; align-items: center; gap: 8px; color: var(--vzb-muted); white-space: nowrap; }
+.vzb-badge { display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px 3px 6px; border-radius: 7px; font-weight: 500; }
+.vzb-badge.vzb-good { color: var(--vzb-good); background: var(--vzb-good-tint); }
+.vzb-badge.vzb-bad { color: var(--vzb-bad); background: var(--vzb-bad-tint); }
+.vzb-badge.vzb-flat { color: var(--vzb-ink-2); background: var(--vzb-track); padding-left: 8px; }
+.vzb-arrow { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* 그래픽은 카드 아래쪽에 붙습니다. 같은 줄의 카드 높이가 맞춰져도 그래픽끼리 바닥이 맞습니다. */
+.vzb-foot { margin-top: auto; padding-top: 20px; }
+.vzb-error { margin: 8px 0 0; color: var(--vzb-bad); }
+/* 그리드 · 히트맵 차트: 높이 2단위. 32px 줄, 13px 글자, 숫자는 오른쪽 정렬과 같은 폭 숫자, 단위는 열 제목에. 줄 사이 옅은 선, 합계 줄은 음영과 굵은 글자. */
+.vzb-card[data-vzb^="grid-"], .vzb-card[data-vzb^="heatmap-"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-tb.vzb-foot { margin: 0 -8px; padding: 12px 8px 0; overflow-x: auto; }   /* 좌우 8px은 합계 줄 음영이 표 밖으로 살짝 나갈 자리. 좁은 자리에서는 표만 옆으로 밉니다 */
+.vzb-tb-table { --vzb-tb-hover: color-mix(in srgb, var(--vzb-track) 55%, var(--vzb-card)); --vzb-tb-sum: var(--vzb-track); width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; line-height: 17px; font-variant-numeric: tabular-nums; }
+.vzb-tb-table th, .vzb-tb-table td { padding: 7px 8px; border-bottom: 1px solid var(--vzb-track); white-space: nowrap; }
+.vzb-tb-table th:first-child, .vzb-tb-table td:first-child { padding-left: 0; }
+.vzb-tb-table th:last-child, .vzb-tb-table td:last-child { padding-right: 0; }
+.vzb-tb-table thead th { padding-top: 0; padding-bottom: 8px; border-bottom-color: var(--vzb-grid); font-size: 12px; font-weight: 400; color: var(--vzb-muted); vertical-align: bottom; text-align: center; }
+.vzb-tb-table thead small { margin-left: 1px; font-size: 11px; }
+.vzb-tb-table tbody th { font-weight: 400; color: var(--vzb-ink); }
+.vzb-tb-table tbody tr:last-child > * { border-bottom: 0; }
+/* 줄 음영(마우스를 올린 줄, 합계 줄)은 양 끝을 8px씩 표 밖으로 늘리고 둥글게 마감합니다. */
+.vzb-tb-table tbody tr:hover > * { background: var(--vzb-tb-hover); }
+.vzb-tb-table tfoot > tr > * { border-bottom: 0; font-weight: 500; background: var(--vzb-tb-sum); }
+.vzb-tb-table tbody tr:hover > :first-child, .vzb-tb-table tfoot > tr > :first-child { border-radius: 6px 0 0 6px; box-shadow: -8px 0 0 var(--vzb-tb-row); }
+.vzb-tb-table tbody tr:hover > :last-child, .vzb-tb-table tfoot > tr > :last-child { border-radius: 0 6px 6px 0; box-shadow: 8px 0 0 var(--vzb-tb-row); }
+.vzb-tb-table tbody tr:hover > * { --vzb-tb-row: var(--vzb-tb-hover); }
+.vzb-tb-table tfoot > tr > * { --vzb-tb-row: var(--vzb-tb-sum); }
+.vzb-tb-txt { text-align: left; }
+.vzb-tb-name { display: block; max-width: 9em; overflow: hidden; text-overflow: ellipsis; }
+.vzb-tb-num { text-align: right; }
+/* 정렬 화살표는 자리를 차지하지 않게 제목 오른쪽에 띄워, 제목이 칸 가운데에 그대로 있게 합니다. 마지막 열 머리는 화살표 자리만큼 오른쪽을 비웁니다. */
+.vzb-tb-sort { position: relative; display: inline-block; margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; }
+.vzb-tb-table thead th:last-child { padding-right: 12px; }
+.vzb-tb-sort:hover { color: var(--vzb-ink); }
+.vzb-tb-sort:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; border-radius: 2px; }
+.vzb-tb-arrow { position: absolute; left: calc(100% + 3px); top: 50%; width: 0; height: 0; margin-top: -2px; border: 4px solid transparent; border-top-color: currentColor; border-bottom-width: 0; opacity: 0; }
+[aria-sort="descending"] .vzb-tb-arrow { opacity: 1; }
+[aria-sort="ascending"] .vzb-tb-arrow { opacity: 1; transform: rotate(180deg); }
+[aria-sort="ascending"] .vzb-tb-sort, [aria-sort="descending"] .vzb-tb-sort { color: var(--vzb-ink); }
+.vzb-tb-table .vzb-badge { padding: 1px 6px 1px 4px; border-radius: 6px; font-size: 12px; line-height: 15px; vertical-align: top; }
+.vzb-tb-table .vzb-tb-state { padding: 1px 6px; }
+.vzb-tb-none { color: var(--vzb-muted); }
+.vzb-tb-table tbody td.vzb-tb-empty { padding: 16px 0; color: var(--vzb-muted); text-align: left; }
+.vzb-tb-spark { display: block; margin: -2px auto -1px; overflow: visible; }   /* 20px 선이 줄 높이(32px)를 늘리지 않게 위아래를 조금 겹칩니다 */
+.vzb-tb-spark-line { fill: none; stroke: var(--vzb-primary); stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.vzb-tb-spark-dot { fill: var(--vzb-primary); }
+.vzb-tb-table th.vzb-tb-wide { width: 40%; }
+.vzb-tb-bar { position: relative; display: flex; justify-content: flex-end; }
+.vzb-tb-bar i { position: absolute; left: 0; top: -3px; bottom: -3px; border-radius: 0 4px 4px 0; background: var(--vzb-primary-soft); }
+.vzb-tb-bar span { position: relative; padding-left: 6px; }
+/* 히트맵: 칸은 숫자 없이 색으로만 채우고(높이 26px, 칸 사이 2px), 마우스를 올린 칸은 테두리로 짚습니다. */
+.vzb-tb-table.is-heat td { padding: 1px; }
+.vzb-tb-table.is-heat tbody > tr > * { border-bottom: 0; }
+.vzb-tb-table.is-heat tbody th { padding-top: 0; padding-bottom: 0; padding-right: 12px; }
+.vzb-tb-table.is-heat th:first-child { width: 1%; }   /* 행 이름 열은 이름 폭만 쓰고 남는 폭은 칸에 줍니다 */
+.vzb-tb-table.is-heat tbody tr:hover > * { background: none; box-shadow: none; }
+.vzb-tb-heat { display: block; height: 26px; border-radius: 4px; background: color-mix(in srgb, var(--vzb-primary) var(--vzb-heat, 0%), var(--vzb-card)); }
+.vzb-tb-heat.is-none { background: var(--vzb-track); }
+.vzb-tb-heat:hover { box-shadow: inset 0 0 0 2px var(--vzb-ink); }
+.vzb-tb-ramp { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 12px; line-height: 16px; color: var(--vzb-muted); }
+.vzb-tb-ramp + .vzb-tb.vzb-foot { padding-top: 10px; }
+.vzb-tb-ramp i { flex: 1 1 auto; height: 8px; border-radius: 4px; background: linear-gradient(90deg, color-mix(in srgb, var(--vzb-primary) 8%, var(--vzb-card)), color-mix(in srgb, var(--vzb-primary) 80%, var(--vzb-card))); }
+.vzb-tb-rate { display: flex; align-items: center; justify-content: flex-end; gap: 6px; width: 100%; }
+.vzb-tb-rate > span { min-width: 44px; }   /* 숫자 폭을 맞춰 막대가 줄마다 같은 자리에 오게 합니다 */
+.vzb-tb-track { position: relative; flex: 1 1 auto; max-width: 120px; height: 8px; border-radius: 4px; background: var(--vzb-track); }
+.vzb-tb-track i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; background: var(--vzb-muted); }
+.vzb-tb-track i.vzb-tb-goal { top: -4px; bottom: -4px; width: 2px; margin-left: -1px; border-radius: 1px; background: var(--vzb-ink); }   /* 목표(100%) 눈금 */
+.vzb-tb-rate.is-good .vzb-tb-track { background: var(--vzb-good-tint); }
+.vzb-tb-rate.is-good .vzb-tb-track i:first-child { background: var(--vzb-good); }
+.vzb-tb-rate.is-bad .vzb-tb-track { background: var(--vzb-bad-tint); }
+.vzb-tb-rate.is-bad .vzb-tb-track i:first-child { background: var(--vzb-bad); }
+.vzb-tb-table.is-pivot .is-col { background: var(--vzb-tb-hover); }
+.vzb-tb-table.is-pivot tfoot .is-col { background: color-mix(in srgb, var(--vzb-track), var(--vzb-ink) 5%); }
+.vzb-tb-table .vzb-tb-sum, .vzb-tb-table.is-pivot tbody td:last-child { font-weight: 500; }
+</style>
+<div class="vzb-card" data-vzb="grid-target">
+<script type="application/json">
+{
+  "title": "채널별 목표 달성 현황",
+  "subtitle": "2026년 9월, 출고 금액",
+  "format": "eok",
+  "better": "up",
+  "nameLabel": "채널",
+  "rows": [
+    { "name": "대리점", "target": 395, "value": 372 },
+    { "name": "온라인", "target": 240, "value": 271 },
+    { "name": "직영점", "target": 170, "value": 178 },
+    { "name": "특판", "target": 95, "value": 73 },
+    { "name": "수출", "target": 35, "value": 44 }
+  ]
+}
+</script>
+</div>
+<script>
+(() => {
+  'use strict';
+  /* 공통 도구: 숫자 표기, 증감, 카드 머리, 그리기 시작 */
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  function el(tag, cls, text) {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function svgEl(tag, attrs) {
+    const n = document.createElementNS(SVGNS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+  const nfs = {};
+  function num(v, d) {
+    nfs[d] = nfs[d] || new Intl.NumberFormat('ko-KR', { minimumFractionDigits: d, maximumFractionDigits: d });
+    return nfs[d].format(v);
+  }
+  function krw(v) {
+    const a = Math.abs(v);
+    if (a >= 1e12) return [num(v / 1e12, 1), '조'];
+    if (a >= 1e8) return [num(v / 1e8, a >= 1e10 ? 0 : 1), '억'];
+    if (a >= 1e4) return [num(v / 1e4, 0), '만'];
+    return [num(v, 0), '원'];
+  }
+  // format: eok(억 단위 값) · krw(원 단위 값) · count(unit으로 단위) · pct(증감을 %p로) · days
+  function format(d) {
+    const dec = (v, fallback) => (d.decimals != null ? d.decimals : fallback);
+    switch (d.format) {
+      case 'eok': return { parts: (v) => [num(v, dec(v, Number.isInteger(v) || Math.abs(v) >= 100 ? 0 : 1)), '억'], rel: true };
+      case 'krw': return { parts: krw, rel: true };
+      case 'pct': return { parts: (v) => [num(v, dec(v, 1)), '%'], rel: false };
+      case 'days': return { parts: (v) => [num(v, dec(v, 1)), '일'], rel: true };
+      default: return { parts: (v) => [num(v, dec(v, Number.isInteger(v) ? 0 : 1)), d.unit || ''], rel: true };
+    }
+  }
+  const show = (f, v) => f.parts(v).join('');
+  // 그릴 수 있는 숫자인지(빈 값 · 빈 글자 · NaN 제외)
+  const fin = (v) => v != null && v !== '' && isFinite(v);
+  // 증감: 방향은 화살표로, 좋고 나쁨(tone)은 better(up · down · neutral)로 정합니다. 비율은 %p로 적습니다.
+  function delta(f, value, base, better) {
+    const diff = value - base;
+    const dir = Math.abs(diff) < 1e-9 ? 0 : Math.sign(diff);
+    const want = better === 'down' ? -1 : better === 'neutral' ? 0 : 1;
+    const tone = dir === 0 || want === 0 ? 'flat' : dir === want ? 'good' : 'bad';
+    let text;
+    if (!f.rel) text = `${num(Math.abs(diff), 1)}%p`;
+    else if (base) text = `${num(Math.abs(diff / base) * 100, 1)}%`;
+    else text = show(f, Math.abs(diff));
+    return { dir, tone, text };
+  }
+  function arrow(dir) {
+    const s = svgEl('svg', { class: 'vzb-arrow', viewBox: '0 0 12 12', 'aria-hidden': 'true' });
+    s.append(svgEl('path', { d: dir > 0 ? 'M3.5 8.5l5-5M4.5 3.5h4v4' : 'M3.5 3.5l5 5M8.5 4.5v4h-4' }));
+    return s;
+  }
+  // 대표 수치(단위는 작게)
+  function figure(f, value) {
+    const n = el('div', 'vzb-num');
+    const [text, unit] = f.parts(value);
+    n.append(text);
+    if (unit) n.append(el('span', 'vzb-unit', unit));
+    return n;
+  }
+  // 증감 배지: 화살표는 오르내림, 색은 좋고 나쁨(better)입니다.
+  function badge(f, value, base, better) {
+    const dl = delta(f, value, base, better);
+    const b = el('span', `vzb-badge vzb-${dl.tone}`);
+    if (dl.dir) b.append(arrow(dl.dir), el('span', 'vzb-sr', dl.dir > 0 ? '증가' : '감소'));
+    b.append(dl.text);
+    return b;
+  }
+  // 머리: 제목 · 기간 부제(subtitle) · 대표 수치와 바로 뒤의 증감 배지. value가 null이면 제목만 둡니다.
+  function head(card, d, f, value, cmp, cmpText) {
+    const hd = el('div', 'vzb-hd');
+    hd.append(el('div', 'vzb-title', d.title || ''));
+    if (d.subtitle) hd.append(el('div', 'vzb-sub', d.subtitle));
+    card.append(hd);
+    if (value == null) return;
+    const fig = el('div', 'vzb-fig');
+    fig.append(figure(f, value));
+    if (cmp && cmp.value != null) {
+      const line = el('span', 'vzb-delta');
+      line.append(badge(f, value, cmp.value, d.better), el('span', null, cmpText || `${cmp.label || '비교 기간'} 대비`));
+      fig.append(line);
+    }
+    card.append(fig);
+  }
+  // 같은 종류의 카드를 모두 찾아 그립니다. 코드를 두 번 붙여 넣어도 카드는 한 번만 그립니다.
+  function mount(type, draw) {
+    const run = () => {
+      document.querySelectorAll(`.vzb-card[data-vzb="${type}"]:not([data-vzb-ready])`).forEach((card) => {
+        card.setAttribute('data-vzb-ready', '');
+        const src = card.querySelector('script[type="application/json"]');
+        let d;
+        try { d = JSON.parse(src ? src.textContent : ''); } catch (e) {
+          card.append(el('p', 'vzb-error', `카드 데이터(JSON)를 읽지 못했습니다: ${e.message}`));
+          return;
+        }
+        card.setAttribute('role', 'group');
+        if (d.title) card.setAttribute('aria-label', d.title);
+        try { draw(card, d, format(d)); } catch (e) {
+          card.append(el('p', 'vzb-error', `카드를 그리지 못했습니다: ${e.message}`));
+        }
+      });
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+    else run();
+  }
+  // 크기가 바뀔 때마다 그래픽을 다시 그립니다. 차트는 카드에 남은 높이를 채웁니다.
+  function onSize(node, fn) {
+    let lw = 0, lh = 0;
+    new ResizeObserver((entries) => {
+      const w = Math.floor(entries[0].contentRect.width), h = Math.floor(entries[0].contentRect.height);
+      if (w > 0 && h > 0 && (w !== lw || h !== lh)) { lw = w; lh = h; fn(w, h); }
+    }).observe(node);
+  }
+
+  /* 표 카드 공통: 머리글은 가운데, 이름은 왼쪽, 숫자는 오른쪽 정렬과 같은 폭 숫자로 적고, 단위는 열 제목에 한 번만 적습니다.
+     줄에 마우스를 올리면 그 줄을 옅게 칠합니다. sortable이면 열 제목을 눌러 정렬하고, 합계 줄(total)은 정렬과 상관없이 맨 아래에 둡니다. */
+
+  // 칸 숫자: 단위 없이 적습니다(단위는 열 제목에). pct 열은 %를 붙입니다.
+  function cellNum(v, c) {
+    if (v == null || !isFinite(v)) return '–';
+    const dec = c.decimals != null ? c.decimals : Number.isInteger(+v) ? 0 : 1;
+    return `${num(+v, dec).replace(/^-/, '−')}${c.pct ? '%' : ''}`;
+  }
+  // 증감 배지: 기준(base) 대비 증감률. KPI 카드의 배지와 같습니다.
+  const relF = { parts: (v) => [num(v, 1), ''], rel: true };
+  const changeBadge = (value, base, better) => (value == null || !base ? el('span', 'vzb-tb-none', '–') : badge(relF, +value, +base, better));
+  // 합계 줄의 증감: 두 값이 모두 있는 줄만 더한 뒤 합계끼리 계산합니다.
+  const ok = (v) => v != null && v !== '' && isFinite(v);
+  function changeTotal(rows, of, base, better) {
+    let a = 0, b = 0;
+    rows.forEach((r) => { if (ok(r[of]) && ok(r[base])) { a += +r[of]; b += +r[base]; } });
+    return changeBadge(a, b, better);
+  }
+  // 스파크라인: 72×20px 곡선과 마지막 점. 줄마다 자기 범위에 맞춰 그리되, 범위가 값의 10%보다 좁으면 10%로 넓혀
+  // 거의 변하지 않은 줄이 크게 출렁여 보이지 않게 합니다(그 줄은 가운데 높이에서 거의 평평하게 그려집니다).
+  function sparkEl(values) {
+    const w = 72, h = 20, pad = 3, vals = (values || []).map((v) => (v == null ? null : +v));
+    const got = vals.filter((v) => v != null), n = vals.length;
+    let lo = Math.min(...got), hi = Math.max(...got);
+    const span = Math.max(hi - lo, Math.max(Math.abs(lo), Math.abs(hi)) * 0.1);
+    lo -= (span - (hi - lo)) / 2;
+    hi = lo + span;
+    const svg = svgEl('svg', { class: 'vzb-tb-spark', viewBox: `0 0 ${w} ${h}`, width: w, height: h, 'aria-hidden': 'true' });
+    if (!got.length) return svg;
+    const pts = [];
+    vals.forEach((v, i) => { if (v != null) pts.push({ x: n < 2 ? w / 2 : pad + (i * (w - pad * 2)) / (n - 1), y: h - pad - ((v - lo) / (hi - lo || 1)) * (h - pad * 2) }); });
+    const last = pts[pts.length - 1];
+    svg.append(svgEl('path', { d: monotone(pts), class: 'vzb-tb-spark-line' }), svgEl('circle', { cx: last.x, cy: last.y, r: 2.5, class: 'vzb-tb-spark-dot' }));
+    return svg;
+  }
+
+  // cfg: columns [{ key, label, unit, pct, decimals, align('txt' | 'num'), value(row), cell(row, ctx) → 요소, total(rows) → 값이나 요소, sort(false면 정렬 안 함), head(클래스) }]
+  //   rows · total(합계 줄 이름) · sortable · sortKey · sortDir(1 오름 · -1 내림) · top(머리 아래 요소) · prepare(rows) → ctx · rowClass(row)
+  function tableCard(card, d, f, cfg) {
+    head(card, d, f, null);
+    if (cfg.top) card.append(cfg.top);
+    const foot = el('div', 'vzb-foot vzb-tb');
+    const table = el('table', 'vzb-tb-table');
+    const thead = el('thead'), tbody = el('tbody'), tfoot = el('tfoot');
+    table.append(el('caption', 'vzb-sr', `${d.title || ''}${d.subtitle ? `, ${d.subtitle}` : ''}${cfg.sortable ? '. 열 제목을 누르면 정렬합니다.' : ''}`), thead, tbody, tfoot);
+    foot.append(table);
+    card.append(foot);
+    const cols = cfg.columns, rows = cfg.rows || [];
+    const ctx = Object.assign({ f, rows }, cfg.prepare ? cfg.prepare(rows) : {});
+    const val = (r, c) => (c.value ? c.value(r) : r[c.key]);
+    const align = (c, j) => c.align || (j ? 'num' : 'txt');
+    let sortKey = cfg.sortKey, dir = cfg.sortDir || -1;
+    const hr = el('tr');
+    const ths = cols.map((c, j) => {
+      const th = el('th', `vzb-tb-${align(c, j)}${c.head ? ` ${c.head}` : ''}`);
+      th.scope = 'col';
+      const label = el('span', null, c.label || '');
+      if (c.unit) label.append(el('small', null, `(${c.unit})`));
+      if (cfg.sortable && c.sort !== false) {
+        const btn = el('button', 'vzb-tb-sort');
+        btn.type = 'button';
+        btn.append(label, el('i', 'vzb-tb-arrow'));
+        btn.addEventListener('click', () => {
+          if (sortKey === c.key) dir = -dir;
+          else { sortKey = c.key; dir = align(c, j) === 'txt' ? 1 : -1; }
+          render();
+        });
+        th.append(btn);
+      } else th.append(label);
+      hr.append(th);
+      return th;
+    });
+    thead.append(hr);
+    const cellOf = (r, c, j) => {
+      const td = el(j ? 'td' : 'th', `vzb-tb-${align(c, j)}`);
+      if (!j) td.scope = 'row';
+      const v = val(r, c), out = c.cell ? c.cell(r, ctx) : typeof v === 'string' ? v : cellNum(v, c);
+      if (!j && typeof out === 'string') {   // 긴 이름은 말줄임표로 줄이고 전체 이름은 title에 둡니다.
+        const name = el('span', 'vzb-tb-name', out);
+        name.title = out;
+        td.append(name);
+      } else if (typeof out === 'string') td.textContent = out; else if (out) td.append(out);
+      return td;
+    };
+    function render() {
+      const list = rows.slice();
+      const c = sortKey && cols.find((x) => x.key === sortKey);
+      if (c) {
+        list.sort((a, b) => {
+          const x = val(a, c), y = val(b, c), nx = x == null || x === '' || (typeof x === 'number' && !isFinite(x)), ny = y == null || y === '' || (typeof y === 'number' && !isFinite(y));
+          if (nx || ny) return nx === ny ? 0 : nx ? 1 : -1;   // 빈 값은 정렬 방향과 상관없이 맨 아래에 둡니다
+          return (typeof x === 'string' || typeof y === 'string' ? String(x).localeCompare(String(y), 'ko', { numeric: true }) : x - y) * dir;
+        });
+      }
+      if (!list.length) {
+        const td = el('td', 'vzb-tb-empty', '표시할 데이터가 없습니다.');
+        td.colSpan = cols.length;
+        const tr = el('tr');
+        tr.append(td);
+        tbody.replaceChildren(tr);
+        return;
+      }
+      tbody.replaceChildren(...list.map((r) => {
+        const tr = el('tr', cfg.rowClass ? cfg.rowClass(r) : null);
+        cols.forEach((c, j) => tr.append(cellOf(r, c, j)));
+        return tr;
+      }));
+      ths.forEach((th, j) => th.setAttribute('aria-sort', cfg.sortable && cols[j].key === sortKey ? (dir > 0 ? 'ascending' : 'descending') : 'none'));
+    }
+    render();
+    if (cfg.total && rows.length) {
+      const tr = el('tr');
+      cols.forEach((c, j) => {
+        const td = el(j ? 'td' : 'th', `vzb-tb-${align(c, j)}`);
+        if (!j) { td.scope = 'row'; td.textContent = cfg.total; }
+        else if (c.total) {
+          const out = c.total(rows, ctx);
+          if (out == null) td.textContent = '';
+          else if (typeof out === 'number') td.textContent = cellNum(out, c);
+          else if (typeof out === 'string') td.textContent = out;
+          else td.append(out);
+        }
+        tr.append(td);
+      });
+      tfoot.append(tr);
+    }
+    return { table, tbody, ctx };
+  }
+  const sumOf = (key) => (rows) => rows.reduce((a, r) => a + (+r[key] || 0), 0);
+  // 값 열의 단위: unit을 적지 않으면 format의 단위(억 · 건 등)를 씁니다.
+  const unitOf = (d, f) => d.unit || f.parts(0)[1] || '';
+
+  // Grid - Target: 목표 · 실적 · 달성률을 한 줄에 적고, 달성률 칸에 목표까지 찬 막대를, 상태 칸에 달성 · 미달 배지를 둡니다.
+  // 막대와 배지는 같은 색입니다(달성 초록 · 미달 빨강, KPI 배지와 같은 색). 막대 바탕은 같은 색의 옅은 단계입니다.
+  // 바탕 끝은 가장 높은 달성률(100% 미만이면 100%), 세로 눈금은 목표(100%)라 목표를 넘은 줄끼리도 길이 차이가 보입니다.
+  // 달성률이 높은 순서로 두고, 합계 줄의 달성률은 합계끼리 다시 계산합니다. 낮을수록 좋은 지표는 "better": "down"입니다.
+  mount('grid-target', (card, d, f) => {
+    const down = d.better === 'down', rows = d.rows || [], unit = unitOf(d, f);
+    const rateOf = (v, t) => (ok(v) && ok(t) && +t ? (v / t) * 100 : null);   // 실적이나 목표가 비었거나 목표가 0이면 계산하지 않습니다
+    const tv = (rs) => sumOf('value')(rs), tt = (rs) => sumOf('target')(rs);
+    const top = Math.max(100, ...rows.map((r) => rateOf(r.value, r.target) || 0), rateOf(tv(rows), tt(rows)) || 0);
+    const met = (v, t) => (down ? v <= t : v >= t);
+    const rateCell = (v, t) => {
+      const r = rateOf(v, t), box = el('span', `vzb-tb-rate${r == null ? '' : met(v, t) ? ' is-good' : ' is-bad'}`), track = el('i', 'vzb-tb-track');
+      const fill = el('i');
+      fill.style.width = `${Math.max(0, Math.min(100, ((r || 0) / top) * 100)).toFixed(1)}%`;
+      const goal = el('i', 'vzb-tb-goal');
+      goal.style.left = `${((100 / top) * 100).toFixed(1)}%`;
+      track.append(fill, goal);
+      box.append(track, el('span', null, r == null ? '–' : `${num(r, 1)}%`));
+      return box;
+    };
+    const state = (v, t) => (rateOf(v, t) != null ? el('span', `vzb-badge vzb-tb-state vzb-${met(v, t) ? 'good' : 'bad'}`, met(v, t) ? (down ? '이내' : '달성') : (down ? '초과' : '미달')) : el('span', 'vzb-tb-none', '–'));
+    tableCard(card, d, f, {
+      rows,
+      total: d.total === false || !f.rel ? null : '합계',   // 비율 지표(pct)는 목표와 실적을 더할 수 없어 합계 줄을 두지 않습니다
+      sortable: true,
+      sortKey: 'rate',
+      sortDir: down ? 1 : -1,
+      columns: [
+        { key: 'name', label: d.nameLabel || '이름' },
+        { key: 'target', label: '목표', unit, total: tt },
+        { key: 'value', label: '실적', unit, total: tv },
+        { key: 'rate', label: '달성률', head: 'vzb-tb-wide', value: (r) => rateOf(r.value, r.target), cell: (r) => rateCell(r.value, r.target), total: (rs) => rateCell(tv(rs), tt(rs)) },
+        { key: 'state', label: '상태', value: (r) => rateOf(r.value, r.target), cell: (r) => state(r.value, r.target), total: (rs) => state(tv(rs), tt(rs)) },
+      ],
+    });
+  });
+})();
+</script>
+
+<p><a href="../#sec-grid">Vizney Blocks 갤러리</a> · <a href="grid-target.txt">코드(텍스트)</a> · © 2026 Vizney · MIT License</p>
+</main>
+</body>
+</html>

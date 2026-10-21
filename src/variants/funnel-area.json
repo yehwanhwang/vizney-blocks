@@ -1,0 +1,12 @@
+{
+  "title": "영업 기회 퍼널",
+  "subtitle": "3분기, 신규 거래처 영업",
+  "format": "count",
+  "unit": "건",
+  "steps": [
+    { "name": "리드", "value": 1240 },
+    { "name": "상담", "value": 820 },
+    { "name": "견적", "value": 410 },
+    { "name": "계약", "value": 150 }
+  ]
+}

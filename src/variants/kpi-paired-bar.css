@@ -1,0 +1,10 @@
+/* KPI - Paired Bar: 이름 · 막대 · 값을 한 줄에. 이번 기간은 옅은 주황 트랙 위 주황 막대, 비교 기간은 회색 */
+.vzb-cp { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px; }
+.vzb-cp-label { color: var(--vzb-ink-2); white-space: nowrap; }
+.vzb-cp-label.is-cmp { color: var(--vzb-muted); }
+.vzb-cp-track { display: block; height: 8px; border-radius: 4px; background: var(--vzb-track); }
+.vzb-cp-track.is-cur { background: var(--vzb-primary-tint); }
+.vzb-cp-bar { display: block; height: 100%; border-radius: 4px; background: var(--vzb-base); }
+.vzb-cp-track.is-cur .vzb-cp-bar { background: var(--vzb-primary); }
+.vzb-cp-val { font-weight: 500; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.vzb-cp-val.is-cmp { font-weight: 400; color: var(--vzb-ink-2); }

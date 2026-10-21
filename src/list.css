@@ -1,0 +1,36 @@
+/* 가로 막대: 높이 2단위. 이름을 얹는 24px 막대 줄(overlay)과 이름 · 10px 막대 · 값 칸 줄(column).
+   막대는 왼쪽이 반듯하고 끝만 4px 둥글며, 고른 줄은 막대가 진해집니다. 열은 줄끼리 맞춥니다(subgrid). */
+.vzb-card[data-vzb^="bar-"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-li.vzb-foot { margin-top: 0; padding-top: 14px; }
+.vzb-li-cols { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 8px; font-size: 12px; color: var(--vzb-muted); }
+.vzb-li-cols:empty { display: none; }
+.vzb-li-list { display: grid; align-items: center; column-gap: 12px; row-gap: 8px; border-radius: 6px; outline: none; }
+.vzb-li-list.is-column { row-gap: 8px; }
+.vzb-li-list:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 4px; }
+.vzb-li-row { display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; align-items: center; min-height: 26px; }
+.vzb-li-list.is-column .vzb-li-row { min-height: 26px; }
+.vzb-li-bar { position: relative; min-width: 0; height: 26px; }
+.vzb-li-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 0 4px 4px 0; background: var(--vzb-primary-soft); }
+.vzb-li-row.is-on .vzb-li-bar .vzb-li-fill { background: var(--vzb-primary); }
+.vzb-li-mark { position: absolute; top: -3px; bottom: -3px; width: 2px; margin-left: -1px; border-radius: 1px; background: var(--vzb-ink); }
+.vzb-li-name { position: relative; display: block; padding: 0 8px; line-height: 26px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vzb-li-name.is-rest { color: var(--vzb-muted); }
+.vzb-li-val { font-weight: 500; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.vzb-li-row.is-rest .vzb-li-val { font-weight: 400; color: var(--vzb-muted); }
+.vzb-li-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--vzb-ink-2); }
+.vzb-li-row.is-rest .vzb-li-label { color: var(--vzb-muted); }
+.vzb-li-row.is-on .vzb-li-label { color: var(--vzb-ink); font-weight: 500; }
+/* 칸 줄의 막대: 진척(track 끝이 목표), 쌓은 조각, 0선 좌우 */
+.vzb-li-track { position: relative; height: 10px; border-radius: 0 4px 4px 0; background: var(--vzb-track); }
+.vzb-li-track > .vzb-li-fill { background: var(--vzb-primary); }
+.vzb-li-fill.is-dim { opacity: 0.4; }
+.vzb-li-stack { display: flex; min-width: 0; height: 10px; }
+.vzb-li-seg { flex: none; height: 100%; background: var(--vzb-c); }
+.vzb-li-seg + .vzb-li-seg { margin-left: 2px; }
+.vzb-li-seg:last-child { border-radius: 0 4px 4px 0; }
+.vzb-li-div { position: relative; height: 10px; }
+.vzb-li-div > .vzb-li-fill { background: var(--vzb-c); }
+.vzb-li-div > .vzb-li-fill.is-neg { border-radius: 4px 0 0 4px; }
+.vzb-li-zero { position: absolute; top: -5px; bottom: -5px; width: 1px; background: var(--vzb-base); }
+.vzb-li-row.is-on .vzb-li-stack, .vzb-li-row.is-on .vzb-li-div > .vzb-li-fill, .vzb-li-row.is-on .vzb-li-track { filter: brightness(0.92); }
+.vzb-li-badge { justify-self: end; }

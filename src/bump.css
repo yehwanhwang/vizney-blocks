@@ -1,0 +1,14 @@
+/* 범프: 2px S자 선(그 밖의 항목은 1.5px 회색), 흰 테두리 점, 양 끝 이름. 강조 선은 3px에 지름 18px 점 안에 순위를 적습니다.
+   순위는 점 안에 흰 글자로 적습니다. 짚은 항목은 강조 선 모양으로 다시 그리고(회색 항목은 진한 회색), 나머지는 옅게 둡니다. */
+.vzb-bp-line { fill: none; stroke: var(--vzb-c); stroke-width: 2; stroke-linecap: round; }
+.vzb-bp-item.vzb-tx .vzb-bp-line { stroke-width: 1.5; }
+.vzb-bp-item.is-focus .vzb-bp-line { stroke-width: 3; }
+.vzb-bp-dot { fill: var(--vzb-c); stroke: var(--vzb-card); stroke-width: 2; }
+.vzb-bp-rank { font-size: 11px; font-weight: 700; fill: #ffffff; pointer-events: none; }
+.vzb-bp-name { font-size: 12px; font-weight: 500; fill: var(--vzb-ink-2); }
+.vzb-bp-item.vzb-tx .vzb-bp-name { font-weight: 400; fill: var(--vzb-muted); }
+.vzb-bp-item { transition: opacity 0.12s; }
+.vzb-bp-svg.is-hover .vzb-bp-item:not(.is-on) { opacity: 0.2; }
+.vzb-bp-svg.is-hover .vzb-bp-item.is-lift { opacity: 0; }
+.vzb-bp-item.vzb-tk { --vzb-c: var(--vzb-ink-2); }
+@media (prefers-reduced-motion: reduce) { .vzb-bp-item { transition: none; } }

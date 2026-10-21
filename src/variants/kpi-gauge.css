@@ -1,0 +1,11 @@
+/* KPI - Gauge: 카드 높이 1.5단위를 채우는 반원. 옅은 주황 트랙 위 주황 호, 끝에 흰 손잡이, 가운데에 현재 값과 비율 */
+.vzb-card[data-vzb="kpi-gauge"] .vzb-foot { padding-top: 8px; }
+.vzb-gg { position: relative; width: min(100%, 284px); margin: 0 auto; }
+.vzb-gg-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.vzb-gg-track { fill: none; stroke: var(--vzb-primary-tint); stroke-width: 13; stroke-linecap: round; }
+.vzb-gg-arc { fill: none; stroke: var(--vzb-primary); stroke-width: 13; stroke-linecap: round; }
+.vzb-gg-knob { fill: var(--vzb-card); stroke: var(--vzb-primary); stroke-width: 3; }
+.vzb-gg-center { position: absolute; left: 0; right: 0; bottom: 0; text-align: center; }
+.vzb-gg-center .vzb-num { font-size: 32px; line-height: 38px; }
+.vzb-gg-cap { margin-top: 2px; color: var(--vzb-muted); }
+.vzb-gg-cap.vzb-bad { color: var(--vzb-bad); }

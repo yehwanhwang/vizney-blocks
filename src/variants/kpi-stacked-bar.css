@@ -1,0 +1,13 @@
+/* KPI - Stacked Bar: 4px 간격의 둥근 조각, 큰 순서로 주황 · 분홍빨강 · 노랑, 기타는 회색. 범례는 2×2에 이름과 비중만 */
+.vzb-sp-bar { display: flex; gap: 4px; height: 10px; }
+.vzb-sp-seg { display: block; flex: 0 1 0; min-width: 4px; border-radius: 5px; transition: opacity 0.15s; }
+.vzb-sp-c1 { background: var(--vzb-primary); }
+.vzb-sp-c2 { background: var(--vzb-secondary); }
+.vzb-sp-c3 { background: var(--vzb-tertiary); }
+.vzb-sp-co { background: var(--vzb-other); }
+.vzb-sp-legend { list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; }
+.vzb-sp-legend li { display: grid; grid-template-columns: 8px minmax(0, 1fr) auto; align-items: center; column-gap: 8px; cursor: default; transition: opacity 0.15s; }
+.vzb-sp-key { width: 8px; height: 8px; border-radius: 50%; }
+.vzb-sp-legend b { font-weight: 500; text-align: right; font-variant-numeric: tabular-nums; }
+.vzb-dim { opacity: 0.35; }
+@media (prefers-reduced-motion: reduce) { .vzb-sp-seg, .vzb-sp-legend li { transition: none; } }

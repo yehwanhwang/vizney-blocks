@@ -1,0 +1,80 @@
+{
+  "title": "구분별 출고 비중",
+  "subtitle": "2026년 9월, 출고 금액 기준",
+  "tabs": [
+    {
+      "name": "채널",
+      "format": "eok",
+      "items": [
+        {
+          "name": "대리점",
+          "value": 372
+        },
+        {
+          "name": "온라인",
+          "value": 271
+        },
+        {
+          "name": "직영점",
+          "value": 178
+        },
+        {
+          "name": "특판",
+          "value": 73
+        },
+        {
+          "name": "수출",
+          "value": 44
+        }
+      ]
+    },
+    {
+      "name": "품목",
+      "format": "eok",
+      "items": [
+        {
+          "name": "가전",
+          "value": 412
+        },
+        {
+          "name": "생활용품",
+          "value": 236
+        },
+        {
+          "name": "주방용품",
+          "value": 158
+        },
+        {
+          "name": "소모품",
+          "value": 87
+        },
+        {
+          "name": "부품",
+          "value": 45
+        }
+      ]
+    },
+    {
+      "name": "권역",
+      "format": "eok",
+      "items": [
+        {
+          "name": "수도권",
+          "value": 397
+        },
+        {
+          "name": "영남",
+          "value": 315
+        },
+        {
+          "name": "충청",
+          "value": 131
+        },
+        {
+          "name": "호남",
+          "value": 95
+        }
+      ]
+    }
+  ]
+}

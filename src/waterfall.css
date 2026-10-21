@@ -1,0 +1,2 @@
+/* 워터폴: 막대(굵기 최대 24px) 사이를 누계 높이의 1px 회색 실선으로 잇습니다. */
+.vzb-wf-link { stroke: var(--vzb-base); stroke-width: 1; }

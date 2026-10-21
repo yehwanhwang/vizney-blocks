@@ -1,0 +1,13 @@
+{
+  "title": "구매 퍼널",
+  "subtitle": "10월 1일–20일, 증감은 전월 같은 기간 대비",
+  "format": "count",
+  "unit": "명",
+  "better": "up",
+  "steps": [
+    { "name": "방문", "value": 120000, "prev": 128000 },
+    { "name": "상품 조회", "value": 54000, "prev": 52000 },
+    { "name": "장바구니", "value": 12600, "prev": 13500 },
+    { "name": "구매", "value": 4080, "prev": 3700 }
+  ]
+}

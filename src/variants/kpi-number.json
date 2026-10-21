@@ -1,0 +1,8 @@
+{
+  "title": "구매 전환율",
+  "subtitle": "10월 1일–20일",
+  "value": 3.4,
+  "format": "pct",
+  "better": "up",
+  "compare": { "label": "전월", "value": 3.1 }
+}

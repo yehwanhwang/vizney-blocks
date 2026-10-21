@@ -1,0 +1,16 @@
+/* 탭 카드: 머리 아래를 같은 폭의 칸으로 나눠 지표 이름과 대표 수치를 둡니다. 고른 칸은 검정 밑줄, 나머지는 회색 글자입니다. */
+.vzb-tabs { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); margin-top: 12px; border-bottom: 1px solid var(--vzb-grid); }
+.vzb-tab {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-width: 0;
+  margin: 0 0 -1px; padding: 0 8px 8px; border: 0; border-bottom: 2px solid transparent;
+  background: none; font: inherit; color: var(--vzb-muted); text-align: left; cursor: pointer;
+}
+.vzb-tab:first-child { padding-left: 0; }
+.vzb-tab span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vzb-tab b { font-size: 20px; line-height: 26px; font-weight: 400; letter-spacing: -0.01em; white-space: nowrap; color: var(--vzb-muted); }
+.vzb-tab small { margin-left: 3px; font-size: 13px; letter-spacing: 0; }
+.vzb-tab:hover b, .vzb-tab[aria-selected="true"] b { color: var(--vzb-ink); }
+.vzb-tab[aria-selected="true"] { color: var(--vzb-ink-2); border-bottom-color: var(--vzb-ink); }
+.vzb-tab:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; border-radius: 2px; }
+.vzb-tabs.is-plain .vzb-tab span { font-size: 14px; line-height: 20px; }
+.vzb-tabs.is-plain .vzb-tab[aria-selected="true"] span { color: var(--vzb-ink); font-weight: 500; }

@@ -1,0 +1,12 @@
+/* 축 차트 공통(라인 · 막대): 높이 2단위(KPI - Line과 같음), 값 범위에 맞춘 세로축 눈금과 옅은 실선 격자, 0선은 한 단계 진한 실선 */
+.vzb-card[data-vzb^="line-"], .vzb-card[data-vzb^="bar-"], .vzb-card[data-vzb^="funnel-"], .vzb-card[data-vzb^="waterfall-"], .vzb-card[data-vzb^="scatter-"], .vzb-card[data-vzb^="bump-"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-ax.vzb-foot { padding-top: 14px; }
+.vzb-ax-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
+.vzb-ax-grid { stroke: var(--vzb-grid); stroke-width: 1; }
+.vzb-ax-zero { stroke: var(--vzb-base); stroke-width: 1; }
+.vzb-ax-label { font-size: 12px; fill: var(--vzb-muted); font-variant-numeric: tabular-nums; }
+.vzb-ax-label.is-last { fill: var(--vzb-ink); font-weight: 500; }
+.vzb-ax-end { font-size: 12px; font-weight: 500; fill: var(--vzb-ink-2); }
+.vzb-ax-note { font-size: 12px; font-weight: 500; fill: var(--vzb-ink-2); paint-order: stroke; stroke: var(--vzb-card); stroke-width: 4px; stroke-linejoin: round; }
+.vzb-ax-mute { fill: var(--vzb-muted); font-weight: 400; }
+.vzb-ax-ref { stroke: var(--vzb-ink-2); stroke-width: 1.5; stroke-dasharray: 6 4; }

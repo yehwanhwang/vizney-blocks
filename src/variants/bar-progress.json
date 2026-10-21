@@ -1,0 +1,33 @@
+{
+  "title": "품목군별 목표 달성률",
+  "subtitle": "2026년 9월, 세로 눈금이 품목군별 월 목표",
+  "format": "eok",
+  "better": "up",
+  "items": [
+    {
+      "name": "가전",
+      "value": 412,
+      "target": 400
+    },
+    {
+      "name": "생활용품",
+      "value": 236,
+      "target": 250
+    },
+    {
+      "name": "주방용품",
+      "value": 158,
+      "target": 190
+    },
+    {
+      "name": "소모품",
+      "value": 87,
+      "target": 75
+    },
+    {
+      "name": "부품",
+      "value": 45,
+      "target": 40
+    }
+  ]
+}

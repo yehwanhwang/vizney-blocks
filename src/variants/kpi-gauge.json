@@ -1,0 +1,8 @@
+{
+  "title": "월 출고 목표",
+  "subtitle": "10월 1일–20일",
+  "value": 590,
+  "format": "eok",
+  "better": "up",
+  "target": { "label": "목표", "value": 960 }
+}

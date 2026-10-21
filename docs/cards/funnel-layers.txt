@@ -1,0 +1,580 @@
+<!-- Vizney Blocks v0.20 · 퍼널 차트 · Funnel - Layers (funnel-layers)
+     https://blocks.vizney.com/cards/funnel-layers.html · © 2026 Vizney · MIT License
+     <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
+<link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
+<style>
+/* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
+   색은 Vizney 차트 가이드의 주황 · 분홍빨강 · 노랑과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다. */
+:where(:root) {
+  --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --vzb-card: #ffffff;
+  --vzb-edge: rgba(17, 24, 39, 0.05);
+  --vzb-ink: #1b1b1b;
+  --vzb-ink-2: #4a4a4a;
+  --vzb-muted: #737373;
+  --vzb-grid: #ebebeb;   /* 격자와 머리 아래 선. 바탕에서 한 단계 떨어진 회색 실선 */
+  --vzb-primary: #ff9500;
+  --vzb-primary-tint: #fff1de;
+  --vzb-primary-soft: #ffd9a6;   /* 이름을 얹는 바 리스트 막대 */
+  --vzb-secondary: #ff2d55;
+  --vzb-tertiary: #ffcc00;
+  --vzb-primary-mid: #ffb54d;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
+  --vzb-secondary-mid: #ff7a93;
+  --vzb-tertiary-mid: #ffdc4d;
+  --vzb-other-mid: #e3e3e3;
+  --vzb-line-3: #007aff;   /* 선의 셋째 색. 노랑은 흰 바탕의 가는 선으로는 잘 보이지 않아 파랑을 씁니다 */
+  --vzb-base: #c4c4c4;
+  --vzb-track: #f1f1f1;
+  --vzb-other: #d9d9d9;
+  --vzb-good: #12814a;
+  --vzb-good-tint: #e5f5ec;
+  --vzb-bad: #d42346;
+  --vzb-bad-tint: #fdebef;
+  --vzb-tip: #1b1b1b;
+  --vzb-radius: 18px;
+  --vzb-unit: 168px;   /* KPI - Number 높이. Line · Bar는 2배, 나머지는 1.5배 */
+  --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);
+}
+/* 카드: 놓인 자리의 폭을 채우고, 높이는 세 단계입니다(Number 1 · Line, Bar 2 · 나머지 1.5, 단위 --vzb-unit). */
+.vzb-card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: calc(var(--vzb-unit) * 1.5);
+  padding: 24px;
+  background: var(--vzb-card);
+  color: var(--vzb-ink);
+  border: 1px solid var(--vzb-edge);
+  border-radius: var(--vzb-radius);
+  box-shadow: var(--vzb-shadow);
+  font: 400 13px/18px var(--vzb-font);
+  text-align: left;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  -webkit-font-smoothing: antialiased;
+}
+.vzb-card *, .vzb-card *::before, .vzb-card *::after { box-sizing: border-box; }
+
+/* 머리: 제목과 기간 부제, 그 아래 대표 수치와 바로 뒤의 증감 배지 */
+.vzb-title { font-size: 17px; line-height: 24px; font-weight: 500; }
+.vzb-sub { margin-top: 2px; color: var(--vzb-muted); }
+.vzb-fig { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin-top: 20px; }
+.vzb-num { font-size: 34px; line-height: 40px; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap; }
+.vzb-unit { margin-left: 4px; font-size: 16px; letter-spacing: 0; color: var(--vzb-muted); }
+.vzb-delta { display: inline-flex; align-items: center; gap: 8px; color: var(--vzb-muted); white-space: nowrap; }
+.vzb-badge { display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px 3px 6px; border-radius: 7px; font-weight: 500; }
+.vzb-badge.vzb-good { color: var(--vzb-good); background: var(--vzb-good-tint); }
+.vzb-badge.vzb-bad { color: var(--vzb-bad); background: var(--vzb-bad-tint); }
+.vzb-badge.vzb-flat { color: var(--vzb-ink-2); background: var(--vzb-track); padding-left: 8px; }
+.vzb-arrow { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* 그래픽은 카드 아래쪽에 붙습니다. 같은 줄의 카드 높이가 맞춰져도 그래픽끼리 바닥이 맞습니다. */
+.vzb-foot { margin-top: auto; padding-top: 20px; }
+.vzb-error { margin: 8px 0 0; color: var(--vzb-bad); }
+/* 그래프 영역: 마우스를 올리거나, 포커스한 뒤 좌우 화살표로 값을 봅니다. */
+.vzb-plot { position: relative; border-radius: 4px; outline: none; touch-action: pan-y; }
+.vzb-plot:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 4px; }
+/* 남은 높이를 채우는 차트: 그래프 영역이 늘어나고 그림은 그 크기에 맞춰 다시 그립니다. */
+.vzb-fill { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
+.vzb-fill > .vzb-plot { flex: 1 1 auto; min-height: 72px; }
+.vzb-fill > .vzb-plot > svg { position: absolute; left: 0; top: 0; }
+.vzb-tip {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: var(--vzb-tip);
+  color: #ffffff;
+  box-shadow: 0 10px 24px -8px rgba(27, 27, 27, 0.4);
+  font: 400 12px/17px var(--vzb-font);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+.vzb-tip.is-on { opacity: 1; }
+.vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
+.vzb-tip-value { font-size: 13px; font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { .vzb-tip { transition: none; } }
+/* 색 이름: t1 · t2 · t3 선(주황 · 분홍빨강 · 파랑), f1 · f2 · f3 막대와 면(주황 · 분홍빨강 · 노랑), fs 옅은 주황,
+   t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
+.vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
+.vzb-t2, .vzb-f2 { --vzb-c: var(--vzb-secondary); }
+.vzb-t3 { --vzb-c: var(--vzb-line-3); }
+.vzb-f3 { --vzb-c: var(--vzb-tertiary); }
+.vzb-t0, .vzb-f0 { --vzb-c: var(--vzb-base); }
+.vzb-tx, .vzb-fx { --vzb-c: var(--vzb-other); }
+.vzb-fg { --vzb-c: var(--vzb-good); }
+.vzb-fb { --vzb-c: var(--vzb-bad); }
+.vzb-ti { --vzb-c: var(--vzb-ink); }
+.vzb-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 10px 0 0; padding: 0; list-style: none; color: var(--vzb-ink-2); }
+.vzb-legend li { display: inline-flex; align-items: center; gap: 6px; }
+.vzb-key, .vzb-tip-key { display: inline-block; flex: none; width: 12px; height: 3px; border-radius: 2px; background: var(--vzb-c); }
+.vzb-key.is-box { width: 10px; height: 10px; border-radius: 3px; }
+.vzb-key.is-dot { width: 9px; height: 9px; border-radius: 50%; }
+.vzb-key.is-dim { opacity: 0.4; }
+.vzb-tip-body { display: flex; flex-direction: column; }
+.vzb-tip-rows { display: grid; grid-template-columns: auto auto auto; justify-content: start; align-items: center; column-gap: 8px; row-gap: 1px; margin-top: 3px; }
+.vzb-tip-row { display: contents; }
+.vzb-tip-row b { font-size: 13px; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.vzb-tip-row span { color: rgba(255, 255, 255, 0.72); }
+.vzb-tip-note { margin-top: 3px; color: rgba(255, 255, 255, 0.72); }
+.vzb-tip-note + .vzb-tip-note { margin-top: 0; }
+.vzb-fs { --vzb-c: var(--vzb-primary-soft); }
+.vzb-key.is-tick { width: 2px; height: 12px; border-radius: 1px; }
+/* 퍼널: 높이 2단위. 같은 폭의 단계 칸, 칸 안에서는 평평하다가 경계에서 S자로 줄어드는 흐름, 흰 비율 알약, 짚으면 나머지 칸을 옅게 덮습니다 */
+.vzb-card[data-vzb^="funnel-"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-fu.vzb-foot { padding-top: 12px; border-radius: 8px; outline: none; }
+.vzb-fu:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 4px; }
+.vzb-fu-row { display: grid; grid-template-columns: repeat(var(--vzb-fu-n), minmax(0, 1fr)); container-type: inline-size; }
+.vzb-fu-cell { min-width: 0; padding: 0 10px; border-left: 1px solid var(--vzb-grid); transition: opacity 0.12s; }
+.vzb-fu-cell:first-child { padding-left: 0; border-left: 0; }
+.vzb-fu-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; color: var(--vzb-muted); }
+.vzb-fu-num { margin-top: 2px; font-size: clamp(14px, 4.6cqw, 22px); line-height: 1.2; font-weight: 400; letter-spacing: -0.01em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.vzb-fu-num .vzb-unit { margin-left: 2px; font-size: 0.6em; }
+.vzb-fu-head .vzb-badge { margin-top: 4px; padding: 1px 6px 1px 4px; border-radius: 6px; font-size: 12px; line-height: 15px; white-space: nowrap; }
+/* 칸이 좁으면(카드 폭 360px 이하) 칸 안쪽 여백과 배지를 줄입니다. */
+@container (max-width: 360px) { .vzb-fu-cell { padding: 0 6px; } .vzb-fu-head .vzb-badge { padding: 1px 4px 1px 2px; font-size: 11px; } .vzb-fu-head .vzb-badge .vzb-arrow { width: 10px; height: 10px; } }
+.vzb-fu-head { padding-bottom: 10px; }
+.vzb-fu-cells { padding-top: 10px; }
+.vzb-fu-cells .vzb-fu-cell { border-top: 2px solid transparent; padding-top: 8px; border-left: 0; }
+.vzb-fu-cells .vzb-fu-cell.is-on { border-top-color: var(--vzb-primary); }
+.vzb-fu-sub { margin-top: 2px; font-size: 12px; color: var(--vzb-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vzb-fu-cell.is-on .vzb-fu-name { color: var(--vzb-ink); font-weight: 500; }
+.vzb-fu-plot { min-height: 96px; }
+.vzb-fu-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
+.vzb-fu-flow { stroke: none; }
+.vzb-fu-band { stroke: var(--vzb-card); stroke-width: 1.5; stroke-linejoin: round; }
+.vzb-fu-div { stroke: var(--vzb-grid); stroke-width: 1; }
+.vzb-fu-gap { stroke: var(--vzb-card); stroke-width: 3; }
+.vzb-fu-shade { fill: var(--vzb-card); fill-opacity: 0.6; pointer-events: none; }
+.vzb-fu-pill rect { fill: var(--vzb-card); filter: drop-shadow(0 2px 4px rgba(27, 27, 27, 0.12)); }
+.vzb-fu-pill-text { font-size: 12px; font-weight: 600; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-fs1 { stop-color: var(--vzb-primary); }
+.vzb-fs2 { stop-color: var(--vzb-primary-mid); }
+.vzb-fs3 { stop-color: var(--vzb-primary-soft); }
+.vzb-u0 { --vzb-c: var(--vzb-primary); }
+.vzb-u1 { --vzb-c: var(--vzb-primary-mid); }
+.vzb-u2 { --vzb-c: var(--vzb-primary-soft); }
+.vzb-u3 { --vzb-c: var(--vzb-primary-tint); }
+.vzb-fu-call { position: absolute; top: 24px; right: 24px; text-align: right; }
+.vzb-fu-call .vzb-num { font-size: 26px; line-height: 30px; }
+.vzb-fu-call .vzb-unit { margin-left: 2px; font-size: 14px; }
+.vzb-fu-call p { margin: 0; font-size: 12px; color: var(--vzb-muted); }
+.vzb-card[data-vzb="funnel-area"] { position: relative; }
+@media (prefers-reduced-motion: reduce) { .vzb-fu-cell { transition: none; } }
+</style>
+<div class="vzb-card" data-vzb="funnel-layers">
+<script type="application/json">
+{
+  "title": "기기별 구매 퍼널",
+  "subtitle": "10월 1일–20일, 범례는 기기별 방문 대비 구매 전환율",
+  "format": "count",
+  "unit": "명",
+  "segments": ["앱", "모바일 웹", "PC"],
+  "steps": [
+    {
+      "name": "방문",
+      "values": [52000, 44000, 24000]
+    },
+    {
+      "name": "상품 조회",
+      "values": [27000, 17000, 10000]
+    },
+    {
+      "name": "장바구니",
+      "values": [7200, 3300, 2100]
+    },
+    {
+      "name": "구매",
+      "values": [2600, 820, 660]
+    }
+  ]
+}
+</script>
+</div>
+<script>
+(() => {
+  'use strict';
+  /* 공통 도구: 숫자 표기, 증감, 카드 머리, 그리기 시작 */
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  function el(tag, cls, text) {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function svgEl(tag, attrs) {
+    const n = document.createElementNS(SVGNS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+  const nfs = {};
+  function num(v, d) {
+    nfs[d] = nfs[d] || new Intl.NumberFormat('ko-KR', { minimumFractionDigits: d, maximumFractionDigits: d });
+    return nfs[d].format(v);
+  }
+  function krw(v) {
+    const a = Math.abs(v);
+    if (a >= 1e12) return [num(v / 1e12, 1), '조'];
+    if (a >= 1e8) return [num(v / 1e8, a >= 1e10 ? 0 : 1), '억'];
+    if (a >= 1e4) return [num(v / 1e4, 0), '만'];
+    return [num(v, 0), '원'];
+  }
+  // format: eok(억 단위 값) · krw(원 단위 값) · count(unit으로 단위) · pct(증감을 %p로) · days
+  function format(d) {
+    const dec = (v, fallback) => (d.decimals != null ? d.decimals : fallback);
+    switch (d.format) {
+      case 'eok': return { parts: (v) => [num(v, dec(v, Number.isInteger(v) || Math.abs(v) >= 100 ? 0 : 1)), '억'], rel: true };
+      case 'krw': return { parts: krw, rel: true };
+      case 'pct': return { parts: (v) => [num(v, dec(v, 1)), '%'], rel: false };
+      case 'days': return { parts: (v) => [num(v, dec(v, 1)), '일'], rel: true };
+      default: return { parts: (v) => [num(v, dec(v, Number.isInteger(v) ? 0 : 1)), d.unit || ''], rel: true };
+    }
+  }
+  const show = (f, v) => f.parts(v).join('');
+  // 그릴 수 있는 숫자인지(빈 값 · 빈 글자 · NaN 제외)
+  const fin = (v) => v != null && v !== '' && isFinite(v);
+  // 증감: 방향은 화살표로, 좋고 나쁨(tone)은 better(up · down · neutral)로 정합니다. 비율은 %p로 적습니다.
+  function delta(f, value, base, better) {
+    const diff = value - base;
+    const dir = Math.abs(diff) < 1e-9 ? 0 : Math.sign(diff);
+    const want = better === 'down' ? -1 : better === 'neutral' ? 0 : 1;
+    const tone = dir === 0 || want === 0 ? 'flat' : dir === want ? 'good' : 'bad';
+    let text;
+    if (!f.rel) text = `${num(Math.abs(diff), 1)}%p`;
+    else if (base) text = `${num(Math.abs(diff / base) * 100, 1)}%`;
+    else text = show(f, Math.abs(diff));
+    return { dir, tone, text };
+  }
+  function arrow(dir) {
+    const s = svgEl('svg', { class: 'vzb-arrow', viewBox: '0 0 12 12', 'aria-hidden': 'true' });
+    s.append(svgEl('path', { d: dir > 0 ? 'M3.5 8.5l5-5M4.5 3.5h4v4' : 'M3.5 3.5l5 5M8.5 4.5v4h-4' }));
+    return s;
+  }
+  // 대표 수치(단위는 작게)
+  function figure(f, value) {
+    const n = el('div', 'vzb-num');
+    const [text, unit] = f.parts(value);
+    n.append(text);
+    if (unit) n.append(el('span', 'vzb-unit', unit));
+    return n;
+  }
+  // 증감 배지: 화살표는 오르내림, 색은 좋고 나쁨(better)입니다.
+  function badge(f, value, base, better) {
+    const dl = delta(f, value, base, better);
+    const b = el('span', `vzb-badge vzb-${dl.tone}`);
+    if (dl.dir) b.append(arrow(dl.dir), el('span', 'vzb-sr', dl.dir > 0 ? '증가' : '감소'));
+    b.append(dl.text);
+    return b;
+  }
+  // 머리: 제목 · 기간 부제(subtitle) · 대표 수치와 바로 뒤의 증감 배지. value가 null이면 제목만 둡니다.
+  function head(card, d, f, value, cmp, cmpText) {
+    const hd = el('div', 'vzb-hd');
+    hd.append(el('div', 'vzb-title', d.title || ''));
+    if (d.subtitle) hd.append(el('div', 'vzb-sub', d.subtitle));
+    card.append(hd);
+    if (value == null) return;
+    const fig = el('div', 'vzb-fig');
+    fig.append(figure(f, value));
+    if (cmp && cmp.value != null) {
+      const line = el('span', 'vzb-delta');
+      line.append(badge(f, value, cmp.value, d.better), el('span', null, cmpText || `${cmp.label || '비교 기간'} 대비`));
+      fig.append(line);
+    }
+    card.append(fig);
+  }
+  // 같은 종류의 카드를 모두 찾아 그립니다. 코드를 두 번 붙여 넣어도 카드는 한 번만 그립니다.
+  function mount(type, draw) {
+    const run = () => {
+      document.querySelectorAll(`.vzb-card[data-vzb="${type}"]:not([data-vzb-ready])`).forEach((card) => {
+        card.setAttribute('data-vzb-ready', '');
+        const src = card.querySelector('script[type="application/json"]');
+        let d;
+        try { d = JSON.parse(src ? src.textContent : ''); } catch (e) {
+          card.append(el('p', 'vzb-error', `카드 데이터(JSON)를 읽지 못했습니다: ${e.message}`));
+          return;
+        }
+        card.setAttribute('role', 'group');
+        if (d.title) card.setAttribute('aria-label', d.title);
+        try { draw(card, d, format(d)); } catch (e) {
+          card.append(el('p', 'vzb-error', `카드를 그리지 못했습니다: ${e.message}`));
+        }
+      });
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+    else run();
+  }
+  // 크기가 바뀔 때마다 그래픽을 다시 그립니다. 차트는 카드에 남은 높이를 채웁니다.
+  function onSize(node, fn) {
+    let lw = 0, lh = 0;
+    new ResizeObserver((entries) => {
+      const w = Math.floor(entries[0].contentRect.width), h = Math.floor(entries[0].contentRect.height);
+      if (w > 0 && h > 0 && (w !== lw || h !== lh)) { lw = w; lh = h; fn(w, h); }
+    }).observe(node);
+  }
+
+  /* 툴팁과 조작: 마우스는 올리면 보이고 벗어나면 숨깁니다. 터치는 탭하면 보이고 다른 곳을 탭하면 닫힙니다.
+     키보드는 그래프에 포커스한 뒤 화살표로 옮깁니다(가로 그래프는 좌우, 목록은 위아래). */
+  let tip;
+  // value는 글자나 요소입니다. side가 참이면 점 위가 아니라 세로선 옆, 그래프 윗선에 맞춰 둡니다(선 · 막대 차트).
+  function showTip(x, y, label, value, side) {
+    if (!tip) {
+      tip = el('div', 'vzb-tip');
+      tip.setAttribute('aria-hidden', 'true');
+      document.body.append(tip);
+    }
+    tip.replaceChildren(el('span', 'vzb-tip-label', label), typeof value === 'string' ? el('span', 'vzb-tip-value', value) : value);
+    tip.classList.add('is-on');
+    const w = tip.offsetWidth, h = tip.offsetHeight, W = window.innerWidth, H = window.innerHeight;
+    if (side) {
+      // side가 'left'이면 기준선 왼쪽을 먼저, 그 밖에는 오른쪽을 먼저 씁니다. 자리가 모자라면 반대쪽으로 넘깁니다.
+      const right = x + 14 + w <= W - 8, left = x - w - 14 >= 8;
+      tip.style.left = `${(side === 'left' ? left || !right : !right) ? Math.max(8, x - w - 14) : x + 14}px`;
+      tip.style.top = `${Math.min(Math.max(8, y), H - h - 8)}px`;
+      return;
+    }
+    tip.style.left = `${Math.min(Math.max(8, x - w / 2), W - w - 8)}px`;
+    tip.style.top = `${y - h - 12 < 8 ? y + 16 : y - h - 12}px`;
+  }
+  function hideTip() { if (tip) tip.classList.remove('is-on'); }
+  // 툴팁 내용: { value, note } 또는 { rows: [{ tone, value, name }], note }. 값이 먼저, 이름은 뒤에 옅게 적습니다.
+  function tipBody(spec, label) {
+    const body = el('span', 'vzb-tip-body');
+    let text = label;
+    if (spec.rows) {
+      const grid = el('span', 'vzb-tip-rows');
+      spec.rows.forEach((r) => {
+        const row = el('span', 'vzb-tip-row');
+        row.append(el('i', `vzb-tip-key vzb-${r.tone}`), el('b', null, r.value), el('span', null, r.name));
+        grid.append(row);
+        text += `, ${r.name} ${r.value}`;
+      });
+      body.append(grid);
+    } else {
+      body.append(el('span', 'vzb-tip-value', spec.value));
+      text += ` ${spec.value}`;
+    }
+    // note는 한 줄 글 또는 줄마다 나눈 배열입니다.
+    (Array.isArray(spec.note) ? spec.note : [spec.note]).filter(Boolean).forEach((line) => {
+      body.append(el('span', 'vzb-tip-note', line));
+      text += `, ${line}`;
+    });
+    return { node: body, text };
+  }
+  // 범례: [{ name, tone, box(면), dot(점), dim(옅게), tick(세로 눈금) }]. 선은 짧은 선, 막대와 면은 네모, 점은 동그라미로 표시합니다.
+  function legendEl(items) {
+    const ul = el('ul', 'vzb-legend');
+    items.forEach((it) => {
+      const li = el('li');
+      li.append(el('i', `vzb-key vzb-${it.tone}${it.box ? ' is-box' : ''}${it.dot ? ' is-dot' : ''}${it.dim ? ' is-dim' : ''}${it.tick ? ' is-tick' : ''}`), it.name);
+      ul.append(li);
+    });
+    return ul;
+  }
+  // 글자 폭(12px 기준, size를 주면 그 크기)과 SVG 글자
+  let meter;
+  function textW(s, weight, family, size) {
+    meter = meter || document.createElement('canvas').getContext('2d');
+    meter.font = `${weight} ${size || 12}px ${family}`;
+    return meter.measureText(s).width;
+  }
+  function svgText(x, y, s, cls, anchor) {
+    const t = svgEl('text', { x, y, class: cls, 'text-anchor': anchor || 'start' });
+    t.textContent = s;
+    return t;
+  }
+  // 차이를 부호와 함께 적습니다. 비율 지표는 %p입니다.
+  function signed(f, diff) {
+    const s = diff > 0 ? '+' : diff < 0 ? '−' : '';
+    return f.rel ? `${s}${show(f, Math.abs(diff))}` : `${s}${num(Math.abs(diff), 1)}%p`;
+  }
+  // pick(clientX, clientY) → 순번, point(순번) → { x, y, label, value, text, side }(화면 좌표), clear() → 강조 해제
+  // n은 개수나 개수를 돌려주는 함수입니다. vertical이면 위아래 화살표로 옮깁니다. 돌려주는 { show(순번), at() }로 키를 더 붙입니다.
+  // 아무것도 고르지 않은 채 화살표를 누르면 기간 차트는 마지막(최근)부터, vertical이나 first면 첫 순번부터 짚습니다.
+  function interact(plot, n, pick, point, clear, vertical, first) {
+    let idx = -1, touched = false;
+    const count = () => (typeof n === 'function' ? n() : n);
+    const live = el('span', 'vzb-sr');
+    live.setAttribute('aria-live', 'polite');
+    plot.after(live);
+    const go = (i) => {
+      if (i < 0 || i >= count()) return;
+      idx = i;
+      const p = point(i);
+      showTip(p.x, p.y, p.label, p.value, p.side);
+      live.textContent = p.text || `${p.label} ${p.value}`;
+    };
+    const end = () => {
+      if (idx < 0) return;
+      idx = -1;
+      clear();
+      hideTip();
+    };
+    const [back, next] = vertical ? ['ArrowUp', 'ArrowDown'] : ['ArrowLeft', 'ArrowRight'];
+    // pick이 -1이면(조각 밖) 강조를 풉니다.
+    const at = (e) => { const i = pick(e.clientX, e.clientY); if (i < 0) end(); else go(i); };
+    plot.addEventListener('pointermove', (e) => { if (e.pointerType !== 'touch' || touched) at(e); });
+    plot.addEventListener('pointerdown', (e) => { if (e.pointerType === 'touch') { touched = true; at(e); } });
+    plot.addEventListener('pointerleave', (e) => { if (e.pointerType !== 'touch') end(); });
+    document.addEventListener('pointerdown', (e) => { if (touched && !plot.contains(e.target)) { touched = false; end(); } }, true);
+    plot.addEventListener('keydown', (e) => {
+      if (e.key !== back && e.key !== next) return;
+      e.preventDefault();
+      const last = count() - 1;
+      go(idx < 0 ? (vertical || first ? 0 : last) : Math.max(0, Math.min(last, idx + (e.key === next ? 1 : -1))));
+    });
+    plot.addEventListener('blur', end);
+    window.addEventListener('scroll', end, { passive: true });
+    return { show: go, at: () => idx, end };
+  }
+
+  /* 퍼널 공통: 단계마다 같은 폭의 칸을 두고, 칸 안에서는 단계 값만큼의 두께를 평평하게 유지하다가 칸 경계를 지나며 S자 곡선으로
+     다음 단계의 두께로 바뀌는 흐름을 그립니다. 칸 위(labels)나 아래(cells)에 단계 이름과 값을 두고, 칸에 마우스를 올리거나
+     카드에 포커스한 뒤 좌우 화살표를 누르면 나머지 칸의 흐름을 옅게 덮어 그 칸만 남기고 툴팁을 보여줍니다.
+     cfg: steps [{ name }] · top(머리 아래 요소) · labels(i) / cells(i) → 칸 요소 · paint(svg, G) → 짚을 때 다시 칠할 모양 [{ d }]
+          over(svg, G) 흐름 위 덧그림 · tip(i) → { value, note } 또는 { rows, note }, note는 글 또는 줄 배열 */
+  function funnelCard(card, d, f, cfg) {
+    const steps = cfg.steps, n = steps.length;
+    head(card, d, f, null);
+    if (cfg.top) card.append(cfg.top);
+    const foot = el('div', 'vzb-foot vzb-fill vzb-fu');
+    foot.style.setProperty('--vzb-fu-n', Math.max(1, n));
+    foot.tabIndex = 0;
+    foot.setAttribute('role', 'group');
+    foot.setAttribute('aria-label', `${d.title || ''} 퍼널, ${steps.map((s) => s.name).join(' → ')}. 좌우 화살표로 단계를 옮깁니다.`);
+    const row = (make, cls) => { const r = el('div', `vzb-fu-row ${cls}`); steps.forEach((s, i) => { const c = make(i); c.classList.add('vzb-fu-cell'); r.append(c); }); return r; };
+    const headRow = cfg.labels ? row(cfg.labels, 'vzb-fu-head') : null;
+    const plot = el('div', 'vzb-plot vzb-fu-plot');
+    const svg = svgEl('svg', { class: 'vzb-fu-svg', 'aria-hidden': 'true' });
+    plot.append(svg);
+    const cellRow = cfg.cells ? row(cfg.cells, 'vzb-fu-cells') : null;
+    if (headRow) foot.append(headRow);
+    foot.append(plot);
+    if (cellRow) foot.append(cellRow);
+    card.append(foot);
+    let G = null, shapes = [], front = null, lastW = 0, lastH = 0;
+    function draw(w, h) {
+      lastW = w; lastH = h;
+      svg.setAttribute('width', w);
+      svg.setAttribute('height', h);
+      svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      svg.replaceChildren();
+      if (!n) return;
+      // 칸 i의 평평한 구간: 앞뒤 칸 경계에서 칸 폭의 25%씩 떨어진 곳까지(첫 칸은 왼쪽 끝부터, 마지막 칸은 오른쪽 끝까지)
+      const cw = w / n;
+      const cols = steps.map((_, i) => ({ x: i * cw, a: i ? i * cw + cw * 0.25 : 0, b: i < n - 1 ? (i + 1) * cw - cw * 0.25 : w, c: i * cw + cw / 2 }));
+      G = { n, w, h, cw, cols };
+      shapes = cfg.paint(svg, G) || [];
+      front = svgEl('g', {});
+      svg.append(front);
+      if (cfg.over) cfg.over(svg, G);
+    }
+    onSize(plot, draw);
+    const rows = [headRow, cellRow].filter(Boolean);
+    interact(foot, n,
+      (cx) => {
+        const r = foot.getBoundingClientRect();
+        return Math.max(0, Math.min(n - 1, Math.floor(((cx - r.left) / Math.max(1, r.width)) * n)));
+      },
+      (i) => {
+        rows.forEach((r) => [...r.children].forEach((c, k) => c.classList.toggle('is-on', k === i)));
+        if (front && G) {
+          const id = `vzb-fc${Math.random().toString(36).slice(2, 8)}`, defs = svgEl('defs', {}), clip = svgEl('clipPath', { id });
+          G.cols.forEach((c, k) => { if (k !== i) clip.append(svgEl('rect', { x: c.x, y: -2, width: G.cw, height: G.h + 4 })); });
+          defs.append(clip);
+          front.replaceChildren(defs, ...shapes.map((s) => svgEl('path', { d: s.d, class: 'vzb-fu-shade', 'clip-path': `url(#${id})` })));
+        }
+        // 툴팁은 짚은 칸 옆(마지막 칸은 왼쪽)에 두어 칸 위의 이름과 값을 가리지 않게 합니다.
+        const t = tipBody(cfg.tip(i), steps[i].name);
+        const pr = plot.getBoundingClientRect(), edge = G ? (i < n - 1 ? G.cols[i].x + G.cw : G.cols[i].x) : 0;
+        return { x: pr.left + edge, y: pr.top + 6, label: steps[i].name, value: t.node, text: t.text, side: i < n - 1 ? true : 'left' };
+      },
+      () => { rows.forEach((r) => [...r.children].forEach((c) => c.classList.remove('is-on'))); if (front) front.replaceChildren(); });
+  }
+  // 단계마다의 위 · 아래 y로 띠를 만듭니다. 평평한 구간은 가로선, 칸 사이는 S자 곡선(양 끝 기울기 0)으로 잇습니다.
+  function flowBand(cols, top, bot) {
+    const R = (v) => +v.toFixed(2), n = cols.length;
+    let p = `M${R(cols[0].a)},${R(top[0])}`;
+    for (let i = 0; i < n; i++) {
+      p += `H${R(cols[i].b)}`;
+      if (i < n - 1) { const m = (cols[i].b + cols[i + 1].a) / 2; p += `C${R(m)},${R(top[i])} ${R(m)},${R(top[i + 1])} ${R(cols[i + 1].a)},${R(top[i + 1])}`; }
+    }
+    p += `V${R(bot[n - 1])}`;
+    for (let i = n - 1; i >= 0; i--) {
+      p += `H${R(cols[i].a)}`;
+      if (i > 0) { const m = (cols[i - 1].b + cols[i].a) / 2; p += `C${R(m)},${R(bot[i])} ${R(m)},${R(bot[i - 1])} ${R(cols[i - 1].b)},${R(bot[i - 1])}`; }
+    }
+    return `${p}Z`;
+  }
+  // 흐름 안의 비율 알약: 흰 바탕에 굵은 글자, 옅은 그림자
+  function fuPill(svg, x, y, text) {
+    const w = String(text).length * 7.2 + 18, g = svgEl('g', { class: 'vzb-fu-pill' });
+    g.append(svgEl('rect', { x: x - w / 2, y: y - 11, width: w, height: 22, rx: 11 }), fuText(x, y + 4, text, 'vzb-fu-pill-text', 'middle'));
+    svg.append(g);
+  }
+  function fuGradient(svg, stops) {
+    const id = `vzb-fg${Math.random().toString(36).slice(2, 8)}`, defs = svgEl('defs', {}), g = svgEl('linearGradient', { id, x1: 0, y1: 0, x2: 1, y2: 0 });
+    stops.forEach(([off, cls]) => g.append(svgEl('stop', { offset: off, class: cls })));
+    defs.append(g);
+    svg.append(defs);
+    return `url(#${id})`;
+  }
+  const fuPct = (a, b) => (!b ? '–' : a === b ? '100%' : `${num((a / b) * 100, 1)}%`);
+  function fuText(x, y, s, cls, anchor) {
+    const t = svgEl('text', { x, y, class: cls, 'text-anchor': anchor || 'start' });
+    t.textContent = s;
+    return t;
+  }
+
+  // Funnel - Layers: 흐름을 구분(segments)별 띠로 나눠 가운데에 첫 구분을, 그 바깥 양쪽에 다음 구분을 반씩 쌓습니다.
+  // 띠 색은 가운데부터 주황 · 옅은 주황 · 더 옅은 주황이고, 범례에는 구분마다 첫 단계에서 마지막 단계까지의 전환율을 적습니다.
+  // 띠가 칸을 지나며 얼마나 가늘어지는지로 어느 구분이 끝까지 잘 남는지 견줍니다. 툴팁에는 그 단계의 구분별 값을 적습니다.
+  mount('funnel-layers', (card, d, f) => {
+    const segs = (d.segments || []).slice(0, 4);
+    const steps = (d.steps || []).filter((s) => s && s.name != null).map((s) => {
+      const values = segs.map((_, k) => (s.values && fin(s.values[k]) ? +s.values[k] : 0));
+      return { name: s.name, values, value: values.reduce((a, v) => a + v, 0) };
+    });
+    const first = steps.length ? steps[0].value : 0, last = steps[steps.length - 1], max = Math.max(0, ...steps.map((s) => s.value));
+    const top = legendEl(segs.map((name, k) => ({ name: `${name} ${steps.length > 1 ? fuPct(last.values[k], steps[0].values[k]) : ''}`.trim(), tone: `u${k}`, box: true })));
+    funnelCard(card, d, f, {
+      steps,
+      top,
+      labels: (i) => {
+        const s = steps[i], c = el('div');
+        c.append(el('div', 'vzb-fu-name', s.name), figure(f, s.value));
+        c.lastChild.className = 'vzb-fu-num';
+        return c;
+      },
+      paint(svg, G) {
+        const mid = G.h / 2, sc = max > 0 ? (G.h * 0.94) / max : 0;
+        G.cols.slice(1).forEach((c) => svg.append(svgEl('line', { x1: c.x + 0.5, x2: c.x + 0.5, y1: 0, y2: G.h, class: 'vzb-fu-div' })));
+        // 가운데 띠(첫 구분)와 양쪽으로 반씩 쌓는 바깥 띠. 바깥 띠부터 그려 안쪽 띠가 위에 오게 합니다.
+        const half = (s, k) => (k === 0 ? s.values[0] / 2 : s.values[0] / 2 + s.values.slice(1, k).reduce((a, v) => a + v / 2, 0));
+        for (let k = segs.length - 1; k >= 1; k -= 1) {
+          const inner = steps.map((s) => half(s, k) * sc), outer = steps.map((s, i) => inner[i] + (s.values[k] / 2) * sc);
+          svg.append(svgEl('path', { d: flowBand(G.cols, outer.map((v) => mid - v), inner.map((v) => mid - v)), class: `vzb-fu-band vzb-u${k}`, fill: 'var(--vzb-c)' }));
+          svg.append(svgEl('path', { d: flowBand(G.cols, inner.map((v) => mid + v), outer.map((v) => mid + v)), class: `vzb-fu-band vzb-u${k}`, fill: 'var(--vzb-c)' }));
+        }
+        const c0 = steps.map((s) => Math.max(2, s.values[0] * sc) / 2);
+        svg.append(svgEl('path', { d: flowBand(G.cols, c0.map((v) => mid - v), c0.map((v) => mid + v)), class: 'vzb-fu-band vzb-u0', fill: 'var(--vzb-c)' }));
+        const env = steps.map((s) => Math.max(4, s.value * sc) / 2);
+        return [{ d: flowBand(G.cols, env.map((v) => mid - v), env.map((v) => mid + v)) }];
+      },
+      over(svg, G) { steps.forEach((s, i) => fuPill(svg, G.cols[i].c, G.h / 2, fuPct(s.value, first))); },
+      tip(i) {
+        const s = steps[i], p = steps[i - 1];
+        return {
+          rows: segs.map((name, k) => ({ tone: `u${k}`, name, value: show(f, s.values[k]) })),
+          note: [`합계 ${show(f, s.value)}`, i ? `앞 단계 대비 ${fuPct(s.value, p.value)}` : ''],
+        };
+      },
+    });
+  });
+})();
+</script>

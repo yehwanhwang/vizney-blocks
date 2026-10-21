@@ -1,0 +1,16 @@
+/* 생키: 높이 2단위. 노드는 폭 8px 막대(모서리 2px), 띠는 노드 색을 32% 옅기로 칠합니다. 짚으면 고른 노드와 이어진 띠만 남기고 나머지는 옅게 둡니다.
+   이름표는 이름(12px)과 값(13px 굵게, 단위는 작게) 두 줄이고, 가운데 단 이름표는 띠 위에 흰 테두리를 둘러 읽히게 합니다. */
+.vzb-card[data-vzb^="sankey-"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-sk.vzb-foot { padding-top: 16px; }
+.vzb-sk-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
+.vzb-sk-link { fill: var(--vzb-c); fill-opacity: 0.32; transition: fill-opacity 0.12s; }
+.vzb-sk-node, .vzb-sk-lab { transition: opacity 0.12s; }
+.vzb-sk-node { fill: var(--vzb-c); }
+.vzb-sk-name { font-size: 12px; fill: var(--vzb-ink-2); }
+.vzb-sk-val { font-size: 13px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-sk-unit { font-size: 11px; font-weight: 400; fill: var(--vzb-muted); }
+.vzb-sk-lab.is-over text { paint-order: stroke; stroke: var(--vzb-card); stroke-width: 4px; stroke-linejoin: round; }
+.vzb-sk-svg.is-hover .vzb-sk-link { fill-opacity: 0.1; }
+.vzb-sk-svg.is-hover .vzb-sk-link.is-on { fill-opacity: 0.62; }
+.vzb-sk-svg.is-hover .vzb-sk-node:not(.is-on), .vzb-sk-svg.is-hover .vzb-sk-lab:not(.is-on) { opacity: 0.3; }
+@media (prefers-reduced-motion: reduce) { .vzb-sk-link, .vzb-sk-node, .vzb-sk-lab { transition: none; } }

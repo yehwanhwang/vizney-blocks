@@ -1,0 +1,15 @@
+{
+  "title": "출고 금액 누계",
+  "format": "eok",
+  "better": "up",
+  "period": "1월 1일–10월 20일",
+  "current": {
+    "label": "2026년",
+    "value": 8555
+  },
+  "compare": {
+    "label": "2025년",
+    "short": "전년 동기",
+    "value": 7817
+  }
+}

@@ -1,0 +1,32 @@
+/* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
+   색은 Vizney 차트 가이드의 주황 · 분홍빨강 · 노랑과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다. */
+:where(:root) {
+  --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --vzb-card: #ffffff;
+  --vzb-edge: rgba(17, 24, 39, 0.05);
+  --vzb-ink: #1b1b1b;
+  --vzb-ink-2: #4a4a4a;
+  --vzb-muted: #737373;
+  --vzb-grid: #ebebeb;   /* 격자와 머리 아래 선. 바탕에서 한 단계 떨어진 회색 실선 */
+  --vzb-primary: #ff9500;
+  --vzb-primary-tint: #fff1de;
+  --vzb-primary-soft: #ffd9a6;   /* 이름을 얹는 바 리스트 막대 */
+  --vzb-secondary: #ff2d55;
+  --vzb-tertiary: #ffcc00;
+  --vzb-primary-mid: #ffb54d;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
+  --vzb-secondary-mid: #ff7a93;
+  --vzb-tertiary-mid: #ffdc4d;
+  --vzb-other-mid: #e3e3e3;
+  --vzb-line-3: #007aff;   /* 선의 셋째 색. 노랑은 흰 바탕의 가는 선으로는 잘 보이지 않아 파랑을 씁니다 */
+  --vzb-base: #c4c4c4;
+  --vzb-track: #f1f1f1;
+  --vzb-other: #d9d9d9;
+  --vzb-good: #12814a;
+  --vzb-good-tint: #e5f5ec;
+  --vzb-bad: #d42346;
+  --vzb-bad-tint: #fdebef;
+  --vzb-tip: #1b1b1b;
+  --vzb-radius: 18px;
+  --vzb-unit: 168px;   /* KPI - Number 높이. Line · Bar는 2배, 나머지는 1.5배 */
+  --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);
+}

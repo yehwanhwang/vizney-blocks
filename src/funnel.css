@@ -1,0 +1,41 @@
+/* 퍼널: 높이 2단위. 같은 폭의 단계 칸, 칸 안에서는 평평하다가 경계에서 S자로 줄어드는 흐름, 흰 비율 알약, 짚으면 나머지 칸을 옅게 덮습니다 */
+.vzb-card[data-vzb^="funnel-"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-fu.vzb-foot { padding-top: 12px; border-radius: 8px; outline: none; }
+.vzb-fu:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 4px; }
+.vzb-fu-row { display: grid; grid-template-columns: repeat(var(--vzb-fu-n), minmax(0, 1fr)); container-type: inline-size; }
+.vzb-fu-cell { min-width: 0; padding: 0 10px; border-left: 1px solid var(--vzb-grid); transition: opacity 0.12s; }
+.vzb-fu-cell:first-child { padding-left: 0; border-left: 0; }
+.vzb-fu-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; color: var(--vzb-muted); }
+.vzb-fu-num { margin-top: 2px; font-size: clamp(14px, 4.6cqw, 22px); line-height: 1.2; font-weight: 400; letter-spacing: -0.01em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.vzb-fu-num .vzb-unit { margin-left: 2px; font-size: 0.6em; }
+.vzb-fu-head .vzb-badge { margin-top: 4px; padding: 1px 6px 1px 4px; border-radius: 6px; font-size: 12px; line-height: 15px; white-space: nowrap; }
+/* 칸이 좁으면(카드 폭 360px 이하) 칸 안쪽 여백과 배지를 줄입니다. */
+@container (max-width: 360px) { .vzb-fu-cell { padding: 0 6px; } .vzb-fu-head .vzb-badge { padding: 1px 4px 1px 2px; font-size: 11px; } .vzb-fu-head .vzb-badge .vzb-arrow { width: 10px; height: 10px; } }
+.vzb-fu-head { padding-bottom: 10px; }
+.vzb-fu-cells { padding-top: 10px; }
+.vzb-fu-cells .vzb-fu-cell { border-top: 2px solid transparent; padding-top: 8px; border-left: 0; }
+.vzb-fu-cells .vzb-fu-cell.is-on { border-top-color: var(--vzb-primary); }
+.vzb-fu-sub { margin-top: 2px; font-size: 12px; color: var(--vzb-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vzb-fu-cell.is-on .vzb-fu-name { color: var(--vzb-ink); font-weight: 500; }
+.vzb-fu-plot { min-height: 96px; }
+.vzb-fu-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
+.vzb-fu-flow { stroke: none; }
+.vzb-fu-band { stroke: var(--vzb-card); stroke-width: 1.5; stroke-linejoin: round; }
+.vzb-fu-div { stroke: var(--vzb-grid); stroke-width: 1; }
+.vzb-fu-gap { stroke: var(--vzb-card); stroke-width: 3; }
+.vzb-fu-shade { fill: var(--vzb-card); fill-opacity: 0.6; pointer-events: none; }
+.vzb-fu-pill rect { fill: var(--vzb-card); filter: drop-shadow(0 2px 4px rgba(27, 27, 27, 0.12)); }
+.vzb-fu-pill-text { font-size: 12px; font-weight: 600; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-fs1 { stop-color: var(--vzb-primary); }
+.vzb-fs2 { stop-color: var(--vzb-primary-mid); }
+.vzb-fs3 { stop-color: var(--vzb-primary-soft); }
+.vzb-u0 { --vzb-c: var(--vzb-primary); }
+.vzb-u1 { --vzb-c: var(--vzb-primary-mid); }
+.vzb-u2 { --vzb-c: var(--vzb-primary-soft); }
+.vzb-u3 { --vzb-c: var(--vzb-primary-tint); }
+.vzb-fu-call { position: absolute; top: 24px; right: 24px; text-align: right; }
+.vzb-fu-call .vzb-num { font-size: 26px; line-height: 30px; }
+.vzb-fu-call .vzb-unit { margin-left: 2px; font-size: 14px; }
+.vzb-fu-call p { margin: 0; font-size: 12px; color: var(--vzb-muted); }
+.vzb-card[data-vzb="funnel-area"] { position: relative; }
+@media (prefers-reduced-motion: reduce) { .vzb-fu-cell { transition: none; } }

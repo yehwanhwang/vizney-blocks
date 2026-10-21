@@ -1,0 +1,10 @@
+/* Bar - Butterfly: 가운데 이름 칸, 좌우로 자라는 12px 막대(바깥 끝만 4px 둥글게), 양쪽 끝 값. 집단 이름은 위쪽 양 끝에 둡니다. */
+.vzb-bf-hd { display: flex; justify-content: space-between; gap: 12px; margin-top: 12px; font-size: 12px; color: var(--vzb-ink-2); }
+.vzb-bf-hd span { display: inline-flex; align-items: center; gap: 6px; }
+.vzb-bf-bar { position: relative; min-width: 0; height: 12px; }
+.vzb-bf-fill { position: absolute; top: 0; bottom: 0; right: 0; border-radius: 4px 0 0 4px; background: var(--vzb-c); }
+.vzb-bf-bar.is-right .vzb-bf-fill { left: 0; right: auto; border-radius: 0 4px 4px 0; }
+.vzb-bf-name { min-width: 3.5em; text-align: center; white-space: nowrap; color: var(--vzb-ink-2); }
+.vzb-li-row.is-on .vzb-bf-name { color: var(--vzb-ink); font-weight: 500; }
+.vzb-li-row.is-on .vzb-bf-fill { filter: brightness(0.92); }
+.vzb-card[data-vzb="bar-butterfly"] .vzb-li-row > .vzb-li-val:first-child { text-align: left; }

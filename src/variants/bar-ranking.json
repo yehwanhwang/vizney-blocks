@@ -1,0 +1,43 @@
+{
+  "title": "지사별 출고 금액",
+  "subtitle": "2026년 9월",
+  "format": "eok",
+  "columns": [
+    "지사",
+    "출고 금액"
+  ],
+  "items": [
+    {
+      "name": "서울",
+      "value": 151
+    },
+    {
+      "name": "경기",
+      "value": 144
+    },
+    {
+      "name": "인천",
+      "value": 102
+    },
+    {
+      "name": "대전",
+      "value": 131
+    },
+    {
+      "name": "광주",
+      "value": 95
+    },
+    {
+      "name": "대구",
+      "value": 106
+    },
+    {
+      "name": "부산",
+      "value": 128
+    },
+    {
+      "name": "울산",
+      "value": 81
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+/* 구성비: 도넛(지름 140px, 굵기 16px, 조각 사이 2px)이나 와플(10×10칸) 옆에 색 · 이름 · 비중 범례. 고른 조각만 진하게 남깁니다. */
+.vzb-card[data-vzb^="donut-"], .vzb-card[data-vzb^="treemap-"], .vzb-card[data-vzb^="waffle-"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-sh.vzb-foot { justify-content: center; padding-top: 14px; }
+/* 그림과 범례는 한 덩어리로 카드 가운데에 둡니다. 범례는 240px까지만 넓혀 이름과 비중이 멀어지지 않게 합니다. */
+.vzb-sh-body { display: grid; grid-template-columns: auto minmax(0, 240px); justify-content: center; align-items: center; gap: 22px 32px; border-radius: 8px; outline: none; }
+.vzb-sh-body:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 6px; }
+.vzb-sh-fig { position: relative; }
+.vzb-sh-donut { display: block; width: 140px; height: 140px; }
+.vzb-sh-slice { fill: var(--vzb-c); transition: opacity 0.12s; }
+.vzb-sh-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+.vzb-sh-center .vzb-num { font-size: 22px; line-height: 26px; }
+.vzb-sh-center .vzb-unit { margin-left: 2px; font-size: 13px; }
+.vzb-sh-cap { margin: 0; font-size: 12px; color: var(--vzb-muted); }
+.vzb-sh-waffle + .vzb-sh-cap { margin-top: 10px; }
+.vzb-sh-legend { display: flex; flex-direction: column; gap: 9px; min-width: 0; margin: 0; padding: 0; list-style: none; }
+.vzb-sh-legend li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 7px; transition: opacity 0.12s; }
+.vzb-sh-legend span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--vzb-ink-2); }
+.vzb-sh-legend b { font-weight: 500; font-variant-numeric: tabular-nums; }
+.vzb-sh-waffle { display: grid; grid-template-columns: repeat(10, var(--vzb-cell, 12px)); grid-auto-rows: var(--vzb-cell, 12px); gap: 2px; }
+.vzb-sh-waffle i { border-radius: 3px; background: var(--vzb-c); transition: opacity 0.12s; }
+.vzb-sh .is-dim { opacity: 0.25; }
+@media (prefers-reduced-motion: reduce) { .vzb-sh-slice, .vzb-sh-legend li, .vzb-sh-waffle i { transition: none; } }

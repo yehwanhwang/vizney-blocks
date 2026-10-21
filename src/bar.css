@@ -1,0 +1,5 @@
+/* 막대 카드: 0에서 자라는 막대(굵기 최대 24px, 끝만 4px 둥글게), 붙인 막대와 쌓은 조각 사이 2px, 고른 기간은 옅은 회색 칸 */
+.vzb-bar { fill: var(--vzb-c); }
+.vzb-bar.is-dim { fill-opacity: 0.4; }
+.vzb-bar-hover { fill: var(--vzb-track); }
+.vzb-bar-goal { stroke: var(--vzb-ink); stroke-width: 2; stroke-linecap: round; }

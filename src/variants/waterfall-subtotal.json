@@ -1,0 +1,12 @@
+{
+  "title": "손익 구조",
+  "subtitle": "2026년 9월, 매출에서 영업이익까지",
+  "format": "eok",
+  "items": [
+    { "name": "매출", "value": 938, "type": "total" },
+    { "name": "매출원가", "value": -612 },
+    { "name": "총이익", "type": "total" },
+    { "name": "판관비", "value": -198 },
+    { "name": "영업이익", "type": "total" }
+  ]
+}

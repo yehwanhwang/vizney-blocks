@@ -1,0 +1,32 @@
+{
+  "title": "채널별 출고 비중",
+  "subtitle": "10월 1일–20일",
+  "format": "eok",
+  "better": "up",
+  "compare": {
+    "label": "전월 동기",
+    "value": 552.3
+  },
+  "parts": [
+    {
+      "label": "대리점",
+      "value": 242
+    },
+    {
+      "label": "온라인",
+      "value": 165
+    },
+    {
+      "label": "직영점",
+      "value": 112
+    },
+    {
+      "label": "특판",
+      "value": 46
+    },
+    {
+      "label": "수출",
+      "value": 25
+    }
+  ]
+}

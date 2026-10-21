@@ -1,0 +1,31 @@
+{
+  "title": "권역별 출고 금액",
+  "subtitle": "2026년 9월, 전월 대비",
+  "format": "eok",
+  "better": "up",
+  "nameLabel": "권역",
+  "valueLabel": "출고 금액",
+  "changeLabel": "전월 대비",
+  "rows": [
+    {
+      "name": "수도권",
+      "value": 397,
+      "prev": 380
+    },
+    {
+      "name": "영남",
+      "value": 315,
+      "prev": 306
+    },
+    {
+      "name": "충청",
+      "value": 131,
+      "prev": 120
+    },
+    {
+      "name": "호남",
+      "value": 95,
+      "prev": 91
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+/* KPI - Bar: 카드 높이 2단위. 점선 격자 위 둥근 막대. 지난 기간은 옅은 주황, 마지막은 주황, 진행 중이면 점선 윤곽 */
+.vzb-card[data-vzb="kpi-bar"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-br-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
+.vzb-grid { stroke: var(--vzb-grid); stroke-width: 1; }
+.vzb-br-bar { fill: var(--vzb-primary); fill-opacity: 0.4; transition: fill-opacity 0.12s; }
+.vzb-br-bar.is-last, .vzb-br-bar.is-hover { fill-opacity: 1; }
+.vzb-br-bar.is-now { fill: var(--vzb-primary-tint); fill-opacity: 1; stroke: var(--vzb-primary); stroke-width: 1.5; stroke-dasharray: 3 2; }
+.vzb-br-bar.is-now.is-hover { fill: var(--vzb-primary); fill-opacity: 0.3; }
+.vzb-axis { font-size: 12px; fill: var(--vzb-muted); }
+.vzb-axis.is-last { font-weight: 500; fill: var(--vzb-ink); }
+@media (prefers-reduced-motion: reduce) { .vzb-br-bar { transition: none; } }

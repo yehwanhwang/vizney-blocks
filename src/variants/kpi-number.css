@@ -1,0 +1,2 @@
+/* KPI - Number: 카드 높이 1단위 */
+.vzb-card[data-vzb="kpi-number"] { min-height: var(--vzb-unit); }

@@ -1,0 +1,12 @@
+/* 스캐터: 지름 9px 점(흰 테두리 2px), 옅은 실선 격자, 점선 기준선, 사분면 이름은 옅은 글자. 고른 점은 테두리로 짚고 나머지는 옅게 둡니다.
+   축 이름은 눈금보다 한 단계 진한 글자로 세로축 위 왼쪽, 가로축 아래 오른쪽에 둡니다. */
+.vzb-sc-dot { fill: var(--vzb-c); stroke: var(--vzb-card); stroke-width: 2; transition: opacity 0.12s; }
+.vzb-sc-svg.is-hover .vzb-sc-dot:not(.is-on) { opacity: 0.3; }
+.vzb-sc-ring { fill: var(--vzb-c); stroke: var(--vzb-ink); stroke-width: 2; pointer-events: none; }
+.vzb-sc-ref { stroke: var(--vzb-ink-2); stroke-width: 1; stroke-dasharray: 4 3; opacity: 0.6; }
+.vzb-sc-quad { font-size: 12px; font-weight: 500; fill: var(--vzb-muted); paint-order: stroke; stroke: var(--vzb-card); stroke-width: 4px; stroke-linejoin: round; }
+.vzb-sc-path { fill: none; stroke: var(--vzb-primary); stroke-width: 1.5; stroke-opacity: 0.5; stroke-linejoin: round; stroke-linecap: round; }
+@media (prefers-reduced-motion: reduce) { .vzb-sc-dot { transition: none; } }
+.vzb-sc-frame { fill: none; stroke: var(--vzb-grid); stroke-width: 1; }
+.vzb-sc-seg { stroke: var(--vzb-c); stroke-width: 1.5; stroke-opacity: 0.6; stroke-linecap: round; }
+.vzb-sc-name { font-size: 12px; font-weight: 500; fill: var(--vzb-ink-2); }

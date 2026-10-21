@@ -1,0 +1,14 @@
+{
+  "title": "영업이익 증감 요인",
+  "subtitle": "2026년 9월, 전년 동월 대비",
+  "format": "eok",
+  "better": "up",
+  "items": [
+    { "name": "25.09", "value": 102, "type": "total" },
+    { "name": "물량", "value": 31 },
+    { "name": "가격", "value": 18 },
+    { "name": "원가", "value": -17 },
+    { "name": "판관비", "value": -6 },
+    { "name": "26.09", "type": "total" }
+  ]
+}

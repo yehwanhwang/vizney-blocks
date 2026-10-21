@@ -1,0 +1,4 @@
+/* Line - Slope: 높이 2단위. 두 기간의 세로선, 2px 선과 흰 테두리 점, 양 끝 비중과 이름. 고른 선만 진하게 남깁니다. */
+.vzb-card[data-vzb="line-slope"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-sl-item { transition: opacity 0.12s; }
+.vzb-sl-item.is-dim { opacity: 0.2; }

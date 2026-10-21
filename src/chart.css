@@ -1,0 +1,53 @@
+/* 그래프 영역: 마우스를 올리거나, 포커스한 뒤 좌우 화살표로 값을 봅니다. */
+.vzb-plot { position: relative; border-radius: 4px; outline: none; touch-action: pan-y; }
+.vzb-plot:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 4px; }
+/* 남은 높이를 채우는 차트: 그래프 영역이 늘어나고 그림은 그 크기에 맞춰 다시 그립니다. */
+.vzb-fill { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
+.vzb-fill > .vzb-plot { flex: 1 1 auto; min-height: 72px; }
+.vzb-fill > .vzb-plot > svg { position: absolute; left: 0; top: 0; }
+.vzb-tip {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: var(--vzb-tip);
+  color: #ffffff;
+  box-shadow: 0 10px 24px -8px rgba(27, 27, 27, 0.4);
+  font: 400 12px/17px var(--vzb-font);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+.vzb-tip.is-on { opacity: 1; }
+.vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
+.vzb-tip-value { font-size: 13px; font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { .vzb-tip { transition: none; } }
+/* 색 이름: t1 · t2 · t3 선(주황 · 분홍빨강 · 파랑), f1 · f2 · f3 막대와 면(주황 · 분홍빨강 · 노랑), fs 옅은 주황,
+   t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
+.vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
+.vzb-t2, .vzb-f2 { --vzb-c: var(--vzb-secondary); }
+.vzb-t3 { --vzb-c: var(--vzb-line-3); }
+.vzb-f3 { --vzb-c: var(--vzb-tertiary); }
+.vzb-t0, .vzb-f0 { --vzb-c: var(--vzb-base); }
+.vzb-tx, .vzb-fx { --vzb-c: var(--vzb-other); }
+.vzb-fg { --vzb-c: var(--vzb-good); }
+.vzb-fb { --vzb-c: var(--vzb-bad); }
+.vzb-ti { --vzb-c: var(--vzb-ink); }
+.vzb-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 10px 0 0; padding: 0; list-style: none; color: var(--vzb-ink-2); }
+.vzb-legend li { display: inline-flex; align-items: center; gap: 6px; }
+.vzb-key, .vzb-tip-key { display: inline-block; flex: none; width: 12px; height: 3px; border-radius: 2px; background: var(--vzb-c); }
+.vzb-key.is-box { width: 10px; height: 10px; border-radius: 3px; }
+.vzb-key.is-dot { width: 9px; height: 9px; border-radius: 50%; }
+.vzb-key.is-dim { opacity: 0.4; }
+.vzb-tip-body { display: flex; flex-direction: column; }
+.vzb-tip-rows { display: grid; grid-template-columns: auto auto auto; justify-content: start; align-items: center; column-gap: 8px; row-gap: 1px; margin-top: 3px; }
+.vzb-tip-row { display: contents; }
+.vzb-tip-row b { font-size: 13px; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.vzb-tip-row span { color: rgba(255, 255, 255, 0.72); }
+.vzb-tip-note { margin-top: 3px; color: rgba(255, 255, 255, 0.72); }
+.vzb-tip-note + .vzb-tip-note { margin-top: 0; }
+.vzb-fs { --vzb-c: var(--vzb-primary-soft); }
+.vzb-key.is-tick { width: 2px; height: 12px; border-radius: 1px; }

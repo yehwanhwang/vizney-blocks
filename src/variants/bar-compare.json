@@ -1,0 +1,50 @@
+{
+  "title": "지사별 출고 금액",
+  "subtitle": "2026년 9월, 전년 동월 대비",
+  "format": "eok",
+  "better": "up",
+  "currentLabel": "2026년 9월",
+  "compareLabel": "2025년 9월",
+  "items": [
+    {
+      "name": "서울",
+      "value": 151,
+      "prev": 148
+    },
+    {
+      "name": "경기",
+      "value": 144,
+      "prev": 136
+    },
+    {
+      "name": "인천",
+      "value": 102,
+      "prev": 98
+    },
+    {
+      "name": "대전",
+      "value": 131,
+      "prev": 82
+    },
+    {
+      "name": "광주",
+      "value": 95,
+      "prev": 91
+    },
+    {
+      "name": "대구",
+      "value": 106,
+      "prev": 108
+    },
+    {
+      "name": "부산",
+      "value": 128,
+      "prev": 126
+    },
+    {
+      "name": "울산",
+      "value": 81,
+      "prev": 72
+    }
+  ]
+}

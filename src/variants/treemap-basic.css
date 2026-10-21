@@ -1,0 +1,11 @@
+/* Treemap - Basic: 높이 2단위를 채우는 칸. 넓은 면이라 색은 한 단계 옅게(--vzb-*-mid), 칸 사이 2px, 칸이 넉넉할 때만 이름과 비중을 적고, 고른 칸만 진하게 남깁니다. */
+.vzb-tm.vzb-foot { padding-top: 14px; }
+.vzb-tm-plot { min-height: 120px; }
+.vzb-tm-tile { position: absolute; display: flex; flex-direction: column; gap: 1px; padding: 6px 7px; overflow: hidden; border-radius: 3px; background: var(--vzb-c); color: var(--vzb-ink); font-size: 12px; line-height: 15px; transition: opacity 0.12s; }
+.vzb-tm-tile span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vzb-tm-tile b { font-weight: 600; font-variant-numeric: tabular-nums; }
+.vzb-tm-tile.is-dim { opacity: 0.3; }
+.vzb-m1 { --vzb-c: var(--vzb-primary-mid); }
+.vzb-m2 { --vzb-c: var(--vzb-secondary-mid); }
+.vzb-m3 { --vzb-c: var(--vzb-tertiary-mid); }
+.vzb-mx { --vzb-c: var(--vzb-other-mid); }

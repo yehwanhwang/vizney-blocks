@@ -1,0 +1,83 @@
+<title>Vizney Blocks</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/*__FONTS__*/
+/*__PAGE_CSS__*/
+</style>
+
+<div class="pg">
+  <header class="hd">
+    <div class="brand">
+      <span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <h1>Vizney Blocks</h1>
+      <span class="ver">/*__VERSION__*/</span>
+      <!--__LINKS__-->
+    </div>
+    <p class="lede">분석가의 판단을 담은 대시보드 카드 모음입니다. 카드를 골라 복사해 HTML에 붙여 넣으면 바로 그려지고, 데이터는 카드 안의 JSON만 바꾸면 됩니다. 차트는 Vizney 차트 가이드의 차트 이름으로 묶었고, 각 묶음에서 같은 차트의 가이드 글로 이어집니다.</p>
+  </header>
+
+  <nav class="cats" id="cats" aria-label="카테고리"></nav>
+
+  <div class="secs" id="secs"></div>
+
+  <section class="use" aria-labelledby="sec-use">
+    <h2 id="sec-use">쓰는 법</h2>
+    <div>
+      <ol class="steps">
+        <li>카드의 <b>복사</b>를 눌러 HTML의 <code>&lt;body&gt;</code> 안 원하는 자리에 붙여 넣습니다. 카드는 놓인 자리의 폭을 채우고, 높이는 내용에 맞춰 정해집니다.</li>
+        <li>카드 안 <code>&lt;script type="application/json"&gt;</code>의 값만 바꿉니다. 증감, 달성률, 비중은 카드가 계산합니다.</li>
+        <li>색과 글꼴은 변수로 바꿉니다. 내 페이지의 <code>:root</code>에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.</li>
+        <!--__AI_STEP__-->
+      </ol>
+      <pre class="code" style="margin-top: 16px">:root {
+  --vzb-primary: #0f766e;        /* 선, 막대, 게이지 */
+  --vzb-primary-tint: #e3f3f1;   /* 트랙, 옅은 바탕 */
+  --vzb-unit: 180px;             /* Number 높이, Line · Bar 2배, 나머지 1.5배 */
+  --vzb-font: 'Pretendard', sans-serif;
+}</pre>
+    </div>
+    <div>
+      <h3>공통 필드</h3>
+      <dl class="fields">
+        <dt><code>title</code></dt><dd>지표명</dd>
+        <dt><code>subtitle</code></dt><dd>기간 부제. 무엇을 언제 기준으로 보는지 적습니다.</dd>
+        <dt><code>value</code></dt><dd>KPI 카드의 대표 수치. KPI - Line과 KPI - Bar는 생략하면 마지막 값을 씁니다.</dd>
+        <dt><code>format</code></dt><dd><code>eok</code> 억 단위 값, <code>krw</code> 원 단위 값을 만·억·조로, <code>count</code> 개수(<code>unit</code>에 단위), <code>pct</code> 비율(증감은 %p), <code>days</code> 일수</dd>
+        <dt><code>better</code></dt><dd><code>up</code>, <code>down</code>, <code>neutral</code>. 증감을 초록과 빨강 중 무엇으로 칠할지 정합니다.</dd>
+        <dt><code>compare</code></dt><dd><code>{ "label", "value" }</code>. KPI 카드에서 증감을 계산할 비교 기준입니다.</dd>
+        <dt><code>labels</code></dt><dd>라인 카드의 기간 이름. <code>values</code>와 같은 길이로 적고, 값이 없는 기간은 <code>null</code>로 둡니다.</dd>
+        <dt><code>series</code></dt><dd><code>[{ "name", "values" }]</code>. 선을 여러 개 그리는 라인 카드에서 씁니다.</dd>
+        <dt><code>rows</code></dt><dd>그리드 차트와 히트맵 차트의 줄. 줄마다 <code>name</code>과 값을 적습니다. 합계 줄과 비중, 증감률, 달성률은 카드가 계산합니다.</dd>
+        <dt><code>curve</code></dt><dd>선 모양. <code>smooth</code>(기본) 곡선, <code>linear</code> 직선, <code>step</code> 계단. 라인 카드와 KPI - Line에서 씁니다.</dd>
+      </dl>
+      <h3 style="margin-top: 24px">여러 장을 한 줄에</h3>
+      <p>카드는 배치를 맡지 않습니다. 감싸는 요소에 격자를 주면 폭에 맞춰 줄이 바뀝니다.</p>
+      <pre class="code">&lt;div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:16px;"&gt;
+  &lt;!-- 카드 여러 장 --&gt;
+&lt;/div&gt;</pre>
+    </div>
+  </section>
+
+  <p class="foot">Spoqa Han Sans Neo(© Spoqa, SIL Open Font License 1.1)를 씁니다. 이 페이지에는 쓰인 글자만 담아 이름을 바꾼 부분 글꼴을 넣었고, 복사한 카드는 Spoqa 배포 링크로 글꼴을 불러옵니다.<!--__FOOT__--></p>
+</div>
+
+<dialog class="dlg" id="dlg" aria-labelledby="dlg-title">
+  <div class="dlg-hd">
+    <div>
+      <h2 id="dlg-title"></h2>
+      <p id="dlg-sub">빈 HTML이나 기존 페이지의 &lt;body&gt; 안에 그대로 붙여 넣습니다.</p>
+    </div>
+    <div class="acts">
+      <button type="button" class="btn is-primary" id="dlg-copy">복사</button>
+      <button type="button" class="btn" id="dlg-close">닫기</button>
+    </div>
+  </div>
+  <pre class="code" id="dlg-code" tabindex="0"></pre>
+</dialog>
+
+<script>
+/*__DATA__*/
+</script>
+<script>
+/*__PAGE_JS__*/
+</script>

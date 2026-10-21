@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://blocks.vizney.com/sitemap.xml

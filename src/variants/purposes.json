@@ -54,7 +54,8 @@
    { "id": "donut-basic", "when": "한 시점의 비중을 볼 때" },
    { "id": "bar-stacked-100", "when": "기간별 구성비 변화를 볼 때" },
    { "id": "bar-stacked", "when": "합계의 흐름과 구성을 함께 볼 때" },
-   { "id": "treemap-basic", "when": "항목이 많거나 묶음 안에 항목이 있을 때" }
+   { "id": "treemap-basic", "when": "항목이 많거나 묶음 안에 항목이 있을 때" },
+   { "id": "waffle-basic", "when": "비중을 칸 수로 세어 보일 때" }
   ]
  },
  {
@@ -84,7 +85,8 @@
   "question": "어디서 빠지고 어디로 가나?",
   "picks": [
    { "id": "funnel-flow", "when": "단계마다 얼마나 빠져나가는지 볼 때" },
-   { "id": "sankey-levels", "when": "여러 갈래로 나뉘는 흐름을 볼 때" }
+   { "id": "sankey-basic", "when": "두 구분 사이의 흐름을 볼 때" },
+   { "id": "sankey-levels", "when": "세 단 이상 이어지는 흐름을 볼 때" }
   ]
  },
  {

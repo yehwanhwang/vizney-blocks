@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  // window.VZB: mode('site' | 'one'), page('home' | 'cat' | 'one' | 'none'), site(공개 주소), cats([{ id, name }]),
+  // window.VZB: mode('site' | 'one'), page('home' | 'cat' | 'one' | 'none'), site(공개 주소), cats([{ id, name }]), retired({ 내린 카드 id: 대신 쓸 카드 주소 }),
   // index([{ id, name, cat, catName, when, tags(목적 색인의 목적과 조건), url }]), code({ 카드 id: 코드 }), example([{ id, wide }]).
   const V = window.VZB || {};
   const code = V.code || {};
@@ -15,6 +15,17 @@
     if (text != null) n.textContent = text;
     return n;
   };
+
+  // 목록에서 내린 카드의 옛 주소(/bar/#bar-grouped, /#n-bar-grouped)는 대신 쓸 카드로 보냅니다.
+  if (V.mode === 'site') {
+    const gone = () => {
+      const to = (V.retired || {})[location.hash.replace(/^#(n-)?/, '')];
+      if (to) location.replace(to);
+      return Boolean(to);
+    };
+    if (gone()) return;
+    window.addEventListener('hashchange', gone);
+  }
 
   // 옛 한 페이지 갤러리 주소(#sec-bar, #n-bar-basic)는 새 차트 페이지로 보냅니다.
   if (V.mode === 'site' && V.page === 'home') {

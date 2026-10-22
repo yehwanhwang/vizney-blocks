@@ -1,5 +1,6 @@
-<!-- Vizney Blocks v0.22 · 막대 차트 · Bar - Progress (bar-progress)
+<!-- Vizney Blocks v0.23 · 막대 차트 · Bar - Progress (bar-progress)
      https://blocks.vizney.com/cards/bar-progress.html · © 2026 Vizney · MIT License
+     v0.23에 목록에서 내린 카드입니다. 대신 Grid - Target(https://blocks.vizney.com/cards/grid-target.txt)를 쓰세요. 같은 달성률 막대를 Grid - Target이 목표·실적 금액과 함께 보여줍니다.
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
 <style>

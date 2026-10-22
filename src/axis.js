@@ -40,10 +40,11 @@
       case 'pct': return (v) => `${num(v, dec)}%`;
       case 'days': return (v) => `${num(v, dec)}일`;
       default: {
-        // 개수는 10만이 넘으면 만 단위로 줄여 적습니다(150,000 → 15만).
-        if (top < 1e5) return (v) => num(v, dec);
+        // 개수는 unit을 붙이고, 10만이 넘으면 만 단위로 줄여 적습니다(150,000건 → 15만건).
+        const u = d.unit || '';
+        if (top < 1e5) return (v) => `${num(v, dec)}${u}`;
         const dd = stepDec(step / 1e4);
-        return (v) => `${num(v / 1e4, dd)}만`;
+        return (v) => `${num(v / 1e4, dd)}만${u}`;
       }
     }
   }

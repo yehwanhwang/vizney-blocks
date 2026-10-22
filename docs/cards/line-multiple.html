@@ -19,7 +19,7 @@
 </head>
 <body>
 <main style="--w:640px">
-<!-- Vizney Blocks v0.22 · 라인 차트 · Line - Multiple (line-multiple)
+<!-- Vizney Blocks v0.23 · 라인 차트 · Line - Multiple (line-multiple)
      https://blocks.vizney.com/cards/line-multiple.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -502,10 +502,11 @@
       case 'pct': return (v) => `${num(v, dec)}%`;
       case 'days': return (v) => `${num(v, dec)}일`;
       default: {
-        // 개수는 10만이 넘으면 만 단위로 줄여 적습니다(150,000 → 15만).
-        if (top < 1e5) return (v) => num(v, dec);
+        // 개수는 unit을 붙이고, 10만이 넘으면 만 단위로 줄여 적습니다(150,000건 → 15만건).
+        const u = d.unit || '';
+        if (top < 1e5) return (v) => `${num(v, dec)}${u}`;
         const dd = stepDec(step / 1e4);
-        return (v) => `${num(v / 1e4, dd)}만`;
+        return (v) => `${num(v / 1e4, dd)}만${u}`;
       }
     }
   }

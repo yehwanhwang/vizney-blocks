@@ -1,0 +1,100 @@
+[
+ {
+  "id": "status",
+  "name": "현황",
+  "question": "지금 얼마인가?",
+  "picks": [
+   { "id": "kpi-number", "when": "숫자와 비교 기준만 둘 때" },
+   { "id": "kpi-line", "when": "최근 13개월 흐름도 함께 볼 때" },
+   { "id": "kpi-bar", "when": "진행 중인 이번 달을 지난달들과 견줄 때" },
+   { "id": "kpi-stacked-bar", "when": "합계와 그 구성을 한 카드에 둘 때" },
+   { "id": "line-tabs", "when": "단위가 다른 지표 2–3개를 한 카드에 둘 때" }
+  ]
+ },
+ {
+  "id": "trend",
+  "name": "추이",
+  "question": "어떻게 변해 왔나?",
+  "picks": [
+   { "id": "line-basic", "when": "한 지표의 흐름을 볼 때" },
+   { "id": "bar-basic", "when": "금액·건수를 0부터의 크기로 견줄 때" },
+   { "id": "line-compare", "when": "작년 같은 달과 견줄 때" },
+   { "id": "line-multiple", "when": "항목 2–3개의 흐름을 함께 볼 때" },
+   { "id": "bump-basic", "when": "값보다 순위가 바뀐 과정을 볼 때" }
+  ]
+ },
+ {
+  "id": "target",
+  "name": "목표",
+  "question": "목표까지 얼마나 왔나?",
+  "picks": [
+   { "id": "kpi-gauge", "when": "지표 하나의 목표·한도 대비 진척을 볼 때" },
+   { "id": "grid-target", "when": "항목별 달성률을 금액과 함께 볼 때" },
+   { "id": "bar-target", "when": "기간마다 목표가 다를 때" },
+   { "id": "line-cumulative", "when": "이번 달 누계 페이스를 볼 때" },
+   { "id": "line-reference", "when": "기준선·평균을 넘었는지 볼 때" }
+  ]
+ },
+ {
+  "id": "compare",
+  "name": "비교",
+  "question": "무엇이 크고 작은가?",
+  "picks": [
+   { "id": "bar-ranking", "when": "항목별 크기와 순위를 볼 때" },
+   { "id": "bar-compare", "when": "작년이나 지난달 값과 견줄 때" },
+   { "id": "bar-butterfly", "when": "두 집단을 같은 항목으로 견줄 때" },
+   { "id": "radar-basic", "when": "점수 여러 개로 강점과 약점을 볼 때" }
+  ]
+ },
+ {
+  "id": "share",
+  "name": "구성",
+  "question": "무엇으로 이뤄져 있나?",
+  "picks": [
+   { "id": "donut-basic", "when": "한 시점의 비중을 볼 때" },
+   { "id": "bar-stacked-100", "when": "기간별 구성비 변화를 볼 때" },
+   { "id": "bar-stacked", "when": "합계의 흐름과 구성을 함께 볼 때" },
+   { "id": "treemap-basic", "when": "항목이 많거나 묶음 안에 항목이 있을 때" }
+  ]
+ },
+ {
+  "id": "table",
+  "name": "표",
+  "question": "항목마다 정확히 얼마인가?",
+  "picks": [
+   { "id": "grid-basic", "when": "항목마다 여러 지표와 합계를 적을 때" },
+   { "id": "grid-spark", "when": "항목마다 13개월 흐름까지 훑을 때" },
+   { "id": "grid-pivot", "when": "두 기준으로 나눈 금액을 교차표로 볼 때" },
+   { "id": "heatmap-basic", "when": "많고 적은 칸을 색으로 찾을 때" }
+  ]
+ },
+ {
+  "id": "change",
+  "name": "증감",
+  "question": "왜 늘고 줄었나?",
+  "picks": [
+   { "id": "waterfall-basic", "when": "두 시점 사이의 변화를 요인별로 나눌 때" },
+   { "id": "waterfall-subtotal", "when": "손익 구조를 보여줄 때" },
+   { "id": "bar-diverging", "when": "기간별 증감·목표 차이를 볼 때" }
+  ]
+ },
+ {
+  "id": "flow",
+  "name": "흐름",
+  "question": "어디서 빠지고 어디로 가나?",
+  "picks": [
+   { "id": "funnel-flow", "when": "단계마다 얼마나 빠져나가는지 볼 때" },
+   { "id": "sankey-levels", "when": "여러 갈래로 나뉘는 흐름을 볼 때" }
+  ]
+ },
+ {
+  "id": "relation",
+  "name": "관계",
+  "question": "두 값은 어떤 관계인가?",
+  "picks": [
+   { "id": "scatter-basic", "when": "두 측정값이 함께 움직이는지 볼 때" },
+   { "id": "scatter-quadrant", "when": "두 기준으로 대상을 네 무리로 나눌 때" },
+   { "id": "scatter-connected", "when": "두 지표의 이동 경로를 볼 때" }
+  ]
+ }
+]

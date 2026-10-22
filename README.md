@@ -22,9 +22,19 @@ Copy-paste HTML dashboard cards (48 cards in 14 chart types). No install, no fra
 </div>
 ```
 
+## 목적으로 고르기
+
+카드는 차트 모양보다 화면이 답할 질문에서 고르는 편이 빠릅니다. 현황, 추이, 목표, 비교, 구성, 표, 증감, 흐름, 관계의 아홉 가지 목적마다 기본 카드 하나와, 조건이 맞을 때만 쓰는 카드를 정리했습니다. 색인은 [갤러리 첫 화면](https://blocks.vizney.com/#purpose)과 [llms.txt](https://blocks.vizney.com/llms.txt)에 있습니다.
+
 ## AI에게 맡기기
 
-카드의 **복사 → AI용 링크 복사**는 카드 코드 주소(`https://blocks.vizney.com/cards/<카드 id>.txt`)를 복사합니다. 이 주소를 AI에게 주고 “이 카드로 우리 매출 데이터를 그려줘”처럼 요청하면 됩니다. 전체 카드 목록과 카드마다의 규칙은 [llms.txt](https://blocks.vizney.com/llms.txt)에 있습니다.
+카드의 **복사 → AI용 링크 복사**는 카드 코드 주소(`https://blocks.vizney.com/cards/<카드 id>.txt`)를 복사합니다. 이 주소를 AI에게 주고 “이 카드로 우리 매출 데이터를 그려줘”처럼 요청하면 됩니다. 전체 카드 목록과 목적 색인, 카드마다의 규칙은 [llms.txt](https://blocks.vizney.com/llms.txt)에 있습니다.
+
+Claude Code, Cursor, Codex 같은 코딩 에이전트에는 스킬로 설치할 수 있습니다. 스킬에는 목적 색인과 쓰는 규칙이 들어 있어, 에이전트가 화면의 질문마다 카드를 고르고 JSON만 바꿔 대시보드를 만듭니다.
+
+```bash
+npx skills add yehwanhwang/vizney-blocks
+```
 
 ## 카드 목록
 
@@ -52,10 +62,11 @@ pip install fonttools
 SPOQA_DIR=/path/to/SpoqaHanSansNeo node build.mjs
 ```
 
-- `src/`: 카드 공통 부품(`*.js`, `*.css`), 카드별 코드와 예시 데이터(`src/variants/`), 카테고리 설명과 규칙(`src/variants/meta.json`)
+- `src/`: 카드 공통 부품(`*.js`, `*.css`), 카드별 코드와 예시 데이터(`src/variants/`), 카테고리 설명과 규칙(`src/variants/meta.json`), 목적 색인(`src/variants/purposes.json`: 목적마다 기본 카드가 맨 앞이고, 나머지는 쓰는 조건과 함께 적습니다)
 - `page/`: 사이트 화면(`site.css`, `site.js`)과 차트 그림(`tiles.json`). 사이트(`docs/`)와 한 페이지 갤러리(`dist/index.html`)가 함께 씁니다.
 - `tools/`: 부분 글꼴 만들기, 글꼴 라이선스, 공유 이미지
 - `docs/`: 빌드 결과. 첫 화면, 차트 페이지(`/bar/` 등), 카드 페이지와 코드(`/cards/`), `llms.txt`가 들어 있고, GitHub Pages가 이 폴더를 blocks.vizney.com로 내보냅니다.
+- `skills/vizney-blocks/SKILL.md`: 빌드 결과. 코딩 에이전트용 스킬로, `purposes.json`과 쓰는 규칙에서 만들어집니다. `docs/`처럼 직접 고치지 않습니다.
 
 ## 라이선스
 

@@ -14,10 +14,10 @@ Copy-paste HTML dashboard cards (48 cards in 14 chart types). No install, no fra
 2. 카드 안 `<script type="application/json">`의 값만 바꿉니다. 증감, 비중, 달성률, 합계는 카드가 계산합니다.
 3. 색과 글꼴은 내 페이지 `:root`의 `--vzb-*` 변수로 바꿉니다.
 
-카드 하나는 스타일, 데이터, 스크립트를 한데 묶은 HTML 조각이라 설치할 라이브러리가 없습니다. 카드는 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위(1단위 168px) 중 하나라 한 줄에 섞어 놓아도 높이가 맞습니다. 여러 장은 감싸는 요소에 격자를 줍니다.
+카드 하나는 스타일, 데이터, 스크립트를 한데 묶은 HTML 조각이라 설치할 라이브러리가 없습니다. 카드는 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위(1단위 168px) 중 하나입니다. 같은 줄의 카드는 가장 높은 카드에 맞춰 늘어나므로 높이가 같은 카드끼리 한 줄에 두면 빈 곳이 없습니다. 여러 장은 감싸는 요소에 격자를 주고, 카드 폭이 340px보다 좁아지지 않게 합니다. 더 좁으면 표와 도넛의 글자가 잘립니다(KPI 카드만 둔 줄은 300px까지 괜찮습니다).
 
 ```html
-<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:16px;">
+<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:16px;">
   <!-- 카드 여러 장 -->
 </div>
 ```

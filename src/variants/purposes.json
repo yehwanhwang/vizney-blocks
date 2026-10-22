@@ -17,7 +17,7 @@
   "question": "어떻게 변해 왔나?",
   "picks": [
    { "id": "line-basic", "when": "한 지표의 흐름을 볼 때" },
-   { "id": "bar-basic", "when": "금액·건수를 0부터의 크기로 견줄 때" },
+   { "id": "bar-basic", "when": "흐름보다 기간별 크기를 견줄 때" },
    { "id": "line-compare", "when": "작년 같은 달과 견줄 때" },
    { "id": "line-multiple", "when": "항목 2–3개의 흐름을 함께 볼 때" },
    { "id": "bump-basic", "when": "값보다 순위가 바뀐 과정을 볼 때" }

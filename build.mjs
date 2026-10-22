@@ -10,7 +10,7 @@ import { join, dirname } from 'node:path';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.22';
+const VERSION = 'v0.23';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = 'https://kr.vizney.com/chart-guide/';
@@ -52,10 +52,17 @@ ${js(v)}
 </script>
 `;
 
+// Retired cards ("retired": { version, use, note } in meta.json) leave the gallery, llms.txt, the skill and the search,
+// but keep their public addresses (/cards/<id>.html and .txt) with working code and a note naming the card to use instead.
+const allVariants = cats.flatMap((cat) => cat.variants.map((v) => ({ ...v, cat: cat.id })));
+const nameOf = Object.fromEntries(allVariants.map((v) => [v.id, v.name]));
+for (const v of allVariants) if (v.retired && (!nameOf[v.retired.use] || allVariants.find((x) => x.id === v.retired.use).retired)) throw new Error(`meta.json: ${v.id} points to a missing or retired card`);
+const retiredNote = (v) => `${v.retired.version}에 목록에서 내린 카드입니다. 대신 ${nameOf[v.retired.use]}(${SITE}/cards/${v.retired.use}.txt)를 쓰세요. ${v.retired.note}`;
+
 function snippet(v, cat) {
   return `<!-- Vizney Blocks ${VERSION} · ${cat.name} · ${v.name} (${v.id})
      ${SITE}/cards/${v.id}.html · ${NOTICE}
-     <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
+${v.retired ? `     ${retiredNote(v)}\n` : ''}     <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 ${FONT_LINK}
 <style>
 ${css(v)}
@@ -64,7 +71,9 @@ ${card(v.id, JSON.parse(r(vp(v.id, 'json'))))}
 ${tail(v)}`;
 }
 
-const built = cats.map((cat) => ({ ...cat, variants: cat.variants.map((v) => ({ ...v, cat: cat.id, code: snippet(v, cat) })) }));
+const builtAll = cats.map((cat) => ({ ...cat, variants: cat.variants.map((v) => ({ ...v, cat: cat.id, code: snippet(v, cat) })) }));
+const retired = builtAll.flatMap((c) => c.variants.filter((v) => v.retired));
+const built = builtAll.map((c) => ({ ...c, variants: c.variants.filter((v) => !v.retired) })).filter((c) => c.variants.length);
 const variants = built.flatMap((cat) => cat.variants);
 const byId = Object.fromEntries(variants.map((v) => [v.id, v]));
 const catName = Object.fromEntries(built.map((c) => [c.id, c.name]));
@@ -309,6 +318,7 @@ const data = (m, page, ids) => `<script>window.VZB = ${esc({
   cats: built.map((c) => ({ id: c.id, name: c.name })),
   index: variants.map((v) => ({ id: v.id, name: v.name, cat: v.cat, catName: catName[v.cat], when: plain(v.when), tags: tagsOf(v.id), url: m.card(v) })),
   example: page === 'home' ? EXAMPLE : [],
+  retired: Object.fromEntries(retired.map((v) => [v.id, m.card(byId[v.retired.use])])),
   code: Object.fromEntries(ids.map((id) => [id, byId[id].code])),
 })};</script>`;
 
@@ -463,15 +473,16 @@ for (const [path, html] of Object.entries(pages)) {
 
 // One page per card (the snippet on a plain background, for embedding) and the same snippet as plain text for AI tools.
 const cardCss = `<style>body{margin:0;background:#eef0f4;font:14px/1.6 'Spoqa Han Sans Neo','Noto Sans KR',sans-serif;color:#4a4a4a}main{box-sizing:border-box;max-width:var(--w,640px);margin:0 auto;padding:40px 16px 24px}p{margin:16px 2px 0;font-size:13px}a{color:#1b1b1b}</style>\n`;
-for (const c of built) {
+for (const c of builtAll) {
   for (const v of c.variants) {
     const w = c.id === 'kpi' ? 420 : 640;
+    const gone = v.retired && `<p>${h(v.retired.version)}에 목록에서 내린 카드입니다. 대신 <a href="${v.retired.use}.html">${h(nameOf[v.retired.use])}</a>를 쓰세요. ${h(v.retired.note)}</p>\n`;
     writeFileSync(join(docs, 'cards', `${v.id}.txt`), v.code);
-    writeFileSync(join(docs, 'cards', `${v.id}.html`), `${head({ title: `${v.name} · Vizney Blocks`, desc: `${c.name} · ${v.name}. ${plain(v.when)}`, path: `/cards/${v.id}.html`, extra: cardCss })}
+    writeFileSync(join(docs, 'cards', `${v.id}.html`), `${head({ title: `${v.name} · Vizney Blocks`, desc: `${c.name} · ${v.name}. ${plain(v.when)}`, path: `/cards/${v.id}.html`, extra: (gone ? '<meta name="robots" content="noindex">\n' : '') + cardCss })}
 <body>
 <main style="--w:${w}px">
 ${v.code}
-<p><a href="/${c.id}/#${v.id}">Vizney Blocks · ${h(c.name)}</a> · <a href="${v.id}.txt">코드(텍스트)</a> · ${NOTICE}</p>
+${gone || ''}<p><a href="/${c.id}/${gone ? '' : `#${v.id}`}">Vizney Blocks · ${h(c.name)}</a> · <a href="${v.id}.txt">코드(텍스트)</a> · ${NOTICE}</p>
 </main>
 </body>
 </html>
@@ -605,5 +616,6 @@ ${['/', ...built.map((c) => `/${c.id}/`)].map((p) => `<url><loc>${SITE}${p}</loc
 `);
 writeFileSync(join(docs, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
 const kb = (p) => `${(readFileSync(join(docs, p)).length / 1024).toFixed(0)} KB`;
-console.log(`docs/: home ${kb('index.html')}, ${built.length} chart pages (bar ${kb('bar/index.html')}), ${variants.length} card pages and .txt files, llms.txt ${kb('llms.txt')}, fonts ${W.map((w) => `${(woff[w].length / 1024).toFixed(0)}`).join('/')} KB`);
+console.log(`docs/: home ${kb('index.html')}, ${built.length} chart pages (bar ${kb('bar/index.html')}), ${variants.length + retired.length} card pages and .txt files (${retired.length} retired), llms.txt ${kb('llms.txt')}, fonts ${W.map((w) => `${(woff[w].length / 1024).toFixed(0)}`).join('/')} KB`);
 console.log(`skills/vizney-blocks/SKILL.md: ${(skill.length / 1024).toFixed(0)} KB · purpose index: ${purposes.length} purposes, ${picked.size} cards; not in the index: ${unpicked.join(', ') || 'none'}`);
+console.log(`retired (addresses kept): ${retired.map((v) => `${v.id} → ${v.retired.use}`).join(', ') || 'none'}`);

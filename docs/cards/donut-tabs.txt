@@ -1,5 +1,6 @@
-<!-- Vizney Blocks v0.22 · 도넛 차트 · Donut - Tabs (donut-tabs)
+<!-- Vizney Blocks v0.23 · 도넛 차트 · Donut - Tabs (donut-tabs)
      https://blocks.vizney.com/cards/donut-tabs.html · © 2026 Vizney · MIT License
+     v0.23에 목록에서 내린 카드입니다. 대신 Donut - Basic(https://blocks.vizney.com/cards/donut-basic.txt)를 쓰세요. 탭 뒤의 기준은 한 번에 하나만 보이므로, 기준마다 Donut - Basic을 나란히 둡니다.
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
 <style>
@@ -463,7 +464,7 @@
 
   // 도넛 · 와플 카드 틀: 왼쪽에 그림(draw), 오른쪽에 색 · 이름 · 비중 범례.
   // cfg: items · sort · draw(fig, P) → 조각마다 강조할 요소 목록 · fit(fig, legend, w, h) → 카드에 남은 자리에 그림 크기 맞추기.
-  // 돌려주는 show(cfg 일부)로 다른 항목을 다시 그립니다(Donut - Tabs).
+  // 돌려주는 show(cfg 일부)로 다른 항목을 다시 그립니다(탭 카드).
   function shareCard(card, d, f, cfg) {
     head(card, d, f, null);
     if (cfg.top) card.append(cfg.top);
@@ -569,7 +570,7 @@
     grid.style.setProperty('--vzb-cell', `${Math.max(10, Math.min(24, Math.floor(Math.min(byW, byH))))}px`);
   }
 
-  /* 탭 카드(Line · Bar · Donut - Tabs): 머리 아래를 똑같은 폭의 칸으로 나눠 지표 이름과 대표 수치를 두고, 고른 탭만 그립니다.
+  /* 탭 카드: 머리 아래를 똑같은 폭의 칸으로 나눠 지표 이름과 대표 수치를 두고, 고른 탭만 그립니다.
      탭마다 format이 달라도 되고, 대표 수치는 value가 없으면 마지막 값입니다. 값이 없는 탭(목록)은 이름만 적습니다.
      draw는 lineCard · barCard · basicList, make(탭)은 그 탭의 그리기 설정입니다. 탭은 좌우 화살표로도 옮깁니다. */
   function tabsCard(card, d, draw, make) {

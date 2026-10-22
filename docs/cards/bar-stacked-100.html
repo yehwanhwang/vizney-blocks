@@ -19,7 +19,7 @@
 </head>
 <body>
 <main style="--w:640px">
-<!-- Vizney Blocks v0.22 · 막대 차트 · Bar - Stacked 100% (bar-stacked-100)
+<!-- Vizney Blocks v0.23 · 막대 차트 · Bar - Stacked 100% (bar-stacked-100)
      https://blocks.vizney.com/cards/bar-stacked-100.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -497,10 +497,11 @@
       case 'pct': return (v) => `${num(v, dec)}%`;
       case 'days': return (v) => `${num(v, dec)}일`;
       default: {
-        // 개수는 10만이 넘으면 만 단위로 줄여 적습니다(150,000 → 15만).
-        if (top < 1e5) return (v) => num(v, dec);
+        // 개수는 unit을 붙이고, 10만이 넘으면 만 단위로 줄여 적습니다(150,000건 → 15만건).
+        const u = d.unit || '';
+        if (top < 1e5) return (v) => `${num(v, dec)}${u}`;
         const dd = stepDec(step / 1e4);
-        return (v) => `${num(v / 1e4, dd)}만`;
+        return (v) => `${num(v / 1e4, dd)}만${u}`;
       }
     }
   }
@@ -767,7 +768,7 @@
 
   // 도넛 · 와플 카드 틀: 왼쪽에 그림(draw), 오른쪽에 색 · 이름 · 비중 범례.
   // cfg: items · sort · draw(fig, P) → 조각마다 강조할 요소 목록 · fit(fig, legend, w, h) → 카드에 남은 자리에 그림 크기 맞추기.
-  // 돌려주는 show(cfg 일부)로 다른 항목을 다시 그립니다(Donut - Tabs).
+  // 돌려주는 show(cfg 일부)로 다른 항목을 다시 그립니다(탭 카드).
   function shareCard(card, d, f, cfg) {
     head(card, d, f, null);
     if (cfg.top) card.append(cfg.top);

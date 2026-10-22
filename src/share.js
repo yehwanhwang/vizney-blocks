@@ -18,7 +18,7 @@
 
   // 도넛 · 와플 카드 틀: 왼쪽에 그림(draw), 오른쪽에 색 · 이름 · 비중 범례.
   // cfg: items · sort · draw(fig, P) → 조각마다 강조할 요소 목록 · fit(fig, legend, w, h) → 카드에 남은 자리에 그림 크기 맞추기.
-  // 돌려주는 show(cfg 일부)로 다른 항목을 다시 그립니다(Donut - Tabs).
+  // 돌려주는 show(cfg 일부)로 다른 항목을 다시 그립니다(탭 카드).
   function shareCard(card, d, f, cfg) {
     head(card, d, f, null);
     if (cfg.top) card.append(cfg.top);

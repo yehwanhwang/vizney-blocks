@@ -5,7 +5,7 @@ description: "Vizney Blocks(blocks.vizney.com)의 HTML 대시보드 카드로 �
 
 # Vizney Blocks로 대시보드 만들기
 
-Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v0.22, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 증감, 비중, 달성률, 합계와 색·강조는 카드가 Vizney 차트 가이드의 규칙대로 계산하고 그린다.
+Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v0.23, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 증감, 비중, 달성률, 합계와 색·강조는 카드가 Vizney 차트 가이드의 규칙대로 계산하고 그린다.
 
 ## 순서
 
@@ -76,6 +76,7 @@ Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v
 - Bar - Stacked 100% (`bar-stacked-100`) — 기간별 구성비 변화를 볼 때
 - Bar - Stacked (`bar-stacked`) — 합계의 흐름과 구성을 함께 볼 때
 - Treemap - Basic (`treemap-basic`) — 항목이 많거나 묶음 안에 항목이 있을 때
+- Waffle - Basic (`waffle-basic`) — 비중을 칸 수로 세어 보일 때
 
 ### 표 · 항목마다 정확히 얼마인가?
 
@@ -93,7 +94,8 @@ Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v
 ### 흐름 · 어디서 빠지고 어디로 가나?
 
 - 기본: Funnel - Flow (`funnel-flow`) — 단계마다 얼마나 빠져나가는지 볼 때
-- Sankey - Levels (`sankey-levels`) — 여러 갈래로 나뉘는 흐름을 볼 때
+- Sankey - Basic (`sankey-basic`) — 두 구분 사이의 흐름을 볼 때
+- Sankey - Levels (`sankey-levels`) — 세 단 이상 이어지는 흐름을 볼 때
 
 ### 관계 · 두 값은 어떤 관계인가?
 
@@ -104,7 +106,7 @@ Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v
 ## 규칙
 
 - 내려받은 카드 코드를 그대로 붙여 넣고 JSON 값만 바꾼다. 스타일과 스크립트는 고치지 않는다. 같은 카드를 여러 장 쓸 때는 카드 코드를 통째로 다시 붙여 넣고 각 JSON만 바꾼다.
-- 카드는 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위(1단위 168px, --vzb-unit) 중 하나다: KPI - Number 1단위, KPI - Gauge · KPI - Paired Bar · KPI - Stacked Bar 1.5단위, 나머지 2단위. 같은 줄의 카드는 가장 높은 카드에 맞춰 늘어나고 그래픽은 바닥에 붙으므로, 빈 곳이 없게 하려면 높이가 같은 카드끼리 한 줄에 둔다.
+- 카드는 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위(1단위 168px, --vzb-unit) 중 하나다: KPI - Number 1단위, KPI - Gauge · KPI - Stacked Bar 1.5단위, 나머지 2단위. 같은 줄의 카드는 가장 높은 카드에 맞춰 늘어나고 그래픽은 바닥에 붙으므로, 빈 곳이 없게 하려면 높이가 같은 카드끼리 한 줄에 둔다.
 - 여러 장은 감싸는 요소에 격자를 준다: display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:16px. 카드 폭이 340px보다 좁으면 표, 도넛, 퍼널, 워터폴의 글자가 잘리거나 겹친다. KPI 카드만 둔 줄은 300px까지 줄여도 된다.
 - 색과 글꼴은 :root의 --vzb-* 변수(--vzb-primary, --vzb-font 등)로 바꾼다. 변수 목록은 카드 코드의 :where(:root) 블록에 있다.
 - 공통 필드: title(지표명), subtitle(기간 부제), value(KPI 카드의 대표 수치. KPI - Line과 KPI - Bar는 비우면 마지막 값), format(eok 억 단위 숫자 · krw 원 단위 숫자를 만·억·조로 줄여 적음 · count 개수, 단위는 unit · pct 퍼센트 숫자(3.4는 3.4%), 증감은 %p · days 일수), better(up · down · neutral, 증감 색), compare({ label, value }), labels(기간 이름. values와 같은 길이로 적고, 값이 없는 기간의 값은 null), series([{ name, values }]), rows(표의 줄), curve(라인 카드의 선 모양: smooth · linear · step).

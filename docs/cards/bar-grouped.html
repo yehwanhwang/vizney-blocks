@@ -15,12 +15,14 @@
 <meta property="og:url" content="https://blocks.vizney.com/cards/bar-grouped.html">
 <meta property="og:image" content="https://blocks.vizney.com/og.png">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="noindex">
 <style>body{margin:0;background:#eef0f4;font:14px/1.6 'Spoqa Han Sans Neo','Noto Sans KR',sans-serif;color:#4a4a4a}main{box-sizing:border-box;max-width:var(--w,640px);margin:0 auto;padding:40px 16px 24px}p{margin:16px 2px 0;font-size:13px}a{color:#1b1b1b}</style>
 </head>
 <body>
 <main style="--w:640px">
-<!-- Vizney Blocks v0.22 · 막대 차트 · Bar - Grouped (bar-grouped)
+<!-- Vizney Blocks v0.23 · 막대 차트 · Bar - Grouped (bar-grouped)
      https://blocks.vizney.com/cards/bar-grouped.html · © 2026 Vizney · MIT License
+     v0.23에 목록에서 내린 카드입니다. 대신 Bar - Compare(https://blocks.vizney.com/cards/bar-compare.txt)를 쓰세요. 같은 질문을 Bar - Compare가 막대 하나와 비교 눈금으로 더 또렷하게 보여줍니다.
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
 <style>
@@ -465,10 +467,11 @@
       case 'pct': return (v) => `${num(v, dec)}%`;
       case 'days': return (v) => `${num(v, dec)}일`;
       default: {
-        // 개수는 10만이 넘으면 만 단위로 줄여 적습니다(150,000 → 15만).
-        if (top < 1e5) return (v) => num(v, dec);
+        // 개수는 unit을 붙이고, 10만이 넘으면 만 단위로 줄여 적습니다(150,000건 → 15만건).
+        const u = d.unit || '';
+        if (top < 1e5) return (v) => `${num(v, dec)}${u}`;
         const dd = stepDec(step / 1e4);
-        return (v) => `${num(v / 1e4, dd)}만`;
+        return (v) => `${num(v / 1e4, dd)}만${u}`;
       }
     }
   }
@@ -736,7 +739,8 @@
 })();
 </script>
 
-<p><a href="/bar/#bar-grouped">Vizney Blocks · 막대 차트</a> · <a href="bar-grouped.txt">코드(텍스트)</a> · © 2026 Vizney · MIT License</p>
+<p>v0.23에 목록에서 내린 카드입니다. 대신 <a href="bar-compare.html">Bar - Compare</a>를 쓰세요. 같은 질문을 Bar - Compare가 막대 하나와 비교 눈금으로 더 또렷하게 보여줍니다.</p>
+<p><a href="/bar/">Vizney Blocks · 막대 차트</a> · <a href="bar-grouped.txt">코드(텍스트)</a> · © 2026 Vizney · MIT License</p>
 </main>
 </body>
 </html>

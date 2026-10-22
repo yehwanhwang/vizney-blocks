@@ -1,4 +1,4 @@
-  /* 탭 카드(Line · Bar · Donut - Tabs): 머리 아래를 똑같은 폭의 칸으로 나눠 지표 이름과 대표 수치를 두고, 고른 탭만 그립니다.
+  /* 탭 카드: 머리 아래를 똑같은 폭의 칸으로 나눠 지표 이름과 대표 수치를 두고, 고른 탭만 그립니다.
      탭마다 format이 달라도 되고, 대표 수치는 value가 없으면 마지막 값입니다. 값이 없는 탭(목록)은 이름만 적습니다.
      draw는 lineCard · barCard · basicList, make(탭)은 그 탭의 그리기 설정입니다. 탭은 좌우 화살표로도 옮깁니다. */
   function tabsCard(card, d, draw, make) {

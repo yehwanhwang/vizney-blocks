@@ -1,5 +1,6 @@
-<!-- Vizney Blocks v0.22 · 레이더 차트 · Radar - Compare (radar-compare)
+<!-- Vizney Blocks v0.23 · 레이더 차트 · Radar - Compare (radar-compare)
      https://blocks.vizney.com/cards/radar-compare.html · © 2026 Vizney · MIT License
+     v0.23에 목록에서 내린 카드입니다. 대신 Radar - Basic(https://blocks.vizney.com/cards/radar-basic.txt)를 쓰세요. 대상의 면이 겹쳐 읽기 어려우므로, 대상마다 Radar - Basic을 나란히 둡니다.
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
 <style>

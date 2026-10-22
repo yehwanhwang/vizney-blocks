@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   // window.VZB: mode('site' | 'one'), page('home' | 'cat' | 'one' | 'none'), site(공개 주소), cats([{ id, name }]),
-  // index([{ id, name, cat, catName, when, url }]), code({ 카드 id: 코드 }), example([{ id, wide }]).
+  // index([{ id, name, cat, catName, when, tags(목적 색인의 목적과 조건), url }]), code({ 카드 id: 코드 }), example([{ id, wide }]).
   const V = window.VZB || {};
   const code = V.code || {};
   const index = V.index || [];
@@ -219,18 +219,18 @@
     }
   });
 
-  // 카드 찾기: 이름 · id · 차트 이름 · 쓰임 설명에서 찾고, 이름이 맞는 카드를 먼저 둡니다.
+  // 카드 찾기: 이름 · id · 차트 이름 · 목적 색인의 목적과 조건 · 쓰임 설명에서 찾고, 이름이 맞는 카드를 먼저 둡니다.
   const q = $('#q'), pop = $('#q-pop');
   if (q && pop) {
     const kbd = $('.search kbd');
     if (kbd && !/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)) kbd.textContent = 'Ctrl K';
     const norm = (s) => String(s || '').toLowerCase().replace(/[\s\-·_]/g, '');
-    const rows = index.map((x) => ({ x, n: norm(x.name), i: norm(x.id), c: norm(x.catName), w: norm(x.when) }));
+    const rows = index.map((x) => ({ x, n: norm(x.name), i: norm(x.id), c: norm(x.catName), t: norm(x.tags), w: norm(x.when) }));
     let hits = [], sel = -1;
     const find = (s) => {
       const t = norm(s);
       if (!t) return [];
-      const rank = (r) => (r.n.startsWith(t) || r.i.startsWith(t) ? 0 : r.n.includes(t) || r.i.includes(t) ? 1 : r.c.includes(t) ? 2 : r.w.includes(t) ? 3 : 9);
+      const rank = (r) => (r.n.startsWith(t) || r.i.startsWith(t) ? 0 : r.n.includes(t) || r.i.includes(t) ? 1 : r.c.includes(t) ? 2 : r.t.includes(t) ? 3 : r.w.includes(t) ? 4 : 9);
       return rows.map((r) => [rank(r), r]).filter(([k]) => k < 9).sort((a, b) => a[0] - b[0]).slice(0, 8).map(([, r]) => r.x);
     };
     const close = () => { pop.hidden = true; q.setAttribute('aria-expanded', 'false'); q.removeAttribute('aria-activedescendant'); };

@@ -1,6 +1,7 @@
 // Builds Vizney Blocks: one self-contained snippet per card, the public site in docs/ (GitHub Pages at blocks.vizney.com:
-// home, a page per chart type, a page and a plain-text copy per card, llms.txt for AI tools), and the one-page gallery
-// in dist/ that is published as an artifact. Both embed a renamed subset of Spoqa Han Sans Neo (VZ Sans).
+// home, a page per chart type, a page and a plain-text copy per card, llms.txt for AI tools), the skill for coding agents
+// in skills/vizney-blocks/ (installed with `npx skills add yehwanhwang/vizney-blocks`), and the one-page gallery in dist/
+// that is published as an artifact. The site and the gallery embed a renamed subset of Spoqa Han Sans Neo (VZ Sans).
 import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync, rmSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -9,7 +10,7 @@ import { join, dirname } from 'node:path';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.21';
+const VERSION = 'v0.22';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = 'https://kr.vizney.com/chart-guide/';
@@ -68,6 +69,19 @@ const variants = built.flatMap((cat) => cat.variants);
 const byId = Object.fromEntries(variants.map((v) => [v.id, v]));
 const catName = Object.fromEntries(built.map((c) => [c.id, c.name]));
 const N = { cards: variants.length, cats: built.length };
+
+// Purpose index: the question a screen answers, its base card (the first pick), and the other cards with the condition
+// that calls for each. People and AI tools pick cards here first; a card outside the index is for cases it does not cover.
+const purposes = JSON.parse(r('src/variants/purposes.json'));
+for (const p of purposes) {
+  if (!p.picks.length) throw new Error(`purposes.json: ${p.name} has no cards`);
+  for (const k of p.picks) if (!byId[k.id]) throw new Error(`purposes.json: no card ${k.id} (${p.name})`);
+}
+const picked = new Set(purposes.flatMap((p) => p.picks.map((k) => k.id)));
+const unpicked = variants.filter((v) => !picked.has(v.id)).map((v) => v.id);
+// Search words for a card: the purposes it answers and their conditions.
+const tagsOf = (id) => purposes.flatMap((p) => p.picks.filter((k) => k.id === id).map((k) => `${p.name} ${p.question} ${k.when}`)).join(' ');
+const SKILL_CMD = 'npx skills add yehwanhwang/vizney-blocks';
 
 // ---------- Page parts ----------
 // Two modes share the markup: the site (a page per chart type) and the one-page gallery (every chart type on one page).
@@ -133,7 +147,22 @@ const hero = () => `<section class="wrap hero" aria-labelledby="hero-title">
 <h1 id="hero-title">분석가의 판단을 담은<br>대시보드 카드</h1>
 <p class="lede">카드를 복사해 HTML에 붙여 넣고 JSON만 바꾸세요. 증감, 비중, 달성률은 카드가 계산하고, 색과 강조는 Vizney 차트 가이드의 규칙을 따릅니다.</p>
 <div class="cta"><a class="btn is-primary is-lg" href="#cards">카드 둘러보기</a><a class="btn is-lg" ${ext(REPO)}>GitHub에서 보기</a></div>
-<p class="hint">AI에게 맡길 때는 카드 링크나 <a href="/llms.txt">llms.txt</a>를 함께 주세요.</p>
+<p class="hint">AI에게 맡길 때는 카드 링크나 <a href="/llms.txt">llms.txt</a>를 주고, 코딩 에이전트에는 <a href="#usage">스킬</a>을 설치하세요.</p>
+</section>`;
+
+// Purpose index: a box per question with its base card first, then each other card after the condition that calls for it.
+const purposeSec = (m) => `<section class="${m.one ? '' : 'wrap '}sec" id="purpose" aria-labelledby="purpose-title">
+<div class="sec-hd"><div><h2 id="purpose-title">목적으로 고르기</h2><p>보여줄 것부터 정하세요. 목적마다 기본 카드를 먼저 쓰고, 다른 카드는 조건이 맞을 때만 고릅니다.</p></div></div>
+<ol class="purposes">
+${purposes.map((p) => {
+    const [base, ...rest] = p.picks;
+    const b = byId[base.id];
+    return `<li class="purpose" id="p-${p.id}">
+<h3><b>${h(p.name)}</b><span>${h(p.question)}</span></h3>
+<a class="pick-base" href="${m.card(b)}"><span class="pick-tag">기본</span><b>${h(b.name)}</b><small>${h(base.when)}</small></a>
+${rest.length ? `<ul class="picks">\n${rest.map((k) => `<li><a href="${m.card(byId[k.id])}"><small>${h(k.when)}</small><b>${h(byId[k.id].name)}</b></a></li>`).join('\n')}\n</ul>\n` : ''}</li>`;
+  }).join('\n')}
+</ol>
 </section>`;
 
 const showcase = () => `<section class="wrap show-wrap" aria-label="카드로 만든 대시보드 예시">
@@ -146,7 +175,7 @@ ${EXAMPLE.map((x) => `<div${x.wide ? ' class="is-wide"' : ''} data-mount="${x.id
 </section>`;
 
 const tiles = () => `<section class="wrap sec" id="cards" aria-labelledby="cards-title">
-<div class="sec-hd"><div><h2 id="cards-title">차트 ${N.cats}가지, 카드 ${N.cards}종</h2><p>Vizney 차트 가이드의 차트 이름으로 묶었습니다. 차트를 고르면 그 차트의 카드가 모두 나옵니다.</p></div></div>
+<div class="sec-hd"><div><h2 id="cards-title">차트로 고르기</h2><p>차트 ${N.cats}가지, 카드 ${N.cards}종을 Vizney 차트 가이드의 차트 이름으로 묶었습니다. 차트를 고르면 그 차트의 카드가 모두 나옵니다.</p></div></div>
 <div class="tiles">
 ${built.map((c) => `<a class="tile" href="/${c.id}/"><span class="tile-art">${ART[c.id]}</span><span class="tile-name"><b>${h(c.name)}</b><em>${c.variants.length}</em>${NEW.includes(c.id) ? '<span class="new">New</span>' : ''}</span></a>`).join('\n')}
 </div>
@@ -167,10 +196,13 @@ const usage = (m) => `<section class="${m.one ? '' : 'wrap '}sec" id="usage" ari
   --vzb-primary: #0f766e;
   --vzb-font: 'Pretendard';
 }</pre></li>
-<li class="step"><span class="num" aria-hidden="true">4</span><h3>AI에게 맡기기</h3><p>카드의 <b>AI용 링크</b>를 주고 데이터를 설명하면 AI가 카드를 채웁니다.</p><pre class="snip">blocks.vizney.com/cards/
+<li class="step"><span class="num" aria-hidden="true">4</span><h3>AI에게 맡기기</h3><p>채팅 AI에는 카드의 <b>AI용 링크</b>를 주고, 코딩 에이전트에는 스킬을 설치합니다.</p><pre class="snip">blocks.vizney.com/cards/
   bar-basic.txt
 이 카드로 지점별 월 매출을
-그려줘</pre></li>
+그려줘
+
+npx skills add
+  yehwanhwang/vizney-blocks</pre></li>
 </ol>
 <details class="fields">
 <summary>공통 필드와 여러 장 배치${IC.down}</summary>
@@ -189,9 +221,11 @@ const usage = (m) => `<section class="${m.one ? '' : 'wrap '}sec" id="usage" ari
 </dl>
 <div>
 <h3>여러 장을 한 줄에</h3>
-<p>카드는 배치를 맡지 않습니다. 감싸는 요소에 격자를 주면 폭에 맞춰 줄이 바뀌고, 높이는 1 · 1.5 · 2단위(1단위 168px) 중 하나라 섞어 놓아도 맞습니다.</p>
+<p>카드는 배치를 맡지 않습니다. 감싸는 요소에 격자를 주면 폭에 맞춰 줄이 바뀝니다. 카드 폭은 340px 이상이 되게 두세요. 더 좁으면 표와 도넛의 글자가 잘립니다. 같은 줄의 카드는 가장 높은 카드에 맞춰 늘어나므로, 높이가 같은 카드끼리 한 줄에 두면 빈 곳이 없습니다.</p>
 <pre class="snip">&lt;div style="display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns:
+    repeat(auto-fit,
+      minmax(min(100%, 340px), 1fr));
   gap:16px;"&gt;
   &lt;!-- 카드 여러 장 --&gt;
 &lt;/div&gt;</pre>
@@ -273,7 +307,7 @@ const data = (m, page, ids) => `<script>window.VZB = ${esc({
   page,
   site: SITE,
   cats: built.map((c) => ({ id: c.id, name: c.name })),
-  index: variants.map((v) => ({ id: v.id, name: v.name, cat: v.cat, catName: catName[v.cat], when: plain(v.when), url: m.card(v) })),
+  index: variants.map((v) => ({ id: v.id, name: v.name, cat: v.cat, catName: catName[v.cat], when: plain(v.when), tags: tagsOf(v.id), url: m.card(v) })),
   example: page === 'home' ? EXAMPLE : [],
   code: Object.fromEntries(ids.map((id) => [id, byId[id].code])),
 })};</script>`;
@@ -324,6 +358,7 @@ pages['index.html'] = sitePage({
   body: `<main id="main">
 ${hero()}
 ${showcase()}
+${purposeSec(SITE_M)}
 ${tiles()}
 ${usage(SITE_M)}
 </main>`,
@@ -375,6 +410,7 @@ ${header(ONE_M, false)}
 ${sidebar(ONE_M, null)}
 <main class="main" id="main">
 ${intro()}
+${purposeSec(ONE_M)}
 ${built.map((c) => catSection(c, ONE_M)).join('\n')}
 ${usage(ONE_M)}
 </main>
@@ -406,7 +442,7 @@ const one = onePage(face((w) => `url(data:font/woff;base64,${woff[w].toString('b
 mkdirSync(join(root, 'dist/snippets'), { recursive: true });
 writeFileSync(join(root, 'dist/index.html'), one);
 writeFileSync(join(root, 'dist/preview.html'), skeleton(one));
-writeFileSync(join(root, 'dist/snippets/all.html'), skeleton(`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;padding:24px;background:#f6f7fb">\n${variants.map((v) => v.code).join('\n')}</div>\n`));
+writeFileSync(join(root, 'dist/snippets/all.html'), skeleton(`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px;padding:24px;background:#f6f7fb">\n${variants.map((v) => v.code).join('\n')}</div>\n`));
 console.log(`dist/index.html: ${(one.length / 1024).toFixed(0)} KB, ${variants.length} variants in ${built.length} categories`);
 
 // ---------- docs/: the public site ----------
@@ -443,24 +479,118 @@ ${v.code}
   }
 }
 
-// llms.txt: what the cards are, how to use them, and every card with its plain-text code address.
+// How to pick and use the cards: shared by llms.txt and the skill so the two never disagree.
+const PICK = '카드는 "목적으로 고르기"에서 고른다. 화면이 답할 질문마다 기본 카드를 먼저 쓰고, 다른 카드는 조건이 정확히 맞을 때만 쓴다. 애매하면 기본 카드를 쓴다. 카드 이름은 지표가 아니라 모양이므로, 지표 이름은 JSON의 title로 바꾼다.';
+const PICK_NOTE = '화면이 답할 질문마다 기본 카드를 먼저 쓰고, 다른 카드는 조건이 정확히 맞을 때만 쓴다. 애매하면 기본 카드를 쓴다. 여기 없는 카드는 이 조건들로 풀리지 않을 때만 쓴다.';
+// Card heights by unit, from TIER: "KPI - Number 1단위, … 1.5단위, 나머지 2단위".
+const HEIGHTS = (() => {
+  const by = {};
+  for (const v of variants) (by[TIER[v.id] || 2] = by[TIER[v.id] || 2] || []).push(v.name);
+  return `${by[1].join(' · ')} 1단위, ${by[1.5].join(' · ')} 1.5단위, 나머지 2단위`;
+})();
+// The grid for several cards. Below 340px the tables, donut, funnel and waterfall clip or overlap their labels
+// (measured on every card with the real font); KPI cards alone hold from 300px.
+const GRID = 'display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:16px';
+const RULES = (from) => [
+  `${from} 카드 코드를 그대로 붙여 넣고 JSON 값만 바꾼다. 스타일과 스크립트는 고치지 않는다. 같은 카드를 여러 장 쓸 때는 카드 코드를 통째로 다시 붙여 넣고 각 JSON만 바꾼다.`,
+  `카드는 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위(1단위 168px, --vzb-unit) 중 하나다: ${HEIGHTS}. 같은 줄의 카드는 가장 높은 카드에 맞춰 늘어나고 그래픽은 바닥에 붙으므로, 빈 곳이 없게 하려면 높이가 같은 카드끼리 한 줄에 둔다.`,
+  `여러 장은 감싸는 요소에 격자를 준다: ${GRID}. 카드 폭이 340px보다 좁으면 표, 도넛, 퍼널, 워터폴의 글자가 잘리거나 겹친다. KPI 카드만 둔 줄은 300px까지 줄여도 된다.`,
+  '색과 글꼴은 :root의 --vzb-* 변수(--vzb-primary, --vzb-font 등)로 바꾼다. 변수 목록은 카드 코드의 :where(:root) 블록에 있다.',
+  '공통 필드: title(지표명), subtitle(기간 부제), value(KPI 카드의 대표 수치. KPI - Line과 KPI - Bar는 비우면 마지막 값), format(eok 억 단위 숫자 · krw 원 단위 숫자를 만·억·조로 줄여 적음 · count 개수, 단위는 unit · pct 퍼센트 숫자(3.4는 3.4%), 증감은 %p · days 일수), better(up · down · neutral, 증감 색), compare({ label, value }), labels(기간 이름. values와 같은 길이로 적고, 값이 없는 기간의 값은 null), series([{ name, values }]), rows(표의 줄), curve(라인 카드의 선 모양: smooth · linear · step).',
+  '증감, 비중, 달성률, 합계는 카드가 계산하므로 JSON에 적지 않는다. 순위·비중 카드는 큰 순서 정렬과 "기타" 묶기도 직접 하므로 데이터를 미리 정렬하거나 묶지 않는다.',
+];
+
+// llms.txt: what the cards are, how to use them, the purpose index, and every card with its plain-text code address.
+const txt = (id) => `${SITE}/cards/${id}.txt`;
 let llms = `# Vizney Blocks
 
 > 복사해 붙여 쓰는 HTML 대시보드 카드 ${variants.length}종(${VERSION}). 카드 하나는 <style>, 데이터 JSON, <script>를 한데 묶은 HTML 조각이며, <body> 안에 붙여 넣으면 그려진다. 데이터는 카드 안 <script type="application/json">의 값만 바꾼다. ${NOTICE}.
 
 쓰는 법:
-- 아래 링크(.txt)의 카드 코드를 그대로 붙여 넣고 JSON 값만 바꾼다. 스타일과 스크립트는 고치지 않는다. 같은 카드를 여러 장 쓸 때는 카드 코드를 통째로 다시 붙여 넣고 각 JSON만 바꾼다.
-- 카드는 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위(1단위 168px, --vzb-unit) 중 하나다. 여러 장은 감싸는 요소에 격자를 준다: display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:16px
-- 색과 글꼴은 :root의 --vzb-* 변수(--vzb-primary, --vzb-font 등)로 바꾼다.
-- 공통 필드: title(지표명), subtitle(기간 부제), format(eok 억 단위 · krw 원 단위 · count 개수와 unit · pct 비율 · days 일수), better(up · down · neutral, 증감 색), compare({ label, value }), labels(기간 이름), series([{ name, values }]), rows(표의 줄).
-- 증감, 비중, 달성률, 합계는 카드가 계산하므로 JSON에 적지 않는다.
+- ${PICK}
+${RULES('아래 링크(.txt)의').map((x) => `- ${x}`).join('\n')}
+- 코딩 에이전트에는 스킬로 설치한다: ${SKILL_CMD}
 - 갤러리: ${SITE}/ · 소스: ${REPO}
+
+## 목적으로 고르기
+
+${PICK_NOTE}
+
+${purposes.map((p) => `- ${p.name} · ${p.question}\n${p.picks.map((k, i) => `  - ${i ? '' : '기본 '}[${byId[k.id].name}](${txt(k.id)}): ${k.when}`).join('\n')}`).join('\n')}
 `;
 for (const c of built) {
   llms += `\n## ${c.name}\n\n${SITE}/${c.id}/ · ${plain(c.intro)}\n\n`;
-  for (const v of c.variants) llms += `- [${v.name}](${SITE}/cards/${v.id}.txt): ${plain(v.when)} 규칙: ${v.rules.map(plain).join(' ')}\n`;
+  for (const v of c.variants) llms += `- [${v.name}](${txt(v.id)}): ${plain(v.when)} 규칙: ${v.rules.map(plain).join(' ')}\n`;
 }
 writeFileSync(join(docs, 'llms.txt'), llms);
+
+// Skill for coding agents (Agent Skills format, skills/<name>/SKILL.md), installed with `npx skills add yehwanhwang/vizney-blocks`.
+// It carries the purpose index and the rules, and sends the agent to the plain-text card code instead of rewriting it.
+const SKILL_DESC = 'Vizney Blocks(blocks.vizney.com)의 HTML 대시보드 카드로 대시보드 화면을 만든다. 한 파일짜리 HTML 대시보드, KPI 카드, 차트나 표가 든 보고 화면을 만들거나 고칠 때, 사용자가 Vizney Blocks를 언급할 때 쓴다. 화면이 답할 질문마다 목적 색인에서 카드를 고르고, 카드 코드는 그대로 둔 채 JSON 데이터만 바꾼다.';
+const skill = `---
+name: vizney-blocks
+description: ${JSON.stringify(SKILL_DESC)}
+---
+
+# Vizney Blocks로 대시보드 만들기
+
+Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(${VERSION}, MIT License). 카드 하나는 \`<style>\`, 데이터 JSON, \`<script>\`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 증감, 비중, 달성률, 합계와 색·강조는 카드가 Vizney 차트 가이드의 규칙대로 계산하고 그린다.
+
+## 순서
+
+1. 화면이 답할 질문을 적는다. 카드 한 장은 질문 하나에 답한다.
+2. 질문마다 아래 "목적으로 고르기"에서 카드를 고른다. 기본 카드를 먼저 쓰고, 다른 카드는 조건이 정확히 맞을 때만 쓴다. 애매하면 기본 카드를 쓴다. 카드 이름은 지표가 아니라 모양이므로, 지표 이름은 JSON의 \`title\`로 바꾼다.
+3. 카드 코드를 내려받는다. \`${SITE}/cards/<카드 id>.txt\`가 카드 코드 원문이다. 코드를 다시 쓰거나 줄이지 말고 받은 그대로 쓴다. 내려받을 수 없으면 사용자에게 그 주소의 내용을 붙여 달라고 한다.
+
+   \`\`\`bash
+   curl -fsSL ${SITE}/cards/kpi-line.txt -o kpi-line.html
+   \`\`\`
+
+4. 카드 안 \`<script type="application/json">\`과 \`</script>\` 사이의 JSON 값만 바꾼다. 필드는 카드 코드에 든 예시 JSON이 기준이다. 예시에 없는 필드는 ${SITE}/llms.txt 의 그 카드 줄에 이름이 나온 것만 더한다(예: \`sort\`, \`max\`, \`focus\`). 그 줄에는 카드가 그리는 규칙도 있다.
+5. 카드를 격자 요소 안에 차례로 붙여 한 HTML 문서로 만든다.
+
+   \`\`\`html
+   <!doctype html>
+   <html lang="ko">
+   <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>영업 현황</title></head>
+   <body style="margin:0; padding:24px; background:#f4f5f7;">
+   <h1 style="margin:0 0 16px; font:700 22px/1.4 var(--vzb-font);">영업 현황</h1>
+   <div style="${GRID};">
+   <!-- 카드 코드를 여기에 차례로 붙인다 -->
+   </div>
+   </body>
+   </html>
+   \`\`\`
+
+6. 브라우저에서 열어 아래 "확인"을 거친다.
+
+## 목적으로 고르기
+
+${PICK_NOTE}
+
+${purposes.map((p) => `### ${p.name} · ${p.question}\n\n${p.picks.map((k, i) => `- ${i ? '' : '기본: '}${byId[k.id].name} (\`${k.id}\`) — ${k.when}`).join('\n')}`).join('\n\n')}
+
+## 규칙
+
+${RULES('내려받은').map((x) => `- ${x}`).join('\n')}
+- 낮을수록 좋은 지표(반품률, 비용, 불량률)는 \`"better": "down"\`으로 둔다. 증가가 빨간 배지가 된다.
+- 비율 지표는 \`"format": "pct"\`로 둔다. 증감이 %p로 적힌다.
+- 월별 추이는 데이터가 있으면 13개월을 넣는다. 처음과 마지막이 같은 달이라 전년 동월과 견줄 수 있다.
+- 이번 달처럼 진행 중인 기간은 지난 기간의 같은 날짜까지와 견주고(전월 동기), \`compare.label\`과 \`subtitle\`에 그 기준을 적는다.
+- 기간 이름은 \`25.09\`, \`3Q26\`처럼 짧게 적는다. 길면 축과 막대 아래에서 잘리거나 서로 붙는다.
+- 같은 지표가 여러 카드에 나오면 기간과 합계가 서로 맞는지 본다. 맞지 않으면 값을 고치지 말고 사용자에게 묻는다.
+- 카드는 HTML 문서에 그대로 붙이는 조각이다. innerHTML이나 React의 dangerouslySetInnerHTML로 넣으면 카드의 \`<script>\`가 실행되지 않는다.
+
+## 확인
+
+- 브라우저 콘솔에 오류가 없고, 카드 안에 오류 문구(\`.vzb-error\`)가 없다.
+- 카드는 넘치는 글자를 오류 없이 말줄임(…)으로 자르므로, 폭 1280px과 390px에서 화면을 캡처해 잘리거나 겹친 글자가 없는지 본다. 캡처할 수 없으면 카드 안에서 \`scrollWidth\`가 \`clientWidth\`보다 큰 요소가 없는지 확인한다.
+- 같은 줄에 놓인 카드의 높이가 맞고, 늘어난 카드에 큰 빈 곳이 없다.
+
+갤러리: ${SITE}/ · 소스: ${REPO}
+`;
+mkdirSync(join(root, 'skills/vizney-blocks'), { recursive: true });
+writeFileSync(join(root, 'skills/vizney-blocks/SKILL.md'), skill);
 
 // Domain, Jekyll off, icon, font license, share image, sitemap.
 writeFileSync(join(docs, 'CNAME'), 'blocks.vizney.com\n');
@@ -476,3 +606,4 @@ ${['/', ...built.map((c) => `/${c.id}/`)].map((p) => `<url><loc>${SITE}${p}</loc
 writeFileSync(join(docs, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
 const kb = (p) => `${(readFileSync(join(docs, p)).length / 1024).toFixed(0)} KB`;
 console.log(`docs/: home ${kb('index.html')}, ${built.length} chart pages (bar ${kb('bar/index.html')}), ${variants.length} card pages and .txt files, llms.txt ${kb('llms.txt')}, fonts ${W.map((w) => `${(woff[w].length / 1024).toFixed(0)}`).join('/')} KB`);
+console.log(`skills/vizney-blocks/SKILL.md: ${(skill.length / 1024).toFixed(0)} KB · purpose index: ${purposes.length} purposes, ${picked.size} cards; not in the index: ${unpicked.join(', ') || 'none'}`);

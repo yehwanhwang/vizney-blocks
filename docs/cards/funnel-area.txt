@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.23 · 퍼널 차트 · Funnel - Area (funnel-area)
+<!-- Vizney Blocks v0.24 · 퍼널 차트 · Funnel - Area (funnel-area)
      https://blocks.vizney.com/cards/funnel-area.html · © 2026 Vizney · MIT License
      v0.23에 목록에서 내린 카드입니다. 대신 Funnel - Flow(https://blocks.vizney.com/cards/funnel-flow.txt)를 쓰세요. 같은 질문에 표현만 다른 카드라 Funnel - Flow 하나로 정리했습니다.
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->

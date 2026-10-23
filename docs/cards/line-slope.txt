@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.23 · 라인 차트 · Line - Slope (line-slope)
+<!-- Vizney Blocks v0.24 · 라인 차트 · Line - Slope (line-slope)
      https://blocks.vizney.com/cards/line-slope.html · © 2026 Vizney · MIT License
      v0.23에 목록에서 내린 카드입니다. 대신 Bar - Stacked 100%(https://blocks.vizney.com/cards/bar-stacked-100.txt)를 쓰세요. 구성비 변화는 Bar - Stacked 100%가 기간 수와 상관없이 보여줍니다.
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->

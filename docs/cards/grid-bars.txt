@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.23 · 그리드 차트 · Grid - Bars (grid-bars)
+<!-- Vizney Blocks v0.24 · 그리드 차트 · Grid - Bars (grid-bars)
      https://blocks.vizney.com/cards/grid-bars.html · © 2026 Vizney · MIT License
      v0.23에 목록에서 내린 카드입니다. 대신 Bar - Compare(https://blocks.vizney.com/cards/bar-compare.txt)를 쓰세요. 크기와 증감은 Bar - Compare로, 정확한 숫자는 Grid - Basic으로 봅니다.
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->

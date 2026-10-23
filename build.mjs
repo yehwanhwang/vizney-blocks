@@ -10,7 +10,7 @@ import { join, dirname } from 'node:path';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.23';
+const VERSION = 'v0.24';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = 'https://kr.vizney.com/chart-guide/';
@@ -439,7 +439,7 @@ const chars = new Set([...Object.values(pages), onePage(''), siteJs].join('').re
 for (const c of '0123456789.,+-−–%()[]/:·×…→←↑↓↗ ') chars.add(c);
 for (let c = 0x20; c < 0x7f; c++) chars.add(String.fromCharCode(c));
 writeFileSync(join(root, 'build/chars.txt'), [...chars].filter((c) => c >= ' ').join(''));
-if (!FONT_DIR) throw new Error('Set SPOQA_DIR to the folder holding SpoqaHanSansNeo-{Regular,Medium,Bold}.ttf');
+if (!FONT_DIR) throw new Error('Set SPOQA_DIR to Original/SpoqaHanSansNeo of github.com/spoqa/spoqa-han-sans (SpoqaHanSansNeo-{Regular,Medium,Bold}.ttf)');
 console.log(execFileSync('python3', ['-I', join(root, 'tools/font.py'), FONT_DIR, join(root, 'build/chars.txt'), join(root, 'build')]).toString().trim());
 const W = [400, 500, 700];
 const woff = Object.fromEntries(W.map((w) => [w, readFileSync(join(root, `build/vz-sans-${w}.woff`))]));

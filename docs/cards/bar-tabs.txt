@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.23 · 막대 차트 · Bar - Tabs (bar-tabs)
+<!-- Vizney Blocks v0.24 · 막대 차트 · Bar - Tabs (bar-tabs)
      https://blocks.vizney.com/cards/bar-tabs.html · © 2026 Vizney · MIT License
      v0.23에 목록에서 내린 카드입니다. 대신 Line - Tabs(https://blocks.vizney.com/cards/line-tabs.txt)를 쓰세요. 같은 탭 구조인 Line - Tabs가 비율 지표까지 담습니다.
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->

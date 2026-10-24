@@ -9,3 +9,4 @@
 .vzb-m2 { --vzb-c: var(--vzb-secondary-mid); }
 .vzb-m3 { --vzb-c: var(--vzb-tertiary-mid); }
 .vzb-mx { --vzb-c: var(--vzb-other-mid); }
+@media (prefers-reduced-motion: reduce) { .vzb-tm-tile { transition: none; } }

@@ -1,5 +1,7 @@
-  // Heatmap - Basic: 행 × 열 칸을 값의 크기에 따라 주황 한 가지의 농도로 칠합니다. 칸에는 숫자를 적지 않아 색의 패턴이 먼저 보이고,
-  // 값은 표 위 범례의 양 끝 값과 칸의 툴팁으로 읽습니다(화면 낭독기는 칸마다 숫자를 읽습니다). "scale": "row"면 행마다 따로 칠합니다.
+  // Heatmap - Basic: 행 × 열 칸을 값의 크기에 따라 주황 한 가지의 농도로 칠합니다. 값이 0을 사이에 두고 갈리면(이익률 · 증감률)
+  // 0을 경계로 좋은 쪽은 초록, 나쁜 쪽은 빨강으로 칠합니다(KPI 배지와 같은 색, better로 뒤집음). 두 쪽은 절댓값이 큰 쪽에 맞춘 같은 눈금입니다.
+  // 열이 넉넉하면(칸 폭 48px 이상) 칸에 숫자를 적고, 좁으면 적지 않아 색의 패턴이 먼저 보이게 합니다. 값은 범례와 툴팁으로도 읽고,
+  // 화면 낭독기는 칸마다 숫자를 읽습니다. "scale": "row"면 행마다 따로 칠합니다. 데이터 열은 같은 폭입니다.
   // 처음에는 적은 순서대로 두고, 열 제목을 누르면 그 열로 정렬합니다. 행 이름 열을 누르면 다시 처음 순서(숫자 순)가 됩니다.
   mount('heatmap-basic', (card, d, f) => {
     const heads = d.columns || [], rows = d.rows || [], byRow = d.scale === 'row';
@@ -8,9 +10,24 @@
       return got.length ? [Math.min(...got), Math.max(...got)] : null;
     };
     const all = range(rows.flatMap((r) => r.values || []));
+    // 칸 숫자의 소수 자릿수는 표 전체에서 맞춥니다(19.8 옆에 20이 아니라 20.0).
+    const dec = d.decimals != null ? d.decimals : rows.flatMap((r) => r.values || []).filter(ok).every((v) => Number.isInteger(+v)) ? 0 : 1;
     const mix = (v, [lo, hi]) => 8 + (hi > lo ? (v - lo) / (hi - lo) : 0.5) * 72;   // 주황을 8–80% 섞습니다. 값이 모두 같으면 가운데 농도입니다
-    const ramp = all && el('div', 'vzb-tb-ramp');
-    if (ramp) ramp.append(el('span', null, byRow ? '행마다 작음' : show(f, all[0])), el('i'), el('span', null, byRow ? '큼' : show(f, all[1])));
+    // 0을 사이에 둔 값: 0에서 멀수록 진하게(16–80%), 두 쪽 모두 절댓값이 큰 쪽에 맞춥니다. 작은 적자도 색이 갈려 보입니다.
+    const signed = !byRow && all && all[0] < 0 && all[1] > 0;
+    const far = signed ? Math.max(-all[0], all[1]) : 0, good = d.better === 'down' ? -1 : 1;
+    const deep = (v) => (v ? 16 + (Math.abs(v) / far) * 64 : 0);
+    const side = (v) => (Math.sign(v) === good ? 'good' : 'bad');
+    const ramp = all && el('div', `vzb-tb-ramp${signed ? ' is-signed' : ''}`);
+    if (ramp) {
+      const bar = el('i');
+      if (signed) {
+        // 범례도 같은 눈금: 왼쪽 끝은 가장 작은 값의 색, 0에서 색이 바뀌고, 오른쪽 끝은 가장 큰 값의 색입니다.
+        const z = ((-all[0] / (all[1] - all[0])) * 100).toFixed(1), c = (t, m) => `color-mix(in srgb, var(--vzb-${t}) ${m.toFixed(0)}%, var(--vzb-card))`;
+        bar.style.background = `linear-gradient(90deg, ${c(side(-1), deep(all[0]))} 0%, ${c(side(-1), 16)} ${z}%, ${c(side(1), 16)} ${z}%, ${c(side(1), deep(all[1]))} 100%)`;
+      }
+      ramp.append(el('span', null, byRow ? '행마다 작음' : show(f, all[0])), bar, el('span', null, byRow ? '큼' : show(f, all[1])));
+    }
     const { table } = tableCard(card, d, f, {
       rows,
       top: ramp,
@@ -19,8 +36,16 @@
         key: `c${j}`, label, value: (r) => (r.values || [])[j],
         cell: (r) => {
           const v = (r.values || [])[j], s = el('span', `vzb-tb-heat${ok(v) ? '' : ' is-none'}`);
-          s.append(el('span', 'vzb-sr', cellNum(v, {})));
-          if (ok(v)) s.style.setProperty('--vzb-heat', `${mix(+v, byRow ? range(r.values) : all).toFixed(0)}%`);
+          s.append(el('span', 'vzb-sr', cellNum(v, { decimals: dec })));
+          const n = el('span', 'vzb-tb-heat-n', cellNum(v, { decimals: dec }));
+          n.setAttribute('aria-hidden', 'true');
+          s.append(n);
+          if (ok(v) && signed) {
+            const m = deep(+v);
+            if (+v) s.classList.add(`is-${side(+v)}`);
+            if (m > 50) s.classList.add('is-deep');
+            s.style.setProperty('--vzb-heat', `${m.toFixed(0)}%`);
+          } else if (ok(v)) s.style.setProperty('--vzb-heat', `${mix(+v, byRow ? range(r.values) : all).toFixed(0)}%`);
           s.dataset.label = `${r.name} · ${label}`;
           s.dataset.value = ok(v) ? show(f, +v) : '–';
           return s;
@@ -28,6 +53,12 @@
       }))),
     });
     table.classList.add('is-heat');
+    table.style.setProperty('--vzb-heat-cols', Math.max(1, heads.length));
+    // 칸이 48px 이상이면 칸에 숫자를 적습니다. 폭이 바뀌면 다시 판단합니다.
+    onSize(table, (w) => {
+      const name = table.querySelector('thead th');
+      table.classList.toggle('has-nums', heads.length > 0 && (w - (name ? name.getBoundingClientRect().width : 0)) / heads.length >= 48);
+    });
     // 칸에 마우스를 올리거나 탭하면 그 칸의 값을 툴팁으로 보여줍니다.
     table.addEventListener('pointerover', (e) => {
       const s = e.target.closest && e.target.closest('.vzb-tb-heat');

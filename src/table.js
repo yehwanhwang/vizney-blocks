@@ -4,8 +4,8 @@
   // 칸 숫자: 단위 없이 적습니다(단위는 열 제목에). pct 열은 %를 붙입니다.
   function cellNum(v, c) {
     if (v == null || !isFinite(v)) return '–';
-    const dec = c.decimals != null ? c.decimals : Number.isInteger(+v) ? 0 : 1;
-    return `${num(+v, dec).replace(/^-/, '−')}${c.pct ? '%' : ''}`;
+    const x = +v / (c.div || 1), dec = c.decimals != null ? c.decimals : Number.isInteger(x) ? 0 : 1;
+    return `${num(x, dec).replace(/^-/, '−')}${c.pct ? '%' : ''}`;
   }
   // 증감 배지: 기준(base) 대비 증감률. KPI 카드의 배지와 같습니다.
   const relF = { parts: (v) => [num(v, 1), ''], rel: true };
@@ -50,6 +50,14 @@
     const ctx = Object.assign({ f, rows }, cfg.prepare ? cfg.prepare(rows) : {});
     const val = (r, c) => (c.value ? c.value(r) : r[c.key]);
     const align = (c, j) => c.align || (j ? 'num' : 'txt');
+    // 달러(usd) 금액 열: 묶음(cfg.money, format이 usd일 때만 넘깁니다)마다 가장 큰 값으로 K · M · B 하나를 골라 칸에는 나눈 값을, 열 제목에는 $K 같은 단위를 적습니다.
+    if (cfg.money) cfg.money.forEach((keys) => {
+      const cs = cols.filter((c) => keys.includes(c.key));
+      const top = Math.max(0, ...cs.flatMap((c) => rows.map((r) => Math.abs(+val(r, c)) || 0)));
+      const [div, u] = top >= 1e9 ? [1e9, 'B'] : top >= 1e6 ? [1e6, 'M'] : top >= 1e3 ? [1e3, 'K'] : [1, ''];
+      cs.forEach((c) => Object.assign(c, { div, decimals: c.decimals != null ? c.decimals : d.decimals != null ? d.decimals : div > 1 ? 1 : 0 }, cfg.moneyHead ? {} : { unit: `$${u}` }));
+      if (cfg.moneyHead) { const h = cols.find((c) => c.key === cfg.moneyHead); if (h) h.unit = `$${u}`; }
+    });
     let sortKey = cfg.sortKey, dir = cfg.sortDir || -1;
     const hr = el('tr');
     const ths = cols.map((c, j) => {
@@ -129,4 +137,4 @@
   }
   const sumOf = (key) => (rows) => rows.reduce((a, r) => a + (+r[key] || 0), 0);
   // 값 열의 단위: unit을 적지 않으면 format의 단위(억 · 건 등)를 씁니다.
-  const unitOf = (d, f) => d.unit || f.parts(0)[1] || '';
+  const unitOf = (d, f) => d.unit || (f.usd ? '' : f.parts(0)[1]) || '';

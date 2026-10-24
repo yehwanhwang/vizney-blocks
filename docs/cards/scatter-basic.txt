@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.26 · 스캐터 차트 · Scatter - Basic (scatter-basic)
+<!-- Vizney Blocks v0.27 · 스캐터 차트 · Scatter - Basic (scatter-basic)
      https://blocks.vizney.com/cards/scatter-basic.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -232,12 +232,19 @@
     if (a >= 1e4) return [num(v / 1e4, 0), '만'];
     return [num(v, 0), '원'];
   }
-  // format: eok(억 단위 값) · krw(원 단위 값) · count(unit으로 단위) · pct(증감을 %p로) · days
+  // 달러 금액: 원래 값을 받아 K · M · B로 줄이고 소수 한 자리로 맞춥니다($745.6K). 접미사는 단위처럼 작게 씁니다.
+  function usd(v, d) {
+    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    const [div, u] = a >= 1e9 ? [1e9, 'B'] : a >= 1e6 ? [1e6, 'M'] : a >= 1e3 ? [1e3, 'K'] : [1, ''];
+    return [`${s}$${num(a / div, d != null ? d : div > 1 ? 1 : 0)}`, u];
+  }
+  // format: eok(억 단위 값) · krw(원 단위 값) · usd(달러 값) · count(unit으로 단위) · pct(증감을 %p로) · days
   function format(d) {
     const dec = (v, fallback) => (d.decimals != null ? d.decimals : fallback);
     switch (d.format) {
       case 'eok': return { parts: (v) => [num(v, dec(v, Number.isInteger(v) || Math.abs(v) >= 100 ? 0 : 1)), '억'], rel: true };
       case 'krw': return { parts: krw, rel: true };
+      case 'usd': return { parts: (v) => usd(v, d.decimals), rel: true, usd: true };
       case 'pct': return { parts: (v) => [num(v, dec(v, 1)), '%'], rel: false };
       case 'days': return { parts: (v) => [num(v, dec(v, 1)), '일'], rel: true };
       default: return { parts: (v) => [num(v, dec(v, Number.isInteger(v) ? 0 : 1)), d.unit || ''], rel: true };
@@ -479,6 +486,12 @@
         const dd = Math.max(0, -Math.floor(Math.log10(step / div) + 1e-9));
         return (v) => `${num(v / div, dd)}${u}`;
       }
+      case 'usd': {
+        // 달러는 가장 큰 눈금에 맞춘 한 단위(B · M · K)로 통일합니다($150K).
+        const [div, u] = top >= 1e9 ? [1e9, 'B'] : top >= 1e6 ? [1e6, 'M'] : top >= 1e3 ? [1e3, 'K'] : [1, ''];
+        const dd = Math.max(0, -Math.floor(Math.log10(step / div) + 1e-9));
+        return (v) => `${v < 0 ? '-' : ''}$${num(Math.abs(v) / div, dd)}${u}`;
+      }
       case 'pct': return (v) => `${num(v, dec)}%`;
       case 'days': return (v) => `${num(v, dec)}일`;
       default: {
@@ -574,8 +587,8 @@
         const dec = stepDec(t.step), ticks = [];
         for (let k = 0; k < t.n; k++) ticks.push(+(t.lo + k * t.step).toFixed(dec));
         const tt = tickText(S.fmt, dec, t.step, Math.max(...ticks.map(Math.abs)));
-        // 단위(억 · % · 만 등)는 맨 위 눈금에만 붙이고, 나머지 눈금은 숫자만 적습니다.
-        const tickLabel = ticks.map((v, k) => (k === ticks.length - 1 ? tt(v) : tt(v).replace(/[^\d.,−]+$/, '')));
+        // 단위(억 · % · 만 · $ 등)는 맨 위 눈금에만 붙이고, 나머지 눈금은 숫자만 적습니다.
+        const tickLabel = ticks.map((v, k) => (k === ticks.length - 1 ? tt(v) : tt(v).replace(/[^\d.,−]+$/, '').replace(/^(−?)\$/, '$1')));
         const gut = Math.ceil(Math.max(...tickLabel.map((s) => textW(s, 400, fam)))) + 10;
         const x0 = gut + 4, right = w - Math.max(endW ? endW + 14 : 0, S.band ? 4 : labW / 2 + 1, 8);
         const step = S.band ? (right - x0) / Math.max(1, n) : (right - x0) / Math.max(1, n - 1);
@@ -671,7 +684,10 @@
   function scatterCard(card, d, f, cfg) {
     const ax = d.x || {}, ay = d.y || {}, fx = format(ax), fy = format(ay);
     const pts = (d.points || []).filter((p) => p && fin(p.x) && fin(p.y)).map((p) => Object.assign({}, p, { x: +p.x, y: +p.y }));
-    const unitOfAxis = (a, fa) => fa.parts(0)[1] || '';
+    // 달러(usd) 축은 가장 큰 값으로 K · M · B 하나를 골라 눈금은 나눈 값으로, 축 이름에는 $K 같은 단위를 적습니다.
+    const scaleOf = (fa, vals) => { const top = Math.max(0, ...vals.map(Math.abs)); return !fa.usd ? [1, ''] : top >= 1e9 ? [1e9, '$B'] : top >= 1e6 ? [1e6, '$M'] : top >= 1e3 ? [1e3, '$K'] : [1, '$']; };
+    const sx = scaleOf(fx, pts.map((p) => p.x)), sy = scaleOf(fy, pts.map((p) => p.y));
+    const unitOfAxis = (a, fa) => (fa.usd ? (a === ax ? sx : sy)[1] : fa.parts(0)[1]) || '';
     const nameOf = (a, fa, fallback) => `${a.label || fallback}${unitOfAxis(a, fa) ? `(${unitOfAxis(a, fa)})` : ''}`;
     // 묶음(group)이 있으면 점 수가 많은 세 묶음만 주황 · 분홍빨강 · 파랑으로, 나머지는 회색으로 칠합니다(같은 수면 먼저 나온 묶음이 앞).
     const groups = [];
@@ -726,7 +742,7 @@
       const dec = stepDec(best.step);
       return { list: Array.from({ length: best.cnt }, (_, k) => +((best.a + k) * best.step).toFixed(dec)), dec };
     };
-    const tickTxt = (v, dec) => num(v, dec).replace(/^-/, '−');
+    const tickTxt = (v, dec, sc) => num(v / sc[0], Math.max(0, dec - Math.round(Math.log10(sc[0])))).replace(/^-/, '−');
     function draw(w, h) {
       lastW = w; lastH = h;
       svg.setAttribute('width', w);
@@ -741,7 +757,7 @@
       // 위에는 세로축 이름, 아래에는 가로 눈금과 가로축 이름이 한 줄씩 들어갑니다.
       const top = 26, bottom = h - 40;
       const yt = ticksOf(yl, yh, Math.max(3, Math.min(4, Math.floor((bottom - top) / 40) + 1)));
-      const gut = Math.ceil(Math.max(...yt.list.map((v) => textW(tickTxt(v, yt.dec), 400, fam)))) + 10;
+      const gut = Math.ceil(Math.max(...yt.list.map((v) => textW(tickTxt(v, yt.dec, sy), 400, fam)))) + 10;
       const right = w - 8;
       const xt = ticksOf(xl, xh, Math.max(3, Math.min(5, Math.floor((right - gut) / 64) + 1)));
       svg.append(svgText(0, 12, `↑ ${nameOf(ay, fy, '세로값')}`, 'vzb-sc-name'), svgText(right, h - 3, `${nameOf(ax, fx, '가로값')} →`, 'vzb-sc-name', 'end'));
@@ -751,17 +767,20 @@
       svg.append(svgEl('rect', { x: gut + 0.5, y: top + 0.5, width: Math.max(0, right - gut - 1), height: Math.max(0, bottom - top - 1), class: 'vzb-sc-frame' }));
       yt.list.forEach((v) => {
         const y = Math.round(Y(v)) + 0.5;
-        svg.append(svgEl('line', { x1: gut, x2: right, y1: y, y2: y, class: v === 0 ? 'vzb-ax-zero' : 'vzb-ax-grid' }), svgText(gut - 8, y + 4, tickTxt(v, yt.dec), 'vzb-ax-label', 'end'));
+        svg.append(svgEl('line', { x1: gut, x2: right, y1: y, y2: y, class: v === 0 ? 'vzb-ax-zero' : 'vzb-ax-grid' }), svgText(gut - 8, y + 4, tickTxt(v, yt.dec, sy), 'vzb-ax-label', 'end'));
       });
       xt.list.forEach((v) => {
         const x = Math.round(X(v)) + 0.5;
-        svg.append(svgEl('line', { x1: x, x2: x, y1: top, y2: bottom, class: v === 0 ? 'vzb-ax-zero' : 'vzb-ax-grid' }), svgText(x, bottom + 18, tickTxt(v, xt.dec), 'vzb-ax-label', 'middle'));
+        svg.append(svgEl('line', { x1: x, x2: x, y1: top, y2: bottom, class: v === 0 ? 'vzb-ax-zero' : 'vzb-ax-grid' }), svgText(x, bottom + 18, tickTxt(v, xt.dec, sx), 'vzb-ax-label', 'middle'));
       });
+      // 이미 적은 글자의 자리(기준선 이름 · 구역 이름 · 점 이름). 점 이름은 이 자리와 겹치지 않는 곳을 찾습니다.
+      const taken = [];
+      const boxAt = (tx, ty, txt, anchor) => { const w = textW(txt, 500, fam), l = anchor === 'end' ? tx - w : anchor === 'middle' ? tx - w / 2 : tx; return [l - 2, ty - 11, l + w + 2, ty + 3]; };
       // 기준선(평균 등)과 사분면 이름
       if (fin(ref.x)) {
         const x = Math.round(X(ref.x)) + 0.5;
         svg.append(svgEl('line', { x1: x, x2: x, y1: top, y2: bottom, class: 'vzb-sc-ref' }));
-        if (ref.xText) svg.append(svgText(x + 6, top + 12, ref.xText, 'vzb-ax-note'));
+        if (ref.xText) { svg.append(svgText(x + 6, top + 12, ref.xText, 'vzb-ax-note')); taken.push(boxAt(x + 6, top + 12, ref.xText, 'start')); }
       }
       if (fin(ref.y)) {
         const y = Math.round(Y(ref.y)) + 0.5;
@@ -769,7 +788,7 @@
       }
       if (cfg.quadrants) {
         const q = cfg.quadrants, at = [[gut + 8, top + 30, 'start'], [right - 8, top + 30, 'end'], [gut + 8, bottom - 10, 'start'], [right - 8, bottom - 10, 'end']];
-        q.forEach((name, k) => { if (name) svg.append(svgText(at[k][0], at[k][1], name, 'vzb-sc-quad', at[k][2])); });
+        q.forEach((name, k) => { if (name) { svg.append(svgText(at[k][0], at[k][1], name, 'vzb-sc-quad', at[k][2])); taken.push(boxAt(at[k][0], at[k][1], name, at[k][2])); } });
       }
       // 이어 그리기: 묶음이 있으면 구간마다 도착점의 묶음 색으로, 없으면 주황 한 가지로 잇습니다.
       if (cfg.path && groups.length) {
@@ -785,11 +804,16 @@
         svg.append(dot);
         dots[i] = dot;
       });
-      // 이름은 고른 점에만 적습니다. 오른쪽 끝에 가까우면 점 왼쪽에 적습니다.
+      // 이름은 고른 점에만 적습니다. 점 오른쪽 · 왼쪽 · 위 · 아래 순서로, 그래프 안이면서 구역 이름이나 먼저 적은 이름과 겹치지 않는 자리에 둡니다.
+      const hit = (b) => taken.some((o) => b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]);
+      const inside = (b) => b[0] >= gut && b[2] <= right && b[1] >= top - 6 && b[3] <= bottom + 6;
       pts.forEach((p, i) => {
         if (!(cfg.label ? cfg.label(p, i) : p.label)) return;
-        const x = X(p.x), y = Y(p.y), txt = String(p.name || ''), left = x + 9 + textW(txt, 500, fam) > right;
-        svg.append(svgText(left ? x - 9 : x + 9, y + 4, txt, 'vzb-ax-note', left ? 'end' : 'start'));
+        const x = X(p.x), y = Y(p.y), txt = String(p.name || '');
+        const spots = [[x + 9, y + 4, 'start'], [x - 9, y + 4, 'end'], [x, y - 10, 'middle'], [x, y + 18, 'middle']];
+        const pick = spots.find((sp) => { const b = boxAt(sp[0], sp[1], txt, sp[2]); return inside(b) && !hit(b); }) || spots.find((sp) => inside(boxAt(sp[0], sp[1], txt, sp[2]))) || spots[0];
+        taken.push(boxAt(pick[0], pick[1], txt, pick[2]));
+        svg.append(svgText(pick[0], pick[1], txt, 'vzb-ax-note', pick[2]));
       });
       front = svgEl('g', {});
       svg.append(front);

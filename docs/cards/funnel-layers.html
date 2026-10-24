@@ -20,7 +20,7 @@
 </head>
 <body>
 <main style="--w:640px">
-<!-- Vizney Blocks v0.26 · 퍼널 차트 · Funnel - Layers (funnel-layers)
+<!-- Vizney Blocks v0.27 · 퍼널 차트 · Funnel - Layers (funnel-layers)
      https://blocks.vizney.com/cards/funnel-layers.html · © 2026 Vizney · MIT License
      v0.23에 목록에서 내린 카드입니다. 대신 Funnel - Flow(https://blocks.vizney.com/cards/funnel-flow.txt)를 쓰세요. 뒤 단계의 띠가 가늘어 구분끼리 견주기 어렵습니다. 구분별 전환율은 Bar - Ranking이나 Grid - Basic으로 봅니다.
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
@@ -248,12 +248,19 @@
     if (a >= 1e4) return [num(v / 1e4, 0), '만'];
     return [num(v, 0), '원'];
   }
-  // format: eok(억 단위 값) · krw(원 단위 값) · count(unit으로 단위) · pct(증감을 %p로) · days
+  // 달러 금액: 원래 값을 받아 K · M · B로 줄이고 소수 한 자리로 맞춥니다($745.6K). 접미사는 단위처럼 작게 씁니다.
+  function usd(v, d) {
+    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    const [div, u] = a >= 1e9 ? [1e9, 'B'] : a >= 1e6 ? [1e6, 'M'] : a >= 1e3 ? [1e3, 'K'] : [1, ''];
+    return [`${s}$${num(a / div, d != null ? d : div > 1 ? 1 : 0)}`, u];
+  }
+  // format: eok(억 단위 값) · krw(원 단위 값) · usd(달러 값) · count(unit으로 단위) · pct(증감을 %p로) · days
   function format(d) {
     const dec = (v, fallback) => (d.decimals != null ? d.decimals : fallback);
     switch (d.format) {
       case 'eok': return { parts: (v) => [num(v, dec(v, Number.isInteger(v) || Math.abs(v) >= 100 ? 0 : 1)), '억'], rel: true };
       case 'krw': return { parts: krw, rel: true };
+      case 'usd': return { parts: (v) => usd(v, d.decimals), rel: true, usd: true };
       case 'pct': return { parts: (v) => [num(v, dec(v, 1)), '%'], rel: false };
       case 'days': return { parts: (v) => [num(v, dec(v, 1)), '일'], rel: true };
       default: return { parts: (v) => [num(v, dec(v, Number.isInteger(v) ? 0 : 1)), d.unit || ''], rel: true };

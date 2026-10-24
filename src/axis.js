@@ -37,6 +37,12 @@
         const dd = Math.max(0, -Math.floor(Math.log10(step / div) + 1e-9));
         return (v) => `${num(v / div, dd)}${u}`;
       }
+      case 'usd': {
+        // 달러는 가장 큰 눈금에 맞춘 한 단위(B · M · K)로 통일합니다($150K).
+        const [div, u] = top >= 1e9 ? [1e9, 'B'] : top >= 1e6 ? [1e6, 'M'] : top >= 1e3 ? [1e3, 'K'] : [1, ''];
+        const dd = Math.max(0, -Math.floor(Math.log10(step / div) + 1e-9));
+        return (v) => `${v < 0 ? '-' : ''}$${num(Math.abs(v) / div, dd)}${u}`;
+      }
       case 'pct': return (v) => `${num(v, dec)}%`;
       case 'days': return (v) => `${num(v, dec)}일`;
       default: {
@@ -132,8 +138,8 @@
         const dec = stepDec(t.step), ticks = [];
         for (let k = 0; k < t.n; k++) ticks.push(+(t.lo + k * t.step).toFixed(dec));
         const tt = tickText(S.fmt, dec, t.step, Math.max(...ticks.map(Math.abs)));
-        // 단위(억 · % · 만 등)는 맨 위 눈금에만 붙이고, 나머지 눈금은 숫자만 적습니다.
-        const tickLabel = ticks.map((v, k) => (k === ticks.length - 1 ? tt(v) : tt(v).replace(/[^\d.,−]+$/, '')));
+        // 단위(억 · % · 만 · $ 등)는 맨 위 눈금에만 붙이고, 나머지 눈금은 숫자만 적습니다.
+        const tickLabel = ticks.map((v, k) => (k === ticks.length - 1 ? tt(v) : tt(v).replace(/[^\d.,−]+$/, '').replace(/^(−?)\$/, '$1')));
         const gut = Math.ceil(Math.max(...tickLabel.map((s) => textW(s, 400, fam)))) + 10;
         const x0 = gut + 4, right = w - Math.max(endW ? endW + 14 : 0, S.band ? 4 : labW / 2 + 1, 8);
         const step = S.band ? (right - x0) / Math.max(1, n) : (right - x0) / Math.max(1, n - 1);

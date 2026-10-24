@@ -17,5 +17,6 @@
       sortable: true,
       sortKey: d.sortKey || (columns[1] && columns[1].key),
       sortDir: -1,
+      money: columns.filter((c) => c.format === 'usd').map((c) => [c.key]),   // "format": "usd" 열은 원래 달러 값을 넣으면 열마다 $K · $M으로 줄입니다
     });
   });

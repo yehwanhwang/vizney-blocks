@@ -11,7 +11,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.25';
+const VERSION = 'v0.26';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = 'https://kr.vizney.com/chart-guide/';
@@ -207,7 +207,7 @@ const usage = (m) => `<section class="${m.one ? '' : 'wrap '}sec" id="usage" ari
 "format": "eok",
 "labels": ["1Q26", "2Q26", "3Q26"],
 "values": [2561, 2654, 2750]</pre></li>
-<li class="step"><span class="num" aria-hidden="true">3</span><h3>변수로 맞추기</h3><p>색과 글꼴은 :root의 변수로 바꿉니다. 모든 카드에 한 번에 적용됩니다.</p><pre class="snip">:root {
+<li class="step"><span class="num" aria-hidden="true">3</span><h3>변수로 맞추기</h3><p>색과 글꼴은 :root의 변수로 바꿉니다. 모든 카드에 한 번에 적용됩니다. 변수 목록은 <a href="${m.file('tokens.css')}">tokens.css</a>에 있습니다.</p><pre class="snip">:root {
   --vzb-primary: #0f766e;
   --vzb-font: 'Pretendard';
 }</pre></li>
@@ -512,7 +512,7 @@ const RULES = (from) => [
   `${from} 카드 코드를 그대로 붙여 넣고 JSON 값만 바꾼다. 스타일과 스크립트는 고치지 않는다. 같은 카드를 여러 장 쓸 때는 카드 코드를 통째로 다시 붙여 넣고 각 JSON만 바꾼다.`,
   `카드는 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위(1단위 168px, --vzb-unit) 중 하나다: ${HEIGHTS}. 같은 줄의 카드는 가장 높은 카드에 맞춰 늘어나고 그래픽은 바닥에 붙으므로, 빈 곳이 없게 하려면 높이가 같은 카드끼리 한 줄에 둔다.`,
   `여러 장은 감싸는 요소에 격자를 준다: ${GRID}. 카드 폭이 340px보다 좁으면 표, 도넛, 퍼널, 워터폴의 글자가 잘리거나 겹친다. KPI 카드만 둔 줄은 300px까지 줄여도 된다.`,
-  '색과 글꼴은 :root의 --vzb-* 변수(--vzb-primary, --vzb-font 등)로 바꾼다. 변수 목록은 카드 코드의 :where(:root) 블록에 있다.',
+  `색과 글꼴은 :root의 --vzb-* 변수(--vzb-primary, --vzb-font 등)로 바꾼다. 변수 목록과 쓰임은 ${SITE}/tokens.css 에 있다(카드 코드의 :where(:root) 블록과 같은 내용). 페이지 전체를 맞출 때는 그 파일의 값을 :root에 다시 적는다.`,
   '공통 필드: title(지표명), subtitle(기간 부제), value(KPI 카드의 대표 수치. KPI - Line과 KPI - Bar는 비우면 마지막 값), format(eok 억 단위 숫자 · krw 원 단위 숫자를 만·억·조로 줄여 적음 · count 개수, 단위는 unit · pct 퍼센트 숫자(3.4는 3.4%), 증감은 %p · days 일수), better(up · down · neutral, 증감 색), compare({ label, value }), labels(기간 이름. values와 같은 길이로 적고, 값이 없는 기간의 값은 null), series([{ name, values }]), rows(표의 줄), curve(라인 카드의 선 모양: smooth · linear · step).',
   '증감, 비중, 달성률, 합계는 카드가 계산하므로 JSON에 적지 않는다. 순위·비중 카드는 큰 순서 정렬과 "기타" 묶기도 직접 하므로 데이터를 미리 정렬하거나 묶지 않는다.',
 ];
@@ -540,6 +540,8 @@ for (const c of built) {
   for (const v of c.variants) llms += `- [${v.name}](${txt(v.id)}): ${plain(v.when)} 규칙: ${v.rules.map(plain).join(' ')}\n`;
 }
 writeFileSync(join(docs, 'llms.txt'), llms);
+// tokens.css at a stable address: the variable list with what each one does, for people and AI tools to re-declare in :root.
+writeFileSync(join(docs, 'tokens.css'), `/* Vizney Blocks ${VERSION} · ${NOTICE} · 카드 코드 안의 :where(:root) 블록과 같은 내용 */\n${tokens}\n`);
 
 // Skill for coding agents (Agent Skills format, skills/<name>/SKILL.md), installed with `npx skills add yehwanhwang/vizney-blocks`.
 // It carries the purpose index and the rules, and sends the agent to the plain-text card code instead of rewriting it.

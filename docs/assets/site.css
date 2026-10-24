@@ -1,6 +1,6 @@
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/vz-sans-400.woff?v=e4bc724d0d) format('woff');}
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/vz-sans-500.woff?v=e4bc724d0d) format('woff');}
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/vz-sans-700.woff?v=e4bc724d0d) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/vz-sans-400.woff?v=7807de9894) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/vz-sans-500.woff?v=7807de9894) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/vz-sans-700.woff?v=7807de9894) format('woff');}
 /* Vizney Blocks site: white page, UI in ink and grays only, color lives in the cards and chart tiles.
    One 1280px column (40px gutters, 16px on phones). Home: hero, live dashboard showcase, purpose index, chart tiles, usage.
    Category pages: sticky sidebar of chart types beside the cards; on phones the sidebar becomes a scrolling row. */

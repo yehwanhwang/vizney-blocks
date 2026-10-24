@@ -36,6 +36,8 @@ Claude Code, Cursor, Codex 같은 코딩 에이전트에는 스킬로 설치할 
 npx skills add yehwanhwang/vizney-blocks
 ```
 
+[OpenDesign](https://open-design.ai)에서는 같은 폴더를 플러그인으로 설치합니다. 앱의 **Plugins → Add → Skill → Import from link**에 `https://github.com/yehwanhwang/vizney-blocks/tree/main/skills/vizney-blocks`를 넣거나, 터미널에서 `od plugin install github:yehwanhwang/vizney-blocks/skills/vizney-blocks`를 실행합니다.
+
 ## 카드 목록
 
 - **[KPI 카드](https://blocks.vizney.com/kpi/)**: [KPI - Number](https://blocks.vizney.com/cards/kpi-number.html), [KPI - Line](https://blocks.vizney.com/cards/kpi-line.html), [KPI - Bar](https://blocks.vizney.com/cards/kpi-bar.html), [KPI - Gauge](https://blocks.vizney.com/cards/kpi-gauge.html), [KPI - Stacked Bar](https://blocks.vizney.com/cards/kpi-stacked-bar.html)
@@ -86,7 +88,7 @@ SPOQA_DIR=/path/to/spoqa-han-sans/Original/SpoqaHanSansNeo node build.mjs
 - `page/`: 사이트 화면(`site.css`, `site.js`)과 차트 그림(`tiles.json`). 사이트(`docs/`)와 한 페이지 갤러리(`dist/index.html`)가 함께 씁니다.
 - `tools/`: 부분 글꼴 만들기, 글꼴 라이선스, 공유 이미지
 - `docs/`: 빌드 결과. 첫 화면, 차트 페이지(`/bar/` 등), 카드 페이지와 코드(`/cards/`), `llms.txt`가 들어 있고, GitHub Pages가 이 폴더를 blocks.vizney.com로 내보냅니다.
-- `skills/vizney-blocks/SKILL.md`: 빌드 결과. 코딩 에이전트용 스킬로, `purposes.json`과 쓰는 규칙에서 만들어집니다. `docs/`처럼 직접 고치지 않습니다.
+- `skills/vizney-blocks/`: 빌드 결과. 코딩 에이전트용 스킬(`SKILL.md`)로, `purposes.json`과 쓰는 규칙에서 만들어집니다. 같은 폴더의 `open-design.json`, `icon.svg`, `preview/index.html`은 OpenDesign 플러그인 카드용입니다. `docs/`처럼 직접 고치지 않습니다.
 
 ## 라이선스
 

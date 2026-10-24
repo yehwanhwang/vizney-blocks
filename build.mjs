@@ -446,7 +446,9 @@ for (const c of '0123456789.,+-−–%()[]/:·×…→←↑↓↗ ') chars.add(
 for (let c = 0x20; c < 0x7f; c++) chars.add(String.fromCharCode(c));
 writeFileSync(join(root, 'build/chars.txt'), [...chars].filter((c) => c >= ' ').join(''));
 if (!FONT_DIR) throw new Error('Set SPOQA_DIR to Original/SpoqaHanSansNeo of github.com/spoqa/spoqa-han-sans (SpoqaHanSansNeo-{Regular,Medium,Bold}.ttf)');
-console.log(execFileSync('python3', ['-I', join(root, 'tools/font.py'), FONT_DIR, join(root, 'build/chars.txt'), join(root, 'build')]).toString().trim());
+// SOURCE_DATE_EPOCH pins the font's modified timestamp so a rebuild with the same characters gives byte-identical woff files
+// (and so docs/ does not change when the cards did not).
+console.log(execFileSync('python3', ['-I', join(root, 'tools/font.py'), FONT_DIR, join(root, 'build/chars.txt'), join(root, 'build')], { env: { ...process.env, SOURCE_DATE_EPOCH: '0' } }).toString().trim());
 const W = [400, 500, 700];
 const woff = Object.fromEntries(W.map((w) => [w, readFileSync(join(root, `build/vz-sans-${w}.woff`))]));
 const face = (src) => W.map((w) => `@font-face{font-family:'VZ Sans';font-style:normal;font-weight:${w};font-display:swap;src:${src(w)} format('woff');}`).join('\n');
@@ -614,10 +616,57 @@ ${RULES('내려받은').map((x) => `- ${x}`).join('\n')}
 mkdirSync(join(root, 'skills/vizney-blocks'), { recursive: true });
 writeFileSync(join(root, 'skills/vizney-blocks/SKILL.md'), skill);
 
+// The same folder is an OpenDesign plugin (open-design.ai): open-design.json beside SKILL.md names the skill and the output
+// surface, icon.svg is the card icon, and preview/index.html is a real output (the home-page example dashboard). Installed in
+// OpenDesign with `od plugin install github:yehwanhwang/vizney-blocks/skills/vizney-blocks`; the community marketplace index
+// (nexu-io/open-design, plugins/registry/community) points at this folder, so the manifest version follows VERSION.
+const ICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect x="2" y="2" width="13" height="13" rx="3" fill="#1b1b1b"/><rect x="17" y="2" width="13" height="13" rx="3" fill="#ff9500"/><rect x="2" y="17" width="13" height="13" rx="3" fill="#ffcc00"/><rect x="17" y="17" width="13" height="13" rx="3" fill="#ff2d55"/></svg>\n';
+const PLUGIN_DESC = `Copy-paste HTML dashboard cards (${variants.length} cards, ${built.length} chart types) built on the Vizney chart guide: pick a card by the question the screen answers, keep the card code, change only its JSON.`;
+const manifest = {
+  $schema: 'https://open-design.ai/schemas/plugin.v1.json',
+  specVersion: '1.0.0',
+  name: 'vizney-blocks',
+  title: 'Vizney Blocks',
+  version: `${VERSION.slice(1)}.0`,
+  description: PLUGIN_DESC,
+  description_i18n: { ko: `복사해 붙여 쓰는 HTML 대시보드 카드 ${variants.length}종(차트 ${built.length}가지). Vizney 차트 가이드의 판단을 담았고, 화면이 답할 질문으로 카드를 골라 코드는 그대로 두고 JSON만 바꾼다.` },
+  license: 'MIT',
+  author: { name: 'Yehwan Hwang · Vizney', url: SITE },
+  homepage: SITE,
+  icon: './icon.svg',
+  plugin: { repo: `${REPO}/tree/main/skills/vizney-blocks` },
+  tags: ['create', 'dashboard', 'kpi', 'chart', 'data-visualization', 'html', 'cards', 'korean'],
+  compat: { agentSkills: [{ path: './SKILL.md' }] },
+  od: {
+    kind: 'skill',
+    taskKind: 'new-generation',
+    mode: 'prototype',
+    scenario: 'operation',
+    preview: { type: 'html', entry: './preview/index.html', motion: 'static' },
+    useCase: {
+      query: {
+        en: 'Build a single-page HTML dashboard with Vizney Blocks cards. Pick one card per question the screen answers from the purpose index, keep each card\'s code and change only its JSON data.',
+        ko: 'Vizney Blocks 카드로 한 페이지 HTML 대시보드를 만든다. 화면이 답할 질문마다 목적 색인에서 카드를 하나 고르고, 카드 코드는 그대로 둔 채 JSON 데이터만 바꾼다.',
+        'zh-CN': '用 Vizney Blocks 卡片构建单页 HTML 仪表盘。按画面要回答的问题从目的索引中各选一张卡片，保留卡片代码，只修改其 JSON 数据。',
+      },
+    },
+    context: { skills: [{ path: './SKILL.md' }] },
+    capabilities: ['prompt:inject'],
+  },
+};
+writeFileSync(join(root, 'skills/vizney-blocks/open-design.json'), `${JSON.stringify(manifest, null, 2)}\n`);
+writeFileSync(join(root, 'skills/vizney-blocks/icon.svg'), ICON);
+mkdirSync(join(root, 'skills/vizney-blocks/preview'), { recursive: true });
+writeFileSync(join(root, 'skills/vizney-blocks/preview/index.html'), skeleton(`<style>body{background:#f4f5f7}.vzb-show{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px;padding:24px;background:#f4f5f7}@media (min-width:720px){.vzb-show .is-wide{grid-column:span 2}}</style>
+<div class="vzb-show">
+${EXAMPLE.map((x) => (x.wide ? `<div class="is-wide">\n${byId[x.id].code}</div>` : byId[x.id].code)).join('\n')}
+</div>
+`));
+
 // Domain, Jekyll off, icon, font license, share image, sitemap.
 writeFileSync(join(docs, 'CNAME'), 'blocks.vizney.com\n');
 writeFileSync(join(docs, '.nojekyll'), '');
-writeFileSync(join(docs, 'favicon.svg'), '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect x="2" y="2" width="13" height="13" rx="3" fill="#1b1b1b"/><rect x="17" y="2" width="13" height="13" rx="3" fill="#ff9500"/><rect x="2" y="17" width="13" height="13" rx="3" fill="#ffcc00"/><rect x="17" y="17" width="13" height="13" rx="3" fill="#ff2d55"/></svg>\n');
+writeFileSync(join(docs, 'favicon.svg'), ICON);
 copyFileSync(join(root, 'tools/OFL.txt'), join(docs, 'OFL.txt'));
 if (existsSync(join(root, 'tools/og.png'))) copyFileSync(join(root, 'tools/og.png'), join(docs, 'og.png'));
 writeFileSync(join(docs, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>

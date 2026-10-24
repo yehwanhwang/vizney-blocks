@@ -19,7 +19,7 @@
 </head>
 <body>
 <main style="--w:640px">
-<!-- Vizney Blocks v0.26 · 그리드 차트 · Grid - Pivot (grid-pivot)
+<!-- Vizney Blocks v0.27 · 그리드 차트 · Grid - Pivot (grid-pivot)
      https://blocks.vizney.com/cards/grid-pivot.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -142,7 +142,13 @@
 .vzb-tb-table.is-heat tbody th { padding-top: 0; padding-bottom: 0; padding-right: 12px; }
 .vzb-tb-table.is-heat th:first-child { width: 1%; }   /* 행 이름 열은 이름 폭만 쓰고 남는 폭은 칸에 줍니다 */
 .vzb-tb-table.is-heat tbody tr:hover > * { background: none; box-shadow: none; }
+.vzb-tb-table.is-heat thead th:not(:first-child) { width: calc(99% / var(--vzb-heat-cols, 7)); }   /* 데이터 열은 같은 폭 */
 .vzb-tb-heat { display: block; height: 26px; border-radius: 4px; background: color-mix(in srgb, var(--vzb-primary) var(--vzb-heat, 0%), var(--vzb-card)); }
+.vzb-tb-heat.is-good { background: color-mix(in srgb, var(--vzb-good) var(--vzb-heat, 0%), var(--vzb-card)); }   /* 0을 사이에 둔 값: 좋은 쪽 */
+.vzb-tb-heat.is-bad { background: color-mix(in srgb, var(--vzb-bad) var(--vzb-heat, 0%), var(--vzb-card)); }     /* 나쁜 쪽 */
+.vzb-tb-heat-n { display: none; }
+.vzb-tb-table.has-nums .vzb-tb-heat-n { display: block; font-size: 12px; line-height: 26px; text-align: center; color: var(--vzb-ink); }
+.vzb-tb-heat.is-deep .vzb-tb-heat-n { color: #ffffff; }   /* 진한 초록 · 빨강 위의 숫자는 흰색 */
 .vzb-tb-heat.is-none { background: var(--vzb-track); }
 .vzb-tb-heat:hover { box-shadow: inset 0 0 0 2px var(--vzb-ink); }
 .vzb-tb-ramp { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 12px; line-height: 16px; color: var(--vzb-muted); }
@@ -218,12 +224,19 @@
     if (a >= 1e4) return [num(v / 1e4, 0), '만'];
     return [num(v, 0), '원'];
   }
-  // format: eok(억 단위 값) · krw(원 단위 값) · count(unit으로 단위) · pct(증감을 %p로) · days
+  // 달러 금액: 원래 값을 받아 K · M · B로 줄이고 소수 한 자리로 맞춥니다($745.6K). 접미사는 단위처럼 작게 씁니다.
+  function usd(v, d) {
+    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    const [div, u] = a >= 1e9 ? [1e9, 'B'] : a >= 1e6 ? [1e6, 'M'] : a >= 1e3 ? [1e3, 'K'] : [1, ''];
+    return [`${s}$${num(a / div, d != null ? d : div > 1 ? 1 : 0)}`, u];
+  }
+  // format: eok(억 단위 값) · krw(원 단위 값) · usd(달러 값) · count(unit으로 단위) · pct(증감을 %p로) · days
   function format(d) {
     const dec = (v, fallback) => (d.decimals != null ? d.decimals : fallback);
     switch (d.format) {
       case 'eok': return { parts: (v) => [num(v, dec(v, Number.isInteger(v) || Math.abs(v) >= 100 ? 0 : 1)), '억'], rel: true };
       case 'krw': return { parts: krw, rel: true };
+      case 'usd': return { parts: (v) => usd(v, d.decimals), rel: true, usd: true };
       case 'pct': return { parts: (v) => [num(v, dec(v, 1)), '%'], rel: false };
       case 'days': return { parts: (v) => [num(v, dec(v, 1)), '일'], rel: true };
       default: return { parts: (v) => [num(v, dec(v, Number.isInteger(v) ? 0 : 1)), d.unit || ''], rel: true };
@@ -317,8 +330,8 @@
   // 칸 숫자: 단위 없이 적습니다(단위는 열 제목에). pct 열은 %를 붙입니다.
   function cellNum(v, c) {
     if (v == null || !isFinite(v)) return '–';
-    const dec = c.decimals != null ? c.decimals : Number.isInteger(+v) ? 0 : 1;
-    return `${num(+v, dec).replace(/^-/, '−')}${c.pct ? '%' : ''}`;
+    const x = +v / (c.div || 1), dec = c.decimals != null ? c.decimals : Number.isInteger(x) ? 0 : 1;
+    return `${num(x, dec).replace(/^-/, '−')}${c.pct ? '%' : ''}`;
   }
   // 증감 배지: 기준(base) 대비 증감률. KPI 카드의 배지와 같습니다.
   const relF = { parts: (v) => [num(v, 1), ''], rel: true };
@@ -363,6 +376,14 @@
     const ctx = Object.assign({ f, rows }, cfg.prepare ? cfg.prepare(rows) : {});
     const val = (r, c) => (c.value ? c.value(r) : r[c.key]);
     const align = (c, j) => c.align || (j ? 'num' : 'txt');
+    // 달러(usd) 금액 열: 묶음(cfg.money, format이 usd일 때만 넘깁니다)마다 가장 큰 값으로 K · M · B 하나를 골라 칸에는 나눈 값을, 열 제목에는 $K 같은 단위를 적습니다.
+    if (cfg.money) cfg.money.forEach((keys) => {
+      const cs = cols.filter((c) => keys.includes(c.key));
+      const top = Math.max(0, ...cs.flatMap((c) => rows.map((r) => Math.abs(+val(r, c)) || 0)));
+      const [div, u] = top >= 1e9 ? [1e9, 'B'] : top >= 1e6 ? [1e6, 'M'] : top >= 1e3 ? [1e3, 'K'] : [1, ''];
+      cs.forEach((c) => Object.assign(c, { div, decimals: c.decimals != null ? c.decimals : d.decimals != null ? d.decimals : div > 1 ? 1 : 0 }, cfg.moneyHead ? {} : { unit: `$${u}` }));
+      if (cfg.moneyHead) { const h = cols.find((c) => c.key === cfg.moneyHead); if (h) h.unit = `$${u}`; }
+    });
     let sortKey = cfg.sortKey, dir = cfg.sortDir || -1;
     const hr = el('tr');
     const ths = cols.map((c, j) => {
@@ -442,7 +463,7 @@
   }
   const sumOf = (key) => (rows) => rows.reduce((a, r) => a + (+r[key] || 0), 0);
   // 값 열의 단위: unit을 적지 않으면 format의 단위(억 · 건 등)를 씁니다.
-  const unitOf = (d, f) => d.unit || f.parts(0)[1] || '';
+  const unitOf = (d, f) => d.unit || (f.usd ? '' : f.parts(0)[1]) || '';
 
   // Grid - Pivot: 행 × 열 교차표에 행 합계(오른쪽 끝 열)와 열 합계(맨 아래 줄)를 둡니다. 열이 네 개를 넘으면 큰 세 열만 두고
   // 나머지는 기타 열로 묶습니다. 칸에 마우스를 올리면 같은 행과 열을 함께 칠합니다.
@@ -467,6 +488,8 @@
       sortable: true,
       sortKey: 'total',
       sortDir: -1,
+      money: f.usd ? [names.map((_, k) => `c${k}`).concat('total')] : null,
+      moneyHead: 'name',
       columns: [{ key: 'name', label: d.nameLabel || '' }]
         .concat(names.map((n, k) => ({ key: `c${k}`, label: n, total: sumOf(`c${k}`) })))
         .concat([{ key: 'total', label: '합계', head: 'vzb-tb-sum', total: sumOf('total') }]),

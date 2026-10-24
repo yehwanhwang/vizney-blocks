@@ -45,7 +45,13 @@
 .vzb-tb-table.is-heat tbody th { padding-top: 0; padding-bottom: 0; padding-right: 12px; }
 .vzb-tb-table.is-heat th:first-child { width: 1%; }   /* 행 이름 열은 이름 폭만 쓰고 남는 폭은 칸에 줍니다 */
 .vzb-tb-table.is-heat tbody tr:hover > * { background: none; box-shadow: none; }
+.vzb-tb-table.is-heat thead th:not(:first-child) { width: calc(99% / var(--vzb-heat-cols, 7)); }   /* 데이터 열은 같은 폭 */
 .vzb-tb-heat { display: block; height: 26px; border-radius: 4px; background: color-mix(in srgb, var(--vzb-primary) var(--vzb-heat, 0%), var(--vzb-card)); }
+.vzb-tb-heat.is-good { background: color-mix(in srgb, var(--vzb-good) var(--vzb-heat, 0%), var(--vzb-card)); }   /* 0을 사이에 둔 값: 좋은 쪽 */
+.vzb-tb-heat.is-bad { background: color-mix(in srgb, var(--vzb-bad) var(--vzb-heat, 0%), var(--vzb-card)); }     /* 나쁜 쪽 */
+.vzb-tb-heat-n { display: none; }
+.vzb-tb-table.has-nums .vzb-tb-heat-n { display: block; font-size: 12px; line-height: 26px; text-align: center; color: var(--vzb-ink); }
+.vzb-tb-heat.is-deep .vzb-tb-heat-n { color: #ffffff; }   /* 진한 초록 · 빨강 위의 숫자는 흰색 */
 .vzb-tb-heat.is-none { background: var(--vzb-track); }
 .vzb-tb-heat:hover { box-shadow: inset 0 0 0 2px var(--vzb-ink); }
 .vzb-tb-ramp { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 12px; line-height: 16px; color: var(--vzb-muted); }

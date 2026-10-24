@@ -21,6 +21,8 @@
       sortable: true,
       sortKey: 'total',
       sortDir: -1,
+      money: f.usd ? [names.map((_, k) => `c${k}`).concat('total')] : null,
+      moneyHead: 'name',
       columns: [{ key: 'name', label: d.nameLabel || '' }]
         .concat(names.map((n, k) => ({ key: `c${k}`, label: n, total: sumOf(`c${k}`) })))
         .concat([{ key: 'total', label: '합계', head: 'vzb-tb-sum', total: sumOf('total') }]),

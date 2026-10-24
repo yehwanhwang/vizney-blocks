@@ -12,6 +12,7 @@
       sortable: true,
       sortKey: 'last',
       sortDir: -1,
+      money: f.usd ? [['last']] : null,
       columns: [
         { key: 'name', label: d.nameLabel || '이름' },
         { key: 'spark', label: L.length ? `${L[0]}–${L[L.length - 1]}` : '흐름', sort: false, cell: (r) => sparkEl(r.values), total: () => sparkEl(sum().values) },

@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.26 · 히트맵 차트 · Heatmap - Basic (heatmap-basic)
+<!-- Vizney Blocks v0.27 · 히트맵 차트 · Heatmap - Basic (heatmap-basic)
      https://blocks.vizney.com/cards/heatmap-basic.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -174,7 +174,13 @@
 .vzb-tb-table.is-heat tbody th { padding-top: 0; padding-bottom: 0; padding-right: 12px; }
 .vzb-tb-table.is-heat th:first-child { width: 1%; }   /* 행 이름 열은 이름 폭만 쓰고 남는 폭은 칸에 줍니다 */
 .vzb-tb-table.is-heat tbody tr:hover > * { background: none; box-shadow: none; }
+.vzb-tb-table.is-heat thead th:not(:first-child) { width: calc(99% / var(--vzb-heat-cols, 7)); }   /* 데이터 열은 같은 폭 */
 .vzb-tb-heat { display: block; height: 26px; border-radius: 4px; background: color-mix(in srgb, var(--vzb-primary) var(--vzb-heat, 0%), var(--vzb-card)); }
+.vzb-tb-heat.is-good { background: color-mix(in srgb, var(--vzb-good) var(--vzb-heat, 0%), var(--vzb-card)); }   /* 0을 사이에 둔 값: 좋은 쪽 */
+.vzb-tb-heat.is-bad { background: color-mix(in srgb, var(--vzb-bad) var(--vzb-heat, 0%), var(--vzb-card)); }     /* 나쁜 쪽 */
+.vzb-tb-heat-n { display: none; }
+.vzb-tb-table.has-nums .vzb-tb-heat-n { display: block; font-size: 12px; line-height: 26px; text-align: center; color: var(--vzb-ink); }
+.vzb-tb-heat.is-deep .vzb-tb-heat-n { color: #ffffff; }   /* 진한 초록 · 빨강 위의 숫자는 흰색 */
 .vzb-tb-heat.is-none { background: var(--vzb-track); }
 .vzb-tb-heat:hover { box-shadow: inset 0 0 0 2px var(--vzb-ink); }
 .vzb-tb-ramp { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 12px; line-height: 16px; color: var(--vzb-muted); }
@@ -259,12 +265,19 @@
     if (a >= 1e4) return [num(v / 1e4, 0), '만'];
     return [num(v, 0), '원'];
   }
-  // format: eok(억 단위 값) · krw(원 단위 값) · count(unit으로 단위) · pct(증감을 %p로) · days
+  // 달러 금액: 원래 값을 받아 K · M · B로 줄이고 소수 한 자리로 맞춥니다($745.6K). 접미사는 단위처럼 작게 씁니다.
+  function usd(v, d) {
+    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    const [div, u] = a >= 1e9 ? [1e9, 'B'] : a >= 1e6 ? [1e6, 'M'] : a >= 1e3 ? [1e3, 'K'] : [1, ''];
+    return [`${s}$${num(a / div, d != null ? d : div > 1 ? 1 : 0)}`, u];
+  }
+  // format: eok(억 단위 값) · krw(원 단위 값) · usd(달러 값) · count(unit으로 단위) · pct(증감을 %p로) · days
   function format(d) {
     const dec = (v, fallback) => (d.decimals != null ? d.decimals : fallback);
     switch (d.format) {
       case 'eok': return { parts: (v) => [num(v, dec(v, Number.isInteger(v) || Math.abs(v) >= 100 ? 0 : 1)), '억'], rel: true };
       case 'krw': return { parts: krw, rel: true };
+      case 'usd': return { parts: (v) => usd(v, d.decimals), rel: true, usd: true };
       case 'pct': return { parts: (v) => [num(v, dec(v, 1)), '%'], rel: false };
       case 'days': return { parts: (v) => [num(v, dec(v, 1)), '일'], rel: true };
       default: return { parts: (v) => [num(v, dec(v, Number.isInteger(v) ? 0 : 1)), d.unit || ''], rel: true };
@@ -473,8 +486,8 @@
   // 칸 숫자: 단위 없이 적습니다(단위는 열 제목에). pct 열은 %를 붙입니다.
   function cellNum(v, c) {
     if (v == null || !isFinite(v)) return '–';
-    const dec = c.decimals != null ? c.decimals : Number.isInteger(+v) ? 0 : 1;
-    return `${num(+v, dec).replace(/^-/, '−')}${c.pct ? '%' : ''}`;
+    const x = +v / (c.div || 1), dec = c.decimals != null ? c.decimals : Number.isInteger(x) ? 0 : 1;
+    return `${num(x, dec).replace(/^-/, '−')}${c.pct ? '%' : ''}`;
   }
   // 증감 배지: 기준(base) 대비 증감률. KPI 카드의 배지와 같습니다.
   const relF = { parts: (v) => [num(v, 1), ''], rel: true };
@@ -519,6 +532,14 @@
     const ctx = Object.assign({ f, rows }, cfg.prepare ? cfg.prepare(rows) : {});
     const val = (r, c) => (c.value ? c.value(r) : r[c.key]);
     const align = (c, j) => c.align || (j ? 'num' : 'txt');
+    // 달러(usd) 금액 열: 묶음(cfg.money, format이 usd일 때만 넘깁니다)마다 가장 큰 값으로 K · M · B 하나를 골라 칸에는 나눈 값을, 열 제목에는 $K 같은 단위를 적습니다.
+    if (cfg.money) cfg.money.forEach((keys) => {
+      const cs = cols.filter((c) => keys.includes(c.key));
+      const top = Math.max(0, ...cs.flatMap((c) => rows.map((r) => Math.abs(+val(r, c)) || 0)));
+      const [div, u] = top >= 1e9 ? [1e9, 'B'] : top >= 1e6 ? [1e6, 'M'] : top >= 1e3 ? [1e3, 'K'] : [1, ''];
+      cs.forEach((c) => Object.assign(c, { div, decimals: c.decimals != null ? c.decimals : d.decimals != null ? d.decimals : div > 1 ? 1 : 0 }, cfg.moneyHead ? {} : { unit: `$${u}` }));
+      if (cfg.moneyHead) { const h = cols.find((c) => c.key === cfg.moneyHead); if (h) h.unit = `$${u}`; }
+    });
     let sortKey = cfg.sortKey, dir = cfg.sortDir || -1;
     const hr = el('tr');
     const ths = cols.map((c, j) => {
@@ -598,10 +619,12 @@
   }
   const sumOf = (key) => (rows) => rows.reduce((a, r) => a + (+r[key] || 0), 0);
   // 값 열의 단위: unit을 적지 않으면 format의 단위(억 · 건 등)를 씁니다.
-  const unitOf = (d, f) => d.unit || f.parts(0)[1] || '';
+  const unitOf = (d, f) => d.unit || (f.usd ? '' : f.parts(0)[1]) || '';
 
-  // Heatmap - Basic: 행 × 열 칸을 값의 크기에 따라 주황 한 가지의 농도로 칠합니다. 칸에는 숫자를 적지 않아 색의 패턴이 먼저 보이고,
-  // 값은 표 위 범례의 양 끝 값과 칸의 툴팁으로 읽습니다(화면 낭독기는 칸마다 숫자를 읽습니다). "scale": "row"면 행마다 따로 칠합니다.
+  // Heatmap - Basic: 행 × 열 칸을 값의 크기에 따라 주황 한 가지의 농도로 칠합니다. 값이 0을 사이에 두고 갈리면(이익률 · 증감률)
+  // 0을 경계로 좋은 쪽은 초록, 나쁜 쪽은 빨강으로 칠합니다(KPI 배지와 같은 색, better로 뒤집음). 두 쪽은 절댓값이 큰 쪽에 맞춘 같은 눈금입니다.
+  // 열이 넉넉하면(칸 폭 48px 이상) 칸에 숫자를 적고, 좁으면 적지 않아 색의 패턴이 먼저 보이게 합니다. 값은 범례와 툴팁으로도 읽고,
+  // 화면 낭독기는 칸마다 숫자를 읽습니다. "scale": "row"면 행마다 따로 칠합니다. 데이터 열은 같은 폭입니다.
   // 처음에는 적은 순서대로 두고, 열 제목을 누르면 그 열로 정렬합니다. 행 이름 열을 누르면 다시 처음 순서(숫자 순)가 됩니다.
   mount('heatmap-basic', (card, d, f) => {
     const heads = d.columns || [], rows = d.rows || [], byRow = d.scale === 'row';
@@ -610,9 +633,24 @@
       return got.length ? [Math.min(...got), Math.max(...got)] : null;
     };
     const all = range(rows.flatMap((r) => r.values || []));
+    // 칸 숫자의 소수 자릿수는 표 전체에서 맞춥니다(19.8 옆에 20이 아니라 20.0).
+    const dec = d.decimals != null ? d.decimals : rows.flatMap((r) => r.values || []).filter(ok).every((v) => Number.isInteger(+v)) ? 0 : 1;
     const mix = (v, [lo, hi]) => 8 + (hi > lo ? (v - lo) / (hi - lo) : 0.5) * 72;   // 주황을 8–80% 섞습니다. 값이 모두 같으면 가운데 농도입니다
-    const ramp = all && el('div', 'vzb-tb-ramp');
-    if (ramp) ramp.append(el('span', null, byRow ? '행마다 작음' : show(f, all[0])), el('i'), el('span', null, byRow ? '큼' : show(f, all[1])));
+    // 0을 사이에 둔 값: 0에서 멀수록 진하게(16–80%), 두 쪽 모두 절댓값이 큰 쪽에 맞춥니다. 작은 적자도 색이 갈려 보입니다.
+    const signed = !byRow && all && all[0] < 0 && all[1] > 0;
+    const far = signed ? Math.max(-all[0], all[1]) : 0, good = d.better === 'down' ? -1 : 1;
+    const deep = (v) => (v ? 16 + (Math.abs(v) / far) * 64 : 0);
+    const side = (v) => (Math.sign(v) === good ? 'good' : 'bad');
+    const ramp = all && el('div', `vzb-tb-ramp${signed ? ' is-signed' : ''}`);
+    if (ramp) {
+      const bar = el('i');
+      if (signed) {
+        // 범례도 같은 눈금: 왼쪽 끝은 가장 작은 값의 색, 0에서 색이 바뀌고, 오른쪽 끝은 가장 큰 값의 색입니다.
+        const z = ((-all[0] / (all[1] - all[0])) * 100).toFixed(1), c = (t, m) => `color-mix(in srgb, var(--vzb-${t}) ${m.toFixed(0)}%, var(--vzb-card))`;
+        bar.style.background = `linear-gradient(90deg, ${c(side(-1), deep(all[0]))} 0%, ${c(side(-1), 16)} ${z}%, ${c(side(1), 16)} ${z}%, ${c(side(1), deep(all[1]))} 100%)`;
+      }
+      ramp.append(el('span', null, byRow ? '행마다 작음' : show(f, all[0])), bar, el('span', null, byRow ? '큼' : show(f, all[1])));
+    }
     const { table } = tableCard(card, d, f, {
       rows,
       top: ramp,
@@ -621,8 +659,16 @@
         key: `c${j}`, label, value: (r) => (r.values || [])[j],
         cell: (r) => {
           const v = (r.values || [])[j], s = el('span', `vzb-tb-heat${ok(v) ? '' : ' is-none'}`);
-          s.append(el('span', 'vzb-sr', cellNum(v, {})));
-          if (ok(v)) s.style.setProperty('--vzb-heat', `${mix(+v, byRow ? range(r.values) : all).toFixed(0)}%`);
+          s.append(el('span', 'vzb-sr', cellNum(v, { decimals: dec })));
+          const n = el('span', 'vzb-tb-heat-n', cellNum(v, { decimals: dec }));
+          n.setAttribute('aria-hidden', 'true');
+          s.append(n);
+          if (ok(v) && signed) {
+            const m = deep(+v);
+            if (+v) s.classList.add(`is-${side(+v)}`);
+            if (m > 50) s.classList.add('is-deep');
+            s.style.setProperty('--vzb-heat', `${m.toFixed(0)}%`);
+          } else if (ok(v)) s.style.setProperty('--vzb-heat', `${mix(+v, byRow ? range(r.values) : all).toFixed(0)}%`);
           s.dataset.label = `${r.name} · ${label}`;
           s.dataset.value = ok(v) ? show(f, +v) : '–';
           return s;
@@ -630,6 +676,12 @@
       }))),
     });
     table.classList.add('is-heat');
+    table.style.setProperty('--vzb-heat-cols', Math.max(1, heads.length));
+    // 칸이 48px 이상이면 칸에 숫자를 적습니다. 폭이 바뀌면 다시 판단합니다.
+    onSize(table, (w) => {
+      const name = table.querySelector('thead th');
+      table.classList.toggle('has-nums', heads.length > 0 && (w - (name ? name.getBoundingClientRect().width : 0)) / heads.length >= 48);
+    });
     // 칸에 마우스를 올리거나 탭하면 그 칸의 값을 툴팁으로 보여줍니다.
     table.addEventListener('pointerover', (e) => {
       const s = e.target.closest && e.target.closest('.vzb-tb-heat');

@@ -25,6 +25,7 @@
       sortable: true,
       sortKey: 'rate',
       sortDir: down ? 1 : -1,
+      money: f.usd ? [['target', 'value']] : null,
       columns: [
         { key: 'name', label: d.nameLabel || '이름' },
         { key: 'target', label: '목표', unit, total: tt },

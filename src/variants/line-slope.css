@@ -2,3 +2,4 @@
 .vzb-card[data-vzb="line-slope"] { min-height: calc(var(--vzb-unit) * 2); }
 .vzb-sl-item { transition: opacity 0.12s; }
 .vzb-sl-item.is-dim { opacity: 0.2; }
+@media (prefers-reduced-motion: reduce) { .vzb-sl-item { transition: none; } }

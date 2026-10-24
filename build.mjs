@@ -6,11 +6,12 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync, rmSyn
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { join, dirname } from 'node:path';
+import { guard } from './guard.mjs';
 
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.24';
+const VERSION = 'v0.25';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = 'https://kr.vizney.com/chart-guide/';
@@ -73,6 +74,12 @@ ${tail(v)}`;
 
 const builtAll = cats.map((cat) => ({ ...cat, variants: cat.variants.map((v) => ({ ...v, cat: cat.id, code: snippet(v, cat) })) }));
 const retired = builtAll.flatMap((c) => c.variants.filter((v) => v.retired));
+// Guard (guard.mjs): self-containment, colors only from tokens, heights, scoping, accessibility hooks, example data,
+// meta ↔ files and public addresses. `node build.mjs --check` runs only this and needs no font.
+const TIER = { 'kpi-number': 1, 'kpi-gauge': 1.5, 'kpi-paired-bar': 1.5, 'kpi-stacked-bar': 1.5 };
+const checked = guard({ root, cats, parts, partCss, partJs, tokens, tier: TIER, fontLink: FONT_LINK, snippets: Object.fromEntries(builtAll.flatMap((c) => c.variants.map((v) => [v.id, v.code]))) });
+console.log(`guard: ${checked} cards pass`);
+if (process.argv.includes('--check')) process.exit(0);
 const built = builtAll.map((c) => ({ ...c, variants: c.variants.filter((v) => !v.retired) })).filter((c) => c.variants.length);
 const variants = built.flatMap((cat) => cat.variants);
 const byId = Object.fromEntries(variants.map((v) => [v.id, v]));
@@ -99,8 +106,7 @@ const ONE_M = { one: true, home: '#top', cards: `#cat-${built[0].id}`, usage: '#
 const NEW = ['sankey', 'radar'];
 const EXAMPLE = [{ id: 'kpi-line' }, { id: 'kpi-bar' }, { id: 'bar-ranking' }, { id: 'sankey-levels', wide: true }, { id: 'radar-basic' }];
 const ART = JSON.parse(r('page/tiles.json'));
-// Card heights in units of 168px: KPI - Number 1, KPI - Line and Bar 2, the other KPI cards 1.5, every chart card 2.
-const TIER = { 'kpi-number': 1, 'kpi-gauge': 1.5, 'kpi-paired-bar': 1.5, 'kpi-stacked-bar': 1.5 };
+// Card heights in units of 168px (TIER above): KPI - Number 1, KPI - Line and Bar 2, the other KPI cards 1.5, every chart card 2.
 const tierPx = (v) => Math.round((TIER[v.id] || 2) * 168);
 
 const h = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');

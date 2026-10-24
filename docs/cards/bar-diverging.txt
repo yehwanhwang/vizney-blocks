@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.24 · 막대 차트 · Bar - Diverging (bar-diverging)
+<!-- Vizney Blocks v0.25 · 막대 차트 · Bar - Diverging (bar-diverging)
      https://blocks.vizney.com/cards/bar-diverging.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">

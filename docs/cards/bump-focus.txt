@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.24 · 범프 차트 · Bump - Focus (bump-focus)
+<!-- Vizney Blocks v0.25 · 범프 차트 · Bump - Focus (bump-focus)
      https://blocks.vizney.com/cards/bump-focus.html · © 2026 Vizney · MIT License
      v0.23에 목록에서 내린 카드입니다. 대신 Bump - Basic(https://blocks.vizney.com/cards/bump-basic.txt)를 쓰세요. Bump - Basic도 고른 항목을 같은 방식으로 강조합니다.
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->

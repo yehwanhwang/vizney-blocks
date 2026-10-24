@@ -1,6 +1,6 @@
 # Vizney Blocks
 
-> 복사해 붙여 쓰는 HTML 대시보드 카드 37종(v0.24). 카드 하나는 <style>, 데이터 JSON, <script>를 한데 묶은 HTML 조각이며, <body> 안에 붙여 넣으면 그려진다. 데이터는 카드 안 <script type="application/json">의 값만 바꾼다. © 2026 Vizney · MIT License.
+> 복사해 붙여 쓰는 HTML 대시보드 카드 37종(v0.25). 카드 하나는 <style>, 데이터 JSON, <script>를 한데 묶은 HTML 조각이며, <body> 안에 붙여 넣으면 그려진다. 데이터는 카드 안 <script type="application/json">의 값만 바꾼다. © 2026 Vizney · MIT License.
 
 쓰는 법:
 - 카드는 "목적으로 고르기"에서 고른다. 화면이 답할 질문마다 기본 카드를 먼저 쓰고, 다른 카드는 조건이 정확히 맞을 때만 쓴다. 애매하면 기본 카드를 쓴다. 카드 이름은 지표가 아니라 모양이므로, 지표 이름은 JSON의 title로 바꾼다.

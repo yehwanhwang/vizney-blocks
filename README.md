@@ -80,6 +80,8 @@ pip install fonttools
 SPOQA_DIR=/path/to/spoqa-han-sans/Original/SpoqaHanSansNeo node build.mjs
 ```
 
+빌드는 맨 앞에서 `guard.mjs`를 돌려 카드가 규칙을 지키는지 검사합니다(외부 리소스 없음, 색은 `tokens.css`의 변수만, 높이 1·1.5·2단위, 선택자와 변수는 `vzb` 접두, 애니메이션에 reduced-motion 규칙, 툴팁은 키보드로도, 예시 JSON의 길이와 계산 필드, meta.json과 파일의 짝, 공개된 카드 주소 유지). 어긋나면 사유를 적고 멈춥니다. 글꼴 없이 검사만 하려면 `node build.mjs --check`를 씁니다.
+
 - `src/`: 카드 공통 부품(`*.js`, `*.css`), 카드별 코드와 예시 데이터(`src/variants/`), 카테고리 설명과 규칙(`src/variants/meta.json`), 목적 색인(`src/variants/purposes.json`: 목적마다 기본 카드가 맨 앞이고, 나머지는 쓰는 조건과 함께 적습니다). 카드를 목록에서 내릴 때는 지우지 않고 meta.json의 그 카드에 `retired`(버전, 대신 쓸 카드, 이유)를 적습니다. 주소와 코드는 남고 목록에서만 빠집니다
 - `page/`: 사이트 화면(`site.css`, `site.js`)과 차트 그림(`tiles.json`). 사이트(`docs/`)와 한 페이지 갤러리(`dist/index.html`)가 함께 씁니다.
 - `tools/`: 부분 글꼴 만들기, 글꼴 라이선스, 공유 이미지

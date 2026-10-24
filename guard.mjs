@@ -123,7 +123,8 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
   for (const v of all) {
     const code = snippets[v.id];
     const where = `cards/${v.id}.txt`;
-    const body = code.replace(fontLink, '').replace(/<!--[\s\S]*?-->/, '');
+    // Comments (the header, tokens.css notes, JS notes) may name addresses; only live references count.
+    const body = code.replace(fontLink, '').replace(/<!--[\s\S]*?-->/, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
     for (const m of body.matchAll(/https?:\/\/[^\s"'`)]+/g)) if (m[0] !== 'http://www.w3.org/2000/svg') fail(where, `외부 주소 ${m[0]}. 카드는 글꼴 링크 말고 아무것도 밖에서 가져오지 않는다`);
     if (/<link\b|@import\b|\burl\((?!#)|^\s*import\s/m.test(body)) fail(where, '외부 리소스(<link>, @import, url(), import)를 쓰지 않는다. url(#id)로 카드 안 요소를 가리키는 것은 괜찮다');
     const scripts = [...body.matchAll(/<script(?![^>]*application\/json)[^>]*>/g)].length;

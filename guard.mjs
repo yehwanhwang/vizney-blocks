@@ -16,7 +16,7 @@ const HEX = /#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(/;
 const COLOR_OK = /^#f{3}$|^#f{6}$|^rgba\(\s*255\s*,\s*255\s*,\s*255\s*,|^rgba\(\s*(27\s*,\s*27\s*,\s*27|17\s*,\s*24\s*,\s*39)\s*,/i;
 const COMPUTED = ['delta', 'change', 'share', 'pct', 'percent', 'ratio', 'rate', 'total', 'sum', 'rank'];
 // Known gaps the guard reports as warnings instead of failing: card id → why, to be fixed as a card change.
-const KNOWN = { 'heatmap-basic': '칸 값은 화면 낭독기가 읽지만 키보드로는 못 연다. 칸 사이 키보드 이동을 더할 때 지운다' };
+const KNOWN = {};
 
 export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippets, fontLink }) {
   const fails = [], warns = [];

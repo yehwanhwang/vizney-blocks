@@ -1,7 +1,7 @@
   // Heatmap - Basic: 행 × 열 칸을 값의 크기에 따라 주황 한 가지의 농도로 칠합니다. 값이 0을 사이에 두고 갈리면(이익률 · 증감률)
   // 0을 경계로 좋은 쪽은 초록, 나쁜 쪽은 빨강으로 칠합니다(KPI 배지와 같은 색, better로 뒤집음). 두 쪽은 절댓값이 큰 쪽에 맞춘 같은 눈금입니다.
   // 열이 넉넉하면(칸 폭 48px 이상) 칸에 숫자를 적고, 좁으면 적지 않아 색의 패턴이 먼저 보이게 합니다. 값은 범례와 툴팁으로도 읽고,
-  // 화면 낭독기는 칸마다 숫자를 읽습니다. "scale": "row"면 행마다 따로 칠합니다. 데이터 열은 같은 폭입니다.
+  // 화면 낭독기는 칸마다 숫자를 읽고, 키보드는 표에 포커스한 뒤 화살표 키로 칸을 옮깁니다. "scale": "row"면 행마다 따로 칠합니다. 데이터 열은 같은 폭입니다.
   // 처음에는 적은 순서대로 두고, 열 제목을 누르면 그 열로 정렬합니다. 행 이름 열을 누르면 다시 처음 순서(숫자 순)가 됩니다.
   mount('heatmap-basic', (card, d, f) => {
     const heads = d.columns || [], rows = d.rows || [], byRow = d.scale === 'row';
@@ -59,12 +59,22 @@
       const name = table.querySelector('thead th');
       table.classList.toggle('has-nums', heads.length > 0 && (w - (name ? name.getBoundingClientRect().width : 0)) / heads.length >= 48);
     });
-    // 칸에 마우스를 올리거나 탭하면 그 칸의 값을 툴팁으로 보여줍니다.
-    table.addEventListener('pointerover', (e) => {
-      const s = e.target.closest && e.target.closest('.vzb-tb-heat');
-      if (!s) { hideTip(); return; }
-      const b = s.getBoundingClientRect();
-      showTip(b.left + b.width / 2, b.top, s.dataset.label, s.dataset.value);
+    // 칸의 값은 마우스를 올리거나 탭하면 툴팁으로 보이고, 표에 포커스한 뒤 화살표 키로 칸을 옮겨도 같은 값을 보여줍니다.
+    // 좌우는 읽는 순서(줄 끝에서 다음 줄로), 위아래는 같은 열의 다른 행입니다. 정렬로 줄이 바뀌어도 그때의 표 순서를 따릅니다.
+    const cells = () => [...table.querySelectorAll('tbody .vzb-tb-heat')];
+    table.classList.add('vzb-plot');
+    table.tabIndex = 0;
+    table.querySelector('caption').append(' 표에 포커스한 뒤 화살표 키로 칸을 옮기면 그 칸의 값을 읽습니다.');
+    let on = null;
+    const mark = (s) => { if (on) on.classList.remove('is-on'); on = s; if (on) on.classList.add('is-on'); };
+    const keys = interact(table, () => cells().length,
+      (cx, cy) => { const t = document.elementFromPoint(cx, cy), s = t && t.closest && t.closest('.vzb-tb-heat'); return s ? cells().indexOf(s) : -1; },
+      (i) => { const s = cells()[i], b = s.getBoundingClientRect(); mark(s); return { x: b.left + b.width / 2, y: b.top, label: s.dataset.label, value: s.dataset.value }; },
+      () => mark(null), false, true);
+    table.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+      e.preventDefault();
+      const n = Math.max(1, heads.length), i = keys.at(), j = i < 0 ? 0 : i + (e.key === 'ArrowDown' ? n : -n);
+      if (j >= 0 && j < cells().length) keys.show(j);
     });
-    table.addEventListener('pointerleave', hideTip);
   });

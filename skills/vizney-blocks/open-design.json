@@ -3,7 +3,7 @@
   "specVersion": "1.0.0",
   "name": "vizney-blocks",
   "title": "Vizney Blocks",
-  "version": "0.27.0",
+  "version": "0.28.0",
   "description": "Copy-paste HTML dashboard cards (37 cards, 14 chart types) built on the Vizney chart guide: pick a card by the question the screen answers, keep the card code, change only its JSON.",
   "description_i18n": {
     "ko": "복사해 붙여 쓰는 HTML 대시보드 카드 37종(차트 14가지). Vizney 차트 가이드의 판단을 담았고, 화면이 답할 질문으로 카드를 골라 코드는 그대로 두고 JSON만 바꾼다."

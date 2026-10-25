@@ -1,0 +1,408 @@
+{
+ "cats": {
+  "kpi": {
+   "name": "KPI Cards",
+   "intro": "Every KPI card shares the same head: the title, a period subtitle, the headline figure and its change badge right after it. The badge's arrow shows the direction and its color shows whether that is good or bad. Card heights come in three sizes: Number is 1 unit, Line and Bar are 2, the rest are 1.5. Mixed in one row, the cards stretch to the tallest one and their graphics sit on the bottom, so heights and baselines line up.",
+   "lede": "Cards where the headline figure and its change are read first. Every KPI card shares the same head: the title, a period subtitle, the headline figure and its change badge right after it. The badge's arrow shows the direction and its color shows whether that is good or bad.",
+   "height": "1–2 units"
+  },
+  "bar": {
+   "name": "Bar Chart",
+   "guide": { "name": "Bar chart", "url": "https://www.vizney.com/bar-chart-in-tableau/" },
+   "intro": "Every bar chart starts at zero and draws bars no thicker than 24px, rounded only at the end, on a light solid grid, by the same rules. As the chart guide says, vertical bars are for trends and comparisons and horizontal bars for rankings and lists. Hover, or focus the chart and press the arrow keys, to see the value of each bar. Height: 2 units.",
+   "groups": {
+    "v": { "name": "Vertical bars", "note": "Trends and comparisons" },
+    "h": { "name": "Horizontal bars", "note": "Rankings and lists" }
+   },
+   "lede": "Bars start at zero, stay no thicker than 24px and are rounded only at the end. Vertical bars are for trends and comparisons; horizontal bars are for rankings and lists.",
+   "height": "2 units"
+  },
+  "line": {
+   "name": "Line Chart",
+   "guide": { "name": "Line chart", "url": "https://www.vizney.com/line-chart-in-tableau/" },
+   "intro": "Every line card draws 3–4 vertical-axis ticks fitted to the value range and a light solid grid under the title and period subtitle, by the same rules, and leaves room above and below the values so the line stays in the middle of the plot. A card with one line shades the area under it lightly, like KPI - Line; with two or more lines the shading would overlap, so there is none. Hover, or focus the chart and press the arrow keys, to see every value of that period. The line shape is chosen with `curve`: smooth, straight or stepped, previewed below. Height: 2 units, the same as KPI - Line.",
+   "option": { "label": "Line shape", "choices": ["Smooth", "Straight", "Step"] },
+   "lede": "Lines are drawn on 3–4 ticks fitted to the value range and a light solid grid. A single line gets a light shade underneath, and the line shape is smooth, straight or stepped.",
+   "height": "2 units"
+  },
+  "grid": {
+   "name": "Grid Chart",
+   "guide": { "name": "Grid chart", "url": "https://www.vizney.com/grid-chart-in-tableau/" },
+   "intro": "Grid charts deliver exact numbers in a table. Headings are centered, names are left-aligned, and numbers are right-aligned in tabular figures so the digits line up. The unit is written once, in the column heading or the subtitle. Click a column heading to sort by it; the shaded total row always stays at the bottom. Height: 2 units, enough for five rows and the total row.",
+   "lede": "Exact numbers in a table. Numbers are right-aligned in tabular figures so the digits line up, column headings sort, and the total row always stays at the bottom.",
+   "height": "2 units"
+  },
+  "donut": {
+   "name": "Donut Chart",
+   "guide": { "name": "Donut chart", "url": "https://www.vizney.com/donut-chart-in-tableau/" },
+   "intro": "Every donut chart colors only the three largest items orange, pink-red and yellow, and folds the rest into a gray Other (the same rule as KPI - Stacked Bar). Shares are written first; amounts go in the tooltip. Hover a slice or a legend row and only that item stays bold. Height: 2 units.",
+   "lede": "Only the three largest items are colored orange, pink-red and yellow; the rest fold into a gray Other. Shares are written first and amounts go in the tooltip.",
+   "height": "2 units"
+  },
+  "scatter": {
+   "name": "Scatter Chart",
+   "guide": { "name": "Scatter chart", "url": "https://www.vizney.com/scatter-chart-in-tableau/" },
+   "intro": "Scatter charts put two measures on the horizontal and vertical axes and plot one point per item to show relation and spread. Points are colored by group, the three largest groups only; the rest are gray. Each axis has 3–5 ticks and a light solid grid, and axis names and units sit on the axis: the vertical one at the top left of the plot with ↑, the horizontal one at the right end under the ticks with →. Move the pointer near a point, or focus the chart and press the left and right arrows, to see its values. Height: 2 units.",
+   "lede": "Two measures on the horizontal and vertical axes, one point per item, to show relation and spread. Only the three largest groups are colored, and axis names sit on the axes.",
+   "height": "2 units"
+  },
+  "treemap": {
+   "name": "Treemap Chart",
+   "guide": { "name": "Treemap chart", "url": "https://www.vizney.com/treemap-chart-in-tableau/" },
+   "intro": "Treemap charts show shares as area and hierarchy as groups of cells. Cells are 2px apart; hover a cell, or focus the chart and press the arrow keys, and only that cell stays bold while its value is shown. Height: 2 units.",
+   "lede": "Shares as area and hierarchy as groups of cells, together. Cells are 2px apart.",
+   "height": "2 units"
+  },
+  "heatmap": {
+   "name": "Heatmap Chart",
+   "guide": { "name": "Heatmap chart", "url": "https://www.vizney.com/heatmap-chart-in-tableau/" },
+   "intro": "Heatmap charts tint each cell where two dimensions meet by its value, so high and low spots are found before the numbers are read. Values are shaded in a single orange; values that split around zero are shaded green and red. Cells are 2px apart, data columns share one width, and roomy cells also carry the number. Hover a cell, or focus the table and press the arrow keys, to see its value. Height: 2 units.",
+   "lede": "Each cell where two dimensions meet is tinted by its value, so high and low spots are found before the numbers are read. Values that split around zero are shaded green and red.",
+   "height": "2 units"
+  },
+  "waterfall": {
+   "name": "Waterfall Chart",
+   "guide": { "name": "Waterfall chart", "url": "https://www.vizney.com/waterfall-chart-in-tableau/" },
+   "intro": "Waterfall charts show how a starting value reaches an ending value by stacking each item's change in turn. Totals are bars that grow from zero, changes are bars floating from the previous running total, and thin solid lines at the running-total height connect the bars. Every bar carries its value. Height: 2 units.",
+   "lede": "How a starting value reaches an ending value, one change at a time. Totals grow from zero and changes float from the previous running total.",
+   "height": "2 units"
+  },
+  "funnel": {
+   "name": "Funnel Chart",
+   "guide": { "name": "Funnel chart", "url": "https://www.vizney.com/funnel-chart-in-tableau/" },
+   "intro": "Funnel charts show a flow that shrinks at every step. Each step gets a cell of the same width; inside the cell the flow keeps the thickness of that step's value, and at the cell boundary it narrows in an S-curve to the next step's thickness. Hover a cell, or focus the card and press the left and right arrows, and the other cells fade so that one stands out with its value, its share of the first step and the drop-off count. Height: 2 units.",
+   "lede": "A flow that shrinks at every step. Inside each cell the flow keeps that step's thickness, and at the boundary it narrows to the next step's.",
+   "height": "2 units"
+  },
+  "waffle": {
+   "name": "Waffle Chart",
+   "guide": { "name": "Waffle chart", "url": "https://www.vizney.com/waffle-chart-in-tableau/" },
+   "intro": "Waffle charts show shares as a count of squares out of 100. The color rule is the same as the donut chart's, and the square size is fitted to the room left on the card. Hover a square or a legend row and only that item stays bold. Height: 2 units.",
+   "lede": "Shares as a count of squares out of 100. The color rule is the same as the donut chart's.",
+   "height": "2 units"
+  },
+  "bump": {
+   "name": "Bump Chart",
+   "guide": { "name": "Bump chart", "url": "https://www.vizney.com/bump-chart-in-tableau/" },
+   "intro": "Bump charts plot each item's rank per period and join them with S-curves, to show how the order changed rather than the values. Rank 1 is at the top, and names at both ends of the lines replace a legend. Hover a line, or focus the chart and press the up and down arrows, to redraw that item as a thick line with the rank inside each dot while the others fade. Height: 2 units.",
+   "lede": "Ranks per period joined with S-curves, to show how the order changed rather than the values. Rank 1 is at the top, and names sit at both ends of the lines.",
+   "height": "2 units"
+  },
+  "sankey": {
+   "name": "Sankey Chart",
+   "intro": "Sankey charts show where a quantity moves from and to by the thickness of its ribbons. Write only the list of flows (`links`) as from · to · value; the nodes and levels follow, and a node's height is the larger of what comes in and what goes out. Every level is drawn to the same scale, so ribbon thickness can be compared across levels, and nodes are spaced generously. Names and values sit right beside the nodes, so there is no legend. Hover a ribbon or node, or focus the chart and press the left and right arrows, and the rest fades while the value and share are shown. Height: 2 units.",
+   "lede": "Where a quantity moves from and to, by the thickness of its ribbons. Write only the flows (`links`) as from · to · value; the nodes and levels follow.",
+   "height": "2 units"
+  },
+  "radar": {
+   "name": "Radar Chart",
+   "guide": { "name": "Radar chart", "url": "https://www.vizney.com/radar-chart-in-tableau/" },
+   "intro": "Radar charts join several scores into one polygon to show a subject's strengths and weaknesses at a glance. The chart is read by its overall shape rather than exact values, so axes with different units are rescaled to a shared range such as 0–100. The grid is four light solid polygons with spokes, and axis names sit outside the vertices. Hover toward an axis, or focus the chart and press the left and right arrows, to see that axis's value for every series. Height: 2 units.",
+   "lede": "Several scores joined into one polygon, to show strengths and weaknesses at a glance. Axes with different units are rescaled to a shared range such as 0–100.",
+   "height": "2 units"
+  }
+ },
+ "cards": {
+  "kpi-number": {
+   "when": "A card with just the number and its change badge. With no graphic, it fits a narrow spot.",
+   "rules": [
+    "The change sits as a badge right after the number, with the baseline and its value beside it. A 0.3pp with nothing to compare against cannot be read.",
+    "Ratio metrics (`pct`) write their change in percentage points. From 3.1% to 3.4% is a 0.3pp increase; written as 9.7%, the change looks bigger than it is.",
+    "The badge's arrow shows the direction and its color shows whether that is good or bad. For a metric where lower is better, like a return rate, set `\"better\": \"down\"` and an increase gets a red badge."
+   ]
+  },
+  "kpi-line": {
+   "when": "A card with a line chart under the number. Use it to show the monthly course alongside the figure.",
+   "rules": [
+    "The monthly line covers 13 months. The first and last are the same month, so the figure compares with the same month last year without seasonal distortion, and the change is written year over year.",
+    "The y-axis is fitted to the value range so small movements show. In return, the fill fades out toward the bottom so the area is not read as a quantity from zero.",
+    "Period names are written every three months, always keeping the first and the last; the other months' values are read by hovering or with the arrow keys."
+   ]
+  },
+  "kpi-bar": {
+   "when": "A card with vertical bars under the number. Use it to see this period's value against the size of past periods.",
+   "rules": [
+    "Bars are read by length, so they start at zero. That is what sets this card apart from KPI - Line, which shows only the course.",
+    "The month in progress (`partial`) is drawn as a dashed outline, so its length is not compared directly with finished months. The counting period goes in the subtitle under the title, and the headline figure compares with the same days of the previous month.",
+    "Past periods are light orange and only the last period is solid. Period names are written every three months, always keeping the current period."
+   ]
+  },
+  "kpi-gauge": {
+   "when": "A card with the number in the middle of a half-circle gauge. Use it to show progress on a metric that has a target or a limit.",
+   "rules": [
+    "No month-over-month change is shown. With both a target comparison and a monthly change on one card, it is unclear which baseline the number should be read against.",
+    "Past the target, the gauge fills completely and the excess is shown only as the percentage.",
+    "For a metric where less is better, like a budget or a limit (`\"better\": \"down\"`), the figure is written as usage, and it turns red once the limit is exceeded."
+   ],
+   "guide": { "name": "Gauge chart", "url": "https://www.vizney.com/gauge-chart-in-tableau/" }
+  },
+  "kpi-stacked-bar": {
+   "when": "A card with one bar split by share and a legend under the number. Use it to show the shares of the parts that make up a total.",
+   "rules": [
+    "Up to four segments are drawn. Only the three largest items get a color; the rest fold into a gray Other. Hover to see the items inside Other.",
+    "The largest item goes on the left, colored orange, pink-red and yellow in turn. Segments are spaced apart so adjacent colors do not blend.",
+    "The legend is two rows of two with only names and shares, so it is not read by color alone. Writing amounts on a share card blurs what is being compared, so amounts appear on hover over a segment or a legend row."
+   ]
+  },
+  "bar-basic": {
+   "when": "A vertical bar card that starts at zero. Use it to compare sizes across periods or items by length.",
+   "rules": [
+    "Bars are read by length, so the vertical axis starts at zero. To follow the course of small changes, use a line card.",
+    "Bars are no thicker than 24px and the leftover width is left as space. Only the end is rounded; the base is flat, keeping the look of bars growing from the zero line.",
+    "The value is written only for the last bar, to the right of its end. A value on top of a narrow bar overlaps its neighbors. The other values are read by hovering or with the arrow keys."
+   ]
+  },
+  "bar-stacked": {
+   "when": "A card that splits each bar into stacked segments per item. Use it to see the course of a total and its composition together.",
+   "rules": [
+    "The largest item goes at the bottom. Only a segment that starts at the zero line compares directly by length, so the most important item's course can be read.",
+    "Only the three largest items get a color; the rest fold into a gray Other. The rule matches KPI - Stacked Bar, so the same item gets the same color.",
+    "Segments are 2px apart so the colors do not blend, and the total is written to the right of the last bar and in the tooltip."
+   ]
+  },
+  "bar-stacked-100": {
+   "when": "A stacked bar card with every period scaled to 100%. Use it to see how the mix changes rather than the amounts.",
+   "rules": [
+    "Every bar is scaled to 100%, so only the change in shares shows even as the total rises and falls. To see the change in the total as well, use Bar - Stacked.",
+    "The largest item goes at the bottom. A bottom segment that starts at the zero line shows the rise and fall of its share directly.",
+    "The tooltip gives both the share and the amount, to tell whether a share grew because that item grew or because another shrank."
+   ]
+  },
+  "bar-target": {
+   "when": "A card that marks each bar's target with a short horizontal line. Use it to see whether each period met a target that differs by period.",
+   "rules": [
+    "The target is a short horizontal line over the bar. Even when the target differs by period, the bar and its target are compared in the same place.",
+    "Periods that missed their target get a lighter bar, so attainment is read first. For a metric where lower is better, flip it with `\"better\": \"down\"`.",
+    "The tooltip gives the target and the attainment rate together."
+   ]
+  },
+  "bar-diverging": {
+   "when": "A card whose bars split above and below the zero line. Use it for signed values such as variance from target or change.",
+   "rules": [
+    "Only the zero line is solid, and bars grow up and down from it. Where the sign flips is read first.",
+    "The good side is green and the bad side red, the same colors as the KPI badge. For a metric where lower is better, flip the colors with `\"better\": \"down\"`.",
+    "Values are written with their sign, and the last bar's value sits to the right of its end."
+   ]
+  },
+  "bar-ranking": {
+   "when": "Horizontal bars with the name laid over the bar and the value on the right. Use it to see each item's size together with its rank.",
+   "rules": [
+    "Items are sorted from largest to smallest. Items with a set order, like age bands or ranges, keep the written order with `\"sort\": false`.",
+    "Up to five rows are shown and the rest fold into one 'Other (n)' row. Other has no bar, only its total, so the folded sum does not blur the ranking. Change the row count with `max`.",
+    "The name is laid over the bar, so the bars use the full width with no name column. The tooltip gives the share of the total."
+   ]
+  },
+  "bar-compare": {
+   "when": "A card with a vertical tick for the comparison value over each horizontal bar and a change badge on the right. Use it to compare each item's value with last year or last month.",
+   "rules": [
+    "The comparison value is a vertical tick, not a second bar. Whether the bar's end passed the tick tells at once whether the item grew or shrank.",
+    "The change badge is the same as the KPI cards': the arrow shows the direction and the color shows good or bad (`better`).",
+    "Sorting is by the current period's value. The folded Other row also gets a change, computed from the two totals."
+   ]
+  },
+  "bar-butterfly": {
+   "when": "A card with the item names in the middle and the two groups' bars spread left and right. Use it to compare two groups, like men and women or two regions, on the same items.",
+   "rules": [
+    "Both groups share one scale. The bars on both sides are sized to the single largest value, so left and right lengths compare directly.",
+    "Each item name is written once in the middle and the values sit in the outer cells. Ordered items like age bands keep the written order; `\"sort\": true` sorts by the sum of the two values.",
+    "The two groups are orange and pink-red, with each group's name at the top end of its bars. The tooltip gives both values, their total and the right-hand group's share."
+   ],
+   "guide": { "name": "Butterfly chart", "url": "https://www.vizney.com/butterfly-chart-in-tableau/" }
+  },
+  "line-basic": {
+   "when": "A card with one line, vertical-axis ticks and a light solid grid. Use it to read one metric's course along with its values per period.",
+   "rules": [
+    "The vertical axis does not start at zero; it wraps the value range in round-number ticks. A line is read by its slope, and drawn from zero the change flattens out. The shade under the line fades toward the bottom so it is not read as size.",
+    "Only 3–4 ticks are drawn and the unit is written on the top tick only; period names are thinned to about five, always keeping the last. The dot and value are written only for the last period.",
+    "The line shape is set with `curve`. The default smooth curve joins the points without overshooting the real values, and `\"step\"` is for metrics such as interest rates or unit prices that hold until the next change."
+   ]
+  },
+  "line-tabs": {
+   "when": "A card with tabs under the head that carry the headline figures of 2–3 metrics and draw only the chosen metric's line. Use it to switch between metrics with different units in one spot.",
+   "rules": [
+    "Metrics with different units are split into tabs rather than overlaid on one plot. Amounts, counts and percentages on one axis either need two axes or hide the small values' movement.",
+    "Each tab shows the metric's name and headline figure, so the numbers are compared before the line is seen. The figure is the last period's value and can be changed per tab with `value`.",
+    "The tabs split the width into three equal cells, up to three tabs. From the fourth on, the cells become too narrow for the numbers, so split the card."
+   ]
+  },
+  "line-multiple": {
+   "when": "A card with 2–3 lines in different colors. Use it to compare the course of one metric split across a few items.",
+   "rules": [
+    "Line colors are orange, pink-red and blue, in that order. Yellow is not used for lines: as a thin line on white its contrast is only 1.5:1.",
+    "Up to three lines get a color. From the fourth item on, lines are light gray and folded into 'n others' in the legend, so colors do not multiply until they stop telling apart.",
+    "There is a legend, and the last value is written at the end of each line. Where end values overlap, the later item's value is dropped, and the tooltip lists that period's values from largest to smallest."
+   ]
+  },
+  "line-compare": {
+   "when": "A card that overlays this year's line and last year's gray line on the same month axis. Use it to compare a seasonal metric with the same month last year.",
+   "rules": [
+    "The horizontal axis runs January to December and the two years overlap. Drawn as 24 months in a row, the same-month differences would have to be read by eye.",
+    "Last year, the baseline, is gray; only this year is orange. This year's line stops at the last finished month, and the remaining months show only last year's line, previewing the seasonal course ahead.",
+    "The tooltip gives both years' values and the year-over-year change, and this year's last value is written above its dot."
+   ]
+  },
+  "line-cumulative": {
+   "when": "A card that overlays this month's and last month's cumulative totals on the same day axis, with a target line. Use it to compare the pace toward a monthly target with last month.",
+   "rules": [
+    "Give daily values and the card accumulates them. A running total stacks up from zero, so the vertical axis starts at zero too.",
+    "The pace toward the target is read against last month's cumulative line, not a straight line. With weekends and holidays, daily results are uneven, and a straight-line pace makes every month look behind at the start.",
+    "The tooltip gives both months' totals to that day, the change versus the same day last month, and the attainment rate. The target line's name and value sit at its right end."
+   ]
+  },
+  "line-reference": {
+   "when": "A card with one line and a reference line such as a target or an average. Use it to see whether each period crossed the reference.",
+   "rules": [
+    "The reference line is dashed, with its name and value at its right end outside the plot so they do not overlap the line. Write `\"avg\"` instead of a number in `value` to draw the period average.",
+    "The vertical axis range always includes the reference line. Even when the values sit far from the reference, the line is never pushed off the card.",
+    "The tooltip gives that period's value and its difference from the reference. For ratio metrics the difference is in percentage points."
+   ]
+  },
+  "grid-basic": {
+   "when": "A basic table that lists several metrics side by side per item, with a total. Use it to report each item's results in a few numbers together.",
+   "rules": [
+    "The initial order is by the most important number column, largest first (`sortKey`). Number columns sort largest first, name columns alphabetically, and a second click reverses the order.",
+    "The total row stays at the bottom whatever the sort. The total of a change column is not the sum or average of the cells; it is recomputed from the totals.",
+    "Columns are set in `columns`. `\"total\": \"sum\"` writes the sum, and a `\"type\": \"change\"` column writes the change between the `of` and `base` values as the same badge as the KPI cards. For a dollar column, set `\"format\": \"usd\"` and give the raw values: the heading gets $K or $M and the cells get the divided values."
+   ]
+  },
+  "grid-spark": {
+   "when": "A table with a small 13-month line in every row. Use it to skim the latest value and the course of several items at once.",
+   "rules": [
+    "Each sparkline is drawn to its own row's range, but a range narrower than 10% of the value is widened to 10%, so a nearly flat row does not look like a big swing. Size is compared between rows in the number column.",
+    "A dot marks the last value at the end of the line, and the same row gives the last value and its change from the first. With 13 months, the change from the first is a year-over-year change.",
+    "No axis, grid or tooltip. To look closely at one item's course, use Line - Basic or Line - Multiple."
+   ]
+  },
+  "grid-target": {
+   "when": "A table with target · actual · attainment in one row and the status marked. Use it to report target and actual amounts as numbers.",
+   "rules": [
+    "The attainment bar starts at zero, the track ends at the highest attainment, and the vertical tick is the target (100%). Rows past the target grow by the excess too, so the differences between rows show. The bar color matches the status: green or red.",
+    "The status is written as Met or Missed alongside its color, so it is not told by color alone. The colors are the KPI badge's green and red.",
+    "Rows are ordered by attainment, and the total row's attainment is recomputed as total actual over total target. For a metric where lower is better, switch with `\"better\": \"down\"`."
+   ]
+  },
+  "grid-pivot": {
+   "when": "A row × column crosstab with row totals and column totals. Use it to show amounts split by two dimensions, like region × channel, as they are.",
+   "rules": [
+    "Row totals go in the rightmost column and column totals in the bottom row. The bottom-right cell is the grand total.",
+    "Columns are ordered by total, largest first; with five or more, only the three largest stay and the rest fold into an Other column (the same rule as the donut chart). Columns with a set order keep the written order with `\"sort\": false`.",
+    "Hovering a cell tints its row and column together, so the crossing point is easy to follow."
+   ]
+  },
+  "donut-basic": {
+   "when": "A card with a donut that carries the total in its center and a share legend beside it. Use it to see the shares of a few items that make up a total at a glance.",
+   "rules": [
+    "A donut instead of a pie. The total fits in the center, and the slices are read by arc length rather than angle.",
+    "Up to four slices. Only the three largest items get a color; the rest fold into a gray Other, and the items inside Other are listed in the tooltip. With many items of even size, Other becomes the largest slice, so Bar - Ranking is the right card.",
+    "The legend carries only names and shares. Writing amounts on a share card blurs what is being compared, so amounts go in the tooltip."
+   ]
+  },
+  "scatter-basic": {
+   "when": "A card that plots two measures per item as one point, colored by group. Use it to see whether two values move together, like sales activity and results, and whether that differs by group.",
+   "rules": [
+    "With groups (`group`), only the three groups with the most points are colored orange, pink-red and blue; the rest are gray, and a dot legend is shown. A 2px white outline keeps overlapping points apart.",
+    "Names are written only on the points worth talking about, like the largest or a clear outlier, with `\"label\": true`. Named on every point, they cannot be read.",
+    "When all values are zero or more, the axes do not go below zero, and the range gets 8% of room above and below."
+   ]
+  },
+  "scatter-quadrant": {
+   "when": "A card that splits the points into four areas with reference lines at the average and at zero. Use it to classify items by two criteria, like size and growth rate.",
+   "rules": [
+    "The horizontal reference is the average and the vertical reference is zero. For other references, write `ref` as `{ \"x\": value, \"y\": value }`.",
+    "Quadrant names (`quadrants`) are written in the order top left, top right, bottom left, bottom right, and sit lightly in the four corners.",
+    "Names are written only on two or three points worth talking about, like the largest or those far from the references, with `\"label\": true`. Without names, finding the problem point means opening tooltips one by one; named on every point, they cannot be read.",
+    "Quadrants are not filled, and point colors follow the group (`group`). The tooltip gives the signed growth rate, the group and the quadrant."
+   ]
+  },
+  "scatter-connected": {
+   "when": "A card that joins the points plotted per period in time order. Use it to see which way two metrics moved together, like visitors and conversion rate.",
+   "rules": [
+    "Points are joined in the order written in `points`. With groups (`group`, e.g. years), the most recent group is orange, then pink-red and blue, and each segment takes the color of its destination point. The last point is drawn larger to show the direction of the course.",
+    "Period names are written only on the first and last points; the other periods are read in the tooltip and with the arrow keys.",
+    "Keep to about thirteen periods. Longer, the line tangles and the direction cannot be read, so group the periods or split into two line charts."
+   ],
+   "guide": { "name": "Connected scatter chart", "url": "https://www.vizney.com/connected-scatter-chart-in-tableau/" }
+  },
+  "treemap-basic": {
+   "when": "A card that divides the area down to the items inside each group. Use it when there are too many items for a donut's slices to stay readable.",
+   "rules": [
+    "Areas are proportional to the values and laid out so the cells stay close to square. The largest cell goes at the top left.",
+    "Color goes to the groups (`groups`). Only the three largest groups get a color; the rest fold into one gray Other cell. Because wide areas are filled, the colors are a step lighter than the bars'.",
+    "Names and shares are written only in cells with room. Small cells give their value in the tooltip, as the share of the total and the share within the group."
+   ]
+  },
+  "heatmap-basic": {
+   "when": "A table whose cells, where rows and columns meet, are tinted by the size of their value. Use it to find the high and low spots where two dimensions meet, like hour × weekday.",
+   "rules": [
+    "Only one color, orange, in varying depth. The smallest value is the lightest, and a depth bar spanning the card's width above the table, with the two end values, serves as the legend.",
+    "When values split around zero, like a profit margin or a growth rate, the good side is shaded green and the bad side red from the zero boundary (the same colors as the KPI badge). In one orange, a loss and a small profit would both be equally pale cells. Both sides share one scale set by the larger absolute value, so depth compares size, and a metric where lower is better flips the colors with `\"better\": \"down\"`.",
+    "Cells 48px or wider also carry the number; narrower cells do not, so the color pattern is seen first. Values appear in a tooltip on hover, or by focusing the table and moving between cells with the arrow keys (left and right in reading order, up and down within a column), and a screen reader reads the number in every cell.",
+    "The initial order is as written; click a column heading, like a weekday, to sort by that column, largest first. When rows differ so much in size that only the large rows get dark, `\"scale\": \"row\"` shades each row on its own scale to show the highs and lows within a row."
+   ]
+  },
+  "waterfall-basic": {
+   "when": "A card that splits the difference between two points into changes by factor. Use it to explain why operating profit or revenue changed.",
+   "rules": [
+    "Write `items` in order: the starting total, the changes by factor, the ending total. For the ending total, write only `\"type\": \"total\"` and it is filled from the running total.",
+    "Increasing factors are green and decreasing factors red (the same colors as the KPI badge); totals are orange. For a metric where lower is better, flip the colors with `\"better\": \"down\"`.",
+    "The vertical axis starts at zero. When the changes are too small next to the totals for their bars to show, draw only the changes with Bar - Diverging."
+   ]
+  },
+  "waterfall-subtotal": {
+   "when": "A card that deducts items in turn from a large value, raising subtotals along the way. Use it to show a profit and loss structure from revenue to operating profit.",
+   "rules": [
+    "A total without a value (`\"type\": \"total\"`) is the running total so far, so subtotals like gross profit and operating profit come out right on their own.",
+    "Totals and subtotals are orange, deducted items gray, and added items light orange. Costs are part of the structure, not bad values, so red is not used.",
+    "Change bars are rounded only at the end that moved, and a deducted item's value is written under its bar."
+   ]
+  },
+  "funnel-flow": {
+   "when": "A card that draws the flow centered, as thick as each step's value. Use it to show at a glance how much narrower the flow gets at each step, like from visit to purchase.",
+   "rules": [
+    "The flow's thickness is proportional to the value. Even when the last step is tiny, 4px is kept so the flow does not look broken.",
+    "Above each cell are the step name and value, and with a previous-period value (`prev`), the same change badge as the KPI cards. The white pill inside the flow is the share of the first step.",
+    "Keep to about four steps. As the cells narrow, the value text shrinks to fit the card's width."
+   ]
+  },
+  "waffle-basic": {
+   "when": "A card that shows shares as a count of squares out of 100. Use it to convey a share at a size you can count, like 'four squares out of ten'.",
+   "rules": [
+    "One square is 1%. So the rounded counts add up to 100, one square is added at a time to the items with the largest remainders first.",
+    "Squares fill from the top left, largest item first, so same-colored squares gather in one block. The square size is set between 10 and 24px to fit the room left on the card, so no large gap remains.",
+    "The color rule is the same as the donut's. Beyond the three largest items, the rest fold into a gray Other."
+   ]
+  },
+  "bump-basic": {
+   "when": "A card that shows how several items' ranks changed from period to period, all at once. Use it to show a ranking race between branches or products.",
+   "rules": [
+    "Give values (`values`) and each period is ranked from largest to smallest. Ranks hide the size of the differences, so when the gaps matter, use Line - Multiple.",
+    "Only the top three items in the last period are colored orange, pink-red and blue (the line chart's color rule); the rest are gray.",
+    "Keep to about eight items. More, and the lines tangle until they cannot be read, so keep only the top items."
+   ]
+  },
+  "sankey-basic": {
+   "when": "A card that draws the flows from a left level to a right level. Use it to see the composition between two breakdowns together, like which product lines each channel's revenue goes to.",
+   "rules": [
+    "Left nodes are colored orange, pink-red and yellow from the largest value and gray from the fourth on; ribbons take the color of their source node. Right nodes are black bars.",
+    "Node order is the order of first appearance in `links`. Writing both sides from the largest node down keeps the ribbons from crossing as much.",
+    "Keep to about five nodes on each side. Past twenty ribbons, fold the small flows into 'Other'."
+   ]
+  },
+  "sankey-levels": {
+   "when": "A card for flows that run across three or more levels, with one node of the last level singled out. Use it to show how much of what came in remains at the end, like a profit flow that splits revenue into costs and profit, or a budget allocation.",
+   "rules": [
+    "Levels start at the nodes with no incoming flow and step one level right per flow; nodes with no outgoing flow gather in the last level. Up to four levels.",
+    "Write the name of a last-level node in `focus` and that node and the ribbons leading to it turn blue, ribbons to the other last-level nodes gray, and the ribbons of earlier levels orange. The earlier levels get a different color so their nodes do not look as if they flow straight into the focus. Left empty, everything is orange.",
+    "First-level names sit to the left of their nodes and the other levels' names to the right. Names in the middle levels get a white outline so they stay readable over the ribbons."
+   ]
+  },
+  "radar-basic": {
+   "when": "A card that overlays one subject's scores per axis on a baseline. Use it to see where one subject is stronger and weaker than the average, like a dealer review.",
+   "rules": [
+    "The baseline is marked in `series` with `\"base\": true`. It is laid underneath as a light gray area with a gray outline, and the subject is overlaid as a light orange area with an orange outline. No dots at the vertices.",
+    "When the card is wide enough, a list on the right gives each axis's score and a badge against the baseline; when narrow, the score sits beside the vertex name. The tooltip gives the difference from the baseline.",
+    "Keep five to eight axes. The scale's end is set with `max`; left empty, it is a round number that wraps the values."
+   ]
+  }
+ }
+}

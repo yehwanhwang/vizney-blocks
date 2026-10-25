@@ -1,0 +1,24 @@
+{
+  "title": "Product Lines by Channel",
+  "subtitle": "September 2026, from channels on the left to product lines on the right",
+  "lang": "en",
+  "format": "usd",
+  "links": [
+    { "from": "Dealers", "to": "Appliances", "value": 19000000 },
+    { "from": "Dealers", "to": "Home goods", "value": 9200000 },
+    { "from": "Dealers", "to": "Kitchenware", "value": 6400000 },
+    { "from": "Dealers", "to": "Consumables", "value": 3200000 },
+    { "from": "Online", "to": "Appliances", "value": 8800000 },
+    { "from": "Online", "to": "Home goods", "value": 7400000 },
+    { "from": "Online", "to": "Kitchenware", "value": 5600000 },
+    { "from": "Online", "to": "Consumables", "value": 4400000 },
+    { "from": "Retail", "to": "Appliances", "value": 7800000 },
+    { "from": "Retail", "to": "Home goods", "value": 4000000 },
+    { "from": "Retail", "to": "Kitchenware", "value": 3800000 },
+    { "from": "Retail", "to": "Consumables", "value": 1800000 },
+    { "from": "Corporate · Export", "to": "Appliances", "value": 5600000 },
+    { "from": "Corporate · Export", "to": "Home goods", "value": 2200000 },
+    { "from": "Corporate · Export", "to": "Kitchenware", "value": 1700000 },
+    { "from": "Corporate · Export", "to": "Consumables", "value": 600000 }
+  ]
+}

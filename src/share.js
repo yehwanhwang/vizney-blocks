@@ -2,14 +2,14 @@
      비중 카드는 비중을 적고 금액은 툴팁에 둡니다. 조각이나 범례 줄에 마우스를 올리면 그 조각만 진하게 남깁니다. */
 
   // 큰 세 항목과 기타. sort가 false면 적은 순서대로 둡니다. members는 묶인 원래 항목입니다.
-  function foldParts(items, sort) {
+  function foldParts(d, items, sort) {
     const ok = (p) => p && p.value != null && +p.value > 0;
     let named = (items || []).filter((p) => ok(p) && !p.other);
     if (sort !== false) named = named.slice().sort((a, b) => b.value - a.value);
     const rest = named.slice(3).concat((items || []).filter((p) => ok(p) && p.other));
     const parts = named.slice(0, 3).map((p, i) => ({ name: p.name, value: +p.value, tone: `f${i + 1}`, members: [p] }));
     if (rest.length === 1) parts.push({ name: rest[0].name, value: +rest[0].value, tone: 'fx', members: rest });
-    else if (rest.length) parts.push({ name: '기타', value: rest.reduce((a, p) => a + +p.value, 0), tone: 'fx', note: rest.map((p) => p.name).join('·'), members: rest });
+    else if (rest.length) parts.push({ name: tx(d, '기타'), value: rest.reduce((a, p) => a + +p.value, 0), tone: 'fx', note: rest.map((p) => p.name).join('·'), members: rest });
     const total = parts.reduce((a, p) => a + p.value, 0);
     parts.forEach((p) => { p.share = total ? p.value / total : 0; });
     return { parts, total };
@@ -34,7 +34,7 @@
     let S, P, marks = [], rows = [];
     function use(next) {
       S = Object.assign({ f }, cfg, next);
-      P = Object.assign(foldParts(S.items, S.sort), { f: S.f });
+      P = Object.assign(foldParts(d, S.items, S.sort), { f: S.f });
       fig.replaceChildren();
       marks = S.draw(fig, P);
       rows = P.parts.map((p, i) => {
@@ -44,7 +44,7 @@
         return li;
       });
       leg.replaceChildren(...rows);
-      body.setAttribute('aria-label', `${S.name || d.title || ''}: ${P.parts.map((p) => `${p.name} ${pctOf(p.share)}`).join(', ')}, 합계 ${show(S.f, P.total)}. 좌우 화살표로 항목을 옮깁니다.`);
+      body.setAttribute('aria-label', tx(d, '%s: %s, 합계 %s. 좌우 화살표로 항목을 옮깁니다.', S.name || d.title || '', P.parts.map((p) => `${p.name} ${pctOf(p.share)}`).join(', '), show(S.f, P.total)));
     }
     use({});
     let size = null;
@@ -62,7 +62,7 @@
       (i) => {
         dim(i);
         const p = P.parts[i], name = p.note ? `${p.name} (${p.note})` : p.name;
-        const t = tipBody({ value: show(S.f, p.value), note: `전체의 ${pctOf(p.share)}` }, name);
+        const t = tipBody({ value: show(S.f, p.value), note: tx(d, '전체의 %s', pctOf(p.share)) }, name);
         const r = (marks[i] && marks[i][0] ? marks[i][0] : rows[i]).getBoundingClientRect();
         return { x: r.left + r.width / 2, y: r.top, label: name, value: t.node, text: t.text };
       },
@@ -90,7 +90,7 @@
       a += ang;
     });
     const center = el('div', 'vzb-sh-center');
-    center.append(figure(P.f, P.total), el('span', 'vzb-sh-cap', '합계'));
+    center.append(figure(P.f, P.total), el('span', 'vzb-sh-cap', tx(P.f, '합계')));
     fig.append(svg, center);
     return marks;
   }
@@ -109,7 +109,7 @@
         marks[i].push(cell);
       }
     });
-    fig.append(grid, el('p', 'vzb-sh-cap', `한 칸 1% · 합계 ${show(P.f, P.total)}`));
+    fig.append(grid, el('p', 'vzb-sh-cap', tx(P.f, '한 칸 1% · 합계 %s', show(P.f, P.total))));
     return marks;
   }
   // 와플 칸 크기: 범례가 제 폭(카드 폭의 절반까지)을 쓰고 남은 폭과, 카드에 남은 높이 가운데 작은 쪽에 맞춰 10–24px로 정합니다.

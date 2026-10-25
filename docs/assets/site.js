@@ -1,11 +1,14 @@
 (() => {
   'use strict';
-  // window.VZB: mode('site' | 'one'), page('home' | 'cat' | 'one' | 'none'), site(공개 주소), cats([{ id, name }]), retired({ 내린 카드 id: 대신 쓸 카드 주소 }),
-  // index([{ id, name, cat, catName, when, tags(목적 색인의 목적과 조건), url }]), code({ 카드 id: 코드 }), example([{ id, wide }]).
+  // window.VZB: mode('site' | 'one'), page('home' | 'cat' | 'one' | 'none'), site(공개 주소), base(언어별 경로: '' 또는 '/en'), t(이 스크립트가 적는 문구),
+  // cats([{ id, name }]), retired({ 내린 카드 id: 대신 쓸 카드 주소 }), index([{ id, name, cat, catName, when, tags(목적 색인의 목적과 조건), url }]),
+  // code({ 카드 id: 코드 }), example([{ id, wide }]).
   const V = window.VZB || {};
   const code = V.code || {};
   const index = V.index || [];
   const SITE = V.site || 'https://blocks.vizney.com';
+  const BASE = V.base || '';
+  const T = Object.assign({ copied: '복사됨', linkCopied: '링크 복사됨', sub: '<b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.', blocked: '복사가 막혀 있습니다. 코드를 선택해 두었으니 Ctrl+C(⌘+C)로 복사하세요.', none: '찾는 카드가 없습니다.', exampleTitle: '영업 현황 예시', exampleSub: '', exampleComment: '' }, V.t || {});
   const current = {};
   const $ = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
@@ -31,7 +34,7 @@
   if (V.mode === 'site' && V.page === 'home') {
     const moved = () => {
       const sec = location.hash.match(/^#sec-([\w-]+)$/), one = location.hash.match(/^#n-([\w-]+)$/);
-      const hit = sec ? (V.cats || []).some((c) => c.id === sec[1]) && `/${sec[1]}/` : one && (index.find((x) => x.id === one[1]) || {}).url;
+      const hit = sec ? (V.cats || []).some((c) => c.id === sec[1]) && `${BASE}/${sec[1]}/` : one && (index.find((x) => x.id === one[1]) || {}).url;
       if (hit) location.replace(hit);
       return Boolean(hit);
     };
@@ -118,7 +121,7 @@
     clearTimeout(btn.vzbTimer);
     btn.vzbTimer = setTimeout(() => { btn.innerHTML = btn.dataset.html; btn.classList.remove('is-done'); }, 1500);
   }
-  const linkOf = (id) => `${SITE}/cards/${id}.txt`;
+  const linkOf = (id) => `${SITE}${BASE}/cards/${id}.txt`;
   const nameOf = (id) => (index.find((x) => x.id === id) || {}).name || id;
 
   // 복사 메뉴: 카드 코드 복사, AI용 링크 복사
@@ -157,7 +160,7 @@
         cls += ' is-data';
         if (first < 0) first = i;
         body = colorJson(body);
-      } else if (i < 4 && /^\s*<!--|^\s{5}\S/.test(line)) cls += ' is-head';
+      } else if (i < 4 && /^\s*<!-{2}|^\s{5}\S/.test(line)) cls += ' is-head';   // `<!-{2}`: 한 페이지 갤러리는 이 파일을 인라인 스크립트로 넣으므로, 소스에 HTML 주석 여는 기호가 그대로 있으면 파서가 닫는 태그를 놓칩니다
       if (/<script type="application\/json">\s*$/.test(line)) inData = true;
       return `<span class="${cls}"><i>${i + 1}</i>${body}</span>`;
     }).join('');
@@ -175,9 +178,8 @@
     const line = first >= 0 ? dlgCode.children[first] : null;
     dlgCode.scrollTop = line ? Math.max(0, line.offsetTop - 56) : 0;
   }
-  const SUB = '<b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.';
   function openCode(id, blocked) {
-    show({ title: nameOf(id), id, sub: blocked ? '복사가 막혀 있습니다. 코드를 선택해 두었으니 Ctrl+C(⌘+C)로 복사하세요.' : SUB, text: current[id] || code[id] || '', link: true });
+    show({ title: nameOf(id), id, sub: blocked ? T.blocked : T.sub, text: current[id] || code[id] || '', link: true });
     if (blocked) {
       const sel = window.getSelection(), r = document.createRange();
       r.selectNodeContents(dlgCode);
@@ -188,8 +190,7 @@
   function exampleCode() {
     const list = (V.example || []).filter((x) => code[x.id]);
     const cell = (x) => `<div${x.wide ? ' style="grid-column: span 2;"' : ''}>\n${current[x.id] || code[x.id]}</div>`;
-    return `<!-- Vizney Blocks 예시 · 영업 현황(카드 ${list.length}장)\n     ${SITE}/ · 각 카드의 JSON만 바꾸세요. -->\n`
-      + `<div style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:16px;">\n${list.map(cell).join('\n')}\n</div>\n`;
+    return `${T.exampleComment}\n<div style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:16px;">\n${list.map(cell).join('\n')}\n</div>\n`;
   }
 
   document.addEventListener('click', async (e) => {
@@ -203,15 +204,14 @@
       const btn = menu && menu.btn;
       closeMenu(true);
       const ok = await copyText(act === 'copy-code' ? current[id] || code[id] : linkOf(id));
-      if (ok) done(btn, act === 'copy-code' ? '복사됨' : '링크 복사됨');
+      if (ok) done(btn, act === 'copy-code' ? T.copied : T.linkCopied);
       else if (act === 'copy-code') openCode(id, true);
     } else if (act === 'example') {
-      const n = (V.example || []).length;
-      show({ title: '영업 현황 예시', sub: `카드 ${n}장을 격자에 넣은 코드입니다. 각 카드의 ${SUB}`, text: exampleCode(), link: false });
+      show({ title: T.exampleTitle, sub: T.exampleSub, text: exampleCode(), link: false });
     } else if (act === 'dlg-copy') {
-      if (await copyText(dlgText)) done(t, '복사됨');
+      if (await copyText(dlgText)) done(t, T.copied);
     } else if (act === 'dlg-link') {
-      if (dlgId && await copyText(linkOf(dlgId))) done(t, '링크 복사됨');
+      if (dlgId && await copyText(linkOf(dlgId))) done(t, T.linkCopied);
     } else if (act === 'dlg-close') dlg.close();
   });
   if (dlg) dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
@@ -260,7 +260,7 @@
         a.addEventListener('click', (ev) => { ev.preventDefault(); go(r.url); });
         li.append(a);
         return li;
-      }) : [el('li', 'none', '찾는 카드가 없습니다.')]));
+      }) : [el('li', 'none', T.none)]));
       pop.hidden = false;
       q.setAttribute('aria-expanded', 'true');
       if (sel >= 0) q.setAttribute('aria-activedescendant', `q-${sel}`); else q.removeAttribute('aria-activedescendant');

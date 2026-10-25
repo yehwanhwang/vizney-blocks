@@ -1,0 +1,9 @@
+{
+  "title": "Purchase Conversion",
+  "subtitle": "Oct 1–20",
+  "lang": "en",
+  "value": 3.4,
+  "format": "pct",
+  "better": "up",
+  "compare": { "label": "September", "value": 3.1 }
+}

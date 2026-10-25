@@ -8,7 +8,7 @@
     }).filter((g) => g.value > 0).sort((a, b) => b.value - a.value);
     const rest = groups.slice(3);
     if (rest.length) {
-      const name = rest.length === 1 ? rest[0].name : '기타', value = rest.reduce((a, g) => a + g.value, 0);
+      const name = rest.length === 1 ? rest[0].name : tx(d, '기타'), value = rest.reduce((a, g) => a + g.value, 0);
       groups = groups.slice(0, 3).concat([{ name, value, rest: true, note: rest.length > 1 ? rest.map((g) => g.name).join('·') : '', items: [{ name, value }] }]);
     }
     const total = groups.reduce((a, g) => a + g.value, 0);
@@ -20,7 +20,7 @@
     const plot = el('div', 'vzb-plot vzb-tm-plot');
     plot.tabIndex = 0;
     plot.setAttribute('role', 'img');
-    plot.setAttribute('aria-label', `${d.title || ''}: ${groups.map((g) => `${g.name} ${pctOf(g.value / total)}(${g.items.map((it) => `${it.name} ${pctOf(it.value / total)}`).join(', ')})`).join('; ')}. 좌우 화살표로 칸을 옮깁니다.`);
+    plot.setAttribute('aria-label', tx(d, '%s: %s. 좌우 화살표로 칸을 옮깁니다.', d.title || '', groups.map((g) => `${g.name} ${pctOf(g.value / total)}(${g.items.map((it) => `${it.name} ${pctOf(it.value / total)}`).join(', ')})`).join('; ')));
     foot.append(plot);
     card.append(foot);
     let tiles = [];
@@ -50,7 +50,7 @@
         tiles.forEach((x, k) => x.tile.classList.toggle('is-dim', k !== i));
         const { tile, it, g } = tiles[i], r = tile.getBoundingClientRect();
         const label = g.rest ? `${g.name}${g.note ? ` (${g.note})` : ''}` : `${g.name} · ${it.name}`;
-        const t = tipBody({ value: show(f, it.value), note: g.rest ? `전체의 ${pctOf(it.value / total)}` : `전체의 ${pctOf(it.value / total)} · ${g.name}의 ${pctOf(it.value / g.value)}` }, label);
+        const t = tipBody({ value: show(f, it.value), note: g.rest ? tx(d, '전체의 %s', pctOf(it.value / total)) : tx(d, '전체의 %1 · %2의 %3', pctOf(it.value / total), g.name, pctOf(it.value / g.value)) }, label);
         return { x: r.left + r.width / 2, y: r.top, label, value: t.node, text: t.text };
       },
       () => tiles.forEach((x) => x.tile.classList.remove('is-dim')));

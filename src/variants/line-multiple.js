@@ -4,6 +4,6 @@
     const list = d.series || [];
     const series = list.map((s, i) => ({ name: s.name, values: s.values || [], tone: i < 3 ? `t${i + 1}` : 'tx', end: i < 3, dot: i < 3 }));
     const legend = series.slice(0, 3).map((s) => ({ name: s.name, tone: s.tone }));
-    if (list.length > 3) legend.push({ name: `그 밖의 ${list.length - 3}개`, tone: 'tx' });
+    if (list.length > 3) legend.push({ name: tx(d, '그 밖의 %s개', list.length - 3), tone: 'tx' });
     lineCard(card, d, f, { series, legend, sort: true });
   });

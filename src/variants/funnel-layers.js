@@ -38,7 +38,7 @@
         const s = steps[i], p = steps[i - 1];
         return {
           rows: segs.map((name, k) => ({ tone: `u${k}`, name, value: show(f, s.values[k]) })),
-          note: [`합계 ${show(f, s.value)}`, i ? `앞 단계 대비 ${fuPct(s.value, p.value)}` : ''],
+          note: [tx(d, '합계 %s', show(f, s.value)), i ? tx(d, '앞 단계 대비 %s', fuPct(s.value, p.value)) : ''],
         };
       },
     });

@@ -3,12 +3,12 @@
      draw는 lineCard · barCard · basicList, make(탭)은 그 탭의 그리기 설정입니다. 탭은 좌우 화살표로도 옮깁니다. */
   function tabsCard(card, d, draw, make) {
     const tabs = (d.tabs || []).slice(0, 3);
-    if (!tabs.length) throw new Error('tabs를 확인하세요.');
+    if (!tabs.length) throw new Error(tx(d, 'tabs를 확인하세요.'));
     const n = (d.labels || []).length;
-    const fmts = tabs.map((t) => format(t));
+    const fmts = tabs.map((t) => format(t, d));
     const row = el('div', 'vzb-tabs');
     row.setAttribute('role', 'tablist');
-    row.setAttribute('aria-label', d.title || '지표');
+    row.setAttribute('aria-label', d.title || tx(d, '지표'));
     let cur = 0, chart = null;
     const spec = (i) => Object.assign({ f: fmts[i], fmt: tabs[i], name: tabs[i].name }, make(tabs[i]));
     if (!tabs.some((t) => Array.isArray(t.values))) row.classList.add('is-plain');

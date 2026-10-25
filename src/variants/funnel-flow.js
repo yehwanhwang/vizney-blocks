@@ -24,8 +24,8 @@
       over(svg, G) { steps.forEach((s, i) => fuPill(svg, G.cols[i].c, G.h / 2, fuPct(s.value, first))); },
       tip(i) {
         const s = steps[i], p = steps[i - 1];
-        const lines = i ? [`${steps[0].name} 대비 ${fuPct(s.value, first)}`, `앞 단계에서 ${show(f, Math.max(0, p.value - s.value))} 이탈`] : ['첫 단계'];
-        if (s.prev != null) lines.push(`지난 기간 ${show(f, s.prev)}`);
+        const lines = i ? [tx(d, '%s 대비 %s|비율', steps[0].name, fuPct(s.value, first)), tx(d, '앞 단계에서 %s 이탈', show(f, Math.max(0, p.value - s.value)))] : [tx(d, '첫 단계')];
+        if (s.prev != null) lines.push(tx(d, '지난 기간 %s', show(f, s.prev)));
         return { value: show(f, s.value), note: lines };
       },
     });

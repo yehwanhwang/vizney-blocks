@@ -1,0 +1,13 @@
+{
+  "title": "Purchase Funnel",
+  "subtitle": "Oct 1–20; changes vs the same days last month",
+  "lang": "en",
+  "format": "count",
+  "better": "up",
+  "steps": [
+    { "name": "Visits", "value": 120000, "prev": 128000 },
+    { "name": "Product views", "value": 54000, "prev": 52000 },
+    { "name": "Cart", "value": 12600, "prev": 13500 },
+    { "name": "Purchases", "value": 4080, "prev": 3700 }
+  ]
+}

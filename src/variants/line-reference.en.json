@@ -1,0 +1,9 @@
+{
+  "title": "Orders",
+  "subtitle": "Last 13 months, monthly",
+  "lang": "en",
+  "format": "count",
+  "labels": ["Sep '25", "Oct '25", "Nov '25", "Dec '25", "Jan '26", "Feb '26", "Mar '26", "Apr '26", "May '26", "Jun '26", "Jul '26", "Aug '26", "Sep '26"],
+  "values": [11630, 11480, 11920, 12650, 11240, 11050, 11820, 12340, 11960, 12810, 13150, 12690, 12460],
+  "reference": { "label": "Monthly target", "value": 12000 }
+}

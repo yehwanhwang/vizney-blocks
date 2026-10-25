@@ -1,19 +1,19 @@
   // Line - Slope: 두 기간의 비중을 양쪽 세로선에 찍고 선으로 잇습니다. 기울기로 비중이 늘었는지 줄었는지가 먼저 읽힙니다.
   // 최근 기간 비중이 큰 세 항목만 주황 · 분홍빨강 · 파랑(선 색 규칙), 나머지는 회색입니다. 툴팁에는 두 비중과 %p 차이를 적습니다.
   mount('line-slope', (card, d, f) => {
-    const periods = d.periods || ['이전', '이후'];
+    const periods = d.periods || [tx(d, '이전'), tx(d, '이후')];
     const raw = (d.items || []).filter((it) => it && Array.isArray(it.values));
     const sum = [0, 1].map((k) => raw.reduce((a, it) => a + (+it.values[k] || 0), 0));
     const items = raw.map((it) => ({ name: it.name, values: it.values, s: [0, 1].map((k) => (sum[k] ? (+it.values[k] || 0) / sum[k] * 100 : 0)) }))
       .sort((a, b) => b.s[1] - a.s[1]);
     items.forEach((it, i) => { it.tone = i < 3 ? `t${i + 1}` : 'tx'; });
     head(card, d, f, null);
-    card.append(legendEl(items.slice(0, 3).map((it) => ({ name: it.name, tone: it.tone })).concat(items.length > 3 ? [{ name: `그 밖의 ${items.length - 3}개`, tone: 'tx' }] : [])));
+    card.append(legendEl(items.slice(0, 3).map((it) => ({ name: it.name, tone: it.tone })).concat(items.length > 3 ? [{ name: tx(d, '그 밖의 %s개', items.length - 3), tone: 'tx' }] : [])));
     const foot = el('div', 'vzb-foot vzb-fill vzb-ax');
     const plot = el('div', 'vzb-plot');
     plot.tabIndex = 0;
     plot.setAttribute('role', 'img');
-    plot.setAttribute('aria-label', `${d.title || ''}: ${items.map((it) => `${it.name} ${num(it.s[0], 1)}%에서 ${num(it.s[1], 1)}%`).join(', ')}. 위아래 화살표로 항목을 옮깁니다.`);
+    plot.setAttribute('aria-label', tx(d, '%s: %s. 위아래 화살표로 항목을 옮깁니다.', d.title || '', items.map((it) => tx(d, '%1 %2%에서 %3%', it.name, num(it.s[0], 1), num(it.s[1], 1))).join(', ')));
     const svg = svgEl('svg', { class: 'vzb-ax-svg', 'aria-hidden': 'true' });
     plot.append(svg);
     foot.append(plot);
@@ -75,7 +75,7 @@
         const it = items[i], r = plot.getBoundingClientRect();
         const t = tipBody({
           rows: [0, 1].map((k) => ({ tone: k ? it.tone : 't0', name: periods[k], value: `${num(it.s[k], 1)}% · ${show(f, +it.values[k] || 0)}` })),
-          note: `비중 ${it.s[1] >= it.s[0] ? '+' : '−'}${num(Math.abs(it.s[1] - it.s[0]), 1)}%p`,
+          note: tx(d, '비중 %s%p', `${it.s[1] >= it.s[0] ? '+' : '−'}${num(Math.abs(it.s[1] - it.s[0]), 1)}`),
         }, it.name);
         return { x: r.left + (x0 + x1) / 2, y: r.top + Math.min(ys[i][0], ys[i][1]), label: it.name, value: t.node, text: t.text };
       },

@@ -1,7 +1,7 @@
   // Bar - Butterfly: 가운데에 항목 이름을 두고 두 집단(groups)의 막대를 좌우로 펼칩니다. 두 집단은 가장 큰 값 하나에 맞춘 같은 눈금을 씁니다.
   // 연령대처럼 순서가 있는 항목은 적은 순서를 지키고, "sort": true면 두 값의 합이 큰 순서로 둡니다. 값은 양쪽 끝 칸에 적습니다.
   mount('bar-butterfly', (card, d, f) => {
-    const [ga, gb] = d.groups && d.groups.length === 2 ? d.groups : ['왼쪽', '오른쪽'];
+    const [ga, gb] = d.groups && d.groups.length === 2 ? d.groups : [tx(d, '왼쪽'), tx(d, '오른쪽')];
     const pair = (it) => [0, 1].map((k) => (it.values && it.values[k] != null && isFinite(it.values[k]) ? +it.values[k] : null));
     const items = (d.items || []).filter((it) => it && it.name != null);
     const max = Math.max(0, ...items.flatMap((it) => pair(it).map((v) => v || 0)));
@@ -33,7 +33,7 @@
         const [a, b] = pair(it), t = (a || 0) + (b || 0);
         return {
           rows: [{ tone: 'f1', name: ga, value: a == null ? '–' : show(f, a) }, { tone: 'f2', name: gb, value: b == null ? '–' : show(f, b) }],
-          note: `합계 ${show(f, t)}${t ? ` · ${gb} ${num(((b || 0) / t) * 100, 1)}%` : ''}`,
+          note: tx(d, '합계 %s', show(f, t)) + (t ? ` · ${gb} ${num(((b || 0) / t) * 100, 1)}%` : ''),
         };
       },
     });

@@ -1,0 +1,20 @@
+{
+  "title": "Results by Channel",
+  "subtitle": "September 2026, year over year",
+  "lang": "en",
+  "better": "up",
+  "sortKey": "value",
+  "columns": [
+    { "key": "name", "label": "Channel" },
+    { "key": "value", "label": "Shipments", "format": "usd", "total": "sum" },
+    { "key": "orders", "label": "Orders", "total": "sum" },
+    { "key": "yoy", "label": "YoY", "type": "change", "of": "value", "base": "prev" }
+  ],
+  "rows": [
+    { "name": "Dealers", "value": 37200000, "orders": 4120, "prev": 38000000 },
+    { "name": "Online", "value": 27100000, "orders": 5310, "prev": 20800000 },
+    { "name": "Retail", "value": 17800000, "orders": 2080, "prev": 17100000 },
+    { "name": "Corporate", "value": 7300000, "orders": 560, "prev": 6300000 },
+    { "name": "Export", "value": 4400000, "orders": 390, "prev": 3900000 }
+  ]
+}

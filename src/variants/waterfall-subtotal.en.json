@@ -1,0 +1,13 @@
+{
+  "title": "Profit and Loss",
+  "subtitle": "September 2026, from revenue to operating profit",
+  "lang": "en",
+  "format": "usd",
+  "items": [
+    { "name": "Revenue", "value": 93800000, "type": "total" },
+    { "name": "Cost of sales", "value": -61200000 },
+    { "name": "Gross profit", "type": "total" },
+    { "name": "SG&A", "value": -19800000 },
+    { "name": "Operating profit", "type": "total" }
+  ]
+}

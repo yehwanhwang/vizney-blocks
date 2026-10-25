@@ -5,8 +5,8 @@
     const run = (vals) => (d.accumulate === false ? vals : sum(vals));
     const cur = d.current || {}, prev = d.previous, t = d.target || {};
     const goal = t.value != null && isFinite(t.value) ? +t.value : null;
-    const series = [{ name: cur.name || '이번 기간', values: run(cur.values || []), tone: 't1', dot: true }];
-    if (prev) series.push({ name: prev.name || '지난 기간', values: run(prev.values || []), tone: 't0' });
+    const series = [{ name: cur.name || tx(d, '이번 기간'), values: run(cur.values || []), tone: 't1', dot: true }];
+    if (prev) series.push({ name: prev.name || tx(d, '지난 기간'), values: run(prev.values || []), tone: 't0' });
     lineCard(card, d, f, {
       series,
       legend: series.map((s) => ({ name: s.name, tone: s.tone })),
@@ -16,7 +16,7 @@
         const y = Math.round(c.y(goal)) + 0.5;
         svg.append(svgEl('line', { x1: c.left - 4, x2: c.right, y1: y, y2: y, class: 'vzb-ax-ref' }));
       },
-      side: goal == null ? null : [{ value: goal, lines: [t.label || '목표', show(f, goal)] }],
+      side: goal == null ? null : [{ value: goal, lines: [t.label || tx(d, '목표'), show(f, goal)] }],
       over: (svg, c) => {   // 이번 기간의 마지막 누계는 점 위에 적습니다
         const i = lastIdx(series[0].values, c.n);
         if (i < 0) return;
@@ -29,9 +29,9 @@
         if (b != null) rows.push({ tone: 't0', name: series[1].name, value: show(f, b) });
         if (a != null && b != null) {
           const dl = delta(f, a, b, d.better);
-          notes.push(`${series[1].name} 대비 ${dl.dir > 0 ? '+' : dl.dir < 0 ? '−' : ''}${dl.text}`);
+          notes.push(tx(d, '%s 대비 %s', series[1].name, `${dl.dir > 0 ? '+' : dl.dir < 0 ? '−' : ''}${dl.text}`));
         }
-        if (a != null && goal) notes.push(`목표의 ${num((a / goal) * 100, 1)}%`);
+        if (a != null && goal) notes.push(tx(d, '목표의 %s%', num((a / goal) * 100, 1)));
         return { rows, note: notes.join(' · ') };
       },
     });

@@ -1,0 +1,19 @@
+{
+  "title": "Shipments by Branch",
+  "subtitle": "September 2026, year over year",
+  "lang": "en",
+  "format": "usd",
+  "better": "up",
+  "currentLabel": "Sep 2026",
+  "compareLabel": "Sep 2025",
+  "items": [
+    { "name": "New York", "value": 15100000, "prev": 14800000 },
+    { "name": "London", "value": 14400000, "prev": 13600000 },
+    { "name": "Tokyo", "value": 10200000, "prev": 9800000 },
+    { "name": "Singapore", "value": 13100000, "prev": 8200000 },
+    { "name": "Sydney", "value": 9500000, "prev": 9100000 },
+    { "name": "Toronto", "value": 10600000, "prev": 10800000 },
+    { "name": "Berlin", "value": 12800000, "prev": 12600000 },
+    { "name": "Dubai", "value": 8100000, "prev": 7200000 }
+  ]
+}

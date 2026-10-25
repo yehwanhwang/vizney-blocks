@@ -8,7 +8,7 @@
       const call = el('div', 'vzb-fu-call');
       const big = el('div', 'vzb-num', first ? num((last.value / first) * 100, 1) : '–');
       big.append(el('span', 'vzb-unit', '%'));
-      call.append(big, el('p', null, d.rateLabel || '전체 전환율'));
+      call.append(big, el('p', null, d.rateLabel || tx(d, '전체 전환율')));
       card.append(call);
     }
     funnelCard(card, d, f, {
@@ -17,7 +17,7 @@
         const s = steps[i], c = el('div');
         const fig = figure(f, s.value);
         fig.className = 'vzb-fu-num';
-        c.append(fig, el('div', 'vzb-fu-name', s.name), el('div', 'vzb-fu-sub', s.note || (i ? `전환 ${fuPct(s.value, steps[i - 1].value)}` : '시작')));
+        c.append(fig, el('div', 'vzb-fu-name', s.name), el('div', 'vzb-fu-sub', s.note || (i ? tx(d, '전환 %s', fuPct(s.value, steps[i - 1].value)) : tx(d, '시작'))));
         return c;
       },
       paint(svg, G) {
@@ -30,7 +30,7 @@
       },
       tip(i) {
         const s = steps[i], p = steps[i - 1];
-        return { value: show(f, s.value), note: i ? [`${steps[0].name} 대비 ${fuPct(s.value, first)}`, `앞 단계에서 ${show(f, Math.max(0, p.value - s.value))} 빠짐`] : '첫 단계' };
+        return { value: show(f, s.value), note: i ? [tx(d, '%s 대비 %s|비율', steps[0].name, fuPct(s.value, first)), tx(d, '앞 단계에서 %s 빠짐', show(f, Math.max(0, p.value - s.value)))] : tx(d, '첫 단계') };
       },
     });
   });

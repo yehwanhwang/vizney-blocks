@@ -3,8 +3,8 @@
   mount('line-compare', (card, d, f) => {
     const cur = d.current || {}, prev = d.previous || {};
     const series = [
-      { name: cur.name || '올해', values: cur.values || [], tone: 't1', dot: true },
-      { name: prev.name || '작년', values: prev.values || [], tone: 't0' },
+      { name: cur.name || tx(d, '올해'), values: cur.values || [], tone: 't1', dot: true },
+      { name: prev.name || tx(d, '작년'), values: prev.values || [], tone: 't0' },
     ];
     lineCard(card, d, f, {
       series,
@@ -22,7 +22,7 @@
         if (b != null) rows.push({ tone: 't0', name: series[1].name, value: show(f, b) });
         if (a == null || b == null) return { rows };
         const dl = delta(f, a, b, d.better);
-        return { rows, note: `${series[1].name} 대비 ${dl.dir > 0 ? '+' : dl.dir < 0 ? '−' : ''}${dl.text}` };
+        return { rows, note: tx(d, '%s 대비 %s', series[1].name, `${dl.dir > 0 ? '+' : dl.dir < 0 ? '−' : ''}${dl.text}`) };
       },
     });
   });

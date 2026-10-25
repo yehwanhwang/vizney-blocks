@@ -4,11 +4,11 @@
     const pts = (d.points || []).filter((p) => p && fin(p.x) && fin(p.y));
     const avg = pts.length ? pts.reduce((a, p) => a + +p.x, 0) / pts.length : 0;
     const ref = Object.assign({ x: avg, y: 0 }, d.ref || {});
-    const fx = format(d.x || {}), fy = format(d.y || {});
+    const fx = format(d.x || {}, d), fy = format(d.y || {}, d);
     const q = d.quadrants || ['', '', '', ''];
     const where = (p) => q[(p.y >= ref.y ? 0 : 2) + (p.x >= ref.x ? 1 : 0)];
     scatterCard(card, d, f, {
-      ref: { x: ref.x, y: ref.y, xText: `${d.ref && fin(d.ref.x) ? '기준' : '평균'} ${show(fx, ref.x)}` },
+      ref: { x: ref.x, y: ref.y, xText: `${tx(d, d.ref && fin(d.ref.x) ? '기준' : '평균')} ${show(fx, ref.x)}` },
       quadrants: q,
       yText: (p) => `${p.y > 0 ? '+' : p.y < 0 ? '−' : ''}${show(fy, Math.abs(p.y))}`,
       note: (p) => where(p) || '',

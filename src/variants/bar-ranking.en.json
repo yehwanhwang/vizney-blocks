@@ -1,0 +1,17 @@
+{
+  "title": "Shipments by Branch",
+  "subtitle": "September 2026",
+  "lang": "en",
+  "format": "usd",
+  "columns": ["Branch", "Shipments"],
+  "items": [
+    { "name": "New York", "value": 15100000 },
+    { "name": "London", "value": 14400000 },
+    { "name": "Tokyo", "value": 10200000 },
+    { "name": "Singapore", "value": 13100000 },
+    { "name": "Sydney", "value": 9500000 },
+    { "name": "Toronto", "value": 10600000 },
+    { "name": "Berlin", "value": 12800000 },
+    { "name": "Dubai", "value": 8100000 }
+  ]
+}

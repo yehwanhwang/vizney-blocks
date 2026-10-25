@@ -8,7 +8,7 @@
       tone: (s) => (s.base ? 't0' : 't1'),
       fill: (s) => (s.base ? 0.3 : 0.2),
       value: (i) => (val(main, i) == null ? '' : f.parts(val(main, i))[0]),
-      note: (i) => (val(main, i) == null || val(base, i) == null ? '' : `${base.name} 대비 ${signed(f, val(main, i) - val(base, i))}`),
+      note: (i) => (val(main, i) == null || val(base, i) == null ? '' : tx(d, '%s 대비 %s', base.name, signed(f, val(main, i) - val(base, i)))),
       panel(ul, ctx) {
         return ctx.axes.map((a, i) => {
           const li = el('li', 'is-axis'), v = val(main, i), b = val(base, i);

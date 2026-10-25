@@ -1,0 +1,19 @@
+{
+  "title": "Downtown Dealer Review",
+  "subtitle": "Q3 2026, each axis scaled to 0–100",
+  "lang": "en",
+  "format": "count",
+  "max": 100,
+  "axes": ["Sales attainment", "Growth", "Profitability", "Satisfaction", "Inventory turns"],
+  "series": [
+    {
+      "name": "Downtown",
+      "values": [92, 58, 81, 88, 52]
+    },
+    {
+      "name": "All dealers",
+      "values": [68, 64, 62, 71, 66],
+      "base": true
+    }
+  ]
+}

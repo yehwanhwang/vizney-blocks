@@ -29,7 +29,7 @@
     const body = el('div', 'vzb-rd-body');
     body.tabIndex = 0;
     body.setAttribute('role', 'img');
-    body.setAttribute('aria-label', `${d.title || ''} 레이더 차트, 항목 ${n}개와 대상 ${series.length}개. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.`);
+    body.setAttribute('aria-label', tx(d, '%s 레이더 차트, 항목 %s개와 대상 %s개. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.', d.title || '', n, series.length));
     const plot = el('div', 'vzb-plot');
     const svg = svgEl('svg', { class: 'vzb-rd-svg', 'aria-hidden': 'true' });
     plot.append(svg);
@@ -40,7 +40,7 @@
     card.append(foot);
     // 화면 낭독기용 값 표: 줄은 항목, 칸은 대상
     const sr = el('div', 'vzb-sr'), table = el('table'), hr = el('tr');
-    hr.append(el('th', null, '항목'));
+    hr.append(el('th', null, tx(d, '항목|축')));
     series.forEach((s) => hr.append(el('th', null, s.name)));
     table.append(el('caption', null, d.title || ''), hr);
     axes.forEach((a, i) => {

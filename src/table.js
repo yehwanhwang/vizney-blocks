@@ -9,13 +9,13 @@
   }
   // 증감 배지: 기준(base) 대비 증감률. KPI 카드의 배지와 같습니다.
   const relF = { parts: (v) => [num(v, 1), ''], rel: true };
-  const changeBadge = (value, base, better) => (value == null || !base ? el('span', 'vzb-tb-none', '–') : badge(relF, +value, +base, better));
+  const changeBadge = (value, base, d) => (value == null || !base ? el('span', 'vzb-tb-none', '–') : badge(Object.assign({ lang: d.lang }, relF), +value, +base, d.better));
   // 합계 줄의 증감: 두 값이 모두 있는 줄만 더한 뒤 합계끼리 계산합니다.
   const ok = (v) => v != null && v !== '' && isFinite(v);
-  function changeTotal(rows, of, base, better) {
+  function changeTotal(rows, of, base, d) {
     let a = 0, b = 0;
     rows.forEach((r) => { if (ok(r[of]) && ok(r[base])) { a += +r[of]; b += +r[base]; } });
-    return changeBadge(a, b, better);
+    return changeBadge(a, b, d);
   }
   // 스파크라인: 72×20px 곡선과 마지막 점. 줄마다 자기 범위에 맞춰 그리되, 범위가 값의 10%보다 좁으면 10%로 넓혀
   // 거의 변하지 않은 줄이 크게 출렁여 보이지 않게 합니다(그 줄은 가운데 높이에서 거의 평평하게 그려집니다).
@@ -43,7 +43,7 @@
     const foot = el('div', 'vzb-foot vzb-tb');
     const table = el('table', 'vzb-tb-table');
     const thead = el('thead'), tbody = el('tbody'), tfoot = el('tfoot');
-    table.append(el('caption', 'vzb-sr', `${d.title || ''}${d.subtitle ? `, ${d.subtitle}` : ''}${cfg.sortable ? '. 열 제목을 누르면 정렬합니다.' : ''}`), thead, tbody, tfoot);
+    table.append(el('caption', 'vzb-sr', `${d.title || ''}${d.subtitle ? `, ${d.subtitle}` : ''}${cfg.sortable ? tx(d, '. 열 제목을 누르면 정렬합니다.') : ''}`), thead, tbody, tfoot);
     foot.append(table);
     card.append(foot);
     const cols = cfg.columns, rows = cfg.rows || [];
@@ -102,7 +102,7 @@
         });
       }
       if (!list.length) {
-        const td = el('td', 'vzb-tb-empty', '표시할 데이터가 없습니다.');
+        const td = el('td', 'vzb-tb-empty', tx(d, '표시할 데이터가 없습니다.'));
         td.colSpan = cols.length;
         const tr = el('tr');
         tr.append(td);

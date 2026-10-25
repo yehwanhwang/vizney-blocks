@@ -26,7 +26,7 @@
         const z = ((-all[0] / (all[1] - all[0])) * 100).toFixed(1), c = (t, m) => `color-mix(in srgb, var(--vzb-${t}) ${m.toFixed(0)}%, var(--vzb-card))`;
         bar.style.background = `linear-gradient(90deg, ${c(side(-1), deep(all[0]))} 0%, ${c(side(-1), 16)} ${z}%, ${c(side(1), 16)} ${z}%, ${c(side(1), deep(all[1]))} 100%)`;
       }
-      ramp.append(el('span', null, byRow ? '행마다 작음' : show(f, all[0])), bar, el('span', null, byRow ? '큼' : show(f, all[1])));
+      ramp.append(el('span', null, byRow ? tx(d, '행마다 작음') : show(f, all[0])), bar, el('span', null, byRow ? tx(d, '큼') : show(f, all[1])));
     }
     const { table } = tableCard(card, d, f, {
       rows,
@@ -64,7 +64,7 @@
     const cells = () => [...table.querySelectorAll('tbody .vzb-tb-heat')];
     table.classList.add('vzb-plot');
     table.tabIndex = 0;
-    table.querySelector('caption').append(' 표에 포커스한 뒤 화살표 키로 칸을 옮기면 그 칸의 값을 읽습니다.');
+    table.querySelector('caption').append(tx(d, ' 표에 포커스한 뒤 화살표 키로 칸을 옮기면 그 칸의 값을 읽습니다.'));
     let on = null;
     const mark = (s) => { if (on) on.classList.remove('is-on'); on = s; if (on) on.classList.add('is-on'); };
     const keys = interact(table, () => cells().length,

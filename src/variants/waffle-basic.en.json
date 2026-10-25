@@ -1,0 +1,13 @@
+{
+  "title": "Shipments by Channel",
+  "subtitle": "September 2026, by shipment value",
+  "lang": "en",
+  "format": "usd",
+  "items": [
+    { "name": "Dealers", "value": 37200000 },
+    { "name": "Online", "value": 27100000 },
+    { "name": "Retail", "value": 17800000 },
+    { "name": "Corporate", "value": 7300000 },
+    { "name": "Export", "value": 4400000 }
+  ]
+}

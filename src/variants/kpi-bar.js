@@ -3,13 +3,13 @@
   mount('kpi-bar', (card, d, f) => {
     const b = d.bars, vals = b.values, labels = b.labels, last = vals.length - 1;
     const partial = !!b.partial;
-    const now = partial ? `${labels[last]}${typeof b.partial === 'string' ? ` ${b.partial}` : ''} 진행 중` : '';
+    const now = partial ? tx(d, '%s 진행 중', `${labels[last]}${typeof b.partial === 'string' ? ` ${b.partial}` : ''}`) : '';
     head(card, d, f, d.value != null ? d.value : vals[last], d.compare);
     const foot = el('div', 'vzb-foot vzb-fill');
     const plot = el('div', 'vzb-plot');
     plot.tabIndex = 0;
     plot.setAttribute('role', 'img');
-    plot.setAttribute('aria-label', `${d.title || ''}: ${labels.map((l, i) => `${l} ${show(f, vals[i])}`).join(', ')}${partial ? ` (${now})` : ''}. 좌우 화살표로 기간을 옮깁니다.`);
+    plot.setAttribute('aria-label', tx(d, '%s: %s%s. 좌우 화살표로 기간을 옮깁니다.', d.title || '', labels.map((l, i) => `${l} ${show(f, vals[i])}`).join(', '), partial ? ` (${now})` : ''));
     const svg = svgEl('svg', { class: 'vzb-br-svg', 'aria-hidden': 'true' });
     plot.append(svg);
     foot.append(plot);

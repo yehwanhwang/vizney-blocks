@@ -9,6 +9,11 @@
 //   7. 데이터: the example JSON parses, labels and values have the same length, and no field the card computes is written in.
 //   8. 메타: every meta.json card has its .js and .json, no orphan source file, ids are slugs under their category, uses are known parts.
 //   9. 주소: no public card address (docs/cards/<id>.txt) disappears.
+//  10. 문구: every Korean string a card can show goes through tx() in core.js, every tx() key has an English entry in EN and every
+//      EN entry is used, so "lang": "en" leaves no Korean behind. The won notations (조 · 억 · 만 · 원) are the only bare Korean.
+//  11. 영어: every card that is not retired has its English example (src/variants/<id>.en.json, with "lang": "en") and its
+//      English wording (meta.en.json: when, rules of the same count, guide; every category: name, intro, lede, height), and
+//      purposes.en.json mirrors purposes.json (same purposes and cards, in the same order, with translated when).
 import { readdirSync, existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -18,7 +23,44 @@ const COMPUTED = ['delta', 'change', 'share', 'pct', 'percent', 'ratio', 'rate',
 // Known gaps the guard reports as warnings instead of failing: card id → why, to be fixed as a card change.
 const KNOWN = {};
 
-export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippets, fontLink }) {
+// Strings and tx() calls in a card script. Walks the source once, keeping track of comments, the three string kinds and `${}` inside
+// template literals, and returns every string literal with whether it is inside a tx(…) call (a ternary of keys counts) and
+// which quote it uses. Keys are single-quoted literals inside tx(); any other Korean is a card word that bypasses tx().
+export function wordsOf(src) {
+  const out = [];
+  let i = 0;
+  const code = (inExpr) => {   // reads code to the end, or (inside `${…}`) to its closing brace, tracking tx() spans
+    let tx = 0, depth = 0, brace = 0;
+    while (i < src.length) {
+      const c = src[i], c2 = src.slice(i, i + 2);
+      if (c2 === '//') { while (i < src.length && src[i] !== '\n') i++; continue; }
+      if (c2 === '/*') { i = src.indexOf('*/', i + 2) + 2; continue; }
+      if (c === "'" || c === '"' || c === '`') { str(c, tx > 0); continue; }
+      if (c === '/' && /(?:[(,=:?!&|[{;]|\breturn|\btypeof)\s*$/.test(src.slice(Math.max(0, i - 20), i))) { i++; while (i < src.length && src[i] !== '/') { if (src[i] === '\\') i++; i++; } i++; continue; }   // a regex literal
+      if (/\btx\($/.test(src.slice(Math.max(0, i - 3), i + 1))) { tx += 1; depth += 1; i++; continue; }
+      if (c === '(') depth += tx ? 1 : 0;
+      if (c === ')' && tx) { depth -= 1; if (!depth) tx = 0; }
+      if (c === '{') brace += 1;
+      if (c === '}') { if (brace) brace -= 1; else if (inExpr) return; }
+      i++;
+    }
+  };
+  const str = (q, inTx) => {
+    let s = '';
+    i++;
+    while (i < src.length && src[i] !== q) {
+      if (src[i] === '\\') { s += src[i] + src[i + 1]; i += 2; continue; }
+      if (q === '`' && src.slice(i, i + 2) === '${') { i += 2; out.push({ q, inTx, text: s }); code(true); i++; s = ''; continue; }
+      s += src[i++];
+    }
+    i++;
+    out.push({ q, inTx, text: s });
+  };
+  code(false);
+  return out;
+}
+
+export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippets, snippetsEn, en, purposes, purposesEn, fontLink }) {
   const fails = [], warns = [];
   const fail = (where, msg) => fails.push(`${where}: ${msg}`);
   const warn = (msg) => warns.push(msg);
@@ -26,6 +68,63 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
   const vdir = join(root, 'src/variants');
   const all = cats.flatMap((c) => c.variants.map((v) => ({ ...v, cat: c.id })));
   const ids = new Set(all.map((v) => v.id));
+  const live = all.filter((v) => !v.retired);
+
+  // 10. card words: Korean only through tx(), every key in EN, every EN entry used
+  const core = src('src/core.js');
+  const enStart = core.indexOf('const EN = {'), enEnd = core.indexOf('\n  };', enStart) + 5;
+  if (enStart < 0 || enEnd < 5) fail('src/core.js', 'const EN = { … }; 번역표가 없다');
+  const EN = enStart < 0 ? {} : new Function(`${core.slice(enStart, enEnd)} return EN;`)();
+  const usedKeys = new Set();
+  const wordFiles = [['src/core.js', core.slice(0, enStart) + core.slice(enEnd)], ...parts.map((p) => [`src/${p}.js`, partJs[p]]), ...all.map((v) => [`src/variants/${v.id}.js`, src(`src/variants/${v.id}.js`)])];
+  for (const [file, text] of wordFiles) {
+    if (!text) continue;
+    for (const w of wordsOf(text)) {
+      if (w.inTx && w.q === "'" && /[가-힣%]/.test(w.text)) {   // a key: Korean, or a bare pattern like '%s%p'
+        usedKeys.add(w.text);
+        if (!(w.text in EN)) fail(file, `tx() 문구 '${w.text}'의 영어가 core.js의 EN에 없다`);
+      } else if (/[가-힣]/.test(w.text.replace(/[조억만원]/g, ''))) fail(file, `카드에 보이는 한국어 '${w.text}'가 tx()를 거치지 않는다. "lang": "en"이면 영어가 나오게 tx(d, '…')로 적는다`);
+    }
+  }
+  for (const k of Object.keys(EN)) if (!usedKeys.has(k)) fail('src/core.js', `EN의 '${k}'를 쓰는 카드가 없다. 표에서 지운다`);
+
+  // 11. English: example data, wording and purpose index for every card that is not retired (build.mjs passes en; --check alone may not)
+  const enCats = (en && en.cats) || {}, enCards = (en && en.cards) || {};
+  for (const c of en ? cats : []) {
+    if (!c.variants.some((v) => !v.retired)) continue;
+    const e = enCats[c.id];
+    if (!e) { fail(`meta.en.json`, `카테고리 ${c.id}의 영어(name · intro · lede · height)가 없다`); continue; }
+    for (const k of ['name', 'intro', 'lede', 'height']) if (!e[k]) fail('meta.en.json', `${c.id}.${k}가 없다`);
+    for (const g of c.groups || []) if (!e.groups || !e.groups[g.id] || !e.groups[g.id].name || !e.groups[g.id].note) fail('meta.en.json', `${c.id}.groups.${g.id}의 name과 note가 없다`);
+    if (c.option && (!e.option || !e.option.label || !Array.isArray(e.option.choices) || e.option.choices.length !== c.option.choices.length)) fail('meta.en.json', `${c.id}.option의 label과 choices(${c.option.choices.length}개)가 없다`);
+    if (c.guide && (!e.guide || !e.guide.name || !e.guide.url)) fail('meta.en.json', `${c.id}.guide의 name과 url이 없다`);
+  }
+  for (const v of en ? live : []) {
+    const e = enCards[v.id];
+    if (!e) fail('meta.en.json', `${v.id}의 영어(when · rules)가 없다`);
+    else {
+      if (!e.when) fail('meta.en.json', `${v.id}.when이 없다`);
+      if (!Array.isArray(e.rules) || e.rules.length !== v.rules.length) fail('meta.en.json', `${v.id}.rules는 한국어와 같은 ${v.rules.length}개여야 한다`);
+      if (v.guide && (!e.guide || !e.guide.name || !e.guide.url)) fail('meta.en.json', `${v.id}.guide의 name과 url이 없다`);
+    }
+    const p = join(vdir, `${v.id}.en.json`);
+    if (!existsSync(p)) { fail(v.id, 'src/variants/<id>.en.json(영어 예시 데이터)이 없다'); continue; }
+    try {
+      const d = JSON.parse(readFileSync(p, 'utf8'));
+      if (d.lang !== 'en') fail(`src/variants/${v.id}.en.json`, '"lang": "en"이 있어야 카드 안 문구가 영어가 된다');
+      if (/[가-힣]/.test(JSON.stringify(d))) fail(`src/variants/${v.id}.en.json`, '영어 예시에 한국어가 있다');
+    } catch (e) { fail(`src/variants/${v.id}.en.json`, `읽지 못한다: ${e.message}`); }
+  }
+  if (purposes && purposesEn) {
+    if (purposesEn.length !== purposes.length) fail('purposes.en.json', `목적이 ${purposes.length}개여야 한다`);
+    purposes.forEach((p, i) => {
+      const e = purposesEn[i];
+      if (!e || e.id !== p.id) { fail('purposes.en.json', `${i + 1}번째 목적은 ${p.id}여야 한다`); return; }
+      if (!e.name || !e.question) fail('purposes.en.json', `${p.id}의 name과 question이 없다`);
+      if (!Array.isArray(e.picks) || e.picks.map((k) => k.id).join() !== p.picks.map((k) => k.id).join()) fail('purposes.en.json', `${p.id}의 picks는 한국어와 같은 카드를 같은 순서로 둔다`);
+      else e.picks.forEach((k) => { if (!k.when) fail('purposes.en.json', `${p.id}의 ${k.id}에 when이 없다`); });
+    });
+  }
 
   // 8. meta.json ↔ files
   for (const v of all) {
@@ -38,8 +137,8 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
     for (const u of v.uses || []) if (!parts.includes(u)) fail(v.id, `uses에 모르는 부품 "${u}"`);
   }
   for (const f of readdirSync(vdir)) {
-    const m = f.match(/^(.+)\.(js|json|css)$/);
-    if (!m || f === 'meta.json' || f === 'purposes.json') continue;
+    const m = f.match(/^(.+?)(\.en)?\.(js|json|css)$/);
+    if (!m || ['meta.json', 'meta.en.json', 'purposes.json', 'purposes.en.json'].includes(f)) continue;
     if (!ids.has(m[1])) fail(`src/variants/${f}`, 'meta.json에 없는 카드의 파일이다. 카드를 내릴 때는 지우지 말고 retired를 적는다');
   }
 
@@ -119,10 +218,9 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
     else if (got !== want) fail(v.id, `CSS의 높이는 ${got}단위인데 build.mjs TIER는 ${want}단위다. 둘을 맞춘다`);
   }
 
-  // Snippet checks (1, 5, 7) on the code people copy.
-  for (const v of all) {
-    const code = snippets[v.id];
-    const where = `cards/${v.id}.txt`;
+  // Snippet checks (1, 5, 7) on the code people copy, in both languages.
+  for (const [v, code, where] of [...all.map((v) => [v, snippets[v.id], `cards/${v.id}.txt`]), ...live.map((v) => [v, (snippetsEn || {})[v.id], `en/cards/${v.id}.txt`])]) {
+    if (!code) continue;
     // Comments (the header, tokens.css notes, JS notes) may name addresses; only live references count.
     const body = code.replace(fontLink, '').replace(/<!--[\s\S]*?-->/, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
     for (const m of body.matchAll(/https?:\/\/[^\s"'`)]+/g)) if (m[0] !== 'http://www.w3.org/2000/svg') fail(where, `외부 주소 ${m[0]}. 카드는 글꼴 링크 말고 아무것도 밖에서 가져오지 않는다`);

@@ -1,0 +1,12 @@
+{
+  "title": "Shipments",
+  "subtitle": "Last 13 months, monthly",
+  "lang": "en",
+  "format": "usd",
+  "better": "up",
+  "compare": { "label": "Sep '25", "value": 86100000 },
+  "trend": {
+    "labels": ["Sep '25", "Oct '25", "Nov '25", "Dec '25", "Jan '26", "Feb '26", "Mar '26", "Apr '26", "May '26", "Jun '26", "Jul '26", "Aug '26", "Sep '26"],
+    "values": [86100000, 81200000, 84600000, 90500000, 85200000, 83800000, 87100000, 88400000, 90200000, 86800000, 91500000, 89700000, 93800000]
+  }
+}

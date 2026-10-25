@@ -3,14 +3,14 @@
   mount('bar-target', (card, d, f) => {
     const vals = d.values || [], goals = d.targets || [], down = d.better === 'down';
     const miss = (i) => vals[i] != null && goals[i] != null && (down ? vals[i] > goals[i] : vals[i] < goals[i]);
-    const name = d.targetLabel || '목표', value = d.valueLabel || '실적';
+    const name = d.targetLabel || tx(d, '목표'), value = d.valueLabel || tx(d, '실적');
     barCard(card, d, f, {
       series: [{ name: value, values: vals, tone: 'f1', dim: miss }],
       extra: goals,
       legend: [
         { name: value, tone: 'f1', box: true },
         { name, tone: 'ti' },
-        { name: `${name} ${down ? '초과' : '미달'}`, tone: 'f1', box: true, dim: true },
+        { name: tx(d, down ? '%s 초과' : '%s 미달', name), tone: 'f1', box: true, dim: true },
       ],
       over: (svg, c) => goals.forEach((g, i) => {
         if (g == null || i >= c.n) return;
@@ -19,7 +19,7 @@
       }),
       tip: (i) => (vals[i] == null ? { value: '–' } : {
         value: show(f, vals[i]),
-        note: goals[i] == null ? '' : `${name} ${show(f, goals[i])} · 달성률 ${num((vals[i] / goals[i]) * 100, 1)}%`,
+        note: goals[i] == null ? '' : tx(d, '%s %s · 달성률 %s%', name, show(f, goals[i]), num((vals[i] / goals[i]) * 100, 1)),
       }),
     });
   });

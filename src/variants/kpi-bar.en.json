@@ -1,0 +1,13 @@
+{
+  "title": "Orders",
+  "subtitle": "Last 13 months; October through the 20th",
+  "lang": "en",
+  "format": "count",
+  "better": "up",
+  "compare": { "label": "Sep 1–20", "value": 7760 },
+  "bars": {
+    "labels": ["Oct '25", "Nov '25", "Dec '25", "Jan '26", "Feb '26", "Mar '26", "Apr '26", "May '26", "Jun '26", "Jul '26", "Aug '26", "Sep '26", "Oct '26"],
+    "values": [11480, 11920, 12650, 11240, 11050, 11820, 12340, 11960, 12810, 13150, 12690, 12460, 8210],
+    "partial": "1–20"
+  }
+}

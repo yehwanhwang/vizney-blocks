@@ -21,8 +21,8 @@
   // 묶인 '기타' 줄의 이름 칸(막대 없음)
   const restName = (it) => el('span', 'vzb-li-name is-rest', it.name);
   // 묶을 항목들의 이름과 값의 합. keys에 적은 값도 함께 더합니다.
-  function foldRest(rest, keys) {
-    const it = { rest: true, name: `기타 ${rest.length}개`, note: rest.map((x) => x.name).join('·') };
+  function foldRest(d, rest, keys) {
+    const it = { rest: true, name: tx(d, '기타 %s개', rest.length), note: rest.map((x) => x.name).join('·') };
     keys.forEach((k) => { it[k] = rest.reduce((a, x) => a + (+x[k] || 0), 0); });
     return it;
   }
@@ -54,7 +54,7 @@
       cols.replaceChildren(...(S.columns || []).map((t) => el('span', null, t)));
       list.className = `vzb-li-list is-${S.layout || 'overlay'}`;
       list.style.gridTemplateColumns = S.cols || 'minmax(0, 1fr) auto';
-      list.setAttribute('aria-label', `${S.name || d.title || ''} 목록, ${shown.length}줄. 위아래 화살표로 항목의 자세한 값을 봅니다.`);
+      list.setAttribute('aria-label', tx(d, '%s 목록, %s줄. 위아래 화살표로 항목의 자세한 값을 봅니다.', S.name || d.title || '', shown.length));
       ctx = Object.assign({ f: S.f }, S.prepare ? S.prepare(shown) : {});
       rows = shown.map((it) => {
         const row = el('div', `vzb-li-row${it.rest ? ' is-rest' : ''}`);
@@ -96,12 +96,12 @@
     return listCard(card, d, f, Object.assign({
       layout: 'overlay',
       cols: 'minmax(0, 1fr) auto',
-      fold: (rest) => foldRest(rest, ['value']),
+      fold: (rest) => foldRest(d, rest, ['value']),
       prepare: (shown) => ({
         max: Math.max(0, ...shown.filter((x) => !x.rest).map((x) => +x.value || 0)),
         total: shown.reduce((a, x) => a + (+x.value || 0), 0),
       }),
       cells: (it, c) => [it.rest ? restName(it) : overlayBar(it.name, share(it.value, c.max)), el('b', 'vzb-li-val', show(c.f, it.value))],
-      tip: (it, c) => ({ value: show(c.f, it.value), note: c.total ? `전체의 ${num((it.value / c.total) * 100, 1)}%` : '' }),
+      tip: (it, c) => ({ value: show(c.f, it.value), note: c.total ? tx(d, '전체의 %s', `${num((it.value / c.total) * 100, 1)}%`) : '' }),
     }, cfg));
   }

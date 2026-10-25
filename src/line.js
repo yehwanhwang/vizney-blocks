@@ -64,5 +64,5 @@
     },
   };
   function lineCard(card, d, f, cfg) {
-    return axisCard(card, d, f, Object.assign({ paint: linePaint, kind: '선 차트', headroom: 0.15 }, cfg));
+    return axisCard(card, d, f, Object.assign({ paint: linePaint, kind: tx(d, '선 차트'), headroom: 0.15 }, cfg));
   }

@@ -39,13 +39,13 @@
       zero: true,
       categorical: true,
       padTop: 22,
-      kind: '워터폴 차트',
-      series: [{ name: '누계', values: rows.map((r) => r.to), tone: 'f1' }],   // 세로축 범위와 화면 낭독기용 표는 누계로 잡습니다
+      kind: tx(d, '워터폴 차트'),
+      series: [{ name: tx(d, '누계'), values: rows.map((r) => r.to), tone: 'f1' }],   // 세로축 범위와 화면 낭독기용 표는 누계로 잡습니다
       extra: rows.flatMap((r) => [r.from, r.to]),
       legend: cfg.legend,
       tip: (i) => {
         const r = rows[i];
-        if (!r.total) return { value: sign(r.value), note: `반영 후 누계 ${show(f, r.to)}` };
+        if (!r.total) return { value: sign(r.value), note: tx(d, '반영 후 누계 %s', show(f, r.to)) };
         return { value: total(r.value), note: i && cfg.totalNote ? cfg.totalNote(r, rows[0]) : '' };
       },
     });

@@ -5,15 +5,15 @@
       const col = Object.assign({}, c, { total: null });
       if (c.type === 'change') {
         col.value = (r) => (+r[c.base] ? (r[c.of] / r[c.base] - 1) * 100 : null);
-        col.cell = (r) => changeBadge(r[c.of], r[c.base], d.better);
-        col.total = (rows) => changeTotal(rows, c.of, c.base, d.better);
+        col.cell = (r) => changeBadge(r[c.of], r[c.base], d);
+        col.total = (rows) => changeTotal(rows, c.of, c.base, d);
       } else if (c.total === 'sum') col.total = sumOf(c.key);
       return col;
     });
     tableCard(card, d, f, {
       columns,
       rows: d.rows || [],
-      total: d.total === false ? null : '합계',
+      total: d.total === false ? null : tx(d, '합계'),
       sortable: true,
       sortKey: d.sortKey || (columns[1] && columns[1].key),
       sortDir: -1,

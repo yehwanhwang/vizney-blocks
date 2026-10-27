@@ -1,0 +1,102 @@
+[
+ {
+  "id": "status",
+  "name": "Status",
+  "question": "What is the number now?",
+  "picks": [
+   { "id": "kpi-number", "when": "Just the number and its baseline" },
+   { "id": "kpi-line", "when": "With the last 13 months as a trend" },
+   { "id": "kpi-bar", "when": "To compare the month in progress with past months" },
+   { "id": "kpi-stacked-bar", "when": "A total and its breakdown on one card" },
+   { "id": "line-tabs", "when": "2–3 metrics with different units on one card" }
+  ]
+ },
+ {
+  "id": "trend",
+  "name": "Trend",
+  "question": "How has it changed?",
+  "picks": [
+   { "id": "line-basic", "when": "The course of one metric" },
+   { "id": "bar-basic", "when": "Size per period rather than the course" },
+   { "id": "line-compare", "when": "Against the same month last year" },
+   { "id": "line-multiple", "when": "The course of 2–3 items together" },
+   { "id": "bump-basic", "when": "How rankings changed rather than values" }
+  ]
+ },
+ {
+  "id": "target",
+  "name": "Target",
+  "question": "How far to the target?",
+  "picks": [
+   { "id": "kpi-gauge", "when": "One metric against its target or limit" },
+   { "id": "grid-target", "when": "Attainment per item, with the amounts" },
+   { "id": "bar-target", "when": "A different target in each period" },
+   { "id": "line-cumulative", "when": "This month's cumulative pace" },
+   { "id": "line-reference", "when": "Whether a baseline or average was crossed" }
+  ]
+ },
+ {
+  "id": "compare",
+  "name": "Compare",
+  "question": "Which is bigger or smaller?",
+  "picks": [
+   { "id": "bar-ranking", "when": "Size and rank per item" },
+   { "id": "bar-compare", "when": "Against last year or last month" },
+   { "id": "bar-butterfly", "when": "Two groups on the same items" },
+   { "id": "radar-basic", "when": "Strengths and weaknesses across several scores" }
+  ]
+ },
+ {
+  "id": "share",
+  "name": "Composition",
+  "question": "What is it made of?",
+  "picks": [
+   { "id": "donut-basic", "when": "Shares at one point in time" },
+   { "id": "bar-stacked-100", "when": "How the mix changed over periods" },
+   { "id": "bar-stacked", "when": "Total and mix over time, together" },
+   { "id": "treemap-basic", "when": "Many items, or items inside groups" },
+   { "id": "waffle-basic", "when": "Shares you can count, in squares" }
+  ]
+ },
+ {
+  "id": "table",
+  "name": "Table",
+  "question": "Exactly how much, per item?",
+  "picks": [
+   { "id": "grid-basic", "when": "Several metrics and a total per item" },
+   { "id": "grid-spark", "when": "A 13-month trend per item at a glance" },
+   { "id": "grid-pivot", "when": "Amounts split two ways, as a crosstab" },
+   { "id": "heatmap-basic", "when": "Finding high and low cells by color" }
+  ]
+ },
+ {
+  "id": "change",
+  "name": "Change",
+  "question": "Why did it go up or down?",
+  "picks": [
+   { "id": "waterfall-basic", "when": "The change between two points, by factor" },
+   { "id": "waterfall-subtotal", "when": "A profit and loss structure" },
+   { "id": "bar-diverging", "when": "Change or variance from target, per period" }
+  ]
+ },
+ {
+  "id": "flow",
+  "name": "Flow",
+  "question": "Where does it drop off, and where does it go?",
+  "picks": [
+   { "id": "funnel-flow", "when": "How much drops out at each step" },
+   { "id": "sankey-basic", "when": "Flows between two breakdowns" },
+   { "id": "sankey-levels", "when": "Flows across three or more levels" }
+  ]
+ },
+ {
+  "id": "relation",
+  "name": "Relation",
+  "question": "How do two values relate?",
+  "picks": [
+   { "id": "scatter-basic", "when": "Whether two measures move together" },
+   { "id": "scatter-quadrant", "when": "Sorting items into four groups by two criteria" },
+   { "id": "scatter-connected", "when": "How two metrics moved over time" }
+  ]
+ }
+]

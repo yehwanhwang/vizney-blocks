@@ -1,0 +1,10 @@
+{
+  "title": "Monthly Shipments",
+  "subtitle": "Jan–Sep 2026, against each month’s target",
+  "lang": "en",
+  "format": "usd",
+  "better": "up",
+  "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+  "values": [85200000, 83800000, 87100000, 88400000, 90200000, 86800000, 91500000, 89700000, 93800000],
+  "targets": [85000000, 83000000, 88000000, 88000000, 90000000, 90000000, 91000000, 90000000, 93000000]
+}

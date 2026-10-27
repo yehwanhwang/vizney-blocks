@@ -1,0 +1,16 @@
+{
+  "title": "Shipments",
+  "subtitle": "Monthly; 2026 through September",
+  "lang": "en",
+  "format": "usd",
+  "better": "up",
+  "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  "current": {
+    "name": "2026",
+    "values": [85200000, 83800000, 87100000, 88400000, 90200000, 86800000, 91500000, 89700000, 93800000]
+  },
+  "previous": {
+    "name": "2025",
+    "values": [79000000, 77200000, 80500000, 81800000, 82900000, 80100000, 84000000, 82300000, 86100000, 81200000, 84600000, 90500000]
+  }
+}

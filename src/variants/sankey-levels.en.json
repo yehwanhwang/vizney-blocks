@@ -1,0 +1,16 @@
+{
+  "title": "Profit Flow",
+  "subtitle": "September 2026, from product-line revenue to costs and operating profit",
+  "lang": "en",
+  "format": "usd",
+  "focus": "Operating profit",
+  "links": [
+    { "from": "Appliances", "to": "Revenue", "value": 41200000 },
+    { "from": "Home goods", "to": "Revenue", "value": 22800000 },
+    { "from": "Kitchenware", "to": "Revenue", "value": 17500000 },
+    { "from": "Consumables", "to": "Revenue", "value": 10000000 },
+    { "from": "Revenue", "to": "Cost of sales", "value": 58600000 },
+    { "from": "Revenue", "to": "SG&A", "value": 22800000 },
+    { "from": "Revenue", "to": "Operating profit", "value": 10100000 }
+  ]
+}

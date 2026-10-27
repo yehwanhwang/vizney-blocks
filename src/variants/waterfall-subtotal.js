@@ -3,7 +3,7 @@
   mount('waterfall-subtotal', (card, d, f) => {
     waterfallCard(card, d, f, {
       toneOf: (r) => (r.total ? 'f1' : r.value >= 0 ? 'fs' : 'f0'),
-      totalNote: (r, first) => (first.value ? `${first.name}의 ${num((r.value / first.value) * 100, 1)}%` : ''),
-      legend: [{ name: '합계 · 소계', tone: 'f1', box: true }, { name: '빼는 항목', tone: 'f0', box: true }],
+      totalNote: (r, first) => (first.value ? tx(d, '%1의 %2', first.name, `${num((r.value / first.value) * 100, 1)}%`) : ''),
+      legend: [{ name: tx(d, '합계 · 소계'), tone: 'f1', box: true }, { name: tx(d, '빼는 항목'), tone: 'f0', box: true }],
     });
   });

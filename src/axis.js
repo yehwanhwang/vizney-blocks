@@ -44,11 +44,16 @@
         return (v) => `${v < 0 ? '-' : ''}$${num(Math.abs(v) / div, dd)}${u}`;
       }
       case 'pct': return (v) => `${num(v, dec)}%`;
-      case 'days': return (v) => `${num(v, dec)}일`;
+      case 'days': return (v) => withUnit(num(v, dec), tx(d, '일'));
       default: {
-        // 개수는 unit을 붙이고, 10만이 넘으면 만 단위로 줄여 적습니다(150,000건 → 15만건).
+        // 개수는 unit을 붙이고, 10만이 넘으면 만 단위로 줄여 적습니다(150,000건 → 15만건). 영어 카드는 K · M · B로 줄입니다(150K).
         const u = d.unit || '';
-        if (top < 1e5) return (v) => `${num(v, dec)}${u}`;
+        if (top < 1e5) return (v) => withUnit(num(v, dec), u);
+        if (d.lang === 'en') {
+          const [div, s] = top >= 1e9 ? [1e9, 'B'] : top >= 1e6 ? [1e6, 'M'] : [1e3, 'K'];
+          const dd = stepDec(step / div);
+          return (v) => withUnit(`${num(v / div, dd)}${s}`, u);
+        }
         const dd = stepDec(step / 1e4);
         return (v) => `${num(v / 1e4, dd)}만${u}`;
       }
@@ -98,7 +103,7 @@
       }
       (S.extra || []).forEach((v) => { if (v != null && isFinite(v)) vals.push(+v); });
       if (S.zero) vals.push(0);
-      if (!n || !vals.length) throw new Error('labels와 values(또는 series)를 확인하세요.');
+      if (!n || !vals.length) throw new Error(tx(d, 'labels와 values(또는 series)를 확인하세요.'));
       S.vmin = Math.min(...vals);
       S.vmax = Math.max(...vals);
       // 선 차트는 값 범위 위아래에 여유를 두어 선이 그래프 가운데에 머물게 합니다. 0 이상인 값은 0 아래로 내려가지 않습니다.
@@ -109,10 +114,10 @@
       }
       const first = S.series[0] ? lastIdx(S.series[0].values, n) : -1;   // 첫 선(현재)의 마지막 기간
       S.latest = first >= 0 ? first : Math.max(-1, ...S.series.map((s) => lastIdx(s.values, n)));
-      plot.setAttribute('aria-label', `${S.name || d.title || ''} ${S.kind || '차트'}, ${labels[0] || ''}–${labels[n - 1] || ''}. 좌우 화살표로 기간을 옮깁니다. 모든 값은 이어지는 표에 있습니다.`);
+      plot.setAttribute('aria-label', tx(d, '%s %s, %s–%s. 좌우 화살표로 기간을 옮깁니다. 모든 값은 이어지는 표에 있습니다.', S.name || d.title || '', S.kind || tx(d, '차트'), labels[0] || '', labels[n - 1] || ''));
       const table = el('table');
       const hr = el('tr');
-      hr.append(el('th', null, '기간'));
+      hr.append(el('th', null, tx(d, '기간')));
       S.series.forEach((s) => hr.append(el('th', null, s.name)));
       table.append(el('caption', null, S.name || d.title || ''), hr);
       labels.forEach((l, i) => {
@@ -137,7 +142,7 @@
         const t = yTicks(S.vmin, S.vmax, Math.max(3, Math.min(4, Math.floor((base - top) / 28) + 1)));
         const dec = stepDec(t.step), ticks = [];
         for (let k = 0; k < t.n; k++) ticks.push(+(t.lo + k * t.step).toFixed(dec));
-        const tt = tickText(S.fmt, dec, t.step, Math.max(...ticks.map(Math.abs)));
+        const tt = tickText(Object.assign({}, S.fmt, { lang: d.lang }), dec, t.step, Math.max(...ticks.map(Math.abs)));   // 탭의 표기 객체에도 카드의 lang을 잇습니다
         // 단위(억 · % · 만 · $ 등)는 맨 위 눈금에만 붙이고, 나머지 눈금은 숫자만 적습니다.
         const tickLabel = ticks.map((v, k) => (k === ticks.length - 1 ? tt(v) : tt(v).replace(/[^\d.,−]+$/, '').replace(/^(−?)\$/, '$1')));
         const gut = Math.ceil(Math.max(...tickLabel.map((s) => textW(s, 400, fam)))) + 10;

@@ -41,14 +41,14 @@
     const plot = el('div', 'vzb-plot');
     plot.tabIndex = 0;
     plot.setAttribute('role', 'img');
-    plot.setAttribute('aria-label', `${d.title || ''} 생키 차트, 노드 ${nodes.length}개와 흐름 ${links.length}개. 좌우 화살표로 노드와 흐름을 차례로 짚습니다. 모든 흐름은 이어지는 표에 있습니다.`);
+    plot.setAttribute('aria-label', tx(d, '%s 생키 차트, 노드 %s개와 흐름 %s개. 좌우 화살표로 노드와 흐름을 차례로 짚습니다. 모든 흐름은 이어지는 표에 있습니다.', d.title || '', nodes.length, links.length));
     const svg = svgEl('svg', { class: 'vzb-sk-svg', 'aria-hidden': 'true' });
     plot.append(svg);
     foot.append(plot);
     card.append(foot);
     // 화면 낭독기용 흐름 표
     const sr = el('div', 'vzb-sr'), table = el('table'), hr = el('tr');
-    hr.append(el('th', null, '출발'), el('th', null, '도착'), el('th', null, '값'));
+    hr.append(el('th', null, tx(d, '출발')), el('th', null, tx(d, '도착')), el('th', null, tx(d, '값')));
     table.append(el('caption', null, d.title || ''), hr);
     links.forEach((l) => { const tr = el('tr'); tr.append(el('td', null, l.s.name), el('td', null, l.t.name), el('td', null, show(f, l.value))); table.append(tr); });
     sr.append(table);
@@ -138,8 +138,8 @@
         const r = plot.getBoundingClientRect();
         if (it.link) {
           const l = it.link, notes = [];
-          if (l.value < l.s.value) notes.push(`${l.s.name}의 ${pct(l.value, l.s.value)}`);
-          if (l.value < l.t.value) notes.push(`${l.t.name}의 ${pct(l.value, l.t.value)}`);
+          if (l.value < l.s.value) notes.push(tx(d, '%1의 %2', l.s.name, pct(l.value, l.s.value)));
+          if (l.value < l.t.value) notes.push(tx(d, '%1의 %2', l.t.name, pct(l.value, l.t.value)));
           const label = `${l.s.name} → ${l.t.name}`, t = tipBody({ value: show(f, l.value), note: notes }, label);
           return { x: r.left + (l.s.x + NW + l.t.x) / 2, y: r.top + (l.sy + l.ty) / 2 - 4, label, value: t.node, text: t.text };
         }
@@ -147,10 +147,10 @@
         const n = it.node, end = L > 0 && n.col === L;
         const list = (end ? n.ins : n.outs).slice().sort((a, b) => b.value - a.value);
         const notes = [], colSum = total(cols[n.col]);
-        if (list.length > 5) notes.push(`외 ${list.length - 5}곳 ${show(f, total(list.slice(5)))}`);
-        if (list.length > 1) notes.push(`합계 ${show(f, n.value)}`);
-        if (end && n.ins.length === 1) { if (n.value < n.ins[0].s.value) notes.push(`${n.ins[0].s.name}의 ${pct(n.value, n.ins[0].s.value)}`); }
-        else if (n.value < colSum) notes.push(`전체의 ${pct(n.value, colSum)}`);
+        if (list.length > 5) notes.push(tx(d, '외 %s곳 %s', list.length - 5, show(f, total(list.slice(5)))));
+        if (list.length > 1) notes.push(tx(d, '합계 %s', show(f, n.value)));
+        if (end && n.ins.length === 1) { if (n.value < n.ins[0].s.value) notes.push(tx(d, '%1의 %2', n.ins[0].s.name, pct(n.value, n.ins[0].s.value))); }
+        else if (n.value < colSum) notes.push(tx(d, '전체의 %s', pct(n.value, colSum)));
         const spec = list.length > 1
           ? { rows: list.slice(0, 5).map((l) => ({ tone: l.tone, value: show(f, l.value), name: end ? l.s.name : l.t.name })), note: notes }
           : { value: show(f, n.value), note: notes };

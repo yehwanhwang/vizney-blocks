@@ -13,8 +13,8 @@
       layout: 'column',
       cols: 'max-content minmax(0, 1fr) auto',
       order: (a, b) => (down ? rate(a) - rate(b) : rate(b) - rate(a)),
-      legend: [{ name: down ? '목표 이내' : '목표 달성', tone: 'f1', box: true }, { name: down ? '목표 초과' : '목표 미달', tone: 'f1', box: true, dim: true }, { name: '목표(100%)', tone: 'ti', tick: true }],
-      fold: (rest) => foldRest(rest, ['value', 'target']),
+      legend: [{ name: tx(d, down ? '목표 이내' : '목표 달성'), tone: 'f1', box: true }, { name: tx(d, down ? '목표 초과' : '목표 미달'), tone: 'f1', box: true, dim: true }, { name: tx(d, '목표(100%)'), tone: 'ti', tick: true }],
+      fold: (rest) => foldRest(d, rest, ['value', 'target']),
       cells: (it) => {
         const track = el('div', 'vzb-li-track');
         const fill = el('i', `vzb-li-fill${miss(it) ? ' is-dim' : ''}`);
@@ -24,6 +24,6 @@
         track.append(fill, goal);
         return [el('span', 'vzb-li-label', it.name), track, el('b', 'vzb-li-val', `${num(rate(it) * 100, 1)}%`)];
       },
-      tip: (it) => ({ value: show(f, it.value), note: `목표 ${show(f, it.target)} · 달성률 ${num(rate(it) * 100, 1)}%` }),
+      tip: (it) => ({ value: show(f, it.value), note: tx(d, '목표 %s · 달성률 %s%', show(f, it.target), num(rate(it) * 100, 1)) }),
     });
   });

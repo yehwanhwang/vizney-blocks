@@ -1,0 +1,15 @@
+{
+  "title": "Target Attainment by Channel",
+  "subtitle": "September 2026, shipments",
+  "lang": "en",
+  "format": "usd",
+  "better": "up",
+  "nameLabel": "Channel",
+  "rows": [
+    { "name": "Dealers", "target": 39500000, "value": 37200000 },
+    { "name": "Online", "target": 24000000, "value": 27100000 },
+    { "name": "Retail", "target": 17000000, "value": 17800000 },
+    { "name": "Corporate", "target": 9500000, "value": 7300000 },
+    { "name": "Export", "target": 3500000, "value": 4400000 }
+  ]
+}

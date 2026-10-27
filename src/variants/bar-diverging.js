@@ -11,7 +11,7 @@
     const sign = (v) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${show(f, Math.abs(v))}`;
     const names = Array.isArray(d.legend) ? d.legend : null;
     barCard(card, d, f, {
-      series: [{ name: d.title || '값', values: vals, tone: 'f0', toneAt }],
+      series: [{ name: d.title || tx(d, '값'), values: vals, tone: 'f0', toneAt }],
       legend: names && want ? [{ name: names[0], tone: 'fg', box: true }, { name: names[1], tone: 'fb', box: true }] : null,
       label: 'last',
       labelText: (v) => sign(v),

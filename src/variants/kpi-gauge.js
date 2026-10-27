@@ -5,7 +5,7 @@
     const t = d.target || {};
     const limit = d.better === 'down';
     const rate = t.value ? d.value / t.value : 0;
-    const share = `${t.label || '목표'} ${show(f, t.value)}의 ${num(rate * 100, 1)}%${limit ? ' 사용' : ''}`;
+    const share = tx(d, limit ? '%1 %2의 %3% 사용' : '%1 %2의 %3%', t.label || tx(d, '목표|소문자'), show(f, t.value), num(rate * 100, 1));
     const foot = el('div', 'vzb-foot');
     const gauge = el('div', 'vzb-gg');
     const svg = svgEl('svg', { class: 'vzb-gg-svg', viewBox: '0 0 260 136', role: 'img', 'aria-label': `${show(f, d.value)}, ${share}` });

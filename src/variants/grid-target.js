@@ -18,20 +18,20 @@
       box.append(track, el('span', null, r == null ? '–' : `${num(r, 1)}%`));
       return box;
     };
-    const state = (v, t) => (rateOf(v, t) != null ? el('span', `vzb-badge vzb-tb-state vzb-${met(v, t) ? 'good' : 'bad'}`, met(v, t) ? (down ? '이내' : '달성') : (down ? '초과' : '미달')) : el('span', 'vzb-tb-none', '–'));
+    const state = (v, t) => (rateOf(v, t) != null ? el('span', `vzb-badge vzb-tb-state vzb-${met(v, t) ? 'good' : 'bad'}`, tx(d, met(v, t) ? (down ? '이내' : '달성') : (down ? '초과' : '미달'))) : el('span', 'vzb-tb-none', '–'));
     tableCard(card, d, f, {
       rows,
-      total: d.total === false || !f.rel ? null : '합계',   // 비율 지표(pct)는 목표와 실적을 더할 수 없어 합계 줄을 두지 않습니다
+      total: d.total === false || !f.rel ? null : tx(d, '합계'),   // 비율 지표(pct)는 목표와 실적을 더할 수 없어 합계 줄을 두지 않습니다
       sortable: true,
       sortKey: 'rate',
       sortDir: down ? 1 : -1,
       money: f.usd ? [['target', 'value']] : null,
       columns: [
-        { key: 'name', label: d.nameLabel || '이름' },
-        { key: 'target', label: '목표', unit, total: tt },
-        { key: 'value', label: '실적', unit, total: tv },
-        { key: 'rate', label: '달성률', head: 'vzb-tb-wide', value: (r) => rateOf(r.value, r.target), cell: (r) => rateCell(r.value, r.target), total: (rs) => rateCell(tv(rs), tt(rs)) },
-        { key: 'state', label: '상태', value: (r) => rateOf(r.value, r.target), cell: (r) => state(r.value, r.target), total: (rs) => state(tv(rs), tt(rs)) },
+        { key: 'name', label: d.nameLabel || tx(d, '이름') },
+        { key: 'target', label: tx(d, '목표'), unit, total: tt },
+        { key: 'value', label: tx(d, '실적'), unit, total: tv },
+        { key: 'rate', label: tx(d, '달성률'), head: 'vzb-tb-wide', value: (r) => rateOf(r.value, r.target), cell: (r) => rateCell(r.value, r.target), total: (rs) => rateCell(tv(rs), tt(rs)) },
+        { key: 'state', label: tx(d, '상태'), value: (r) => rateOf(r.value, r.target), cell: (r) => state(r.value, r.target), total: (rs) => state(tv(rs), tt(rs)) },
       ],
     });
   });

@@ -3,12 +3,12 @@
   // value를 생략하면 마지막 값을, compare를 생략하면 직전 시점을 씁니다.
   mount('kpi-line', (card, d, f) => {
     const vals = d.trend.values, labels = d.trend.labels, last = vals.length - 1;
-    head(card, d, f, d.value != null ? d.value : vals[last], d.compare || (last > 0 ? { label: '직전 시점', value: vals[last - 1] } : null));
+    head(card, d, f, d.value != null ? d.value : vals[last], d.compare || (last > 0 ? { label: tx(d, '직전 시점'), value: vals[last - 1] } : null));
     const foot = el('div', 'vzb-foot vzb-fill');
     const plot = el('div', 'vzb-plot');
     plot.tabIndex = 0;
     plot.setAttribute('role', 'img');
-    plot.setAttribute('aria-label', `${d.title || ''} 추이: ${labels.map((l, i) => `${l} ${show(f, vals[i])}`).join(', ')}. 좌우 화살표로 시점을 옮깁니다.`);
+    plot.setAttribute('aria-label', tx(d, '%s 추이: %s. 좌우 화살표로 시점을 옮깁니다.', d.title || '', labels.map((l, i) => `${l} ${show(f, vals[i])}`).join(', ')));
     const svg = svgEl('svg', { class: 'vzb-tr-svg', 'aria-hidden': 'true' });
     plot.append(svg);
     foot.append(plot);

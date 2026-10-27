@@ -8,7 +8,7 @@
     const rest = named.slice(3).concat(d.parts.filter((p) => p.other));
     const segs = named.slice(0, 3).map((p, i) => ({ label: p.label, value: p.value, cls: `vzb-sp-c${i + 1}` }));
     if (rest.length === 1) segs.push({ label: rest[0].label, value: rest[0].value, cls: 'vzb-sp-co' });
-    else if (rest.length) segs.push({ label: '기타', value: sum(rest), cls: 'vzb-sp-co', note: rest.map((p) => p.label).join('·') });
+    else if (rest.length) segs.push({ label: tx(d, '기타'), value: sum(rest), cls: 'vzb-sp-co', note: rest.map((p) => p.label).join('·') });
     const whole = sum(segs) || 1;
     const share = (v) => `${num((v / whole) * 100, 1)}%`;
     head(card, d, f, d.value != null ? d.value : sum(d.parts), d.compare);
@@ -17,7 +17,7 @@
     const bar = el('div', 'vzb-plot vzb-sp-bar');
     bar.tabIndex = 0;
     bar.setAttribute('role', 'img');
-    bar.setAttribute('aria-label', `${segs.map((s) => `${s.label} ${share(s.value)}`).join(', ')}. 좌우 화살표로 항목을 옮깁니다.`);
+    bar.setAttribute('aria-label', tx(d, '%s. 좌우 화살표로 항목을 옮깁니다.', segs.map((s) => `${s.label} ${share(s.value)}`).join(', ')));
     const legend = el('ul', 'vzb-sp-legend');
     const segEls = [], rowEls = [];
     const focus = (i) => {

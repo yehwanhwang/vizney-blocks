@@ -1,0 +1,9 @@
+{
+  "title": "Monthly Shipment Target",
+  "subtitle": "Oct 1–20",
+  "lang": "en",
+  "value": 59000000,
+  "format": "usd",
+  "better": "up",
+  "target": { "label": "target", "value": 96000000 }
+}

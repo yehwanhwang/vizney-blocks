@@ -1,0 +1,10 @@
+{
+  "title": "Orders vs Target",
+  "subtitle": "Last 13 months, difference from the monthly target of 12,000",
+  "lang": "en",
+  "format": "count",
+  "better": "up",
+  "legend": ["Above target", "Below target"],
+  "labels": ["Sep '25", "Oct '25", "Nov '25", "Dec '25", "Jan '26", "Feb '26", "Mar '26", "Apr '26", "May '26", "Jun '26", "Jul '26", "Aug '26", "Sep '26"],
+  "values": [-370, -520, -80, 650, -760, -950, -180, 340, -40, 810, 1150, 690, 460]
+}

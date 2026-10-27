@@ -4,7 +4,7 @@
     const want = d.better === 'down' ? -1 : 1;
     waterfallCard(card, d, f, {
       toneOf: (r) => (r.total ? 'f1' : Math.sign(r.value) * want > 0 ? 'fg' : r.value === 0 ? 'f0' : 'fb'),
-      totalNote: (r, first) => { const diff = r.value - first.value; return `${first.name} 대비 ${diff > 0 ? '+' : diff < 0 ? '−' : ''}${show(f, Math.abs(diff))}${first.value ? ` (${diff > 0 ? '+' : diff < 0 ? '−' : ''}${num(Math.abs(diff / first.value) * 100, 1)}%)` : ''}`; },
-      legend: [{ name: '합계', tone: 'f1', box: true }, { name: want > 0 ? '늘린 요인' : '줄인 요인', tone: 'fg', box: true }, { name: want > 0 ? '줄인 요인' : '늘린 요인', tone: 'fb', box: true }],
+      totalNote: (r, first) => { const diff = r.value - first.value, sg = diff > 0 ? '+' : diff < 0 ? '−' : ''; return tx(d, '%s 대비 %s', first.name, `${sg}${show(f, Math.abs(diff))}${first.value ? ` (${sg}${num(Math.abs(diff / first.value) * 100, 1)}%)` : ''}`); },
+      legend: [{ name: tx(d, '합계'), tone: 'f1', box: true }, { name: tx(d, want > 0 ? '늘린 요인' : '줄인 요인'), tone: 'fg', box: true }, { name: tx(d, want > 0 ? '줄인 요인' : '늘린 요인'), tone: 'fb', box: true }],
     });
   });

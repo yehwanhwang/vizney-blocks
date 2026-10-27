@@ -1,0 +1,15 @@
+{
+  "title": "Shipments by Channel",
+  "subtitle": "Oct 1–20",
+  "lang": "en",
+  "format": "usd",
+  "better": "up",
+  "compare": { "label": "Sep 1–20", "value": 55230000 },
+  "parts": [
+    { "label": "Dealers", "value": 24200000 },
+    { "label": "Online", "value": 16500000 },
+    { "label": "Retail", "value": 11200000 },
+    { "label": "Corporate", "value": 4600000 },
+    { "label": "Export", "value": 2500000 }
+  ]
+}

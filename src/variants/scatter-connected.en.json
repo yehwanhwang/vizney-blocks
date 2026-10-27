@@ -1,0 +1,17 @@
+{
+  "title": "Visitors and Conversion over Time",
+  "subtitle": "Last 8 quarters, quarterly points joined in time order",
+  "lang": "en",
+  "x": { "label": "Visitors", "format": "count", "unit": "K" },
+  "y": { "label": "Conversion", "format": "pct", "decimals": 1 },
+  "points": [
+    { "name": "4Q24", "group": "2024", "x": 412, "y": 2.6 },
+    { "name": "1Q25", "group": "2025", "x": 425, "y": 2.7 },
+    { "name": "2Q25", "group": "2025", "x": 448, "y": 2.7 },
+    { "name": "3Q25", "group": "2025", "x": 451, "y": 2.8 },
+    { "name": "4Q25", "group": "2025", "x": 494, "y": 2.9 },
+    { "name": "1Q26", "group": "2026", "x": 463, "y": 2.9 },
+    { "name": "2Q26", "group": "2026", "x": 515, "y": 3.1 },
+    { "name": "3Q26", "group": "2026", "x": 554, "y": 3.2 }
+  ]
+}

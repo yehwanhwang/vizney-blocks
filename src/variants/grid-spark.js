@@ -8,16 +8,16 @@
     const sum = () => pick(L.map((_, i) => (rows.every((r) => ok(r.values[i])) ? rows.reduce((a, r) => a + +r.values[i], 0) : null)));
     tableCard(card, d, f, {
       rows,
-      total: d.total === false ? null : '합계',
+      total: d.total === false ? null : tx(d, '합계'),
       sortable: true,
       sortKey: 'last',
       sortDir: -1,
       money: f.usd ? [['last']] : null,
       columns: [
-        { key: 'name', label: d.nameLabel || '이름' },
-        { key: 'spark', label: L.length ? `${L[0]}–${L[L.length - 1]}` : '흐름', sort: false, cell: (r) => sparkEl(r.values), total: () => sparkEl(sum().values) },
-        { key: 'last', label: d.valueLabel || L[L.length - 1] || '최근', unit: unitOf(d, f), total: () => sum().last },
-        { key: 'chg', label: d.changeLabel || '처음 대비', value: (r) => (ok(r.first) && +r.first && ok(r.last) ? r.last / r.first - 1 : null), cell: (r) => changeBadge(r.last, r.first, d.better), total: () => { const t = sum(); return changeBadge(t.last, t.first, d.better); } },
+        { key: 'name', label: d.nameLabel || tx(d, '이름') },
+        { key: 'spark', label: L.length ? `${L[0]}–${L[L.length - 1]}` : tx(d, '흐름'), sort: false, cell: (r) => sparkEl(r.values), total: () => sparkEl(sum().values) },
+        { key: 'last', label: d.valueLabel || L[L.length - 1] || tx(d, '최근'), unit: unitOf(d, f), total: () => sum().last },
+        { key: 'chg', label: d.changeLabel || tx(d, '처음 대비'), value: (r) => (ok(r.first) && +r.first && ok(r.last) ? r.last / r.first - 1 : null), cell: (r) => changeBadge(r.last, r.first, d), total: () => { const t = sum(); return changeBadge(t.last, t.first, d); } },
       ],
     });
   });

@@ -1,0 +1,43 @@
+{
+  "title": "Shipments by Product",
+  "subtitle": "September 2026, down to the products in each line",
+  "lang": "en",
+  "format": "usd",
+  "groups": [
+    {
+      "name": "Appliances",
+      "items": [
+        { "name": "Refrigerators", "value": 16800000 },
+        { "name": "Washers", "value": 12400000 },
+        { "name": "Air conditioners", "value": 12000000 }
+      ]
+    },
+    {
+      "name": "Home goods",
+      "items": [
+        { "name": "Detergent", "value": 12800000 },
+        { "name": "Household items", "value": 10800000 }
+      ]
+    },
+    {
+      "name": "Kitchenware",
+      "items": [
+        { "name": "Cookware", "value": 9600000 },
+        { "name": "Tableware", "value": 6200000 }
+      ]
+    },
+    {
+      "name": "Consumables",
+      "items": [
+        { "name": "Filters", "value": 4900000 },
+        { "name": "Replacement parts", "value": 3800000 }
+      ]
+    },
+    {
+      "name": "Parts",
+      "items": [
+        { "name": "Repair parts", "value": 4500000 }
+      ]
+    }
+  ]
+}

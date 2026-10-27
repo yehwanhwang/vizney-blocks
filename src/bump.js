@@ -25,15 +25,15 @@
     const plot = el('div', 'vzb-plot');
     plot.tabIndex = 0;
     plot.setAttribute('role', 'img');
-    plot.setAttribute('aria-label', `${d.title || ''} 순위 변화, ${labels[0] || ''}–${labels[n - 1] || ''}. 위아래 화살표로 항목을 옮깁니다. 모든 순위는 이어지는 표에 있습니다.`);
+    plot.setAttribute('aria-label', tx(d, '%s 순위 변화, %s–%s. 위아래 화살표로 항목을 옮깁니다. 모든 순위는 이어지는 표에 있습니다.', d.title || '', labels[0] || '', labels[n - 1] || ''));
     const svg = svgEl('svg', { class: 'vzb-ax-svg vzb-bp-svg', 'aria-hidden': 'true' });
     plot.append(svg);
     foot.append(plot);
     card.append(foot);
     const sr = el('div', 'vzb-sr'), table = el('table'), hr = el('tr');
-    hr.append(el('th', null, '항목'), ...labels.map((l) => el('th', null, l)));
-    table.append(el('caption', null, `${d.title || ''} 순위`), hr);
-    order.forEach((i) => { const tr = el('tr'); tr.append(el('th', null, items[i].name), ...labels.map((_, t) => el('td', null, items[i].ranks[t] ? `${items[i].ranks[t]}위` : ''))); table.append(tr); });
+    hr.append(el('th', null, tx(d, '항목')), ...labels.map((l) => el('th', null, l)));
+    table.append(el('caption', null, tx(d, '%s 순위', d.title || '')), hr);
+    order.forEach((i) => { const tr = el('tr'); tr.append(el('th', null, items[i].name), ...labels.map((_, t) => el('td', null, items[i].ranks[t] ? tx(d, '%s위', items[i].ranks[t]) : ''))); table.append(tr); });
     sr.append(table);
     card.append(sr);
     const fam = getComputedStyle(card).fontFamily;
@@ -108,8 +108,8 @@
         front.replaceChildren();
         if (!it.focus) { const g = paintItem(it, true, it.tone === 'tx' ? 'tk' : it.tone); g.classList.add('is-on'); front.append(g); }
         const r = plot.getBoundingClientRect();
-        const note = `${labels[a]} ${it.ranks[a]}위에서 ${m > 0 ? `${m}계단 오름` : m < 0 ? `${-m}계단 내림` : '그대로'}${fin(it.values[b]) ? ` · ${show(f, it.values[b])}` : ''}`;
-        const t = tipBody({ value: `${labels[b]} ${it.ranks[b]}위`, note }, it.name);
+        const note = tx(d, '%1 %2위에서 %3', labels[a], it.ranks[a], m > 0 ? tx(d, '%s계단 오름', m) : m < 0 ? tx(d, '%s계단 내림', -m) : tx(d, '그대로')) + (fin(it.values[b]) ? ` · ${show(f, it.values[b])}` : '');
+        const t = tipBody({ value: tx(d, '%s %s위', labels[b], it.ranks[b]), note }, it.name);
         return { x: r.left + xs[b], y: r.top + Y(it.ranks[b]) - 14, label: it.name, value: t.node, text: t.text };
       },
       () => { svg.classList.remove('is-hover'); groups.forEach((g) => { if (g) g.classList.remove('is-on', 'is-lift'); }); if (front) front.replaceChildren(); },

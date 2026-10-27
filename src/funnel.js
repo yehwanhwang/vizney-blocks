@@ -11,7 +11,7 @@
     foot.style.setProperty('--vzb-fu-n', Math.max(1, n));
     foot.tabIndex = 0;
     foot.setAttribute('role', 'group');
-    foot.setAttribute('aria-label', `${d.title || ''} 퍼널, ${steps.map((s) => s.name).join(' → ')}. 좌우 화살표로 단계를 옮깁니다.`);
+    foot.setAttribute('aria-label', tx(d, '%s 퍼널, %s. 좌우 화살표로 단계를 옮깁니다.', d.title || '', steps.map((s) => s.name).join(' → ')));
     const row = (make, cls) => { const r = el('div', `vzb-fu-row ${cls}`); steps.forEach((s, i) => { const c = make(i); c.classList.add('vzb-fu-cell'); r.append(c); }); return r; };
     const headRow = cfg.labels ? row(cfg.labels, 'vzb-fu-head') : null;
     const plot = el('div', 'vzb-plot vzb-fu-plot');

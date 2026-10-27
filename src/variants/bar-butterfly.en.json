@@ -1,0 +1,33 @@
+{
+  "title": "Buyers by Age Group",
+  "subtitle": "September 2026, online channel",
+  "lang": "en",
+  "format": "count",
+  "groups": ["Men", "Women"],
+  "items": [
+    {
+      "name": "Teens",
+      "values": [320, 410]
+    },
+    {
+      "name": "20s",
+      "values": [1840, 2630]
+    },
+    {
+      "name": "30s",
+      "values": [2960, 3520]
+    },
+    {
+      "name": "40s",
+      "values": [2410, 2180]
+    },
+    {
+      "name": "50s",
+      "values": [1280, 1050]
+    },
+    {
+      "name": "60+",
+      "values": [540, 380]
+    }
+  ]
+}

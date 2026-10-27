@@ -4,7 +4,7 @@
      cfg: toneOf(p) · rankGroups(groups) 색을 줄 묶음 순서 · label(p, 순번) 이름을 적을 점 · ref { x, y, xText } 기준선 · quadrants [왼쪽 위, 오른쪽 위, 왼쪽 아래, 오른쪽 아래]
           path(적은 순서로 잇기) · radius(p, 순번) · fade(p, 순번) 점의 옅기 · yText(p) 툴팁 값 · note(p) 툴팁 덧붙임 · legend */
   function scatterCard(card, d, f, cfg) {
-    const ax = d.x || {}, ay = d.y || {}, fx = format(ax), fy = format(ay);
+    const ax = d.x || {}, ay = d.y || {}, fx = format(ax, d), fy = format(ay, d);
     const pts = (d.points || []).filter((p) => p && fin(p.x) && fin(p.y)).map((p) => Object.assign({}, p, { x: +p.x, y: +p.y }));
     // 달러(usd) 축은 가장 큰 값으로 K · M · B 하나를 골라 눈금은 나눈 값으로, 축 이름에는 $K 같은 단위를 적습니다.
     const scaleOf = (fa, vals) => { const top = Math.max(0, ...vals.map(Math.abs)); return !fa.usd ? [1, ''] : top >= 1e9 ? [1e9, '$B'] : top >= 1e6 ? [1e6, '$M'] : top >= 1e3 ? [1e3, '$K'] : [1, '$']; };
@@ -19,21 +19,21 @@
     const groupOf = (p) => groups.find((x) => x.name === p.group);
     const toneOf = (p) => (cfg.toneOf ? cfg.toneOf(p) : (groupOf(p) || {}).tone || 'f1');
     const rest = ranked.slice(3);
-    const legend = cfg.legend || (ranked.length > 1 ? ranked.slice(0, 3).map((g) => ({ name: g.name, tone: g.tone, dot: true })).concat(rest.length ? [{ name: rest.length === 1 ? rest[0].name : '기타', tone: 'f0', dot: true }] : []) : null);
+    const legend = cfg.legend || (ranked.length > 1 ? ranked.slice(0, 3).map((g) => ({ name: g.name, tone: g.tone, dot: true })).concat(rest.length ? [{ name: rest.length === 1 ? rest[0].name : tx(d, '기타'), tone: 'f0', dot: true }] : []) : null);
     head(card, d, f, null);
     if (legend) card.append(legendEl(legend));
     const foot = el('div', 'vzb-foot vzb-fill vzb-ax vzb-sc');
     const plot = el('div', 'vzb-plot');
     plot.tabIndex = 0;
     plot.setAttribute('role', 'img');
-    plot.setAttribute('aria-label', `${d.title || ''} 산점도, 점 ${pts.length}개. 좌우 화살표로 점을 옮깁니다. 모든 값은 이어지는 표에 있습니다.`);
+    plot.setAttribute('aria-label', tx(d, '%s 산점도, 점 %s개. 좌우 화살표로 점을 옮깁니다. 모든 값은 이어지는 표에 있습니다.', d.title || '', pts.length));
     const svg = svgEl('svg', { class: 'vzb-ax-svg vzb-sc-svg', 'aria-hidden': 'true' });
     plot.append(svg);
     foot.append(plot);
     card.append(foot);
     // 화면 낭독기용 값 표
     const sr = el('div', 'vzb-sr'), table = el('table'), hr = el('tr');
-    hr.append(el('th', null, '이름'), el('th', null, nameOf(ax, fx, '가로값')), el('th', null, nameOf(ay, fy, '세로값')));
+    hr.append(el('th', null, tx(d, '이름')), el('th', null, nameOf(ax, fx, tx(d, '가로값'))), el('th', null, nameOf(ay, fy, tx(d, '세로값'))));
     table.append(el('caption', null, d.title || ''), hr);
     pts.forEach((p) => { const tr = el('tr'); tr.append(el('th', null, p.name || ''), el('td', null, show(fx, p.x)), el('td', null, show(fy, p.y))); table.append(tr); });
     sr.append(table);
@@ -82,7 +82,7 @@
       const gut = Math.ceil(Math.max(...yt.list.map((v) => textW(tickTxt(v, yt.dec, sy), 400, fam)))) + 10;
       const right = w - 8;
       const xt = ticksOf(xl, xh, Math.max(3, Math.min(5, Math.floor((right - gut) / 64) + 1)));
-      svg.append(svgText(0, 12, `↑ ${nameOf(ay, fy, '세로값')}`, 'vzb-sc-name'), svgText(right, h - 3, `${nameOf(ax, fx, '가로값')} →`, 'vzb-sc-name', 'end'));
+      svg.append(svgText(0, 12, `↑ ${nameOf(ay, fy, tx(d, '세로값'))}`, 'vzb-sc-name'), svgText(right, h - 3, `${nameOf(ax, fx, tx(d, '가로값'))} →`, 'vzb-sc-name', 'end'));
       X = (v) => gut + ((v - xl) / (xh - xl || 1)) * (right - gut);
       Y = (v) => bottom - ((v - yl) / (yh - yl || 1)) * (bottom - top);
       // 그래프 바깥 테두리: 아래와 왼쪽은 축선, 위와 오른쪽은 격자와 같은 옅은 선
@@ -156,7 +156,7 @@
         dots.forEach((c, j) => c.classList.toggle('is-on', j === i));
         front.replaceChildren(svgEl('circle', { cx: X(p.x), cy: Y(p.y), r: 7.5, class: `vzb-sc-ring vzb-${toneOf(p)}` }));
         const r = plot.getBoundingClientRect();
-        const note = [p.group != null ? String(p.group) : '', `${ax.label || '가로값'} ${show(fx, p.x)}`, cfg.note ? cfg.note(p) : ''].filter(Boolean).join(' · ');
+        const note = [p.group != null ? String(p.group) : '', `${ax.label || tx(d, '가로값')} ${show(fx, p.x)}`, cfg.note ? cfg.note(p) : ''].filter(Boolean).join(' · ');
         const t = tipBody({ value: cfg.yText ? cfg.yText(p) : show(fy, p.y), note }, p.name || '');
         return { x: r.left + X(p.x), y: r.top + Y(p.y) - 8, label: p.name || '', value: t.node, text: t.text };
       },

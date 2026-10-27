@@ -7,7 +7,7 @@
       fill: (s, i) => (i < 3 ? 0.12 : 0),
       legendInPanel: true,
       panel(ul, ctx) {
-        ul.append(el('li', 'is-cap', '항목 평균'));
+        ul.append(el('li', 'is-cap', tx(d, '항목 평균')));
         ctx.series.forEach((s, j) => {
           const vals = s.values.filter((v) => v != null), li = el('li', 'is-key');
           li.dataset.s = j;

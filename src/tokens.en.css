@@ -1,0 +1,33 @@
+/* Vizney Blocks tokens: re-declare the same variables on your page's :root and they apply to every card.
+   The colors are the Vizney chart guide's orange, pink-red and yellow with a lighter step of each; the text is Vizney black (#1b1b1b).
+   List: https://blocks.vizney.com/en/tokens.css */
+:where(:root) {
+  --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* every word on the card */
+  --vzb-card: #ffffff;   /* card background */
+  --vzb-edge: rgba(17, 24, 39, 0.05);   /* card border */
+  --vzb-ink: #1b1b1b;   /* title and headline figure */
+  --vzb-ink-2: #4a4a4a;   /* body text, the no-change badge */
+  --vzb-muted: #737373;   /* subtitle, units, axis ticks */
+  --vzb-grid: #ebebeb;   /* grid lines and the line under the head: a solid gray one step off the background */
+  --vzb-primary: #ff9500;   /* first data color (orange): lines, bars, the largest item */
+  --vzb-primary-tint: #fff1de;   /* light orange background: the shade under a line, the radar area */
+  --vzb-primary-soft: #ffd9a6;   /* bar-list bars that carry the name */
+  --vzb-secondary: #ff2d55;   /* second data color (pink-red) */
+  --vzb-tertiary: #ffcc00;   /* third data color (yellow); not used for thin lines */
+  --vzb-primary-mid: #ffb54d;     /* one step lighter, for wide areas (treemap cells) */
+  --vzb-secondary-mid: #ff7a93;   /* pink-red for wide areas */
+  --vzb-tertiary-mid: #ffdc4d;   /* yellow for wide areas */
+  --vzb-other-mid: #e3e3e3;   /* the Other group on wide areas */
+  --vzb-line-3: #007aff;   /* third line color: yellow is hard to see as a thin line on white, so blue */
+  --vzb-base: #c4c4c4;   /* the baseline (last year's line, the radar baseline outline) */
+  --vzb-track: #f1f1f1;   /* track behind the gauge and attainment bars */
+  --vzb-other: #d9d9d9;   /* items folded into Other, items from the fourth on */
+  --vzb-good: #12814a;   /* a good change (badges, increases in a waterfall) */
+  --vzb-good-tint: #e5f5ec;   /* background of a good-change badge */
+  --vzb-bad: #d42346;   /* a bad change, over the limit, error text */
+  --vzb-bad-tint: #fdebef;   /* background of a bad-change badge */
+  --vzb-tip: #1b1b1b;   /* tooltip background */
+  --vzb-radius: 18px;   /* card corners */
+  --vzb-unit: 168px;   /* height unit 1 (KPI - Number); Line and Bar are 2, the other KPI cards 1.5, chart cards 2 */
+  --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* card shadow */
+}

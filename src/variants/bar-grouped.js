@@ -12,7 +12,7 @@
         const rows = series.filter((s) => s.values[i] != null).map((s) => ({ tone: s.tone, name: s.name, value: show(f, s.values[i]) }));
         if (base.length !== 1 || main.length !== 1 || main[0].values[i] == null || base[0].values[i] == null) return { rows };
         const dl = delta(f, main[0].values[i], base[0].values[i], d.better);
-        return { rows, note: `${base[0].name} 대비 ${dl.dir > 0 ? '+' : dl.dir < 0 ? '−' : ''}${dl.text}` };
+        return { rows, note: tx(d, '%s 대비 %s', base[0].name, `${dl.dir > 0 ? '+' : dl.dir < 0 ? '−' : ''}${dl.text}`) };
       },
     });
   });

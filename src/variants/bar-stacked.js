@@ -10,7 +10,7 @@
     if (rest.length === 1) series.push({ name: rest[0].name, values: rest[0].values || [], tone: 'fx' });
     else if (rest.length) {
       series.push({
-        name: '기타', note: rest.map((s) => s.name).join('·'), tone: 'fx',
+        name: tx(d, '기타'), note: rest.map((s) => s.name).join('·'), tone: 'fx',
         values: Array.from({ length: n }, (_, i) => (rest.every((s) => (s.values || [])[i] == null) ? null : rest.reduce((a, s) => a + (+(s.values || [])[i] || 0), 0))),
       });
     }
@@ -23,7 +23,7 @@
       legend: series.map((s) => ({ name: s.name, tone: s.tone, box: true })),
       tip: (i) => ({
         rows: series.filter((s) => s.values[i] != null).map((s) => ({ tone: s.tone, name: s.note ? `${s.name}(${s.note})` : s.name, value: show(f, s.values[i]) })),
-        note: `합계 ${show(f, sum(i))}`,
+        note: tx(d, '합계 %s', show(f, sum(i))),
       }),
     });
   });

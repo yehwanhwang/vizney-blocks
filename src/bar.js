@@ -65,5 +65,5 @@
     },
   };
   function barCard(card, d, f, cfg) {
-    return axisCard(card, d, f, Object.assign({ paint: barPaint, band: true, zero: true, kind: '막대 차트' }, cfg));
+    return axisCard(card, d, f, Object.assign({ paint: barPaint, band: true, zero: true, kind: tx(d, '막대 차트') }, cfg));
   }

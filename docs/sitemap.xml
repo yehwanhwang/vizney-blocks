@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>https://blocks.vizney.com/</loc></url>
-<url><loc>https://blocks.vizney.com/kpi/</loc></url>
-<url><loc>https://blocks.vizney.com/bar/</loc></url>
-<url><loc>https://blocks.vizney.com/line/</loc></url>
-<url><loc>https://blocks.vizney.com/grid/</loc></url>
-<url><loc>https://blocks.vizney.com/donut/</loc></url>
-<url><loc>https://blocks.vizney.com/scatter/</loc></url>
-<url><loc>https://blocks.vizney.com/treemap/</loc></url>
-<url><loc>https://blocks.vizney.com/heatmap/</loc></url>
-<url><loc>https://blocks.vizney.com/waterfall/</loc></url>
-<url><loc>https://blocks.vizney.com/funnel/</loc></url>
-<url><loc>https://blocks.vizney.com/waffle/</loc></url>
-<url><loc>https://blocks.vizney.com/bump/</loc></url>
-<url><loc>https://blocks.vizney.com/sankey/</loc></url>
-<url><loc>https://blocks.vizney.com/radar/</loc></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<url><loc>https://blocks.vizney.com/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/"/></url>
+<url><loc>https://blocks.vizney.com/kpi/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/kpi/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/kpi/"/></url>
+<url><loc>https://blocks.vizney.com/bar/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/bar/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/bar/"/></url>
+<url><loc>https://blocks.vizney.com/line/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/line/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/line/"/></url>
+<url><loc>https://blocks.vizney.com/grid/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/grid/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/grid/"/></url>
+<url><loc>https://blocks.vizney.com/donut/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/donut/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/donut/"/></url>
+<url><loc>https://blocks.vizney.com/scatter/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/scatter/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/scatter/"/></url>
+<url><loc>https://blocks.vizney.com/treemap/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/treemap/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/treemap/"/></url>
+<url><loc>https://blocks.vizney.com/heatmap/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/heatmap/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/heatmap/"/></url>
+<url><loc>https://blocks.vizney.com/waterfall/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/waterfall/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/waterfall/"/></url>
+<url><loc>https://blocks.vizney.com/funnel/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/funnel/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/funnel/"/></url>
+<url><loc>https://blocks.vizney.com/waffle/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/waffle/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/waffle/"/></url>
+<url><loc>https://blocks.vizney.com/bump/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/bump/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/bump/"/></url>
+<url><loc>https://blocks.vizney.com/sankey/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/sankey/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/sankey/"/></url>
+<url><loc>https://blocks.vizney.com/radar/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/radar/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/radar/"/></url>
+<url><loc>https://blocks.vizney.com/en/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/"/></url>
+<url><loc>https://blocks.vizney.com/en/kpi/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/kpi/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/kpi/"/></url>
+<url><loc>https://blocks.vizney.com/en/bar/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/bar/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/bar/"/></url>
+<url><loc>https://blocks.vizney.com/en/line/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/line/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/line/"/></url>
+<url><loc>https://blocks.vizney.com/en/grid/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/grid/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/grid/"/></url>
+<url><loc>https://blocks.vizney.com/en/donut/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/donut/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/donut/"/></url>
+<url><loc>https://blocks.vizney.com/en/scatter/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/scatter/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/scatter/"/></url>
+<url><loc>https://blocks.vizney.com/en/treemap/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/treemap/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/treemap/"/></url>
+<url><loc>https://blocks.vizney.com/en/heatmap/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/heatmap/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/heatmap/"/></url>
+<url><loc>https://blocks.vizney.com/en/waterfall/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/waterfall/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/waterfall/"/></url>
+<url><loc>https://blocks.vizney.com/en/funnel/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/funnel/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/funnel/"/></url>
+<url><loc>https://blocks.vizney.com/en/waffle/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/waffle/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/waffle/"/></url>
+<url><loc>https://blocks.vizney.com/en/bump/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/bump/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/bump/"/></url>
+<url><loc>https://blocks.vizney.com/en/sankey/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/sankey/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/sankey/"/></url>
+<url><loc>https://blocks.vizney.com/en/radar/</loc><xhtml:link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/radar/"/><xhtml:link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/radar/"/></url>
 </urlset>

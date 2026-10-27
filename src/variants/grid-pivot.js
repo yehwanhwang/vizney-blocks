@@ -7,7 +7,7 @@
     let order = parts.map((_, j) => j);
     if (d.sort !== false) order = order.sort((a, b) => colSum(b) - colSum(a));
     const keep = parts.length > 4 ? order.slice(0, 3) : order, rest = parts.length > 4 ? order.slice(3) : [];
-    const names = keep.map((j) => parts[j]).concat(rest.length ? ['기타'] : []);
+    const names = keep.map((j) => parts[j]).concat(rest.length ? [tx(d, '기타')] : []);
     const rows = src.map((r) => {
       const v = r.values || [], out = { name: r.name };
       keep.forEach((j, k) => { out[`c${k}`] = ok(v[j]) ? +v[j] : null; });
@@ -17,7 +17,7 @@
     });
     const { table } = tableCard(card, d, f, {
       rows,
-      total: '합계',
+      total: tx(d, '합계'),
       sortable: true,
       sortKey: 'total',
       sortDir: -1,
@@ -25,7 +25,7 @@
       moneyHead: 'name',
       columns: [{ key: 'name', label: d.nameLabel || '' }]
         .concat(names.map((n, k) => ({ key: `c${k}`, label: n, total: sumOf(`c${k}`) })))
-        .concat([{ key: 'total', label: '합계', head: 'vzb-tb-sum', total: sumOf('total') }]),
+        .concat([{ key: 'total', label: tx(d, '합계'), head: 'vzb-tb-sum', total: sumOf('total') }]),
     });
     table.classList.add('is-pivot');
     let col = -1;

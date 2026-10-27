@@ -1,0 +1,34 @@
+{
+  "title": "Orders by Hour and Weekday",
+  "subtitle": "September 2026, by order time",
+  "lang": "en",
+  "format": "count",
+  "nameLabel": "Hour",
+  "columns": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+  "rows": [
+    {
+      "name": "0–4",
+      "values": [31, 32, 32, 28, 29, 47, 39]
+    },
+    {
+      "name": "4–8",
+      "values": [74, 77, 76, 67, 70, 41, 34]
+    },
+    {
+      "name": "8–12",
+      "values": [720, 749, 742, 648, 677, 257, 211]
+    },
+    {
+      "name": "12–16",
+      "values": [658, 685, 678, 593, 619, 339, 278]
+    },
+    {
+      "name": "16–20",
+      "values": [401, 417, 413, 361, 445, 309, 253]
+    },
+    {
+      "name": "20–24",
+      "values": [175, 182, 180, 157, 194, 243, 199]
+    }
+  ]
+}

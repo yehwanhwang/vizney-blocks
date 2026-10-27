@@ -1,0 +1,13 @@
+{
+  "title": "Shipments by Product Line",
+  "subtitle": "September 2026, by shipment value",
+  "lang": "en",
+  "format": "usd",
+  "items": [
+    { "name": "Appliances", "value": 41200000 },
+    { "name": "Home goods", "value": 23600000 },
+    { "name": "Kitchenware", "value": 15800000 },
+    { "name": "Consumables", "value": 8700000 },
+    { "name": "Parts", "value": 4500000 }
+  ]
+}

@@ -3,11 +3,11 @@
   mount('bar-stacked-100', (card, d, f) => {
     const n = (d.labels || []).length, src = d.series || [];
     const totals = src.map((s) => ({ name: s.name, other: s.other, value: (s.values || []).reduce((a, v) => a + (+v || 0), 0), s }));
-    const { parts } = foldParts(totals, d.sort);
+    const { parts } = foldParts(d, totals, d.sort);
     const raw = parts.map((p) => ({ name: p.name, note: p.note, tone: p.tone, values: Array.from({ length: n }, (_, i) => p.members.reduce((a, m) => a + (+(m.s.values || [])[i] || 0), 0)) }));
     const sums = Array.from({ length: n }, (_, i) => raw.reduce((a, s) => a + s.values[i], 0));
     const series = raw.map((s) => ({ name: s.name, tone: s.tone, values: s.values.map((v, i) => (sums[i] ? (v / sums[i]) * 100 : null)) }));
-    const pf = format({ format: 'pct' });
+    const pf = format({ format: 'pct' }, d);
     barCard(card, d, pf, {
       series,
       stack: true,
@@ -16,7 +16,7 @@
       legend: series.map((s) => ({ name: s.name, tone: s.tone, box: true })),
       tip: (i) => ({
         rows: raw.map((s, k) => ({ tone: s.tone, name: s.note ? `${s.name}(${s.note})` : s.name, value: `${num(series[k].values[i] || 0, 1)}% · ${show(f, s.values[i])}` })),
-        note: `합계 ${show(f, sums[i])}`,
+        note: tx(d, '합계 %s', show(f, sums[i])),
       }),
     });
   });

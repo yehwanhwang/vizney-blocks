@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.30 · Donut Chart · Donut - Basic (donut-basic)
+<!-- Vizney Blocks v0.31 · Donut Chart · Donut - Basic (donut-basic)
      https://blocks.vizney.com/en/cards/donut-basic.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">

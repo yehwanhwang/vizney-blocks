@@ -12,7 +12,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.30';
+const VERSION = 'v0.31';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -132,7 +132,7 @@ const WORDS = {
   ko: {
     html: 'ko', og: 'ko_KR', other: { lang: 'en', label: 'English' },
     skip: '본문으로 건너뛰기', menu: '주 메뉴', cards: '카드', usage: '쓰는 법', guide: '차트 가이드', find: '카드 찾기', found: '찾은 카드',
-    footFont: '글꼴 VZ Sans(Spoqa Han Sans Neo 부분 글꼴)', footNav: '바닥글', footBlog: '블로그', langAria: '언어',
+    footFont: '글꼴 VZ Sans(Spoqa Han Sans Neo 부분 글꼴)', footNav: '바닥글', footBlog: '블로그', footContact: '문의', langAria: '언어',
     copy: '복사', aiLink: 'AI용 링크', close: '닫기', code: '코드', viewCode: '코드 보기', copyCode: '카드 코드 복사', copyCodeNote: 'HTML에 붙여 넣습니다', copyLink: 'AI용 링크 복사', copyLinkNote: (id) => `${id}.txt 주소를 AI에 줍니다`,
     eyebrow: `카드 ${N.cards}종 · 차트 ${N.cats}가지 · MIT 라이선스`, h1: '분석가의 판단을 담은<br>대시보드 카드', h1one: '분석가의 판단을 담은 대시보드 카드',
     lede: '카드를 복사해 HTML에 붙여 넣고 JSON만 바꾸세요. 증감, 비중, 달성률은 카드가 계산하고, 색과 강조는 Vizney 차트 가이드의 규칙을 따릅니다.',
@@ -165,7 +165,7 @@ const WORDS = {
   en: {
     html: 'en', og: 'en_US', other: { lang: 'ko', label: '한국어' },
     skip: 'Skip to content', menu: 'Main menu', cards: 'Cards', usage: 'How to use', guide: 'Chart guide', find: 'Find a card', found: 'Cards found',
-    footFont: 'Font VZ Sans (a subset of Spoqa Han Sans Neo)', footNav: 'Footer', footBlog: 'Blog', langAria: 'Language',
+    footFont: 'Font VZ Sans (a subset of Spoqa Han Sans Neo)', footNav: 'Footer', footBlog: 'Blog', footContact: 'Contact', langAria: 'Language',
     copy: 'Copy', aiLink: 'AI link', close: 'Close', code: 'Code', viewCode: 'view code', copyCode: 'Copy card code', copyCodeNote: 'Paste it into your HTML', copyLink: 'Copy AI link', copyLinkNote: (id) => `Give an AI the ${id}.txt address`,
     eyebrow: `${N.cards} cards · ${N.cats} chart types · MIT License`, h1: 'Dashboard cards<br>with an analyst’s judgment built in', h1one: 'Dashboard cards with an analyst’s judgment built in',
     lede: 'Copy a card into your HTML and change only its JSON. The card computes changes, shares and attainment, and its colors and emphasis follow the rules of the Vizney chart guide.',
@@ -216,8 +216,11 @@ const LOCALES = [ENL, KO];
 // ---------- Page parts ----------
 // Two modes share the markup: the site (a page per chart type, in each language under its base path) and the one-page
 // gallery (every chart type on one page, Korean). Every part takes the locale L (cards, purposes, strings, addresses).
-const siteMode = (L) => ({ one: false, home: `${L.base}/`, cards: `${L.base}/#cards`, usage: `${L.base}/#usage`, cat: (id) => `${L.base}/${id}/`, card: (v) => `${L.base}/${v.cat}/#${v.id}`, file: (p) => `/${p}`, llms: L.llms, tokens: L.tokens });
-const ONE_M = { one: true, home: '#top', cards: `#cat-${built[0].id}`, usage: '#usage', cat: (id) => `#cat-${id}`, card: (v) => `#${v.id}`, file: (p) => `${SITE}/${p}`, llms: `${SITE}/llms.txt`, tokens: `${SITE}/tokens.css` };
+// The Vizney wordmark (white, the logo of the Vizney blog header), 3x of its 32px height in the top bar.
+const WORDMARK = readFileSync(join(root, 'page/vizney-wordmark.png'));
+const WORDMARK_SRC = `/assets/vizney-wordmark.png?v=${createHash('sha1').update(WORDMARK).digest('hex').slice(0, 10)}`;
+const siteMode = (L) => ({ one: false, wordmark: WORDMARK_SRC, home: `${L.base}/`, cards: `${L.base}/#cards`, usage: `${L.base}/#usage`, cat: (id) => `${L.base}/${id}/`, card: (v) => `${L.base}/${v.cat}/#${v.id}`, file: (p) => `/${p}`, llms: L.llms, tokens: L.tokens });
+const ONE_M = { one: true, wordmark: `data:image/png;base64,${WORDMARK.toString('base64')}`, home: '#top', cards: `#cat-${built[0].id}`, usage: '#usage', cat: (id) => `#cat-${id}`, card: (v) => `#${v.id}`, file: (p) => `${SITE}/${p}`, llms: `${SITE}/llms.txt`, tokens: `${SITE}/tokens.css` };
 const NEW = ['sankey', 'radar'];
 const EXAMPLE = [{ id: 'kpi-line' }, { id: 'kpi-bar' }, { id: 'bar-ranking' }, { id: 'sankey-levels', wide: true }, { id: 'radar-basic' }];
 const ART = JSON.parse(r('page/tiles.json'));
@@ -241,8 +244,10 @@ const IC = {
   down: '<svg class="ic" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5L6 7.5l3-3"/></svg>',
 };
 
-// The header, footer and buttons follow Vizney Styles (styles.vizney.com): both are lines of Vizney, so they share the
-// top bar with the Vizney mark, a Vizney link in the menu, the EN · KO switch and the footer that links back to vizney.com.
+// The header follows the Vizney blog (kr.vizney.com · www.vizney.com), the home of every Vizney line: an ink bar with the
+// white Vizney wordmark, the line name Blocks beside it, a Vizney link in the menu and the EN · KO switch. The footer links
+// back to the blog and its contact page. The 2×2 block mark is the line's icon only (favicon, OpenDesign icon.svg), where
+// the wordmark does not fit.
 // alt: the same page in the other language. Without it (the one-page gallery) there is no switch.
 const langSwitch = (L, alt) => {
   if (!alt) return '';
@@ -253,7 +258,7 @@ const langSwitch = (L, alt) => {
 };
 const header = (m, current, L, alt) => `<header class="top" id="top">
 <div class="wrap top-in">
-<a class="logo" href="${m.home}"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Vizney Blocks</a>
+<a class="logo" href="${m.home}"><img class="word" src="${m.wordmark}" alt="Vizney" width="94" height="32"><span class="line">Blocks</span></a>
 <nav class="top-nav" aria-label="${L.t.menu}"><a href="${m.cards}"${current ? ' aria-current="page"' : ''}>${L.t.cards}</a><a href="${m.usage}">${L.t.usage}</a><a ${ext(L.guide)}>${L.t.guide}<span aria-hidden="true"> ↗</span></a><a ${ext(L.blog)}>Vizney<span aria-hidden="true"> ↗</span></a></nav>
 <div class="top-end">
 <div class="search">${IC.search}<label class="sr" for="q">${L.t.find}</label><input id="q" type="search" placeholder="${L.t.find}" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="q-pop"><kbd aria-hidden="true">⌘K</kbd><ul class="search-pop" id="q-pop" role="listbox" aria-label="${L.t.found}" hidden></ul></div>
@@ -266,7 +271,7 @@ const footer = (m, L) => `<footer class="foot">
 <div class="wrap foot-in">
 <span>Vizney Blocks ${VERSION} · © 2026 <a ${ext(L.blog)}>Vizney</a> · MIT License</span>
 <span>${L.t.footFont} · <a href="${m.file('OFL.txt')}">SIL Open Font License</a></span>
-<nav aria-label="${L.t.footNav}"><a ${ext(L.blog)}>${L.t.footBlog}</a><a ${ext(STYLES)}>Vizney Styles</a><a href="${m.llms}">llms.txt</a><a ${ext(REPO)}>GitHub</a></nav>
+<nav aria-label="${L.t.footNav}"><a ${ext(L.blog)}>${L.t.footBlog}</a><a ${ext(STYLES)}>Vizney Styles</a><a href="${m.llms}">llms.txt</a><a ${ext(REPO)}>GitHub</a><a ${ext(`${L.blog}contact-us/`)}>${L.t.footContact}</a></nav>
 </div>
 </footer>`;
 
@@ -612,6 +617,7 @@ for (const w of W) writeFileSync(join(docs, `assets/fonts/vz-sans-${w}.woff`), w
 const cssOut = `${face((w) => `url(fonts/vz-sans-${w}.woff?v=${fontV})`)}\n${siteCss}\n`;
 writeFileSync(join(docs, 'assets/site.css'), cssOut);
 writeFileSync(join(docs, 'assets/site.js'), `${siteJs}\n`);
+writeFileSync(join(docs, 'assets/vizney-wordmark.png'), WORDMARK);
 const V = { __FONT_V__: fontV, __CSS_V__: hash(cssOut), __JS_V__: hash(siteJs) };
 for (const [path, html] of Object.entries(pages)) {
   mkdirSync(dirname(join(docs, path)), { recursive: true });

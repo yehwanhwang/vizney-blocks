@@ -92,8 +92,8 @@ SPOQA_DIR=/path/to/spoqa-han-sans/Original/SpoqaHanSansNeo node build.mjs
 
 - `src/`: 카드 공통 부품(`*.js`, `*.css`), 카드별 코드와 예시 데이터(`src/variants/`), 카테고리 설명과 규칙(`src/variants/meta.json`), 목적 색인(`src/variants/purposes.json`: 목적마다 기본 카드가 맨 앞이고, 나머지는 쓰는 조건과 함께 적습니다). 카드를 목록에서 내릴 때는 지우지 않고 meta.json의 그 카드에 `retired`(버전, 대신 쓸 카드, 이유)를 적습니다. 주소와 코드는 남고 목록에서만 빠집니다
 - 영어: 한국어가 원본이고 영어는 덧씌웁니다. 카드 안 문구(합계 · 기타 · 툴팁 · 낭독 문구)는 `src/core.js`의 `EN` 표와 `tx()`로 바뀌고, 사이트 문구는 `build.mjs`의 `WORDS`, 카드의 쓰임과 규칙은 `src/variants/meta.en.json`, 목적 색인은 `purposes.en.json`, 예시 데이터는 `<id>.en.json`(`"lang": "en"` 포함), 토큰 설명은 `src/tokens.en.css`(선언은 `tokens.css`와 같아야 합니다)에 있습니다. 카드를 더할 때는 이 넷을 함께 적어야 가드를 지납니다
-- `page/`: 사이트 화면(`site.css`, `site.js`)과 차트 그림(`tiles.json`). 머리글, 링크, 버튼, 언어 전환(EN · KO), 바닥글은 [Vizney Styles](https://styles.vizney.com)와 같은 틀이라 한쪽을 고치면 다른 쪽도 맞춥니다. 사이트(`docs/`)와 한 페이지 갤러리(`dist/index.html`)가 함께 씁니다.
-- `tools/`: 부분 글꼴 만들기, 글꼴 라이선스, 공유 이미지(영어 `og.png`, 한국어 `og-ko.png`)
+- `page/`: 사이트 화면(`site.css`, `site.js`), 차트 그림(`tiles.json`), 머리글의 흰색 Vizney 워드마크(`vizney-wordmark.png`). 사이트 틀은 Vizney 블로그(kr.vizney.com · www.vizney.com)가 기준입니다. 머리글은 블로그처럼 검정 바탕에 Vizney 워드마크와 라인 이름 Blocks를 두고, 버튼 · 현재 메뉴 · 포커스 같은 UI 강조색은 블로그 포스트 이미지의 노랑(#ffcc00) 하나만 씁니다. 2×2 블록 마크는 워드마크가 들어가지 않는 아이콘 자리(파비콘, OpenDesign `icon.svg`)에만 씁니다. 사이트(`docs/`)와 한 페이지 갤러리(`dist/index.html`)가 함께 씁니다.
+- `tools/`: 부분 글꼴 만들기, 글꼴 라이선스, 공유 이미지(영어 `og.png`, 한국어 `og-ko.png`). 공유 이미지는 블로그 포스트 이미지 규격(검정 바탕, 노랑 포인트, 아래 Vizney 워드마크)이며, 빌드한 뒤 `docs/`를 띄워 두고 `node tools/og.mjs`(Playwright 필요)로 다시 만들고 한 번 더 빌드합니다
 - `docs/`: 빌드 결과. 영문 첫 화면과 차트 페이지(`/bar/` 등), 한국어 첫 화면과 차트 페이지(`docs/ko/`), 한국어 카드 페이지와 코드(`/cards/`)·`llms.txt`·`tokens.css`, 영문 카드 페이지와 코드(`docs/en/cards/`)·`llms.txt`·`tokens.css`, 예전 영문 주소에서 넘겨 주는 페이지(`docs/en/` 아래 첫 화면과 차트 페이지)가 들어 있습니다. GitHub Pages가 이 폴더를 blocks.vizney.com로 내보냅니다.
 - `skills/vizney-blocks/`: 빌드 결과. 코딩 에이전트용 스킬(`SKILL.md`)로, `purposes.json`과 쓰는 규칙에서 만들어집니다. 같은 폴더의 `open-design.json`, `icon.svg`, `preview/index.html`은 OpenDesign 플러그인 카드용입니다. `docs/`처럼 직접 고치지 않습니다.
 

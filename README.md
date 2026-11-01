@@ -4,9 +4,9 @@
 
 Copy-paste HTML dashboard cards (37 cards in 14 chart types). No install, no framework: each card is one self-contained HTML snippet. The gallery, the card pages and llms.txt are in Korean and English; the skill and this README are in Korean.
 
-**갤러리: https://blocks.vizney.com** · **English: https://blocks.vizney.com/en/**
+**갤러리(English): https://blocks.vizney.com** · **한국어: https://blocks.vizney.com/ko/**
 
-![Vizney Blocks 갤러리](docs/og.png)
+![Vizney Blocks 갤러리](docs/og-ko.png)
 
 ## 쓰는 법
 
@@ -24,7 +24,7 @@ Copy-paste HTML dashboard cards (37 cards in 14 chart types). No install, no fra
 
 ## 목적으로 고르기
 
-카드는 차트 모양보다 화면이 답할 질문에서 고르는 편이 빠릅니다. 현황, 추이, 목표, 비교, 구성, 표, 증감, 흐름, 관계의 아홉 가지 목적마다 기본 카드 하나와, 조건이 맞을 때만 쓰는 카드를 정리했습니다. 색인은 [갤러리 첫 화면](https://blocks.vizney.com/#purpose)과 [llms.txt](https://blocks.vizney.com/llms.txt)에 있습니다.
+카드는 차트 모양보다 화면이 답할 질문에서 고르는 편이 빠릅니다. 현황, 추이, 목표, 비교, 구성, 표, 증감, 흐름, 관계의 아홉 가지 목적마다 기본 카드 하나와, 조건이 맞을 때만 쓰는 카드를 정리했습니다. 색인은 [갤러리 첫 화면](https://blocks.vizney.com/ko/#purpose)과 [llms.txt](https://blocks.vizney.com/llms.txt)에 있습니다.
 
 ## AI에게 맡기기
 
@@ -38,26 +38,28 @@ npx skills add yehwanhwang/vizney-blocks
 
 [OpenDesign](https://open-design.ai)에서는 같은 폴더를 플러그인으로 설치합니다. 앱의 **Plugins → Add → Skill → Import from link**에 `https://github.com/yehwanhwang/vizney-blocks/tree/main/skills/vizney-blocks`를 넣거나, 터미널에서 `od plugin install github:yehwanhwang/vizney-blocks/skills/vizney-blocks`를 실행합니다.
 
-## 영문 페이지
+## 영문 페이지와 한국어 페이지
 
-같은 카드를 영어로 보여주는 페이지가 `/en/` 아래에 있습니다. 첫 화면과 차트 페이지(`/en/bar/` 등), 카드 페이지와 코드(`/en/cards/<id>.html`, `.txt`), [llms.txt](https://blocks.vizney.com/en/llms.txt), [tokens.css](https://blocks.vizney.com/en/tokens.css)가 있고, 머리의 English · 한국어로 같은 페이지를 오갑니다. 카드 코드는 한 벌이고, 영문 페이지의 카드는 영어 예시 데이터에 `"lang": "en"`을 넣은 것입니다. 차트 가이드 링크는 www.vizney.com으로 갑니다. 목록에서 내린 카드의 주소는 한국어 페이지에만 있습니다.
+v0.30부터 영문 페이지가 메인입니다. 첫 화면과 차트 페이지는 영어가 `/`(`/bar/` 등), 한국어가 `/ko/`(`/ko/bar/` 등)에 있고, 머리의 EN · KO로 같은 페이지를 오갑니다. 예전 영문 주소(`/en/`, `/en/bar/`)는 같은 페이지의 `/`로 넘어갑니다.
+
+AI와 다른 페이지가 쓰는 주소는 그대로입니다. 한국어 카드 코드와 목록은 `/cards/<id>.html`, `.txt`, [llms.txt](https://blocks.vizney.com/llms.txt), [tokens.css](https://blocks.vizney.com/tokens.css)에, 영어는 `/en/cards/<id>.html`, `.txt`, [llms.txt](https://blocks.vizney.com/en/llms.txt), [tokens.css](https://blocks.vizney.com/en/tokens.css)에 있습니다. 카드 코드는 한 벌이고, 영문 카드는 영어 예시 데이터에 `"lang": "en"`을 넣은 것입니다. 차트 가이드 링크는 영어는 www.vizney.com, 한국어는 kr.vizney.com으로 갑니다. 목록에서 내린 카드의 주소는 한국어에만 있습니다.
 
 ## 카드 목록
 
-- **[KPI 카드](https://blocks.vizney.com/kpi/)**: [KPI - Number](https://blocks.vizney.com/cards/kpi-number.html), [KPI - Line](https://blocks.vizney.com/cards/kpi-line.html), [KPI - Bar](https://blocks.vizney.com/cards/kpi-bar.html), [KPI - Gauge](https://blocks.vizney.com/cards/kpi-gauge.html), [KPI - Stacked Bar](https://blocks.vizney.com/cards/kpi-stacked-bar.html)
-- **[막대 차트](https://blocks.vizney.com/bar/)**: [Bar - Basic](https://blocks.vizney.com/cards/bar-basic.html), [Bar - Stacked](https://blocks.vizney.com/cards/bar-stacked.html), [Bar - Stacked 100%](https://blocks.vizney.com/cards/bar-stacked-100.html), [Bar - Target](https://blocks.vizney.com/cards/bar-target.html), [Bar - Diverging](https://blocks.vizney.com/cards/bar-diverging.html), [Bar - Ranking](https://blocks.vizney.com/cards/bar-ranking.html), [Bar - Compare](https://blocks.vizney.com/cards/bar-compare.html), [Bar - Butterfly](https://blocks.vizney.com/cards/bar-butterfly.html)
-- **[라인 차트](https://blocks.vizney.com/line/)**: [Line - Basic](https://blocks.vizney.com/cards/line-basic.html), [Line - Tabs](https://blocks.vizney.com/cards/line-tabs.html), [Line - Multiple](https://blocks.vizney.com/cards/line-multiple.html), [Line - Compare](https://blocks.vizney.com/cards/line-compare.html), [Line - Cumulative](https://blocks.vizney.com/cards/line-cumulative.html), [Line - Reference](https://blocks.vizney.com/cards/line-reference.html)
-- **[그리드 차트](https://blocks.vizney.com/grid/)**: [Grid - Basic](https://blocks.vizney.com/cards/grid-basic.html), [Grid - Spark](https://blocks.vizney.com/cards/grid-spark.html), [Grid - Target](https://blocks.vizney.com/cards/grid-target.html), [Grid - Pivot](https://blocks.vizney.com/cards/grid-pivot.html)
-- **[도넛 차트](https://blocks.vizney.com/donut/)**: [Donut - Basic](https://blocks.vizney.com/cards/donut-basic.html)
-- **[스캐터 차트](https://blocks.vizney.com/scatter/)**: [Scatter - Basic](https://blocks.vizney.com/cards/scatter-basic.html), [Scatter - Quadrant](https://blocks.vizney.com/cards/scatter-quadrant.html), [Scatter - Connected](https://blocks.vizney.com/cards/scatter-connected.html)
-- **[트리맵 차트](https://blocks.vizney.com/treemap/)**: [Treemap - Basic](https://blocks.vizney.com/cards/treemap-basic.html)
-- **[히트맵 차트](https://blocks.vizney.com/heatmap/)**: [Heatmap - Basic](https://blocks.vizney.com/cards/heatmap-basic.html)
-- **[워터폴 차트](https://blocks.vizney.com/waterfall/)**: [Waterfall - Basic](https://blocks.vizney.com/cards/waterfall-basic.html), [Waterfall - Subtotal](https://blocks.vizney.com/cards/waterfall-subtotal.html)
-- **[퍼널 차트](https://blocks.vizney.com/funnel/)**: [Funnel - Flow](https://blocks.vizney.com/cards/funnel-flow.html)
-- **[와플 차트](https://blocks.vizney.com/waffle/)**: [Waffle - Basic](https://blocks.vizney.com/cards/waffle-basic.html)
-- **[범프 차트](https://blocks.vizney.com/bump/)**: [Bump - Basic](https://blocks.vizney.com/cards/bump-basic.html)
-- **[생키 차트](https://blocks.vizney.com/sankey/)**: [Sankey - Basic](https://blocks.vizney.com/cards/sankey-basic.html), [Sankey - Levels](https://blocks.vizney.com/cards/sankey-levels.html)
-- **[레이더 차트](https://blocks.vizney.com/radar/)**: [Radar - Basic](https://blocks.vizney.com/cards/radar-basic.html)
+- **[KPI 카드](https://blocks.vizney.com/ko/kpi/)**: [KPI - Number](https://blocks.vizney.com/cards/kpi-number.html), [KPI - Line](https://blocks.vizney.com/cards/kpi-line.html), [KPI - Bar](https://blocks.vizney.com/cards/kpi-bar.html), [KPI - Gauge](https://blocks.vizney.com/cards/kpi-gauge.html), [KPI - Stacked Bar](https://blocks.vizney.com/cards/kpi-stacked-bar.html)
+- **[막대 차트](https://blocks.vizney.com/ko/bar/)**: [Bar - Basic](https://blocks.vizney.com/cards/bar-basic.html), [Bar - Stacked](https://blocks.vizney.com/cards/bar-stacked.html), [Bar - Stacked 100%](https://blocks.vizney.com/cards/bar-stacked-100.html), [Bar - Target](https://blocks.vizney.com/cards/bar-target.html), [Bar - Diverging](https://blocks.vizney.com/cards/bar-diverging.html), [Bar - Ranking](https://blocks.vizney.com/cards/bar-ranking.html), [Bar - Compare](https://blocks.vizney.com/cards/bar-compare.html), [Bar - Butterfly](https://blocks.vizney.com/cards/bar-butterfly.html)
+- **[라인 차트](https://blocks.vizney.com/ko/line/)**: [Line - Basic](https://blocks.vizney.com/cards/line-basic.html), [Line - Tabs](https://blocks.vizney.com/cards/line-tabs.html), [Line - Multiple](https://blocks.vizney.com/cards/line-multiple.html), [Line - Compare](https://blocks.vizney.com/cards/line-compare.html), [Line - Cumulative](https://blocks.vizney.com/cards/line-cumulative.html), [Line - Reference](https://blocks.vizney.com/cards/line-reference.html)
+- **[그리드 차트](https://blocks.vizney.com/ko/grid/)**: [Grid - Basic](https://blocks.vizney.com/cards/grid-basic.html), [Grid - Spark](https://blocks.vizney.com/cards/grid-spark.html), [Grid - Target](https://blocks.vizney.com/cards/grid-target.html), [Grid - Pivot](https://blocks.vizney.com/cards/grid-pivot.html)
+- **[도넛 차트](https://blocks.vizney.com/ko/donut/)**: [Donut - Basic](https://blocks.vizney.com/cards/donut-basic.html)
+- **[스캐터 차트](https://blocks.vizney.com/ko/scatter/)**: [Scatter - Basic](https://blocks.vizney.com/cards/scatter-basic.html), [Scatter - Quadrant](https://blocks.vizney.com/cards/scatter-quadrant.html), [Scatter - Connected](https://blocks.vizney.com/cards/scatter-connected.html)
+- **[트리맵 차트](https://blocks.vizney.com/ko/treemap/)**: [Treemap - Basic](https://blocks.vizney.com/cards/treemap-basic.html)
+- **[히트맵 차트](https://blocks.vizney.com/ko/heatmap/)**: [Heatmap - Basic](https://blocks.vizney.com/cards/heatmap-basic.html)
+- **[워터폴 차트](https://blocks.vizney.com/ko/waterfall/)**: [Waterfall - Basic](https://blocks.vizney.com/cards/waterfall-basic.html), [Waterfall - Subtotal](https://blocks.vizney.com/cards/waterfall-subtotal.html)
+- **[퍼널 차트](https://blocks.vizney.com/ko/funnel/)**: [Funnel - Flow](https://blocks.vizney.com/cards/funnel-flow.html)
+- **[와플 차트](https://blocks.vizney.com/ko/waffle/)**: [Waffle - Basic](https://blocks.vizney.com/cards/waffle-basic.html)
+- **[범프 차트](https://blocks.vizney.com/ko/bump/)**: [Bump - Basic](https://blocks.vizney.com/cards/bump-basic.html)
+- **[생키 차트](https://blocks.vizney.com/ko/sankey/)**: [Sankey - Basic](https://blocks.vizney.com/cards/sankey-basic.html), [Sankey - Levels](https://blocks.vizney.com/cards/sankey-levels.html)
+- **[레이더 차트](https://blocks.vizney.com/ko/radar/)**: [Radar - Basic](https://blocks.vizney.com/cards/radar-basic.html)
 
 ### 목록에서 내린 카드
 
@@ -90,9 +92,9 @@ SPOQA_DIR=/path/to/spoqa-han-sans/Original/SpoqaHanSansNeo node build.mjs
 
 - `src/`: 카드 공통 부품(`*.js`, `*.css`), 카드별 코드와 예시 데이터(`src/variants/`), 카테고리 설명과 규칙(`src/variants/meta.json`), 목적 색인(`src/variants/purposes.json`: 목적마다 기본 카드가 맨 앞이고, 나머지는 쓰는 조건과 함께 적습니다). 카드를 목록에서 내릴 때는 지우지 않고 meta.json의 그 카드에 `retired`(버전, 대신 쓸 카드, 이유)를 적습니다. 주소와 코드는 남고 목록에서만 빠집니다
 - 영어: 한국어가 원본이고 영어는 덧씌웁니다. 카드 안 문구(합계 · 기타 · 툴팁 · 낭독 문구)는 `src/core.js`의 `EN` 표와 `tx()`로 바뀌고, 사이트 문구는 `build.mjs`의 `WORDS`, 카드의 쓰임과 규칙은 `src/variants/meta.en.json`, 목적 색인은 `purposes.en.json`, 예시 데이터는 `<id>.en.json`(`"lang": "en"` 포함), 토큰 설명은 `src/tokens.en.css`(선언은 `tokens.css`와 같아야 합니다)에 있습니다. 카드를 더할 때는 이 넷을 함께 적어야 가드를 지납니다
-- `page/`: 사이트 화면(`site.css`, `site.js`)과 차트 그림(`tiles.json`). 사이트(`docs/`)와 한 페이지 갤러리(`dist/index.html`)가 함께 씁니다.
-- `tools/`: 부분 글꼴 만들기, 글꼴 라이선스, 공유 이미지
-- `docs/`: 빌드 결과. 첫 화면, 차트 페이지(`/bar/` 등), 카드 페이지와 코드(`/cards/`), `llms.txt`가 들어 있고, 영문 페이지는 `docs/en/`에 같은 구조로 들어 있습니다. GitHub Pages가 이 폴더를 blocks.vizney.com로 내보냅니다.
+- `page/`: 사이트 화면(`site.css`, `site.js`)과 차트 그림(`tiles.json`). 머리글, 링크, 버튼, 언어 전환(EN · KO), 바닥글은 [Vizney Styles](https://styles.vizney.com)와 같은 틀이라 한쪽을 고치면 다른 쪽도 맞춥니다. 사이트(`docs/`)와 한 페이지 갤러리(`dist/index.html`)가 함께 씁니다.
+- `tools/`: 부분 글꼴 만들기, 글꼴 라이선스, 공유 이미지(영어 `og.png`, 한국어 `og-ko.png`)
+- `docs/`: 빌드 결과. 영문 첫 화면과 차트 페이지(`/bar/` 등), 한국어 첫 화면과 차트 페이지(`docs/ko/`), 한국어 카드 페이지와 코드(`/cards/`)·`llms.txt`·`tokens.css`, 영문 카드 페이지와 코드(`docs/en/cards/`)·`llms.txt`·`tokens.css`, 예전 영문 주소에서 넘겨 주는 페이지(`docs/en/` 아래 첫 화면과 차트 페이지)가 들어 있습니다. GitHub Pages가 이 폴더를 blocks.vizney.com로 내보냅니다.
 - `skills/vizney-blocks/`: 빌드 결과. 코딩 에이전트용 스킬(`SKILL.md`)로, `purposes.json`과 쓰는 규칙에서 만들어집니다. 같은 폴더의 `open-design.json`, `icon.svg`, `preview/index.html`은 OpenDesign 플러그인 카드용입니다. `docs/`처럼 직접 고치지 않습니다.
 
 ## 라이선스

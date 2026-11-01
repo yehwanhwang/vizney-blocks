@@ -1,7 +1,9 @@
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/vz-sans-400.woff?v=de2d8fe4b5) format('woff');}
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/vz-sans-500.woff?v=de2d8fe4b5) format('woff');}
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/vz-sans-700.woff?v=de2d8fe4b5) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/vz-sans-400.woff?v=fa8e7f52f8) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/vz-sans-500.woff?v=fa8e7f52f8) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/vz-sans-700.woff?v=fa8e7f52f8) format('woff');}
 /* Vizney Blocks site: white page, UI in ink and grays only, color lives in the cards and chart tiles.
+   The frame (top bar, links, buttons, language switch, footer) is shared with Vizney Styles (styles.vizney.com):
+   both are lines of Vizney, so change the two together.
    One 1280px column (40px gutters, 16px on phones). Home: hero, live dashboard showcase, purpose index, chart tiles, usage.
    Category pages: sticky sidebar of chart types beside the cards; on phones the sidebar becomes a scrolling row. */
 :root {
@@ -13,18 +15,26 @@
   --muted: #616771;
   --line: #e6e8ec;
   --line-2: #eceef2;
+  --rule: #cfd2d8;
+  --yellow: #ffcc00;
   --data: #fff4e5;
   --font: 'VZ Sans', 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
   --mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', 'VZ Sans', monospace;
   --vzb-font: var(--font);
   --shadow: 0 12px 32px -12px rgba(17, 24, 39, 0.28);
+  --shadow-sm: 0 1px 2px rgba(17, 24, 39, 0.12);
+  color-scheme: light;
 }
 html { scroll-padding-top: calc(var(--top-h, 64px) + 24px); }
 [hidden] { display: none !important; }
 html, body { background: var(--page); color: var(--ink); }
 body { margin: 0; font: 400 15px/1.7 var(--font); -webkit-font-smoothing: antialiased; word-break: keep-all; overflow-wrap: anywhere; }
-a { color: var(--ink); }
-a:hover { color: var(--ink-2); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 41; background: var(--page); }
+/* Text links: ink with a yellow underline (the yellow of the Vizney mark), ink on hover. */
+a { color: var(--ink); text-decoration-line: underline; text-decoration-color: var(--yellow); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+a:hover { color: var(--ink); text-decoration-color: var(--ink); }
+/* The cards keep their own focus rings. */
+:focus-visible:not(.vzb-card, .vzb-card *) { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 4px; }
 code { font-family: var(--mono); font-size: 0.86em; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .skip { position: absolute; left: 16px; top: -60px; z-index: 100; padding: 10px 14px; border-radius: 10px; background: var(--ink); color: #ffffff; font-size: 14px; text-decoration: none; }
@@ -44,7 +54,7 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 .btn.is-primary.is-done { background: #3a3a3a; }
 
 /* Top bar */
-.top { position: sticky; top: 0; z-index: 40; background: rgba(255, 255, 255, 0.92); backdrop-filter: saturate(1.4) blur(10px); -webkit-backdrop-filter: saturate(1.4) blur(10px); border-bottom: 1px solid var(--line-2); }
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40; background: rgba(255, 255, 255, 0.92); backdrop-filter: saturate(1.4) blur(10px); -webkit-backdrop-filter: saturate(1.4) blur(10px); border-bottom: 1px solid var(--line-2); }
 .top-in { min-height: 64px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 28px; padding-block: 10px; }
 .logo { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
 .mark { display: grid; grid-template-columns: repeat(2, 9px); gap: 2px; }
@@ -57,6 +67,11 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 .top-nav a[aria-current] { color: var(--ink); font-weight: 500; }
 .top-nav a:hover { color: var(--ink); }
 .top-end { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+/* Language switch: EN · KO, the current one raised. */
+.lang { display: flex; height: 40px; box-sizing: border-box; padding: 4px; border-radius: 10px; background: var(--soft); }
+.lang a { display: inline-flex; align-items: center; justify-content: center; min-width: 40px; padding: 0 10px; border-radius: 7px; font-size: 13px; font-weight: 700; color: var(--muted); text-decoration: none; }
+.lang a:hover { color: var(--ink); }
+.lang a[aria-current] { background: var(--page); color: var(--ink); box-shadow: var(--shadow-sm); }
 
 /* Search */
 .search { position: relative; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 8px 0 12px; border-radius: 10px; background: var(--soft); color: var(--muted); }
@@ -76,7 +91,7 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 /* Home: hero */
 .hero { padding-top: 72px; }
 .eyebrow { margin: 0; display: inline-flex; padding: 6px 12px; border-radius: 999px; background: var(--soft); font-size: 13px; line-height: 1.4; color: var(--ink-2); }
-.hero h1 { margin: 20px 0 0; font-size: clamp(36px, 5.2vw, 58px); line-height: 1.16; font-weight: 700; letter-spacing: -0.035em; }
+.hero h1 { text-wrap: balance; margin: 20px 0 0; font-size: clamp(36px, 5.2vw, 58px); line-height: 1.16; font-weight: 700; letter-spacing: -0.035em; }
 .hero .lede { margin: 20px 0 0; max-width: 640px; font-size: 18px; line-height: 1.7; color: var(--ink-2); }
 .cta { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 10px; }
 .hint { margin: 16px 0 0; font-size: 14px; color: var(--muted); }
@@ -231,7 +246,7 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 .foot { margin-top: 120px; border-top: 1px solid var(--line-2); }
 .foot-in { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 24px; padding-block: 28px 40px; font-size: 13px; color: var(--muted); }
 .foot-in nav { margin-left: auto; display: flex; flex-wrap: wrap; gap: 6px 18px; }
-.foot-in a { color: var(--ink-2); }
+.foot-in a { color: var(--ink-2); text-decoration-color: currentColor; text-decoration-thickness: auto; text-underline-offset: auto; }
 
 /* Code dialog: line numbers, the data JSON tinted and colored, the rest quiet. */
 .dlg { box-sizing: border-box; width: min(960px, calc(100vw - 32px)); max-height: calc(100vh - 48px); padding: 0; border: 0; border-radius: 18px; box-shadow: 0 40px 90px -30px rgba(17, 24, 39, 0.5); color: var(--ink); }
@@ -298,5 +313,8 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
   .fields-in { padding: 4px 18px 18px; }
   .fields dl { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   .fields dd { margin-bottom: 10px; }
+}
+@media (max-width: 560px) {
+  .is-git { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .tile, .rules summary svg, .fields > summary svg { transition: none; } }

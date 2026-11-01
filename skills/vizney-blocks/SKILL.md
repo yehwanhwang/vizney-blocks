@@ -5,7 +5,7 @@ description: "Vizney Blocks(blocks.vizney.com)의 HTML 대시보드 카드로 �
 
 # Vizney Blocks로 대시보드 만들기
 
-Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v0.29, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 증감, 비중, 달성률, 합계와 색·강조는 카드가 Vizney 차트 가이드의 규칙대로 계산하고 그린다.
+Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v0.30, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 증감, 비중, 달성률, 합계와 색·강조는 카드가 Vizney 차트 가이드의 규칙대로 계산하고 그린다.
 
 ## 순서
 
@@ -128,4 +128,4 @@ Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v
 - 카드는 넘치는 글자를 오류 없이 말줄임(…)으로 자르므로, 폭 1280px과 390px에서 화면을 캡처해 잘리거나 겹친 글자가 없는지 본다. 캡처할 수 없으면 카드 안에서 `scrollWidth`가 `clientWidth`보다 큰 요소가 없는지 확인한다.
 - 같은 줄에 놓인 카드의 높이가 맞고, 늘어난 카드에 큰 빈 곳이 없다.
 
-갤러리: https://blocks.vizney.com/ · 소스: https://github.com/yehwanhwang/vizney-blocks
+갤러리: https://blocks.vizney.com/ (한국어 https://blocks.vizney.com/ko/) · 소스: https://github.com/yehwanhwang/vizney-blocks

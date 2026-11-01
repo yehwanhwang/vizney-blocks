@@ -1,5 +1,6 @@
 // Builds Vizney Blocks: one self-contained snippet per card, the public site in docs/ (GitHub Pages at blocks.vizney.com:
-// home, a page per chart type, a page and a plain-text copy per card, llms.txt for AI tools, and the same in English under /en/),
+// home, a page per chart type, a page and a plain-text copy per card, llms.txt for AI tools, in English at / and in Korean at /ko/;
+// the card code and llms.txt keep their published addresses: Korean at /cards/ and /llms.txt, English under /en/),
 // the skill for coding agents in skills/vizney-blocks/ (installed with `npx skills add yehwanhwang/vizney-blocks`), and the
 // one-page gallery in dist/ that is published as an artifact. The site and the gallery embed a renamed subset of Spoqa Han Sans Neo (VZ Sans).
 import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync, rmSync } from 'node:fs';
@@ -11,10 +12,13 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.29';
+const VERSION = 'v0.30';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
+// The Vizney blog, the home of every Vizney line (Korean readers go to kr.vizney.com), and the sister line.
+const BLOG = { ko: 'https://kr.vizney.com/', en: 'https://www.vizney.com/' };
+const STYLES = 'https://styles.vizney.com/';
 const NOTICE = '© 2026 Vizney · MIT License';
 const FONT_LINK = '<link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">';
 
@@ -120,12 +124,15 @@ const SKILL_CMD = 'npx skills add yehwanhwang/vizney-blocks';
 
 // ---------- Languages ----------
 // Everything a page says, in both languages. A locale (L) carries its cards, purpose index, addresses and strings, and every
-// page part takes one. The Korean site is at /, the English site at /en/; tokens.css, OFL.txt and the fonts are shared.
+// page part takes one. English is the main site: its pages are at / and the Korean pages at /ko/. The addresses AI tools and
+// links use keep their places (published before English became the main site): the Korean card code and llms.txt at /cards/
+// and /llms.txt, the English at /en/cards/ and /en/llms.txt. L.base is where a locale's pages live, L.files where its cards,
+// llms.txt and tokens.css live. OFL.txt and the fonts are shared; the old /en/ pages redirect to /.
 const WORDS = {
   ko: {
     html: 'ko', og: 'ko_KR', other: { lang: 'en', label: 'English' },
     skip: '본문으로 건너뛰기', menu: '주 메뉴', cards: '카드', usage: '쓰는 법', guide: '차트 가이드', find: '카드 찾기', found: '찾은 카드',
-    footFont: '글꼴 VZ Sans(Spoqa Han Sans Neo 부분 글꼴)', footNav: '바닥글', footGuide: 'Vizney 차트 가이드',
+    footFont: '글꼴 VZ Sans(Spoqa Han Sans Neo 부분 글꼴)', footNav: '바닥글', footBlog: '블로그', langAria: '언어',
     copy: '복사', aiLink: 'AI용 링크', close: '닫기', code: '코드', viewCode: '코드 보기', copyCode: '카드 코드 복사', copyCodeNote: 'HTML에 붙여 넣습니다', copyLink: 'AI용 링크 복사', copyLinkNote: (id) => `${id}.txt 주소를 AI에 줍니다`,
     eyebrow: `카드 ${N.cards}종 · 차트 ${N.cats}가지 · MIT 라이선스`, h1: '분석가의 판단을 담은<br>대시보드 카드', h1one: '분석가의 판단을 담은 대시보드 카드',
     lede: '카드를 복사해 HTML에 붙여 넣고 JSON만 바꾸세요. 증감, 비중, 달성률은 카드가 계산하고, 색과 강조는 Vizney 차트 가이드의 규칙을 따릅니다.',
@@ -153,12 +160,12 @@ const WORDS = {
     homeTitle: 'Vizney Blocks · 복사해 쓰는 대시보드 카드', catTitle: (name) => `${name} · Vizney Blocks`, catDesc: (lede, n) => `${lede} 복사해 붙여 쓰는 HTML 카드 ${n}종.`,
     homeDesc: `복사해 붙여 쓰는 HTML 대시보드 카드 ${N.cards}종. KPI, 막대, 라인, 그리드, 도넛, 스캐터, 생키, 레이더 등 차트 ${N.cats}가지를 Vizney 차트 가이드의 판단 규칙으로 만들었습니다. MIT License.`,
     // site.js
-    js: { copied: '복사됨', linkCopied: '링크 복사됨', sub: '<b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.', blocked: '복사가 막혀 있습니다. 코드를 선택해 두었으니 Ctrl+C(⌘+C)로 복사하세요.', none: '찾는 카드가 없습니다.', exampleTitle: '영업 현황 예시', exampleSub: (n) => `카드 ${n}장을 격자에 넣은 코드입니다. 각 카드의 <b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.`, exampleComment: (n) => `<!-- Vizney Blocks 예시 · 영업 현황(카드 ${n}장)\n     ${SITE}/ · 각 카드의 JSON만 바꾸세요. -->` },
+    js: { copied: '복사됨', linkCopied: '링크 복사됨', sub: '<b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.', blocked: '복사가 막혀 있습니다. 코드를 선택해 두었으니 Ctrl+C(⌘+C)로 복사하세요.', none: '찾는 카드가 없습니다.', exampleTitle: '영업 현황 예시', exampleSub: (n) => `카드 ${n}장을 격자에 넣은 코드입니다. 각 카드의 <b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.`, exampleComment: (n) => `<!-- Vizney Blocks 예시 · 영업 현황(카드 ${n}장)\n     ${SITE}/ko/ · 각 카드의 JSON만 바꾸세요. -->` },
   },
   en: {
     html: 'en', og: 'en_US', other: { lang: 'ko', label: '한국어' },
     skip: 'Skip to content', menu: 'Main menu', cards: 'Cards', usage: 'How to use', guide: 'Chart guide', find: 'Find a card', found: 'Cards found',
-    footFont: 'Font VZ Sans (a subset of Spoqa Han Sans Neo)', footNav: 'Footer', footGuide: 'Vizney chart guide',
+    footFont: 'Font VZ Sans (a subset of Spoqa Han Sans Neo)', footNav: 'Footer', footBlog: 'Blog', langAria: 'Language',
     copy: 'Copy', aiLink: 'AI link', close: 'Close', code: 'Code', viewCode: 'view code', copyCode: 'Copy card code', copyCodeNote: 'Paste it into your HTML', copyLink: 'Copy AI link', copyLinkNote: (id) => `Give an AI the ${id}.txt address`,
     eyebrow: `${N.cards} cards · ${N.cats} chart types · MIT License`, h1: 'Dashboard cards<br>with an analyst’s judgment built in', h1one: 'Dashboard cards with an analyst’s judgment built in',
     lede: 'Copy a card into your HTML and change only its JSON. The card computes changes, shares and attainment, and its colors and emphasis follow the rules of the Vizney chart guide.',
@@ -185,25 +192,26 @@ const WORDS = {
     pagerAria: 'Previous and next chart', prev: 'Previous', next: 'Next', codeText: 'Code (text)',
     homeTitle: 'Vizney Blocks · Copy-paste dashboard cards', catTitle: (name) => `${name} · Vizney Blocks`, catDesc: (lede, n) => `${lede} ${n} copy-paste HTML cards.`,
     homeDesc: `${N.cards} copy-paste HTML dashboard cards. ${N.cats} chart types, from KPI, bar, line and grid to donut, scatter, Sankey and radar, built on the judgment rules of the Vizney chart guide. MIT License.`,
-    js: { copied: 'Copied', linkCopied: 'Link copied', sub: 'Change only the data (JSON) on the <b>orange lines</b>. Leave the rest as it is.', blocked: 'Copying is blocked here. The code is selected; press Ctrl+C (⌘+C) to copy it.', none: 'No card found.', exampleTitle: 'Sales Overview example', exampleSub: (n) => `The code of ${n} cards in a grid. In each card, change only the data (JSON) on the <b>orange lines</b>. Leave the rest as it is.`, exampleComment: (n) => `<!-- Vizney Blocks example · Sales Overview (${n} cards)\n     ${SITE}/en/ · Change only each card's JSON. -->` },
+    js: { copied: 'Copied', linkCopied: 'Link copied', sub: 'Change only the data (JSON) on the <b>orange lines</b>. Leave the rest as it is.', blocked: 'Copying is blocked here. The code is selected; press Ctrl+C (⌘+C) to copy it.', none: 'No card found.', exampleTitle: 'Sales Overview example', exampleSub: (n) => `The code of ${n} cards in a grid. In each card, change only the data (JSON) on the <b>orange lines</b>. Leave the rest as it is.`, exampleComment: (n) => `<!-- Vizney Blocks example · Sales Overview (${n} cards)\n     ${SITE}/ · Change only each card's JSON. -->` },
   },
 };
 const locale = (lang) => {
-  const base = lang === 'en' ? '/en' : '';
+  const base = lang === 'en' ? '' : '/ko';
+  const files = lang === 'en' ? '/en' : '';
   const cs = lang === 'en' ? builtEn : built;
   const vs = cs.flatMap((c) => c.variants);
   const ps = lang === 'en' ? purposesEn : purposes;
   return {
-    lang, base, cats: cs, variants: vs, purposes: ps, guide: GUIDE[lang], t: WORDS[lang],
+    lang, base, files, cats: cs, variants: vs, purposes: ps, guide: GUIDE[lang], blog: BLOG[lang], t: WORDS[lang],
     byId: Object.fromEntries(vs.map((v) => [v.id, v])),
     catName: Object.fromEntries(cs.map((c) => [c.id, c.name])),
     // Search words for a card: the purposes it answers and their conditions.
     tagsOf: (id) => ps.flatMap((p) => p.picks.filter((k) => k.id === id).map((k) => `${p.name} ${p.question} ${k.when}`)).join(' '),
-    llms: `${base}/llms.txt`, tokens: `${base}/tokens.css`,
+    llms: `${files}/llms.txt`, tokens: `${files}/tokens.css`,
   };
 };
 const KO = locale('ko'), ENL = locale('en');
-const LOCALES = [KO, ENL];
+const LOCALES = [ENL, KO];
 
 // ---------- Page parts ----------
 // Two modes share the markup: the site (a page per chart type, in each language under its base path) and the one-page
@@ -233,23 +241,32 @@ const IC = {
   down: '<svg class="ic" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5L6 7.5l3-3"/></svg>',
 };
 
-// The header's language switch (alt: the same page in the other language) sits before the GitHub button on the site pages.
+// The header, footer and buttons follow Vizney Styles (styles.vizney.com): both are lines of Vizney, so they share the
+// top bar with the Vizney mark, a Vizney link in the menu, the EN · KO switch and the footer that links back to vizney.com.
+// alt: the same page in the other language. Without it (the one-page gallery) there is no switch.
+const langSwitch = (L, alt) => {
+  if (!alt) return '';
+  const link = (lang, label) => (lang === L.lang
+    ? `<a aria-current="true" lang="${lang}">${label}</a>`
+    : `<a href="${alt}" hreflang="${lang}" lang="${lang}">${label}</a>`);
+  return `<div class="lang" role="group" aria-label="${L.t.langAria}">${link('en', 'EN')}${link('ko', 'KO')}</div>\n`;
+};
 const header = (m, current, L, alt) => `<header class="top" id="top">
 <div class="wrap top-in">
 <a class="logo" href="${m.home}"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Vizney Blocks</a>
-<nav class="top-nav" aria-label="${L.t.menu}"><a href="${m.cards}"${current ? ' aria-current="page"' : ''}>${L.t.cards}</a><a href="${m.usage}">${L.t.usage}</a><a ${ext(L.guide)}>${L.t.guide} ↗</a></nav>
+<nav class="top-nav" aria-label="${L.t.menu}"><a href="${m.cards}"${current ? ' aria-current="page"' : ''}>${L.t.cards}</a><a href="${m.usage}">${L.t.usage}</a><a ${ext(L.guide)}>${L.t.guide}<span aria-hidden="true"> ↗</span></a><a ${ext(L.blog)}>Vizney<span aria-hidden="true"> ↗</span></a></nav>
 <div class="top-end">
 <div class="search">${IC.search}<label class="sr" for="q">${L.t.find}</label><input id="q" type="search" placeholder="${L.t.find}" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="q-pop"><kbd aria-hidden="true">⌘K</kbd><ul class="search-pop" id="q-pop" role="listbox" aria-label="${L.t.found}" hidden></ul></div>
-${alt ? `<a class="btn is-lang" href="${alt}" hreflang="${L.t.other.lang}" lang="${L.t.other.lang}">${L.t.other.label}</a>\n` : ''}<a class="btn is-git" ${ext(REPO)}>GitHub${IC.out}</a>
+${langSwitch(L, alt)}<a class="btn is-git" ${ext(REPO)}>GitHub${IC.out}</a>
 </div>
 </div>
 </header>`;
 
 const footer = (m, L) => `<footer class="foot">
 <div class="wrap foot-in">
-<span>Vizney Blocks ${VERSION} · ${NOTICE}</span>
+<span>Vizney Blocks ${VERSION} · © 2026 <a ${ext(L.blog)}>Vizney</a> · MIT License</span>
 <span>${L.t.footFont} · <a href="${m.file('OFL.txt')}">SIL Open Font License</a></span>
-<nav aria-label="${L.t.footNav}"><a ${ext(REPO)}>GitHub</a><a href="${m.llms}">llms.txt</a><a ${ext(L.guide)}>${L.t.footGuide}</a></nav>
+<nav aria-label="${L.t.footNav}"><a ${ext(L.blog)}>${L.t.footBlog}</a><a ${ext(STYLES)}>Vizney Styles</a><a href="${m.llms}">llms.txt</a><a ${ext(REPO)}>GitHub</a></nav>
 </div>
 </footer>`;
 
@@ -316,7 +333,7 @@ const usage = (m, L) => `<section class="${m.one ? '' : 'wrap '}sec" id="usage" 
   --vzb-primary: #0f766e;
   --vzb-font: 'Pretendard';
 }</pre></li>
-<li class="step"><span class="num" aria-hidden="true">4</span><h3>${L.t.step4}</h3><p>${L.t.step4p}</p><pre class="snip">${L.t.step4code(L.base)}</pre></li>
+<li class="step"><span class="num" aria-hidden="true">4</span><h3>${L.t.step4}</h3><p>${L.t.step4p}</p><pre class="snip">${L.t.step4code(L.files)}</pre></li>
 </ol>
 <details class="fields">
 <summary>${L.t.fields}${IC.down}</summary>
@@ -344,7 +361,7 @@ const intro = (L) => `<section class="intro" aria-labelledby="intro-title">
 <p class="eyebrow">${L.t.eyebrow}</p>
 <h1 id="intro-title">${L.t.h1one}</h1>
 <p class="cat-lede">${L.t.lede}</p>
-<div class="cat-links"><a class="pill" ${ext(`${SITE}/`)}>blocks.vizney.com${IC.out}</a><a class="pill" ${ext(`${SITE}/llms.txt`)}>${L.t.aiList}${IC.out}</a></div>
+<div class="cat-links"><a class="pill" ${ext(`${SITE}${L.base}/`)}>blocks.vizney.com${IC.out}</a><a class="pill" ${ext(`${SITE}/llms.txt`)}>${L.t.aiList}${IC.out}</a></div>
 </section>`;
 
 // Category pages
@@ -412,6 +429,7 @@ const data = (m, page, ids, L) => `<script>window.VZB = ${esc({
   page,
   site: SITE,
   base: L.base,
+  files: L.files,
   t: Object.fromEntries(Object.entries(L.t.js).map(([k, v]) => [k, typeof v === 'function' ? v(EXAMPLE.length) : v])),
   cats: L.cats.map((c) => ({ id: c.id, name: c.name })),
   index: L.variants.map((v) => ({ id: v.id, name: v.name, cat: v.cat, catName: L.catName[v.cat], when: plain(v.when), tags: L.tagsOf(v.id), url: m.card(v) })),
@@ -422,7 +440,7 @@ const data = (m, page, ids, L) => `<script>window.VZB = ${esc({
 
 // ---------- Site pages (docs/) ----------
 const attr = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-// alt: the same page in the other language, for the hreflang links (Korean is the default for other languages).
+// alt: the same page in the other language, for the hreflang links (English is the default for other languages).
 const head = ({ title, desc, path, extra = '', L = KO, alt }) => `<!doctype html>
 <html lang="${L.t.html}">
 <head>
@@ -431,14 +449,14 @@ const head = ({ title, desc, path, extra = '', L = KO, alt }) => `<!doctype html
 <title>${attr(title)}</title>
 <meta name="description" content="${attr(desc)}">
 <link rel="canonical" href="${SITE}${path}">
-${alt ? `<link rel="alternate" hreflang="${L.lang}" href="${SITE}${path}">\n<link rel="alternate" hreflang="${L.t.other.lang}" href="${SITE}${alt}">\n<link rel="alternate" hreflang="x-default" href="${SITE}${L.lang === 'ko' ? path : alt}">\n` : ''}<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+${alt ? `<link rel="alternate" hreflang="${L.lang}" href="${SITE}${path}">\n<link rel="alternate" hreflang="${L.t.other.lang}" href="${SITE}${alt}">\n<link rel="alternate" hreflang="x-default" href="${SITE}${L.lang === 'en' ? path : alt}">\n` : ''}<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vizney Blocks">
 <meta property="og:locale" content="${L.t.og}">
 <meta property="og:title" content="${attr(title)}">
 <meta property="og:description" content="${attr(desc)}">
 <meta property="og:url" content="${SITE}${path}">
-<meta property="og:image" content="${SITE}/og.png">
+<meta property="og:image" content="${SITE}/${L.lang === 'ko' ? 'og-ko.png' : 'og.png'}">
 <meta name="twitter:card" content="summary_large_image">
 ${extra}</head>`;
 // Asset versions are filled in once the font is built (the font depends on every character the pages use).
@@ -496,23 +514,39 @@ ${pager(i, m, L)}
     });
   });
 }
-// GitHub Pages serves one 404 page for every address, so it is Korean with an English line.
+// GitHub Pages serves one 404 page for every address, so it is English (the main site) with a Korean line.
 pages['404.html'] = sitePage({
-  title: '페이지를 찾을 수 없습니다 · Vizney Blocks',
-  desc: KO.t.homeDesc,
+  title: 'Page not found · Vizney Blocks',
+  desc: ENL.t.homeDesc,
   path: '/404.html',
   robots: 'noindex',
   page: 'none',
   ids: [],
-  L: KO,
+  L: ENL,
   body: `<main id="main" class="wrap hero lost">
 <p class="eyebrow">404</p>
-<h1>페이지를 찾을 수 없습니다</h1>
-<p class="lede">주소가 바뀌었거나 없는 페이지입니다. 위의 카드 찾기로 카드 이름을 찾거나 첫 화면에서 차트를 고르세요.</p>
-<div class="cta"><a class="btn is-primary is-lg" href="/">첫 화면으로</a><a class="btn is-lg" href="/#cards">차트 고르기</a></div>
-<p class="hint" lang="en">Page not found. The address may have changed. Search for a card above, or start from the <a href="/en/">English home page</a>.</p>
+<h1>Page not found</h1>
+<p class="lede">The address may have changed, or the page does not exist. Search for a card above, or pick a chart on the home page.</p>
+<div class="cta"><a class="btn is-primary is-lg" href="/">Home</a><a class="btn is-lg" href="/#cards">Pick a chart</a></div>
+<p class="hint" lang="ko">페이지를 찾을 수 없습니다. 위의 카드 찾기로 카드 이름을 찾거나 <a href="/ko/">한국어 첫 화면</a>에서 시작하세요.</p>
 </main>`,
 });
+// The English pages were at /en/ before English became the main site; those addresses now send people to the same page at /.
+const moved = (to) => `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Vizney Blocks</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="${SITE}${to}">
+<meta http-equiv="refresh" content="0; url=${to}">
+<script>location.replace('${to}' + location.hash);</script>
+</head>
+<body><p><a href="${to}">Vizney Blocks</a></p></body>
+</html>
+`;
+pages['en/index.html'] = moved('/');
+for (const c of ENL.cats) pages[`en/${c.id}/index.html`] = moved(`/${c.id}/`);
 
 // ---------- One-page gallery (dist/, published as an artifact) ----------
 const siteCss = r('page/site.css').trim();
@@ -585,7 +619,7 @@ for (const [path, html] of Object.entries(pages)) {
 }
 
 // One page per card (the snippet on a plain background, for embedding) and the same snippet as plain text for AI tools.
-// The English pages (/en/cards/) exist for the cards that are not retired; the retired addresses are Korean only.
+// The English cards (/en/cards/) exist for the cards that are not retired; the retired addresses are Korean only (/cards/).
 const cardCss = `<style>body{margin:0;background:#eef0f4;font:14px/1.6 'Spoqa Han Sans Neo','Noto Sans KR',sans-serif;color:#4a4a4a}main{box-sizing:border-box;max-width:var(--w,640px);margin:0 auto;padding:40px 16px 24px}p{margin:16px 2px 0;font-size:13px}a{color:#1b1b1b}</style>\n`;
 mkdirSync(join(docs, 'en/cards'), { recursive: true });
 for (const [L, all] of [[KO, builtAll], [ENL, builtEnAll]]) {
@@ -593,9 +627,9 @@ for (const [L, all] of [[KO, builtAll], [ENL, builtEnAll]]) {
     for (const v of c.variants) {
       const w = c.id === 'kpi' ? 420 : 640;
       const gone = v.retired && `<p>${h(v.retired.version)}에 목록에서 내린 카드입니다. 대신 <a href="${v.retired.use}.html">${h(nameOf[v.retired.use])}</a>를 쓰세요. ${h(v.retired.note)}</p>\n`;
-      const path = `${L.base}/cards/${v.id}.html`;
-      writeFileSync(join(docs, `${L.base}/cards`, `${v.id}.txt`), v.code);
-      writeFileSync(join(docs, path), `${head({ title: `${v.name} · Vizney Blocks`, desc: `${c.name} · ${v.name}. ${plain(v.when)}`, path, L, alt: v.retired ? null : `${(L.lang === 'ko' ? ENL : KO).base}/cards/${v.id}.html`, extra: (gone ? '<meta name="robots" content="noindex">\n' : '') + cardCss })}
+      const path = `${L.files}/cards/${v.id}.html`;
+      writeFileSync(join(docs, `${L.files}/cards`, `${v.id}.txt`), v.code);
+      writeFileSync(join(docs, path), `${head({ title: `${v.name} · Vizney Blocks`, desc: `${c.name} · ${v.name}. ${plain(v.when)}`, path, L, alt: v.retired ? null : `${(L.lang === 'ko' ? ENL : KO).files}/cards/${v.id}.html`, extra: (gone ? '<meta name="robots" content="noindex">\n' : '') + cardCss })}
 <body>
 <main style="--w:${w}px">
 ${v.code}
@@ -645,7 +679,7 @@ const RULES = (from, lang = 'ko') => (lang === 'en' ? [
 ]);
 
 // llms.txt: what the cards are, how to use them, the purpose index, and every card with its plain-text code address. One per language.
-const txt = (id, L) => `${SITE}${L.base}/cards/${id}.txt`;
+const txt = (id, L) => `${SITE}${L.files}/cards/${id}.txt`;
 for (const L of LOCALES) {
   const en = L.lang === 'en';
   let llms = en ? `# Vizney Blocks
@@ -656,7 +690,7 @@ How to use:
 - ${PICK.en}
 ${RULES('from the links (.txt) below', 'en').map((x) => `- ${x}`).join('\n')}
 - Coding agents can install the skill (its text is in Korean; the purpose index and rules are the ones above): ${SKILL_CMD}
-- Gallery: ${SITE}/en/ · Korean: ${SITE}/llms.txt · Source: ${REPO}
+- Gallery: ${SITE}/ · Korean: ${SITE}/ko/ (llms.txt: ${SITE}/llms.txt) · Source: ${REPO}
 
 ## Pick by purpose
 
@@ -671,7 +705,7 @@ ${L.purposes.map((p) => `- ${p.name} · ${p.question}\n${p.picks.map((k, i) => `
 - ${PICK.ko}
 ${RULES('아래 링크(.txt)의').map((x) => `- ${x}`).join('\n')}
 - 코딩 에이전트에는 스킬로 설치한다: ${SKILL_CMD}
-- 갤러리: ${SITE}/ · 영어: ${SITE}/en/llms.txt · 소스: ${REPO}
+- 갤러리: ${SITE}/ko/ · 영어: ${SITE}/ (llms.txt: ${SITE}/en/llms.txt) · 소스: ${REPO}
 
 ## 목적으로 고르기
 
@@ -683,9 +717,9 @@ ${L.purposes.map((p) => `- ${p.name} · ${p.question}\n${p.picks.map((k, i) => `
     llms += `\n## ${c.name}\n\n${SITE}${L.base}/${c.id}/ · ${plain(c.intro)}\n\n`;
     for (const v of c.variants) llms += `- [${v.name}](${txt(v.id, L)}): ${plain(v.when)} ${en ? 'Rules:' : '규칙:'} ${v.rules.map(plain).join(' ')}\n`;
   }
-  writeFileSync(join(docs, `${L.base}/llms.txt`), llms);
+  writeFileSync(join(docs, `${L.files}/llms.txt`), llms);
   // tokens.css at a stable address: the variable list with what each one does, for people and AI tools to re-declare in :root.
-  writeFileSync(join(docs, `${L.base}/tokens.css`), `/* Vizney Blocks ${VERSION} · ${NOTICE} · ${en ? 'the same content as the :where(:root) block in the card code' : '카드 코드 안의 :where(:root) 블록과 같은 내용'} */\n${tokensBy[L.lang]}\n`);
+  writeFileSync(join(docs, `${L.files}/tokens.css`), `/* Vizney Blocks ${VERSION} · ${NOTICE} · ${en ? 'the same content as the :where(:root) block in the card code' : '카드 코드 안의 :where(:root) 블록과 같은 내용'} */\n${tokensBy[L.lang]}\n`);
 }
 
 // Skill for coding agents (Agent Skills format, skills/<name>/SKILL.md), installed with `npx skills add yehwanhwang/vizney-blocks`.
@@ -753,7 +787,7 @@ ${RULES('내려받은', 'ko').map((x) => `- ${x}`).join('\n')}
 - 카드는 넘치는 글자를 오류 없이 말줄임(…)으로 자르므로, 폭 1280px과 390px에서 화면을 캡처해 잘리거나 겹친 글자가 없는지 본다. 캡처할 수 없으면 카드 안에서 \`scrollWidth\`가 \`clientWidth\`보다 큰 요소가 없는지 확인한다.
 - 같은 줄에 놓인 카드의 높이가 맞고, 늘어난 카드에 큰 빈 곳이 없다.
 
-갤러리: ${SITE}/ · 소스: ${REPO}
+갤러리: ${SITE}/ (한국어 ${SITE}/ko/) · 소스: ${REPO}
 `;
 mkdirSync(join(root, 'skills/vizney-blocks'), { recursive: true });
 writeFileSync(join(root, 'skills/vizney-blocks/SKILL.md'), skill);
@@ -810,9 +844,10 @@ writeFileSync(join(docs, 'CNAME'), 'blocks.vizney.com\n');
 writeFileSync(join(docs, '.nojekyll'), '');
 writeFileSync(join(docs, 'favicon.svg'), ICON);
 copyFileSync(join(root, 'tools/OFL.txt'), join(docs, 'OFL.txt'));
-if (existsSync(join(root, 'tools/og.png'))) copyFileSync(join(root, 'tools/og.png'), join(docs, 'og.png'));
+// Share images: English (og.png, the main site) and Korean (og-ko.png).
+for (const f of ['og.png', 'og-ko.png']) if (existsSync(join(root, `tools/${f}`))) copyFileSync(join(root, `tools/${f}`), join(docs, f));
 // The sitemap lists both languages and links each page to its translation.
-const alt = (p) => ['ko', 'en'].map((l) => `<xhtml:link rel="alternate" hreflang="${l}" href="${SITE}${l === 'en' ? '/en' : ''}${p}"/>`).join('');
+const alt = (p) => LOCALES.map((l) => `<xhtml:link rel="alternate" hreflang="${l.lang}" href="${SITE}${l.base}${p}"/>`).join('');
 writeFileSync(join(docs, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${LOCALES.flatMap((L) => ['/', ...L.cats.map((c) => `/${c.id}/`)].map((p) => `<url><loc>${SITE}${L.base}${p}</loc>${alt(p)}</url>`)).join('\n')}
@@ -821,6 +856,6 @@ ${LOCALES.flatMap((L) => ['/', ...L.cats.map((c) => `/${c.id}/`)].map((p) => `<u
 writeFileSync(join(docs, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
 const kb = (p) => `${(readFileSync(join(docs, p)).length / 1024).toFixed(0)} KB`;
 console.log(`docs/: home ${kb('index.html')}, ${built.length} chart pages (bar ${kb('bar/index.html')}), ${variants.length + retired.length} card pages and .txt files (${retired.length} retired), llms.txt ${kb('llms.txt')}, fonts ${W.map((w) => `${(woff[w].length / 1024).toFixed(0)}`).join('/')} KB`);
-console.log(`docs/en/: home ${kb('en/index.html')}, ${builtEn.length} chart pages, ${builtEn.flatMap((c) => c.variants).length} card pages and .txt files, llms.txt ${kb('en/llms.txt')}`);
+console.log(`docs/ko/: home ${kb('ko/index.html')}, ${built.length} chart pages · docs/en/: ${builtEn.flatMap((c) => c.variants).length} English card pages and .txt files, llms.txt ${kb('en/llms.txt')}, redirects from the old English pages`);
 console.log(`skills/vizney-blocks/SKILL.md: ${(skill.length / 1024).toFixed(0)} KB · purpose index: ${purposes.length} purposes, ${picked.size} cards; not in the index: ${unpicked.join(', ') || 'none'}`);
 console.log(`retired (addresses kept): ${retired.map((v) => `${v.id} → ${v.retired.use}`).join(', ') || 'none'}`);

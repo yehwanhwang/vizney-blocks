@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  // window.VZB: mode('site' | 'one'), page('home' | 'cat' | 'one' | 'none'), site(공개 주소), base(언어별 경로: '' 또는 '/en'), t(이 스크립트가 적는 문구),
+  // window.VZB: mode('site' | 'one'), page('home' | 'cat' | 'one' | 'none'), site(공개 주소), base(언어별 페이지 경로: 영어 '' · 한국어 '/ko'), files(카드 코드 경로: 한국어 '' · 영어 '/en'), t(이 스크립트가 적는 문구),
   // cats([{ id, name }]), retired({ 내린 카드 id: 대신 쓸 카드 주소 }), index([{ id, name, cat, catName, when, tags(목적 색인의 목적과 조건), url }]),
   // code({ 카드 id: 코드 }), example([{ id, wide }]).
   const V = window.VZB || {};
@@ -8,6 +8,7 @@
   const index = V.index || [];
   const SITE = V.site || 'https://blocks.vizney.com';
   const BASE = V.base || '';
+  const FILES = V.files || '';
   const T = Object.assign({ copied: '복사됨', linkCopied: '링크 복사됨', sub: '<b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.', blocked: '복사가 막혀 있습니다. 코드를 선택해 두었으니 Ctrl+C(⌘+C)로 복사하세요.', none: '찾는 카드가 없습니다.', exampleTitle: '영업 현황 예시', exampleSub: '', exampleComment: '' }, V.t || {});
   const current = {};
   const $ = (s, r) => (r || document).querySelector(s);
@@ -121,7 +122,7 @@
     clearTimeout(btn.vzbTimer);
     btn.vzbTimer = setTimeout(() => { btn.innerHTML = btn.dataset.html; btn.classList.remove('is-done'); }, 1500);
   }
-  const linkOf = (id) => `${SITE}${BASE}/cards/${id}.txt`;
+  const linkOf = (id) => `${SITE}${FILES}/cards/${id}.txt`;
   const nameOf = (id) => (index.find((x) => x.id === id) || {}).name || id;
 
   // 복사 메뉴: 카드 코드 복사, AI용 링크 복사

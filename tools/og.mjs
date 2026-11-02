@@ -1,5 +1,5 @@
 // Share images (tools/og.png English, tools/og-ko.png Korean), in the format of the Vizney blog's post images:
-// ink background, the Vizney yellow as the one accent, the white Vizney wordmark at the bottom. The right side shows real
+// ink background, the Vizney yellow (#ffcc00) as the one accent, the white Vizney wordmark at the bottom center. The right side shows real
 // cards from docs/, so run it after a build:
 //   (cd docs && python3 -m http.server 8765) &   node tools/og.mjs
 // Needs Playwright (require('playwright') with Chromium). build.mjs copies the two files into docs/.
@@ -32,18 +32,16 @@ body { position: relative; font-family: 'VZ Sans', sans-serif; color: #ffffff; -
 h1 { margin: 30px 0 0; font-size: ${lang === 'en' ? 50 : 54}px; line-height: 1.24; font-weight: 700; letter-spacing: -0.03em; }
 h1 em { font-style: normal; color: #ffcc00; }
 p { margin: 26px 0 0; font-size: 22px; line-height: 1.6; color: rgba(255, 255, 255, 0.72); }
-.foot { position: absolute; left: 72px; bottom: 56px; display: flex; align-items: center; gap: 16px; }
+.foot { position: absolute; left: 0; right: 0; bottom: 44px; display: flex; justify-content: center; }
 .foot img { display: block; width: 117px; height: 40px; }
-.foot span { padding-left: 16px; border-left: 1px solid rgba(255, 255, 255, 0.28); font-size: 18px; font-weight: 500; color: rgba(255, 255, 255, 0.72); }
-.facts { position: absolute; right: 56px; bottom: 60px; font-size: 16px; color: rgba(255, 255, 255, 0.58); z-index: 2; }
+.facts { margin: 28px 0 0; font-size: 16px; color: rgba(255, 255, 255, 0.58); }
 .cards { position: absolute; left: 652px; top: 72px; width: 600px; display: grid; grid-template-columns: 360px 360px; align-items: start; gap: 18px; }
 .cards > * { box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6); }
 .cards .b { margin-top: 120px; }
 </style></head><body>
-<div class="copy"><span class="line">Vizney Blocks</span><h1>${T[lang].title}</h1><p>${T[lang].sub}</p></div>
+<div class="copy"><span class="line">Vizney Blocks</span><h1>${T[lang].title}</h1><p>${T[lang].sub}</p><div class="facts">${T[lang].facts}</div></div>
 <div class="cards"><div>${card(lang, 'kpi-line')}</div><div class="b">${card(lang, 'bar-ranking')}</div></div>
-<div class="foot"><img src="${WORDMARK}" alt="Vizney"><span>Blocks</span></div>
-<div class="facts">${T[lang].facts}</div>
+<div class="foot"><img src="${WORDMARK}" alt="Vizney"></div>
 </body></html>`;
 
 const browser = await chromium.launch();

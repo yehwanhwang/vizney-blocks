@@ -12,7 +12,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.32';
+const VERSION = 'v0.33';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -131,8 +131,8 @@ const SKILL_CMD = 'npx skills add yehwanhwang/vizney-blocks';
 const WORDS = {
   ko: {
     html: 'ko', og: 'ko_KR', other: { lang: 'en', label: 'English' },
-    skip: '본문으로 건너뛰기', menu: '주 메뉴', cards: '카드', usage: '쓰는 법', guide: '차트 가이드', find: '카드 찾기', found: '찾은 카드',
-    footFont: '글꼴 VZ Sans(Spoqa Han Sans Neo 부분 글꼴)', footNav: '바닥글', footBlog: '블로그', footContact: '문의', langAria: '언어',
+    skip: '본문으로 건너뛰기', menu: '주 메뉴', more: '더 보기', cards: '카드', usage: '쓰는 법', guide: '차트 가이드', find: '카드 찾기', found: '찾은 카드',
+    footFont: '글꼴 VZ Sans(Spoqa Han Sans Neo 부분 글꼴)', footNav: '바닥글', footBlog: '블로그', footContact: '문의',
     copy: '복사', aiLink: 'AI용 링크', close: '닫기', code: '코드', viewCode: '코드 보기', copyCode: '카드 코드 복사', copyCodeNote: 'HTML에 붙여 넣습니다', copyLink: 'AI용 링크 복사', copyLinkNote: (id) => `${id}.txt 주소를 AI에 줍니다`,
     eyebrow: `카드 ${N.cards}종 · 차트 ${N.cats}가지 · MIT 라이선스`, h1: '분석가의 판단을 담은<br>대시보드 카드', h1one: '분석가의 판단을 담은 대시보드 카드',
     lede: '카드를 복사해 HTML에 붙여 넣고 JSON만 바꾸세요. 증감, 비중, 달성률은 카드가 계산하고, 색과 강조는 Vizney 차트 가이드의 규칙을 따릅니다.',
@@ -164,8 +164,8 @@ const WORDS = {
   },
   en: {
     html: 'en', og: 'en_US', other: { lang: 'ko', label: '한국어' },
-    skip: 'Skip to content', menu: 'Main menu', cards: 'Cards', usage: 'How to use', guide: 'Chart guide', find: 'Find a card', found: 'Cards found',
-    footFont: 'Font VZ Sans (a subset of Spoqa Han Sans Neo)', footNav: 'Footer', footBlog: 'Blog', footContact: 'Contact', langAria: 'Language',
+    skip: 'Skip to content', menu: 'Main menu', more: 'More', cards: 'Cards', usage: 'How to use', guide: 'Chart guide', find: 'Find a card', found: 'Cards found',
+    footFont: 'Font VZ Sans (a subset of Spoqa Han Sans Neo)', footNav: 'Footer', footBlog: 'Blog', footContact: 'Contact',
     copy: 'Copy', aiLink: 'AI link', close: 'Close', code: 'Code', viewCode: 'view code', copyCode: 'Copy card code', copyCodeNote: 'Paste it into your HTML', copyLink: 'Copy AI link', copyLinkNote: (id) => `Give an AI the ${id}.txt address`,
     eyebrow: `${N.cards} cards · ${N.cats} chart types · MIT License`, h1: 'Dashboard cards<br>with an analyst’s judgment built in', h1one: 'Dashboard cards with an analyst’s judgment built in',
     lede: 'Copy a card into your HTML and change only its JSON. The card computes changes, shares and attainment, and its colors and emphasis follow the rules of the Vizney chart guide.',
@@ -216,11 +216,11 @@ const LOCALES = [ENL, KO];
 // ---------- Page parts ----------
 // Two modes share the markup: the site (a page per chart type, in each language under its base path) and the one-page
 // gallery (every chart type on one page, Korean). Every part takes the locale L (cards, purposes, strings, addresses).
-// The Vizney wordmark (white, the logo of the Vizney blog header), 3x of its 32px height in the top bar.
-const WORDMARK = readFileSync(join(root, 'page/vizney-wordmark.png'));
-const WORDMARK_SRC = `/assets/vizney-wordmark.png?v=${createHash('sha1').update(WORDMARK).digest('hex').slice(0, 10)}`;
-const siteMode = (L) => ({ one: false, wordmark: WORDMARK_SRC, home: `${L.base}/`, cards: `${L.base}/#cards`, usage: `${L.base}/#usage`, cat: (id) => `${L.base}/${id}/`, card: (v) => `${L.base}/${v.cat}/#${v.id}`, file: (p) => `/${p}`, llms: L.llms, tokens: L.tokens });
-const ONE_M = { one: true, wordmark: `data:image/png;base64,${WORDMARK.toString('base64')}`, home: '#top', cards: `#cat-${built[0].id}`, usage: '#usage', cat: (id) => `#cat-${id}`, card: (v) => `#${v.id}`, file: (p) => `${SITE}/${p}`, llms: `${SITE}/llms.txt`, tokens: `${SITE}/tokens.css` };
+// The Vizney logo of the blog header (vizney_logo_w_v2.png, white, with the image's own padding), 3x of its 40px height.
+const LOGO = readFileSync(join(root, 'page/vizney-logo.png'));
+const LOGO_SRC = `/assets/vizney-logo.png?v=${createHash('sha1').update(LOGO).digest('hex').slice(0, 10)}`;
+const siteMode = (L) => ({ one: false, logo: LOGO_SRC, home: `${L.base}/`, cards: `${L.base}/#cards`, usage: `${L.base}/#usage`, cat: (id) => `${L.base}/${id}/`, card: (v) => `${L.base}/${v.cat}/#${v.id}`, file: (p) => `/${p}`, llms: L.llms, tokens: L.tokens });
+const ONE_M = { one: true, logo: `data:image/png;base64,${LOGO.toString('base64')}`, home: '#top', cards: `#cat-${built[0].id}`, usage: '#usage', cat: (id) => `#cat-${id}`, card: (v) => `#${v.id}`, file: (p) => `${SITE}/${p}`, llms: `${SITE}/llms.txt`, tokens: `${SITE}/tokens.css` };
 const NEW = ['sankey', 'radar'];
 const EXAMPLE = [{ id: 'kpi-line' }, { id: 'kpi-bar' }, { id: 'bar-ranking' }, { id: 'sankey-levels', wide: true }, { id: 'radar-basic' }];
 const ART = JSON.parse(r('page/tiles.json'));
@@ -244,28 +244,41 @@ const IC = {
   down: '<svg class="ic" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5L6 7.5l3-3"/></svg>',
 };
 
-// The header follows the Vizney blog (kr.vizney.com · www.vizney.com), the home of every Vizney line: an ink bar with the
-// white Vizney wordmark, the line name Blocks beside it, a Vizney link in the menu and the EN · KO switch. The footer links
-// back to the blog and its contact page. The 2×2 block mark is the line's icon only (favicon, OpenDesign icon.svg), where
-// the wordmark does not fit.
-// alt: the same page in the other language. Without it (the one-page gallery) there is no switch.
-const langSwitch = (L, alt) => {
-  if (!alt) return '';
-  const link = (lang, label) => (lang === L.lang
-    ? `<a aria-current="true" lang="${lang}">${label}</a>`
-    : `<a href="${alt}" hreflang="${lang}" lang="${lang}">${label}</a>`);
-  return `<div class="lang" role="group" aria-label="${L.t.langAria}">${link('en', 'EN')}${link('ko', 'KO')}</div>\n`;
+// The header is the Vizney blog header (kr.vizney.com · www.vizney.com, Ghost Casper with the Stacked navigation), the
+// common header of every Vizney site: Blocks and Styles use the same values, measured on the blog. 768px and up: two rows
+// (80px with the globe and search on the left and the logo in the middle, a 1px rule, 56px with the menu); 767px and down:
+// one 64px row (logo, globe, search, burger) and a full-screen menu. Only Vizney links in it, in the same tab.
+// The line's own navigation (Vizney Blocks · cards · how to use · GitHub) is the tab row under it.
+const VIZNEY_NAV = {
+  ko: { home: 'https://kr.vizney.com/', items: [['Chart Guide', 'https://kr.vizney.com/chart-guide/'], ['Blocks', 'https://blocks.vizney.com/ko/', true], ['Styles', 'https://styles.vizney.com/?lang=ko'], ['Tips & Tricks', 'https://kr.vizney.com/tips/'], ['Knowledge Base', 'https://kr.vizney.com/kb/'], ['About', 'https://kr.vizney.com/about/'], ['Contact', 'https://kr.vizney.com/contact-us/']], other: 'Switch to English', otherLang: 'en' },
+  en: { home: 'https://www.vizney.com/', items: [['Chart Guide', 'https://www.vizney.com/chart-guide/'], ['Blocks', 'https://blocks.vizney.com/', true], ['Styles', 'https://styles.vizney.com/'], ['Tips & Tricks', 'https://www.vizney.com/tips/'], ['Knowledge Base', 'https://www.vizney.com/kb/'], ['About', 'https://www.vizney.com/about/'], ['Contact', 'https://www.vizney.com/contact-us/']], other: '한글로 보기', otherLang: 'ko' },
 };
-const header = (m, current, L, alt) => `<header class="top" id="top">
-<div class="wrap top-in">
-<a class="logo" href="${m.home}"><img class="word" src="${m.wordmark}" alt="Vizney" width="94" height="32"><span class="line">Blocks</span></a>
-<nav class="top-nav" aria-label="${L.t.menu}"><a href="${m.cards}"${current ? ' aria-current="page"' : ''}>${L.t.cards}</a><a href="${m.usage}">${L.t.usage}</a><a ${ext(L.guide)}>${L.t.guide}<span aria-hidden="true"> ↗</span></a><a ${ext(L.blog)}>Vizney<span aria-hidden="true"> ↗</span></a></nav>
-<div class="top-end">
-<div class="search">${IC.search}<label class="sr" for="q">${L.t.find}</label><input id="q" type="search" placeholder="${L.t.find}" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="q-pop"><kbd aria-hidden="true">⌘K</kbd><ul class="search-pop" id="q-pop" role="listbox" aria-label="${L.t.found}" hidden></ul></div>
-${langSwitch(L, alt)}<a class="btn is-git" ${ext(REPO)}>GitHub${IC.out}</a>
+// The blog's icons: the globe of its language switch, the search of Ghost (20px, stroke 2) and Ghost's "more" dots.
+const GLOBE = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>';
+const LOUPE = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>';
+const DOTS = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" width="24" height="24" aria-hidden="true"><circle cx="8" cy="16" r="2.667"/><circle cx="16" cy="16" r="2.667"/><circle cx="24" cy="16" r="2.667"/></svg>';
+// alt: the same page in the other language (the globe). The one-page gallery has none and links the English home page.
+const header = (m, L, alt) => {
+  const N = VIZNEY_NAV[L.lang];
+  return `<header class="vz-head" id="top">
+<div class="vz-in">
+<div class="vz-tools"><a class="vz-icon vz-globe" href="${alt || `${SITE}/`}" hreflang="${N.otherLang}" title="${N.other}" aria-label="${N.other}">${GLOBE}</a><button class="vz-icon vz-search" type="button" aria-label="${L.t.find}" aria-haspopup="dialog" aria-controls="q-dlg">${LOUPE}</button></div>
+<a class="vz-logo" href="${N.home}"><img src="${m.logo}" alt="Vizney" width="106" height="40"></a>
+<button class="vz-burger" type="button" aria-label="${L.t.menu}" aria-expanded="false" aria-controls="vz-menu"></button>
+<nav class="vz-menu" id="vz-menu" aria-label="Vizney"><ul class="vz-nav">
+${N.items.map(([t, href, here]) => `<li><a href="${href}"${here ? ' aria-current="true"' : ''}>${h(t)}</a></li>`).join('\n')}
+<li class="vz-more" hidden><button type="button" aria-label="${L.t.more}" aria-expanded="false" aria-controls="vz-drop">${DOTS}</button><ul class="vz-drop" id="vz-drop"></ul></li>
+</ul></nav>
 </div>
-</div>
-</header>`;
+</header>
+<nav class="tabs" aria-label="Vizney Blocks"><div class="tabs-in">
+<a class="tab is-name" href="${m.home}"${m.tab === 'home' ? ' aria-current="page"' : ''}>Vizney Blocks</a><a class="tab" href="${m.cards}"${m.tab === 'cards' ? ' aria-current="page"' : ''}>${L.t.cards}</a><a class="tab" href="${m.usage}">${L.t.usage}</a><a class="tab is-git" ${ext(REPO)}>GitHub${IC.out}</a>
+</div></nav>
+<dialog class="qdlg" id="q-dlg" aria-label="${L.t.find}">
+<div class="search">${IC.search}<label class="sr" for="q">${L.t.find}</label><input id="q" type="search" placeholder="${L.t.find}" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="q-pop"><kbd aria-hidden="true">⌘K</kbd></div>
+<ul class="search-pop" id="q-pop" role="listbox" aria-label="${L.t.found}" hidden></ul>
+</dialog>`;
+};
 
 const footer = (m, L) => `<footer class="foot">
 <div class="wrap foot-in">
@@ -466,12 +479,12 @@ ${alt ? `<link rel="alternate" hreflang="${L.lang}" href="${SITE}${path}">\n<lin
 ${extra}</head>`;
 // Asset versions are filled in once the font is built (the font depends on every character the pages use).
 const assets = '<link rel="preload" href="/assets/fonts/vz-sans-400.woff?v=__FONT_V__" as="font" type="font/woff" crossorigin>\n<link rel="stylesheet" href="/assets/site.css?v=__CSS_V__">\n';
-const sitePage = ({ title, desc, path, body, page, ids, current, robots, L, alt }) => {
+const sitePage = ({ title, desc, path, body, page, ids, tab, robots, L, alt }) => {
   const m = siteMode(L);
   return `${head({ title, desc, path, L, alt, extra: (robots ? `<meta name="robots" content="${robots}">\n` : '') + assets })}
 <body>
 ${skip(L)}
-${header(m, current, L, alt)}
+${header({ ...m, tab }, L, alt)}
 ${body}
 ${footer(m, L)}
 ${dialog(L)}
@@ -491,6 +504,7 @@ for (const L of LOCALES) {
     path: `${L.base}/`,
     L, alt: `${other.base}/`,
     page: 'home',
+    tab: 'home',
     ids: EXAMPLE.map((x) => x.id),
     body: `<main id="main">
 ${hero(m, L)}
@@ -507,7 +521,7 @@ ${usage(m, L)}
       path: `${L.base}/${c.id}/`,
       L, alt: `${other.base}/${c.id}/`,
       page: 'cat',
-      current: true,
+      tab: 'cards',
       ids: c.variants.map((v) => v.id),
       body: `<div class="wrap doc">
 ${sidebar(m, c.id, L)}
@@ -565,7 +579,7 @@ ${fontCss}
 ${siteCss}
 </style>
 ${skip(KO)}
-${header(ONE_M, false, KO)}
+${header({ ...ONE_M, tab: 'home' }, KO)}
 <div class="wrap doc is-one">
 ${sidebar(ONE_M, null, KO)}
 <main class="main" id="main">
@@ -617,7 +631,7 @@ for (const w of W) writeFileSync(join(docs, `assets/fonts/vz-sans-${w}.woff`), w
 const cssOut = `${face((w) => `url(fonts/vz-sans-${w}.woff?v=${fontV})`)}\n${siteCss}\n`;
 writeFileSync(join(docs, 'assets/site.css'), cssOut);
 writeFileSync(join(docs, 'assets/site.js'), `${siteJs}\n`);
-writeFileSync(join(docs, 'assets/vizney-wordmark.png'), WORDMARK);
+writeFileSync(join(docs, 'assets/vizney-logo.png'), LOGO);
 const V = { __FONT_V__: fontV, __CSS_V__: hash(cssOut), __JS_V__: hash(siteJs) };
 for (const [path, html] of Object.entries(pages)) {
   mkdirSync(dirname(join(docs, path)), { recursive: true });

@@ -12,7 +12,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.33';
+const VERSION = 'v0.34';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -218,6 +218,7 @@ const LOCALES = [ENL, KO];
 // gallery (every chart type on one page, Korean). Every part takes the locale L (cards, purposes, strings, addresses).
 // The Vizney logo of the blog header (vizney_logo_w_v2.png, white, with the image's own padding), 3x of its 40px height.
 const LOGO = readFileSync(join(root, 'page/vizney-logo.png'));
+const FAVICON_V = createHash('sha1').update(readFileSync(join(root, 'page/favicon.png'))).digest('hex').slice(0, 10);
 const LOGO_SRC = `/assets/vizney-logo.png?v=${createHash('sha1').update(LOGO).digest('hex').slice(0, 10)}`;
 const siteMode = (L) => ({ one: false, logo: LOGO_SRC, home: `${L.base}/`, cards: `${L.base}/#cards`, usage: `${L.base}/#usage`, cat: (id) => `${L.base}/${id}/`, card: (v) => `${L.base}/${v.cat}/#${v.id}`, file: (p) => `/${p}`, llms: L.llms, tokens: L.tokens });
 const ONE_M = { one: true, logo: `data:image/png;base64,${LOGO.toString('base64')}`, home: '#top', cards: `#cat-${built[0].id}`, usage: '#usage', cat: (id) => `#cat-${id}`, card: (v) => `#${v.id}`, file: (p) => `${SITE}/${p}`, llms: `${SITE}/llms.txt`, tokens: `${SITE}/tokens.css` };
@@ -467,7 +468,7 @@ const head = ({ title, desc, path, extra = '', L = KO, alt }) => `<!doctype html
 <title>${attr(title)}</title>
 <meta name="description" content="${attr(desc)}">
 <link rel="canonical" href="${SITE}${path}">
-${alt ? `<link rel="alternate" hreflang="${L.lang}" href="${SITE}${path}">\n<link rel="alternate" hreflang="${L.t.other.lang}" href="${SITE}${alt}">\n<link rel="alternate" hreflang="x-default" href="${SITE}${L.lang === 'en' ? path : alt}">\n` : ''}<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+${alt ? `<link rel="alternate" hreflang="${L.lang}" href="${SITE}${path}">\n<link rel="alternate" hreflang="${L.t.other.lang}" href="${SITE}${alt}">\n<link rel="alternate" hreflang="x-default" href="${SITE}${L.lang === 'en' ? path : alt}">\n` : ''}<link rel="icon" href="/favicon.png?v=${FAVICON_V}" type="image/png">\n<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=${FAVICON_V}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vizney Blocks">
 <meta property="og:locale" content="${L.t.og}">
@@ -862,7 +863,8 @@ ${EXAMPLE.map((x) => (x.wide ? `<div class="is-wide">\n${byId[x.id].code}</div>`
 // Domain, Jekyll off, icon, font license, share image, sitemap.
 writeFileSync(join(docs, 'CNAME'), 'blocks.vizney.com\n');
 writeFileSync(join(docs, '.nojekyll'), '');
-writeFileSync(join(docs, 'favicon.svg'), ICON);
+// Favicon: the Vizney icon of the blog (vizney_icon_b_v2.png), so a tab looks the same on every Vizney site.
+for (const f of ['favicon.png', 'favicon.ico', 'apple-touch-icon.png']) copyFileSync(join(root, `page/${f}`), join(docs, f));
 copyFileSync(join(root, 'tools/OFL.txt'), join(docs, 'OFL.txt'));
 // Share images: English (og.png, the main site) and Korean (og-ko.png).
 for (const f of ['og.png', 'og-ko.png']) if (existsSync(join(root, `tools/${f}`))) copyFileSync(join(root, `tools/${f}`), join(docs, f));

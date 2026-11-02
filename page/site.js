@@ -43,14 +43,70 @@
     window.addEventListener('hashchange', moved);
   }
 
-  // 머리 막대의 높이: 붙어 있는 동안 옆 목록과 앵커 이동이 그만큼 아래에서 시작합니다(휴대폰에서는 붙지 않습니다).
-  const top = $('.top');
+  // 탭 줄의 높이: 화면 위에 붙어 있으므로 옆 목록과 앵커 이동이 그만큼 아래에서 시작합니다.
+  const tabs = $('.tabs');
   const topH = () => {
-    const h = top && getComputedStyle(top).position === 'sticky' ? top.offsetHeight : 0;
+    const h = tabs && getComputedStyle(tabs).position === 'sticky' ? tabs.offsetHeight : 0;
     document.documentElement.style.setProperty('--top-h', `${h}px`);
   };
   topH();
   window.addEventListener('resize', topH, { passive: true });
+
+  // Vizney 공통 머리글(블로그 머리글과 같은 동작). 768px 이상: 메뉴 줄에 다 들어가지 않는 항목은 블로그(Ghost)처럼
+  // 오른쪽 끝의 … 버튼 아래로 옮깁니다. 767px 이하: 햄버거가 전체 화면 메뉴를 엽니다.
+  const head = $('.vz-head');
+  if (head) {
+    const menu = $('.vz-menu', head), nav = $('.vz-nav', head), more = $('.vz-more', head), drop = $('.vz-drop', head);
+    const moreBtn = more && $('button', more), burger = $('.vz-burger', head);
+    const wide = window.matchMedia('(min-width: 768px)');
+    const items = $$(':scope > li:not(.vz-more)', nav);
+    const setMore = (open) => { if (!more) return; more.classList.toggle('is-open', open); moreBtn.setAttribute('aria-expanded', String(open)); };
+    const fit = () => {
+      if (!more) return;
+      setMore(false);
+      items.forEach((li) => nav.insertBefore(li, more));
+      more.hidden = true;
+      if (!wide.matches) return;
+      const room = () => nav.scrollWidth <= menu.clientWidth;
+      if (room()) return;
+      more.hidden = false;
+      for (let k = items.length - 1; k > 0 && !room(); k--) drop.prepend(items[k]);
+    };
+    if (moreBtn) {
+      moreBtn.addEventListener('click', (e) => { e.stopPropagation(); setMore(!more.classList.contains('is-open')); });
+      document.addEventListener('click', (e) => { if (!more.contains(e.target)) setMore(false); });
+      more.addEventListener('keydown', (e) => { if (e.key === 'Escape') { setMore(false); moreBtn.focus(); } });
+    }
+    const setOpen = (open) => {
+      document.body.classList.toggle('vz-open', open);
+      burger.setAttribute('aria-expanded', String(open));
+    };
+    if (burger) {
+      burger.addEventListener('click', () => setOpen(!document.body.classList.contains('vz-open')));
+      head.addEventListener('keydown', (e) => { if (e.key === 'Escape' && document.body.classList.contains('vz-open')) { setOpen(false); burger.focus(); } });
+    }
+    const onWidth = () => { if (wide.matches) setOpen(false); fit(); };
+    wide.addEventListener('change', onWidth);
+    window.addEventListener('resize', fit, { passive: true });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    fit();
+  }
+
+  // 카드 찾기 창: 머리글의 돋보기나 ⌘K(Ctrl K)로 엽니다.
+  const qdlg = $('#q-dlg'), qbtn = $('.vz-search');
+  const openSearch = () => {
+    if (!qdlg || qdlg.open) return;
+    document.body.classList.remove('vz-open');
+    qdlg.showModal();
+    const q = $('#q');
+    q.focus();
+    q.select();
+  };
+  if (qdlg) {
+    if (qbtn) qbtn.addEventListener('click', openSearch);
+    qdlg.addEventListener('click', (e) => { if (e.target === qdlg) qdlg.close(); });
+    qdlg.addEventListener('close', () => { const q = $('#q'); q.value = ''; q.dispatchEvent(new Event('input')); if (qbtn) qbtn.focus(); });
+  }
 
   // 카드 그리기: 페이지가 글꼴을 직접 넣으므로 코드의 Spoqa 링크는 빼고 붙입니다.
   function mount(host, src) {
@@ -226,8 +282,7 @@
       closeMenu(true);
     } else if (menu && e.key === 'Tab') closeMenu();
     else if ((e.metaKey || e.ctrlKey) && !e.altKey && e.key.toLowerCase() === 'k') {
-      const q = $('#q');
-      if (q) { e.preventDefault(); q.focus(); q.select(); }
+      if (qdlg) { e.preventDefault(); openSearch(); }
     }
   });
 
@@ -246,7 +301,7 @@
       return rows.map((r) => [rank(r), r]).filter(([k]) => k < 9).sort((a, b) => a[0] - b[0]).slice(0, 8).map(([, r]) => r.x);
     };
     const close = () => { pop.hidden = true; q.setAttribute('aria-expanded', 'false'); q.removeAttribute('aria-activedescendant'); };
-    const go = (url) => { close(); q.value = ''; q.blur(); location.href = url; };
+    const go = (url) => { close(); if (qdlg && qdlg.open) qdlg.close(); location.href = url; };
     const render = () => {
       pop.replaceChildren(...(hits.length ? hits.map((r, k) => {
         const li = el('li');
@@ -268,7 +323,6 @@
     };
     q.addEventListener('input', () => { hits = find(q.value); sel = hits.length ? 0 : -1; if (q.value.trim()) render(); else close(); });
     q.addEventListener('focus', () => { if (q.value.trim()) render(); });
-    q.addEventListener('blur', () => setTimeout(close, 120));
     q.addEventListener('keydown', (e) => {
       if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && hits.length) {
         e.preventDefault();
@@ -279,7 +333,7 @@
       } else if (e.key === 'Enter' && sel >= 0) {
         e.preventDefault();
         go(hits[sel].url);
-      } else if (e.key === 'Escape') { close(); q.blur(); }
+      } else if (e.key === 'Escape' && !pop.hidden && q.value) { e.preventDefault(); q.value = ''; close(); }
     });
   }
 

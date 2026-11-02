@@ -1,9 +1,9 @@
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/vz-sans-400.woff?v=fa8e7f52f8) format('woff');}
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/vz-sans-500.woff?v=fa8e7f52f8) format('woff');}
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/vz-sans-700.woff?v=fa8e7f52f8) format('woff');}
-/* Vizney Blocks site: white page under the ink top bar of the Vizney blog (kr.vizney.com · www.vizney.com), which is
-   the reference: Blocks follows the blog, not the other way round. Text and frame are ink and grays; the one UI accent is
-   the Vizney yellow #ffcc00 of the blog's post images (primary buttons, the current menu item, focus, link underlines).
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/vz-sans-400.woff?v=3807345072) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/vz-sans-500.woff?v=3807345072) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/vz-sans-700.woff?v=3807345072) format('woff');}
+/* Vizney Blocks site: the Vizney common header (the blog's header, kr.vizney.com · www.vizney.com: the blog is the
+   reference and Blocks follows it), the line's tab row, then a white page. Text and frame are ink and grays; the one UI
+   accent is the Vizney yellow #ffcc00 of the blog's post images (primary buttons, the current chart, focus, link underlines).
    Data colors live in the cards and chart tiles, and the orange JSON lines of the code view are data, not UI.
    One 1280px column (40px gutters, 16px on phones). Home: hero, live dashboard showcase, purpose index, chart tiles, usage.
    Category pages: sticky sidebar of chart types beside the cards; on phones the sidebar becomes a scrolling row. */
@@ -19,13 +19,6 @@
   --rule: #cfd2d8;
   --yellow: #ffcc00;
   --yellow-2: #f2c200;
-  /* Top bar: the blog's header ink with white text. */
-  --top: #1b1b1b;
-  --on-top: #ffffff;
-  --on-top-2: rgba(255, 255, 255, 0.72);
-  --on-top-3: rgba(255, 255, 255, 0.58);
-  --top-soft: rgba(255, 255, 255, 0.1);
-  --top-line: rgba(255, 255, 255, 0.24);
   --data: #fff4e5;
   --font: 'VZ Sans', 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
   --mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', 'VZ Sans', monospace;
@@ -34,11 +27,11 @@
   --shadow-sm: 0 1px 2px rgba(17, 24, 39, 0.12);
   color-scheme: light;
 }
-html { scroll-padding-top: calc(var(--top-h, 64px) + 24px); }
+html { scroll-padding-top: calc(var(--top-h, 48px) + 24px); }
 [hidden] { display: none !important; }
 html, body { background: var(--page); color: var(--ink); }
 body { margin: 0; font: 400 15px/1.7 var(--font); -webkit-font-smoothing: antialiased; word-break: keep-all; overflow-wrap: anywhere; }
-body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 41; background: var(--top); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 41; background: #1b1b1b; }
 /* Text links: ink with a yellow underline, ink on hover. */
 a { color: var(--ink); text-decoration-line: underline; text-decoration-color: var(--yellow); text-decoration-thickness: 2px; text-underline-offset: 4px; }
 a:hover { color: var(--ink); text-decoration-color: var(--ink); }
@@ -62,42 +55,97 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 .btn.is-done { border-color: var(--ink); }
 .btn.is-primary.is-done { background: var(--yellow-2); border-color: var(--ink); }
 
-/* Top bar: the Vizney blog header. Ink bar, white Vizney wordmark, the line name Blocks after a thin rule. */
-.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40; background: var(--top); color: var(--on-top); }
-.top-in { min-height: 64px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 28px; padding-block: 10px; }
-.logo { display: inline-flex; align-items: center; gap: 12px; color: var(--on-top); text-decoration: none; }
-.logo:hover { color: var(--on-top); }
-.logo .word { display: block; width: 94px; height: 32px; }
-.logo .line { padding-left: 12px; border-left: 1px solid var(--top-line); font-size: 15px; font-weight: 500; line-height: 20px; color: var(--on-top-2); }
-.top-nav { display: flex; flex-wrap: wrap; gap: 4px 22px; font-size: 15px; }
-.top-nav a { color: var(--on-top-2); text-decoration: none; }
-.top-nav a[aria-current] { color: var(--on-top); font-weight: 500; text-decoration: underline; text-decoration-color: var(--yellow); text-decoration-thickness: 2px; text-underline-offset: 8px; }
-.top-nav a:hover { color: var(--on-top); }
-.top-end { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-.top :is(.logo, .top-nav a, .lang a, .btn):focus-visible { outline: 2px solid var(--yellow); outline-offset: 3px; box-shadow: none; }
-.top .btn { background: transparent; border-color: var(--top-line); color: var(--on-top); }
-.top .btn:hover { border-color: var(--on-top); color: var(--on-top); }
-/* Language switch: EN · KO, the current one a white chip. */
-.lang { display: flex; height: 40px; box-sizing: border-box; padding: 4px; border-radius: 10px; background: var(--top-soft); }
-.lang a { display: inline-flex; align-items: center; justify-content: center; min-width: 40px; padding: 0 10px; border-radius: 7px; font-size: 13px; font-weight: 700; color: var(--on-top-3); text-decoration: none; }
-.lang a:hover { color: var(--on-top); }
-.lang a[aria-current] { background: var(--on-top); color: var(--ink); }
+/* Vizney common header: the Vizney blog header (kr.vizney.com · www.vizney.com, Ghost Casper with the Stacked navigation
+   and the blog's code injection), which Blocks and Styles copy value for value. Change a value only when the blog changes.
+   768px and up: two rows, 80px (globe and search on the left, logo in the middle) and 56px (the menu), each with a 1px rule
+   under it; scrolls away with the page. 767px and down: one 64px row and a full-screen menu behind the burger. */
+.vz-head { position: relative; z-index: 40; padding: 0 max(4vmin, 20px); background: #1b1b1b; color: #ffffff; font-family: var(--font); font-size: 16px; line-height: 1.3; }
+.vz-head::before, .vz-head::after { content: ""; position: absolute; left: 0; width: 100%; height: 1px; background-color: hsla(0, 0%, 100%, 0.15); }
+.vz-head::before { top: 80px; }
+.vz-head::after { top: 136px; }
+.vz-in { display: grid; grid-template-columns: 1fr auto 1fr; grid-template-rows: 80px 56px; column-gap: 40px; align-items: center; max-width: 1200px; margin: 0 auto; }
+.vz-head a { color: #ffffff; text-decoration: none; }
+.vz-head a:hover { color: #ffffff; }
+.vz-tools { grid-row: 1; grid-column: 1; justify-self: start; display: flex; align-items: center; gap: 8px; }
+.vz-icon { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; }
+.vz-globe { margin-right: -4px; opacity: 0.9; transition: opacity 0.2s ease; }
+.vz-globe:hover { opacity: 1; }
+.vz-search:hover { opacity: 0.9; }
+.vz-logo { grid-row: 1; grid-column: 2; display: block; }
+.vz-logo img { display: block; width: auto; height: auto; max-height: 40px; }
+.vz-burger { display: none; position: relative; width: 30px; height: 30px; padding: 0; margin-right: -3px; border: 0; background: transparent; cursor: pointer; appearance: none; }
+.vz-burger::before, .vz-burger::after { content: ""; position: absolute; left: 3px; width: 24px; height: 1px; background: #ffffff; transition: all 0.2s cubic-bezier(0.04, 0.04, 0.12, 0.96) 0.1008s; }
+.vz-burger::before { top: 11px; }
+.vz-burger::after { bottom: 11px; }
+.vz-menu { grid-row: 2; grid-column: 1 / 4; display: flex; align-items: center; justify-content: center; height: 56px; margin: 0 48px; font-weight: 500; }
+.vz-nav { display: flex; flex-wrap: nowrap; align-items: center; gap: 32px; margin: 0; padding: 0; list-style: none; }
+.vz-nav li { margin: 0; padding: 0; }
+.vz-nav a { display: inline-flex; align-items: center; font-size: 16px; font-weight: 500; line-height: 1.7; text-transform: none; white-space: nowrap; }
+.vz-nav a:hover { opacity: 0.9; }
+.vz-nav a[aria-current] { text-decoration: underline; text-decoration-color: currentColor; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+/* Items that do not fit the menu row go into Ghost's "more" dropdown (site.js moves them). */
+.vz-more { position: relative; }
+.vz-more > button { position: relative; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; margin: 0 -6px; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; }
+.vz-drop { position: absolute; top: 100%; right: -16px; z-index: 90; box-sizing: border-box; width: 200px; margin: 24px 0 0; padding: 12px 0; list-style: none; text-align: left; background: #ffffff; border-radius: 5px; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04), 0 7px 20px -5px rgba(0, 0, 0, 0.15); opacity: 0; visibility: hidden; transform: translate3d(0, 6px, 0); transition: opacity 0.3s, transform 0.2s; }
+.vz-more.is-open .vz-drop { opacity: 1; visibility: visible; transform: translateY(0); }
+.vz-head .vz-drop a { display: block; padding: 6px 20px; color: #15171a; line-height: 1.7; }
+.vz-head :focus-visible { outline: 2px solid var(--yellow); outline-offset: 2px; box-shadow: none; }
+.vz-head .vz-drop :focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; box-shadow: none; }
 
-/* Search (in the top bar; its list of results is a white panel) */
-.search { position: relative; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 8px 0 12px; border-radius: 10px; background: var(--top-soft); color: var(--on-top-3); }
-.search:focus-within { box-shadow: 0 0 0 2px var(--yellow); }
-.search input { width: 160px; border: 0; background: transparent; font: 400 14px/1 var(--font); color: var(--on-top); outline: none; }
+/* Tab row: the line's own navigation under the Vizney header. Sticks to the top while the page scrolls. */
+.tabs { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 39; padding: 0 max(4vmin, 20px); background: #ffffff; box-shadow: inset 0 -1px 0 var(--line); }
+.tabs-in { box-sizing: border-box; display: flex; align-items: stretch; gap: 24px; max-width: 1200px; height: 48px; margin: 0 auto; overflow-x: auto; scrollbar-width: none; }
+.tabs-in::-webkit-scrollbar { display: none; }
+.tab { display: inline-flex; align-items: center; gap: 4px; flex: none; font-size: 14px; font-weight: 500; color: var(--ink-2); text-decoration: none; white-space: nowrap; }
+.tab:hover { color: var(--ink); }
+.tab.is-name { font-size: 15px; font-weight: 700; color: var(--ink); }
+.tab[aria-current] { color: var(--ink); box-shadow: inset 0 -2px 0 #1b1b1b; }
+.tab.is-git { margin-left: auto; }
+.tab:focus-visible { outline-offset: -3px; box-shadow: none; }
+
+/* Card search: the header's magnifier (or ⌘K) opens it. */
+.qdlg { box-sizing: border-box; width: min(640px, calc(100vw - 32px)); max-height: calc(100vh - 20vh); margin: 10vh auto auto; padding: 8px; border: 0; border-radius: 16px; background: #ffffff; box-shadow: 0 40px 90px -30px rgba(17, 24, 39, 0.5); color: var(--ink); }
+.qdlg[open] { display: flex; flex-direction: column; }
+.qdlg::backdrop { background: rgba(17, 24, 39, 0.4); }
+.search { display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 10px 0 14px; color: var(--muted); }
+.search input { flex: 1 1 auto; min-width: 0; border: 0; background: transparent; font: 400 16px/1 var(--font); color: var(--ink); outline: none; }
 .search input:focus-visible { outline: none; box-shadow: none; }
-.search input::placeholder { color: var(--on-top-3); }
+.search input::placeholder { color: var(--muted); }
 .search input::-webkit-search-cancel-button { display: none; }
-.search kbd { font: 12px/1.4 var(--mono); color: var(--on-top-3); background: transparent; border: 1px solid var(--top-line); border-radius: 6px; padding: 1px 6px; }
-.search-pop { position: absolute; top: calc(100% + 8px); right: 0; z-index: 60; width: min(420px, calc(100vw - 32px)); max-height: min(440px, 70vh); overflow: auto; margin: 0; padding: 6px; list-style: none; border: 1px solid #e3e5ea; border-radius: 14px; background: #ffffff; box-shadow: var(--shadow); }
+.search kbd { font: 12px/1.4 var(--mono); color: var(--muted); background: #ffffff; border: 1px solid #e3e5ea; border-radius: 6px; padding: 1px 6px; }
+.search-pop { flex: 1 1 auto; overflow: auto; margin: 0; padding: 6px 0 0; list-style: none; border-top: 1px solid var(--line-2); }
 .search-pop a { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 10px 12px; border-radius: 9px; text-decoration: none; color: var(--ink); }
 .search-pop a b { font-weight: 500; font-size: 14px; }
 .search-pop a span { font-size: 12px; color: var(--muted); text-align: right; }
 .search-pop a small { grid-column: 1 / -1; font-size: 12.5px; line-height: 1.5; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .search-pop [aria-selected="true"] a, .search-pop a:hover { background: var(--soft); }
 .search-pop .none { padding: 14px 12px; font-size: 13.5px; color: var(--muted); }
+
+/* Vizney common header, 767px and down: logo, globe, search, burger in one 64px row; the burger opens a full-screen menu. */
+@media (max-width: 767px) {
+  .vz-head { height: 64px; }
+  .vz-head::before, .vz-head::after { display: none; }
+  .vz-in { grid-template-columns: 1fr auto auto; grid-template-rows: 64px; column-gap: 0; }
+  .vz-logo { grid-column: 1; justify-self: start; }
+  .vz-tools { grid-column: 2; gap: 0; }
+  .vz-globe { margin-right: 8px; }
+  .vz-search { margin: 0 8px 0 -6px; }
+  .vz-burger { display: block; grid-row: 1; grid-column: 3; }
+  .vz-menu { position: fixed; visibility: hidden; opacity: 0; margin: 0; height: auto; }
+  .vz-nav { flex-direction: column; gap: 16px; line-height: 1.4; }
+  .vz-nav a { font-size: 26px; font-weight: 600; line-height: 1.7; }
+  .vz-nav li { opacity: 0; transform: translateY(-4px); }
+  .vz-more { display: none !important; }
+  .vz-open .vz-head { position: fixed; inset: 0; z-index: 3999; height: 100%; overflow-y: auto; overscroll-behavior-y: contain; }
+  /* The blog keeps a members row (Sign in) at the bottom of its open menu; this site has none, so the same space stays empty
+     and the items sit where the blog's do. */
+  .vz-open .vz-in { box-sizing: border-box; min-height: 100%; grid-template-rows: 64px 1fr; row-gap: 48px; padding-bottom: calc(48px + max(4vmin, 20px) + max(4vmin, 28px) + 20.8px); }
+  .vz-open .vz-menu { position: static; visibility: visible; opacity: 1; grid-row: 2; grid-column: 1 / -1; }
+  .vz-open .vz-nav li { opacity: 1; transform: translateY(0); transition: transform 0.2s, opacity 0.2s; }
+  .vz-open .vz-burger::before { top: 15px; transform: rotate(45deg); }
+  .vz-open .vz-burger::after { bottom: 14px; transform: rotate(-45deg); }
+  .tabs-in { gap: 20px; }
+}
 
 /* Home: hero */
 .hero { padding-top: 72px; }
@@ -184,7 +232,7 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 
 /* Category pages: sidebar and cards */
 .doc { display: flex; align-items: flex-start; gap: 40px; padding-top: 36px; }
-.side { flex: 0 0 232px; position: sticky; top: calc(var(--top-h, 64px) + 24px); max-height: calc(100vh - var(--top-h, 64px) - 40px); overflow: auto; display: flex; flex-direction: column; gap: 2px; padding-bottom: 16px; }
+.side { flex: 0 0 232px; position: sticky; top: calc(var(--top-h, 48px) + 24px); max-height: calc(100vh - var(--top-h, 48px) - 40px); overflow: auto; display: flex; flex-direction: column; gap: 2px; padding-bottom: 16px; }
 .side-hd { margin: 0 0 8px; padding: 0 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: var(--muted); }
 .side a { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 8px; font-size: 14px; line-height: 1.4; color: var(--ink-2); text-decoration: none; white-space: nowrap; }
 .side a:hover { background: var(--soft); color: var(--ink); }
@@ -292,18 +340,12 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
   .side a[aria-current], .side a.is-on { background: var(--yellow); border-color: var(--yellow); box-shadow: none; color: var(--ink); }
   .side a[aria-current] em, .side a.is-on em { color: var(--ink-2); }
   .main { padding-top: 16px; }
-  .is-one .side { position: sticky; top: var(--top-h, 64px); z-index: 30; padding-top: 10px; padding-bottom: 10px; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line-2); }
-  html:has(.is-one) { scroll-padding-top: calc(var(--top-h, 64px) + 76px); }
+  .is-one .side { position: sticky; top: var(--top-h, 48px); z-index: 30; padding-top: 10px; padding-bottom: 10px; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line-2); }
+  html:has(.is-one) { scroll-padding-top: calc(var(--top-h, 48px) + 76px); }
   .fields-in { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 720px) {
   .wrap { padding-inline: 16px; }
-  .top { position: relative; }
-  .top-nav { display: none; }
-  .top-end { flex: 1 1 auto; }
-  .search { flex: 1 1 auto; }
-  .search input { width: 100%; min-width: 0; }
-  .search kbd { display: none; }
   .hero { padding-top: 44px; }
   .hero .lede { font-size: 16px; }
   .show { padding: 14px; border-radius: 22px; }
@@ -323,8 +365,5 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
   .fields-in { padding: 4px 18px 18px; }
   .fields dl { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   .fields dd { margin-bottom: 10px; }
-}
-@media (max-width: 560px) {
-  .is-git { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .tile, .rules summary svg, .fields > summary svg { transition: none; } }

@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.31 · Line Chart · Line - Compare (line-compare)
+<!-- Vizney Blocks v0.32 · Line Chart · Line - Compare (line-compare)
      https://blocks.vizney.com/en/cards/line-compare.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">

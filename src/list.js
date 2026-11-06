@@ -5,17 +5,25 @@
   // 막대 길이(0–100%)
   const share = (v, max) => `${(Math.max(0, Math.min(1, max > 0 ? v / max : 0)) * 100).toFixed(2)}%`;
   // 이름을 막대 안에 얹은 칸. mark가 있으면 그 자리(비교 값)에 세로 눈금을 긋습니다.
+  // 막대가 짧아 눈금이 이름 글자 위에 떨어지면 눈금 가운데를 비워(is-split) 위아래 끝만 남깁니다. 글자를 가로지르는 선은 이름을 읽기 어렵게 합니다.
   function overlayBar(name, width, mark) {
     const bar = el('div', 'vzb-li-bar');
     const fill = el('i', 'vzb-li-fill');
     fill.style.width = width;
     bar.append(fill);
+    const label = el('span', 'vzb-li-name', name);
     if (mark != null) {
       const m = el('i', 'vzb-li-mark');
       m.style.left = mark;
       bar.append(m);
+      onSize(bar, (w) => {
+        const r = document.createRange();   // 이름 칸은 막대 폭을 다 쓰므로 글자가 차지한 폭은 Range로 잽니다
+        r.selectNodeContents(label);
+        const x = (parseFloat(mark) / 100) * w, end = Math.min(8 + r.getBoundingClientRect().width, w) + 4;
+        m.classList.toggle('is-split', x > 4 && x < end);
+      });
     }
-    bar.append(el('span', 'vzb-li-name', name));
+    bar.append(label);
     return bar;
   }
   // 묶인 '기타' 줄의 이름 칸(막대 없음)
@@ -92,16 +100,18 @@
   }
 
   // Bar - Ranking: 이름을 막대 안에 얹고 값은 오른쪽에. 툴팁에 전체 중 비중을 적습니다.
+  // 비율 지표(pct, 전환율처럼)는 더할 수 없으므로 비중을 적지 않고, 묶인 기타 줄에도 값을 적지 않습니다(묶인 이름은 툴팁에).
   function basicList(card, d, f, cfg) {
+    const add = f.rel !== false;
     return listCard(card, d, f, Object.assign({
       layout: 'overlay',
       cols: 'minmax(0, 1fr) auto',
-      fold: (rest) => foldRest(d, rest, ['value']),
+      fold: (rest) => (add ? foldRest(d, rest, ['value']) : Object.assign(foldRest(d, rest, []), { value: null })),
       prepare: (shown) => ({
         max: Math.max(0, ...shown.filter((x) => !x.rest).map((x) => +x.value || 0)),
-        total: shown.reduce((a, x) => a + (+x.value || 0), 0),
+        total: add ? shown.reduce((a, x) => a + (+x.value || 0), 0) : 0,
       }),
-      cells: (it, c) => [it.rest ? restName(it) : overlayBar(it.name, share(it.value, c.max)), el('b', 'vzb-li-val', show(c.f, it.value))],
-      tip: (it, c) => ({ value: show(c.f, it.value), note: c.total ? tx(d, '전체의 %s', `${num((it.value / c.total) * 100, 1)}%`) : '' }),
+      cells: (it, c) => [it.rest ? restName(it) : overlayBar(it.name, share(it.value, c.max)), el('b', 'vzb-li-val', it.value == null ? '' : show(c.f, it.value))],
+      tip: (it, c) => ({ value: it.value == null ? '' : show(c.f, it.value), note: c.total ? tx(d, '전체의 %s', `${num((it.value / c.total) * 100, 1)}%`) : '' }),
     }, cfg));
   }

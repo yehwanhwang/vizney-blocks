@@ -54,6 +54,9 @@
     });
     table.classList.add('is-heat');
     table.style.setProperty('--vzb-heat-cols', Math.max(1, heads.length));
+    // 여섯 행(칸 26px + 사이 2px)이 쓰는 168px 안에 행을 넣습니다. 요일 일곱 행은 22px, 여덟 행은 19px이고, 칸 숫자가 읽히는
+    // 18px보다 낮아지는 아홉 행부터는 카드가 길어집니다.
+    if (rows.length > 6) table.style.setProperty('--vzb-heat-h', `${Math.max(18, Math.floor((6 * 28) / rows.length) - 2)}px`);
     // 칸이 48px 이상이면 칸에 숫자를 적습니다. 폭이 바뀌면 다시 판단합니다.
     onSize(table, (w) => {
       const name = table.querySelector('thead th');

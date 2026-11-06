@@ -71,7 +71,7 @@
   // 차이를 부호와 함께 적습니다. 비율 지표는 %p입니다.
   function signed(f, diff) {
     const s = diff > 0 ? '+' : diff < 0 ? '−' : '';
-    return f.rel ? `${s}${show(f, Math.abs(diff))}` : `${s}${num(Math.abs(diff), 1)}%p`;
+    return f.rel ? `${s}${show(f, Math.abs(diff))}` : `${s}${pp(f, diff)}%p`;
   }
   // pick(clientX, clientY) → 순번, point(순번) → { x, y, label, value, text, side }(화면 좌표), clear() → 강조 해제
   // n은 개수나 개수를 돌려주는 함수입니다. vertical이면 위아래 화살표로 옮깁니다. 돌려주는 { show(순번), at() }로 키를 더 붙입니다.

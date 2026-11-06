@@ -19,13 +19,15 @@
 }
 .vzb-card *, .vzb-card *::before, .vzb-card *::after { box-sizing: border-box; }
 
-/* 머리: 제목과 기간 부제, 그 아래 대표 수치와 바로 뒤의 증감 배지 */
+/* 머리: 제목과 기간 부제, 그 아래 대표 수치와 바로 뒤의 증감 배지.
+   배지와 비교 문구는 숫자와 같은 줄의 항목이라, 좁으면 비교 문구만 아래 줄로 내려가고 배지는 숫자 뒤에 남습니다. */
 .vzb-title { font-size: 17px; line-height: 24px; font-weight: 500; }
 .vzb-sub { margin-top: 2px; color: var(--vzb-muted); }
-.vzb-fig { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin-top: 20px; }
-.vzb-num { font-size: 34px; line-height: 40px; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap; }
+.vzb-fig { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; margin-top: 20px; }   /* 숫자 줄은 기준선 아래에 16px이 남아 줄 사이를 따로 두지 않습니다 */
+.vzb-num { margin-right: 4px; font-size: 34px; line-height: 40px; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap; }   /* 숫자와 배지 사이 12px, 배지와 비교 문구 사이 8px */
 .vzb-unit { margin-left: 4px; font-size: 16px; letter-spacing: 0; color: var(--vzb-muted); }
-.vzb-delta { display: inline-flex; align-items: center; gap: 8px; color: var(--vzb-muted); white-space: nowrap; }
+.vzb-delta { display: contents; color: var(--vzb-muted); white-space: nowrap; }
+.vzb-vs { min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
 .vzb-badge { display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px 3px 6px; border-radius: 7px; font-weight: 500; }
 .vzb-badge.vzb-good { color: var(--vzb-good); background: var(--vzb-good-tint); }
 .vzb-badge.vzb-bad { color: var(--vzb-bad); background: var(--vzb-bad-tint); }

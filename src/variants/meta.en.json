@@ -2,7 +2,7 @@
  "cats": {
   "kpi": {
    "name": "KPI Cards",
-   "intro": "Every KPI card shares the same head: the title, a period subtitle, the headline figure and its change badge right after it. The badge's arrow shows the direction and its color shows whether that is good or bad. Card heights come in three sizes: Number is 1 unit, Line and Bar are 2, the rest are 1.5. Mixed in one row, the cards stretch to the tallest one and their graphics sit on the bottom, so heights and baselines line up.",
+   "intro": "Every KPI card shares the same head: the title, a period subtitle, the headline figure and its change badge right after it. In a narrow card the badge stays after the number and only the comparison text drops to the line below, at the same card height. The badge's arrow shows the direction and its color shows whether that is good or bad. Card heights come in three sizes: Number is 1 unit, Line and Bar are 2, the rest are 1.5. Mixed in one row, the cards stretch to the tallest one and their graphics sit on the bottom, so heights and baselines line up.",
    "lede": "Cards where the headline figure and its change are read first. Every KPI card shares the same head: the title, a period subtitle, the headline figure and its change badge right after it. The badge's arrow shows the direction and its color shows whether that is good or bad.",
    "height": "1–2 units"
   },
@@ -56,7 +56,7 @@
   "heatmap": {
    "name": "Heatmap Chart",
    "guide": { "name": "Heatmap chart", "url": "https://www.vizney.com/heatmap-chart-in-tableau/" },
-   "intro": "Heatmap charts tint each cell where two dimensions meet by its value, so high and low spots are found before the numbers are read. Values are shaded in a single orange; values that split around zero are shaded green and red. Cells are 2px apart, data columns share one width, and roomy cells also carry the number. Hover a cell, or focus the table and press the arrow keys, to see its value. Height: 2 units.",
+   "intro": "Heatmap charts tint each cell where two dimensions meet by its value, so high and low spots are found before the numbers are read. Values are shaded in a single orange; values that split around zero are shaded green and red. Cells are 2px apart, data columns share one width, and roomy cells also carry the number. Hover a cell, or focus the table and press the arrow keys, to see its value. Height: 2 units; with more than six rows the cells get shorter, so up to eight rows (seven weekdays included) keep that height.",
    "lede": "Each cell where two dimensions meet is tinted by its value, so high and low spots are found before the numbers are read. Values that split around zero are shaded green and red.",
    "height": "2 units"
   },
@@ -106,8 +106,8 @@
   "kpi-number": {
    "when": "A card with just the number and its change badge. With no graphic, it fits a narrow spot.",
    "rules": [
-    "The change sits as a badge right after the number, with the baseline and its value beside it. A 0.3pp with nothing to compare against cannot be read.",
-    "Ratio metrics (`pct`) write their change in percentage points. From 3.1% to 3.4% is a 0.3pp increase; written as 9.7%, the change looks bigger than it is.",
+    "The change sits as a badge right after the number, with the baseline and its value beside it. A 0.3pp with nothing to compare against cannot be read. In a narrow card only the comparison text drops below the number and the bottom padding shrinks, keeping the 1-unit height and the number's position.",
+    "Ratio metrics (`pct`) write their change in percentage points. From 3.1% to 3.4% is a 0.3pp increase; written as 9.7%, the change looks bigger than it is. The change follows `decimals` (one place when empty), and a difference small enough to show as 0.0pp gets more places, like 0.03pp.",
     "The badge's arrow shows the direction and its color shows whether that is good or bad. For a metric where lower is better, like a return rate, set `\"better\": \"down\"` and an increase gets a red badge."
    ]
   },
@@ -353,7 +353,7 @@
    "rules": [
     "A total without a value (`\"type\": \"total\"`) is the running total so far, so subtotals like gross profit and operating profit come out right on their own.",
     "Totals and subtotals are orange, deducted items gray, and added items light orange. Costs are part of the structure, not bad values, so red is not used.",
-    "Change bars are rounded only at the end that moved, and a deducted item's value is written under its bar."
+    "Change bars are rounded only at the end that moved, and a deducted item's value is written under its bar. When the bar sits on the baseline and the value would run into the axis labels, it is written above the bar."
    ]
   },
   "funnel-flow": {

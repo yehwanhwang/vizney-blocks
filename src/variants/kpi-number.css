@@ -1,2 +1,4 @@
-/* KPI - Number: 카드 높이 1단위 */
+/* KPI - Number: 카드 높이 1단위. 비교 문구가 숫자 아래 줄로 내려가면(vzb-wrapped) 남는 8px과 아래 여백 24px 가운데 10px을
+   그 줄(18px)에 내어 줘, 숫자의 자리와 카드 높이가 한 줄짜리 카드와 같습니다. */
 .vzb-card[data-vzb="kpi-number"] { min-height: var(--vzb-unit); }
+.vzb-card[data-vzb="kpi-number"].vzb-wrapped { padding-bottom: 14px; }

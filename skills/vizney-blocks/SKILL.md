@@ -5,7 +5,7 @@ description: "Vizney Blocks(blocks.vizney.com)의 HTML 대시보드 카드로 �
 
 # Vizney Blocks로 대시보드 만들기
 
-Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v0.37, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 증감, 비중, 달성률, 합계와 색·강조는 카드가 Vizney 차트 가이드의 규칙대로 계산하고 그린다.
+Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v0.38, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 증감, 비중, 달성률, 합계와 색·강조는 카드가 Vizney 차트 가이드의 규칙대로 계산하고 그린다.
 
 ## 순서
 
@@ -142,7 +142,7 @@ Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v
 
 ### 고르기와 배치
 
-AI가 이 스킬로 대시보드를 만든 실험(브리프 3개 × 모델 2개)에서 실제로 어긋난 자리다. 숫자는 카드를 실제 글꼴로 그려 잰 값이다.
+AI가 이 카드로 대시보드를 만든 실험(브리프 3개 × 모델 2개)에서 실제로 어긋난 자리다. 숫자는 카드를 실제 글꼴로 그려 잰 값이다.
 
 - 비중 카드(Donut - Basic, Waffle - Basic, KPI - Stacked Bar)는 큰 세 항목에만 색을 주고 나머지를 "기타"로 묶는다. 기타가 셋째 조각보다 크면 둘째로 큰 것이 무엇인지 화면이 답하지 못하므로 Bar - Ranking을 쓴다. 파이를 요청받아도 같고, 바꾼 이유를 사용자에게 알린다.
 - KPI 줄은 KPI - Number가 기본이다. 같은 지표의 추이 카드가 따로 있으면 KPI - Line · KPI - Bar를 쓰지 않는다. 한 지표의 그래픽이 두 곳에 있으면 어느 쪽을 읽을지 모르고, 기간과 합계가 어긋날 자리가 생긴다.

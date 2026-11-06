@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.37 · KPI Cards · KPI - Bar (kpi-bar)
+<!-- Vizney Blocks v0.38 · KPI Cards · KPI - Bar (kpi-bar)
      https://blocks.vizney.com/en/cards/kpi-bar.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">

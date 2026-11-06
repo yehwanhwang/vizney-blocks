@@ -12,7 +12,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.37';
+const VERSION = 'v0.38';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -144,17 +144,20 @@ const WORDS = {
     step1: '복사해서 붙이기', step1p: '카드의 <b>복사</b>를 눌러 HTML의 &lt;body&gt; 안 원하는 자리에 붙여 넣습니다.',
     step2: 'JSON만 바꾸기', step2p: '카드 안 JSON의 값만 바꿉니다. 증감, 비중, 달성률은 카드가 계산합니다.', step2code: '"title": "분기별 출고 금액",\n"format": "eok",\n"labels": ["1Q26", "2Q26", "3Q26"],\n"values": [2561, 2654, 2750]',
     step3: '변수로 맞추기', step3p: (tokens) => `색과 글꼴은 :root의 변수로 바꿉니다. 모든 카드에 한 번에 적용됩니다. 변수 목록은 <a href="${tokens}">tokens.css</a>에 있습니다.`,
-    step4: 'AI에게 맡기기', step4p: '채팅 AI에는 카드의 <b>AI용 링크</b>를 주고, 코딩 에이전트에는 스킬을 설치합니다.', step4code: (base) => `blocks.vizney.com${base}/cards/\n  bar-basic.txt\n이 카드로 지점별 월 매출을\n그려줘\n\nnpx skills add\n  yehwanhwang/vizney-blocks`,
+    step4: 'AI에게 맡기기', step4p: '채팅 AI에는 카드의 <b>AI용 링크</b>를 주고, 코딩 에이전트에는 스킬을 설치합니다. 스킬은 카드 코드를 쓰기 전에 설계표(줄 · 질문 · 카드)를 보여 주고, 다 만든 뒤 체크리스트로 확인합니다. 새 판단은 <code>npx skills update</code>로 받습니다.', step4code: (base) => `blocks.vizney.com${base}/cards/\n  bar-basic.txt\n이 카드로 지점별 월 매출을\n그려줘\n\nnpx skills add\n  yehwanhwang/vizney-blocks`,
     fields: '공통 필드와 여러 장 배치',
     fieldList: [
       ['title', '지표명'], ['subtitle', '기간 부제. 무엇을 언제 기준으로 보는지 적습니다.'], ['value', 'KPI 카드의 대표 수치. KPI - Line과 KPI - Bar는 생략하면 마지막 값을 씁니다.'],
-      ['format', '<code>eok</code> 억 단위 값, <code>krw</code> 원 단위 값을 만·억·조로, <code>usd</code> 달러 값을 $745.6K·$1.2M처럼, <code>count</code> 개수(<code>unit</code>에 단위), <code>pct</code> 비율(증감은 %p), <code>days</code> 일수'],
+      ['format', '<code>eok</code> 억 단위 값, <code>krw</code> 원 단위 값을 만·억·조로(10만 원 미만은 87,324원처럼 원 단위 그대로), <code>usd</code> 달러 값을 $745.6K·$1.2M처럼, <code>count</code> 개수(<code>unit</code>에 단위), <code>pct</code> 비율(증감은 %p), <code>days</code> 일수'],
+      ['decimals', '숫자의 소수 자릿수. 비우면 카드가 정하고, <code>pct</code>의 증감(%p)도 이 자릿수를 따릅니다.'],
       ['better', '<code>up</code>, <code>down</code>, <code>neutral</code>. 증감을 초록과 빨강 중 무엇으로 칠할지 정합니다.'], ['compare', '<code>{ "label", "value" }</code>. KPI 카드에서 증감을 계산할 비교 기준입니다.'],
       ['labels', '기간 이름. <code>values</code>와 같은 길이로 적고, 값이 없는 기간은 <code>null</code>로 둡니다.'], ['series', '<code>[{ "name", "values" }]</code>. 선이나 막대를 여러 묶음 그릴 때 씁니다.'],
       ['rows', '표와 목록의 줄. 줄마다 <code>name</code>과 값을 적습니다. 합계 줄과 비중, 증감률, 달성률은 카드가 계산합니다.'], ['curve', '선 모양. <code>smooth</code>(기본) 곡선, <code>linear</code> 직선, <code>step</code> 계단. 라인 카드와 KPI - Line에서 씁니다.'],
       ['lang', '<code>en</code>이면 카드 안의 합계 · 기타 · 달성 같은 문구가 영어가 됩니다. 비우면 한국어입니다.'],
     ],
-    grid: '여러 장을 한 줄에', gridp: '카드는 배치를 맡지 않습니다. 감싸는 요소에 격자를 주면 폭에 맞춰 줄이 바뀝니다. 카드 폭은 340px 이상이 되게 두세요. 더 좁으면 표와 도넛의 글자가 잘립니다. 같은 줄의 카드는 가장 높은 카드에 맞춰 늘어나므로, 높이가 같은 카드끼리 한 줄에 두면 빈 곳이 없습니다.', gridNote: '카드 여러 장',
+    grid: '여러 장을 한 줄에', gridp: '카드는 배치를 맡지 않습니다. 감싸는 요소에 격자를 주면 폭에 맞춰 줄이 바뀝니다. 카드 폭은 340px 이상이 되게 두세요. 더 좁으면 표와 도넛의 글자가 잘립니다. KPI 카드만 둔 줄은 280px까지 줄여도 되어, 폭 1280px 화면에 네 장이 한 줄에 들어갑니다. 같은 줄의 카드는 가장 높은 카드에 맞춰 늘어나므로, 높이가 같은 카드끼리 한 줄에 두면 빈 곳이 없습니다.', gridNote: '카드 여러 장',
+    layoutTitle: '고르기와 배치', layoutAll: (u) => `AI가 이 카드로 대시보드를 만든 실험에서 어긋난 자리를 규칙으로 옮겼습니다. 이유와 숫자는 <a href="${u}">llms.txt</a>에 있습니다.`,
+    layoutList: ['KPI 카드는 한 줄에 네 장까지 둡니다.', '바 리스트와 표는 여섯 줄까지 2단위에 들어갑니다. 더 길면 줄 수가 같은 카드끼리 한 줄에 둡니다.', '비중 카드의 기타가 셋째 조각보다 크면 Bar - Ranking을 씁니다.', '전체 폭은 폭이 정보량인 카드(여러 선의 13개월 라인, 열이 많은 표·히트맵, 항목이 많은 워터폴, 생키)에만 줍니다.', '카드 사이에 묶음 제목을 두지 않습니다. 화면 제목과 기준일·출처 한 줄이면 됩니다.'],
     aiList: 'AI용 목록 llms.txt', kinds: '차트 종류', crumb: '현재 위치', nCards: (n) => `카드 ${n}장`, height: (h) => `높이 ${h}`, nInGroup: (n) => `${n}장`, judgment: (n) => `들어 있는 판단 ${n}`,
     pagerAria: '이전과 다음 차트', prev: '이전', next: '다음', codeText: '코드(텍스트)',
     homeTitle: 'Vizney Blocks · 복사해 쓰는 대시보드 카드', catTitle: (name) => `${name} · Vizney Blocks`, catDesc: (lede, n) => `${lede} 복사해 붙여 쓰는 HTML 카드 ${n}종.`,
@@ -177,17 +180,20 @@ const WORDS = {
     step1: 'Copy and paste', step1p: 'Press <b>Copy</b> on a card and paste it anywhere inside the &lt;body&gt; of your HTML.',
     step2: 'Change only the JSON', step2p: 'Edit the values in the card’s JSON. The card computes changes, shares and attainment.', step2code: '"title": "Orders by Quarter",\n"format": "count",\n"labels": ["1Q26", "2Q26", "3Q26"],\n"values": [2561, 2654, 2750]',
     step3: 'Tune with variables', step3p: (tokens) => `Set colors and the font with :root variables; they apply to every card at once. The list is in <a href="${tokens}">tokens.css</a>.`,
-    step4: 'Hand it to an AI', step4p: 'Give a chat AI the card’s <b>AI link</b>; install the skill in a coding agent.', step4code: (base) => `blocks.vizney.com${base}/cards/\n  bar-basic.txt\nDraw our monthly sales by\nbranch with this card\n\nnpx skills add\n  yehwanhwang/vizney-blocks`,
+    step4: 'Hand it to an AI', step4p: 'Give a chat AI the card’s <b>AI link</b>; install the skill in a coding agent. The skill shows a design table (row · question · card) before writing card code and checks the result against a checklist. Get new judgment with <code>npx skills update</code>.', step4code: (base) => `blocks.vizney.com${base}/cards/\n  bar-basic.txt\nDraw our monthly sales by\nbranch with this card\n\nnpx skills add\n  yehwanhwang/vizney-blocks`,
     fields: 'Common fields and layout',
     fieldList: [
       ['title', 'Metric name'], ['subtitle', 'Period subtitle: what is measured, and as of when.'], ['value', 'The headline figure of a KPI card. KPI - Line and KPI - Bar use the last value when it is omitted.'],
-      ['format', '<code>usd</code> dollar amounts, shortened to $745.6K · $1.2M; <code>count</code> a count (its unit in <code>unit</code>); <code>pct</code> a percentage (changes in pp); <code>days</code> a number of days; <code>eok</code> and <code>krw</code> are Korean won notations'],
+      ['format', '<code>usd</code> dollar amounts, shortened to $745.6K · $1.2M; <code>count</code> a count (its unit in <code>unit</code>); <code>pct</code> a percentage (changes in pp); <code>days</code> a number of days; <code>eok</code> and <code>krw</code> are Korean won notations (<code>krw</code> writes amounts under 100,000 won in full)'],
+      ['decimals', 'Decimal places of the numbers. Left empty, the card decides; <code>pct</code> changes (pp) follow it too.'],
       ['better', '<code>up</code>, <code>down</code>, <code>neutral</code>. Decides whether a change is colored green or red.'], ['compare', '<code>{ "label", "value" }</code>. The baseline a KPI card computes its change against.'],
       ['labels', 'Period names, the same length as <code>values</code>; use <code>null</code> for a period without a value.'], ['series', '<code>[{ "name", "values" }]</code>, for several lines or groups of bars.'],
       ['rows', 'Rows of a table or list, each with a <code>name</code> and its values. The card computes the total row, shares, change rates and attainment.'], ['curve', 'Line shape: <code>smooth</code> (default), <code>linear</code>, <code>step</code>. Used by the line cards and KPI - Line.'],
       ['lang', '<code>en</code> makes the words the card prints itself English (Total, Other, Met…). Omit it for Korean.'],
     ],
-    grid: 'Several cards in a row', gridp: 'Cards do not lay themselves out. Give the wrapper a grid and the rows wrap to the width. Keep each card at least 340px wide; narrower, the text in tables and donuts clips. Cards in a row stretch to the tallest one, so a row of equal-height cards leaves no gaps.', gridNote: 'several cards',
+    grid: 'Several cards in a row', gridp: 'Cards do not lay themselves out. Give the wrapper a grid and the rows wrap to the width. Keep each card at least 340px wide; narrower, the text in tables and donuts clips. A row of KPI cards alone can go down to 280px, so four fit across a 1280px page. Cards in a row stretch to the tallest one, so a row of equal-height cards leaves no gaps.', gridNote: 'several cards',
+    layoutTitle: 'Picking and layout', layoutAll: (u) => `Where AI agents went wrong building dashboards with these cards, turned into rules. The reasons and measurements are in <a href="${u}">llms.txt</a>.`,
+    layoutList: ['Up to four KPI cards per row.', 'Bar lists and tables fit 2 units up to six rows. Longer ones go in a row with cards of the same row count.', 'When a share card’s Other is larger than its third slice, use Bar - Ranking.', 'Give the full width only to cards whose width carries information (a 13-month line with several series, a wide table or heatmap, a long waterfall, a sankey).', 'No group headings between card rows: one screen title and one line for the date and source.'],
     aiList: 'llms.txt for AI', kinds: 'Chart types', crumb: 'You are here', nCards: (n) => `${n} cards`, height: (h) => `Height ${h}`, nInGroup: (n) => `${n} cards`, judgment: (n) => `Judgment built in (${n})`,
     pagerAria: 'Previous and next chart', prev: 'Previous', next: 'Next', codeText: 'Code (text)',
     homeTitle: 'Vizney Blocks · Copy-paste dashboard cards', catTitle: (name) => `${name} · Vizney Blocks`, catDesc: (lede, n) => `${lede} ${n} copy-paste HTML cards.`,
@@ -370,6 +376,11 @@ ${L.t.fieldList.map(([k, v]) => `<dt><code>${k}</code></dt><dd>${v}</dd>`).join(
   gap:16px;"&gt;
   &lt;!-- ${L.t.gridNote} --&gt;
 &lt;/div&gt;</pre>
+<h3 class="fields-sub">${L.t.layoutTitle}</h3>
+<ul class="fields-rules">
+${L.t.layoutList.map((x) => `<li>${x}</li>`).join('\n')}
+</ul>
+<p>${L.t.layoutAll(`${SITE}${L.files}/llms.txt`)}</p>
 </div>
 </div>
 </details>
@@ -668,6 +679,37 @@ const PICK = {
   ko: '카드는 "목적으로 고르기"에서 고른다. 화면이 답할 질문마다 기본 카드를 먼저 쓰고, 다른 카드는 조건이 정확히 맞을 때만 쓴다. 애매하면 기본 카드를 쓴다. 카드 이름은 지표가 아니라 모양이므로, 지표 이름은 JSON의 title로 바꾼다.',
   en: 'Pick cards in "Pick by purpose". For each question the screen answers, use the base card first and another card only when its condition fits exactly. When unsure, use the base card. Card names describe the shape, not the metric, so put the metric name in the JSON title.',
 };
+// Picking and layout: where AI agents went wrong when they built dashboards with the skill (3 briefs × 2 models, measured
+// with the real font). Shared by llms.txt, SKILL.md and the How-to-use page so chat AIs, agents and people use the same judgment.
+const LAYOUT_NOTE = {
+  ko: 'AI가 이 카드로 대시보드를 만든 실험(브리프 3개 × 모델 2개)에서 실제로 어긋난 자리다. 숫자는 카드를 실제 글꼴로 그려 잰 값이다.',
+  en: 'Where AI agents actually went wrong building dashboards with these cards (3 briefs × 2 models). The numbers are measured on the cards drawn with the real font.',
+};
+const LAYOUT = { ko: [
+  "비중 카드(Donut - Basic, Waffle - Basic, KPI - Stacked Bar)는 큰 세 항목에만 색을 주고 나머지를 \"기타\"로 묶는다. 기타가 셋째 조각보다 크면 둘째로 큰 것이 무엇인지 화면이 답하지 못하므로 Bar - Ranking을 쓴다. 파이를 요청받아도 같고, 바꾼 이유를 사용자에게 알린다.",
+  "KPI 줄은 KPI - Number가 기본이다. 같은 지표의 추이 카드가 따로 있으면 KPI - Line · KPI - Bar를 쓰지 않는다. 한 지표의 그래픽이 두 곳에 있으면 어느 쪽을 읽을지 모르고, 기간과 합계가 어긋날 자리가 생긴다.",
+  "KPI 카드는 한 줄에 네 장까지다. 지표가 다섯 개 이상이면 덜 중요한 것을 빼거나, 단위가 다른 두세 개를 Line - Tabs 한 장으로 묶는다. 다섯 장을 한 줄에 넣으려고 격자의 최소 폭을 280px 아래로 내리지 않고, 3장 + 2장처럼 폭이 다른 두 줄로 나누지도 않는다.",
+  "일별 · 주별처럼 마지막 값이 대표가 아닌 데이터는 Line - Tabs의 탭과 KPI - Line에 `value`로 기간 합계를 적고 부제에 그 기준을 쓴다. 비우면 마지막 하루의 값이 대표 수치가 되어, 같은 화면의 주간 KPI와 부딪힌다. 합계가 뜻이 없는 비율 지표는 비우고 부제에 \"마지막 날 기준\"을 쓴다.",
+  "바 리스트와 표(Bar - Ranking, Bar - Compare, Grid - Basic, Grid - Target)는 여섯 줄까지 2단위에 들어가고, 일곱 줄부터 한 줄에 32px씩 길어져 같은 줄의 카드도 함께 늘어난다. 기본인 다섯 줄과 \"기타\"를 쓰고, 항목을 모두 보여야 하면 줄 수가 같은 카드끼리 한 줄에 둔다. 짝 지을 카드가 없으면 그 줄의 격자를 `auto-fit` 대신 `auto-fill`로 두어, 카드가 혼자 전체 폭으로 늘어나지 않고 한 칸 폭을 지키게 한다.",
+  "전체 폭이나 두 칸에 걸친 자리는 폭이 정보량인 카드에만 준다: 여러 선의 13개월 라인, 열이 일곱 개 이상인 표와 히트맵, 항목이 일곱 개 이상인 워터폴, 생키. 이 카드들은 반 폭에 두지 않고 넓은 자리에 둔다. 바 리스트와 짧은 표는 넓혀도 정보가 늘지 않고 눈만 멀리 움직인다.",
+  "항목이 일곱 개 이상인 워터폴은 폭 390px에서 값 글자가 서로 닿는다. 모바일에서도 읽혀야 하면 작은 항목을 묶어(영업외손익과 법인세를 \"영업외 · 세금\"으로) 여섯 개 안팎으로 줄인다.",
+  "폭 390px 화면(카드 폭 342px)에서 표는 이름 열과 숫자 세 열까지 들어간다. 숫자 열이 넷 이상이면 카드 안에서 가로로 밀리므로, 표를 나누거나 증감은 다른 카드에 맡긴다.",
+  "상위 N개만 보이는 표에는 합계 줄을 두지 않는다(Grid - Basic은 `\"total\": false`). 표의 합계 줄은 전체 합계로 읽힌다. 전체를 알려야 하면 부제에 \"전체 8,756억 중\"처럼 적는다.",
+  "화면에는 제목 하나와 기준일 · 출처 한 줄만 두고, 카드 줄 사이에 묶음 제목(\"핵심 지표\", \"채널\")을 넣지 않는다. 카드 제목이 이미 질문이라 묶음 제목은 되풀이가 되고, 줄 사이 간격이 달라져 격자가 흐트러진다.",
+  "고른 카드가 데이터를 제대로 그리지 못하면(글자가 겹치거나 잘림) 다른 모양의 카드로 바꾸지 않는다. 항목을 묶거나 이름을 줄이고, 남은 문제는 카드 이름과 함께 사용자에게 알린다.",
+], en: [
+  "Share cards (Donut - Basic, Waffle - Basic, KPI - Stacked Bar) color only the three largest items and fold the rest into \"Other\". When Other is larger than the third slice, the screen cannot say what is second largest, so use Bar - Ranking. The same holds when a pie was asked for; tell the user why it changed.",
+  "KPI - Number is the default in a KPI row. When the metric has its own trend card, do not use KPI - Line or KPI - Bar. A metric drawn in two places leaves the reader unsure which to read and leaves room for periods and totals to disagree.",
+  "Up to four KPI cards per row. With five or more metrics, drop the least important or put two or three with different units into one Line - Tabs. Do not lower the grid minimum below 280px to fit five, and do not split them into rows of different widths such as 3 + 2.",
+  "For daily or weekly data, where the last value is not the headline, put the period total in `value` on Line - Tabs tabs and KPI - Line, and name that basis in the subtitle. Left empty, the last day's value becomes the headline and clashes with the weekly KPI on the same screen. For a ratio, where a total means nothing, leave it empty and write \"as of the last day\" in the subtitle.",
+  "Bar lists and tables (Bar - Ranking, Bar - Compare, Grid - Basic, Grid - Target) fit 2 units up to six rows; from the seventh row each row adds 32px and stretches the other cards in that row. Use the default five rows plus \"Other\". If every item must show, put cards with the same number of rows in one row. With no card to pair, give that row's grid `auto-fill` instead of `auto-fit` so the card keeps one column's width instead of stretching across.",
+  "Give the full width, or a two-column slot, only to cards whose width carries information: a 13-month line with several series, a table or heatmap with seven or more columns, a waterfall with seven or more items, a sankey. Do not put those at half width. A bar list or a short table gains nothing from the width; the eye only travels farther.",
+  "A waterfall with seven or more items has its value labels touch at 390px. If it must read on a phone, fold small items (non-operating items and tax into \"Non-operating & tax\") to about six.",
+  "On a 390px screen (cards 342px wide) a table fits a name column and three number columns. With four or more number columns it scrolls sideways inside the card, so split the table or move the change to another card.",
+  "A table that shows only the top N gets no total row (Grid - Basic: `\"total\": false`). A total row reads as the grand total. To give the whole, write it in the subtitle, such as \"of 875.6B total\".",
+  "Keep one screen title and one line for the as-of date and source; put no group headings (\"Key metrics\", \"Channels\") between rows of cards. The card titles are already the questions, so group headings repeat them and change the row spacing, which breaks the grid.",
+  "When the chosen card cannot draw the data well (overlapping or clipped text), do not switch to a card of another shape. Fold items or shorten names, and tell the user what is left, with the card's name.",
+] };
 const PICK_NOTE = {
   ko: '화면이 답할 질문마다 기본 카드를 먼저 쓰고, 다른 카드는 조건이 정확히 맞을 때만 쓴다. 애매하면 기본 카드를 쓴다. 여기 없는 카드는 이 조건들로 풀리지 않을 때만 쓴다.',
   en: 'For each question the screen answers, use the base card first and another card only when its condition fits exactly. When unsure, use the base card. A card not listed here is for cases these conditions do not cover.',
@@ -719,6 +761,12 @@ ${RULES('from the links (.txt) below', 'en').map((x) => `- ${x}`).join('\n')}
 ${PICK_NOTE.en}
 
 ${L.purposes.map((p) => `- ${p.name} · ${p.question}\n${p.picks.map((k, i) => `  - ${i ? '' : 'Base: '}[${L.byId[k.id].name}](${txt(k.id, L)}): ${k.when}`).join('\n')}`).join('\n')}
+
+## Picking and layout
+
+${LAYOUT_NOTE.en}
+
+${LAYOUT.en.map((x) => `- ${x}`).join('\n')}
 ` : `# Vizney Blocks
 
 > 복사해 붙여 쓰는 HTML 대시보드 카드 ${variants.length}종(${VERSION}). 카드 하나는 <style>, 데이터 JSON, <script>를 한데 묶은 HTML 조각이며, <body> 안에 붙여 넣으면 그려진다. 데이터는 카드 안 <script type="application/json">의 값만 바꾼다. ${NOTICE}.
@@ -734,6 +782,12 @@ ${RULES('아래 링크(.txt)의').map((x) => `- ${x}`).join('\n')}
 ${PICK_NOTE.ko}
 
 ${L.purposes.map((p) => `- ${p.name} · ${p.question}\n${p.picks.map((k, i) => `  - ${i ? '' : '기본 '}[${L.byId[k.id].name}](${txt(k.id, L)}): ${k.when}`).join('\n')}`).join('\n')}
+
+## 고르기와 배치
+
+${LAYOUT_NOTE.ko}
+
+${LAYOUT.ko.map((x) => `- ${x}`).join('\n')}
 `;
   for (const c of L.cats) {
     llms += `\n## ${c.name}\n\n${SITE}${L.base}/${c.id}/ · ${plain(c.intro)}\n\n`;
@@ -825,19 +879,9 @@ ${RULES('내려받은', 'ko').map((x) => `- ${x}`).join('\n')}
 
 ### 고르기와 배치
 
-AI가 이 스킬로 대시보드를 만든 실험(브리프 3개 × 모델 2개)에서 실제로 어긋난 자리다. 숫자는 카드를 실제 글꼴로 그려 잰 값이다.
+${LAYOUT_NOTE.ko}
 
-- 비중 카드(Donut - Basic, Waffle - Basic, KPI - Stacked Bar)는 큰 세 항목에만 색을 주고 나머지를 "기타"로 묶는다. 기타가 셋째 조각보다 크면 둘째로 큰 것이 무엇인지 화면이 답하지 못하므로 Bar - Ranking을 쓴다. 파이를 요청받아도 같고, 바꾼 이유를 사용자에게 알린다.
-- KPI 줄은 KPI - Number가 기본이다. 같은 지표의 추이 카드가 따로 있으면 KPI - Line · KPI - Bar를 쓰지 않는다. 한 지표의 그래픽이 두 곳에 있으면 어느 쪽을 읽을지 모르고, 기간과 합계가 어긋날 자리가 생긴다.
-- KPI 카드는 한 줄에 네 장까지다. 지표가 다섯 개 이상이면 덜 중요한 것을 빼거나, 단위가 다른 두세 개를 Line - Tabs 한 장으로 묶는다. 다섯 장을 한 줄에 넣으려고 격자의 최소 폭을 280px 아래로 내리지 않고, 3장 + 2장처럼 폭이 다른 두 줄로 나누지도 않는다.
-- 일별 · 주별처럼 마지막 값이 대표가 아닌 데이터는 Line - Tabs의 탭과 KPI - Line에 \`value\`로 기간 합계를 적고 부제에 그 기준을 쓴다. 비우면 마지막 하루의 값이 대표 수치가 되어, 같은 화면의 주간 KPI와 부딪힌다. 합계가 뜻이 없는 비율 지표는 비우고 부제에 "마지막 날 기준"을 쓴다.
-- 바 리스트와 표(Bar - Ranking, Bar - Compare, Grid - Basic, Grid - Target)는 여섯 줄까지 2단위에 들어가고, 일곱 줄부터 한 줄에 32px씩 길어져 같은 줄의 카드도 함께 늘어난다. 기본인 다섯 줄과 "기타"를 쓰고, 항목을 모두 보여야 하면 줄 수가 같은 카드끼리 한 줄에 둔다. 짝 지을 카드가 없으면 그 줄의 격자를 \`auto-fit\` 대신 \`auto-fill\`로 두어, 카드가 혼자 전체 폭으로 늘어나지 않고 한 칸 폭을 지키게 한다.
-- 전체 폭이나 두 칸에 걸친 자리는 폭이 정보량인 카드에만 준다: 여러 선의 13개월 라인, 열이 일곱 개 이상인 표와 히트맵, 항목이 일곱 개 이상인 워터폴, 생키. 이 카드들은 반 폭에 두지 않고 넓은 자리에 둔다. 바 리스트와 짧은 표는 넓혀도 정보가 늘지 않고 눈만 멀리 움직인다.
-- 항목이 일곱 개 이상인 워터폴은 폭 390px에서 값 글자가 서로 닿는다. 모바일에서도 읽혀야 하면 작은 항목을 묶어(영업외손익과 법인세를 "영업외 · 세금"으로) 여섯 개 안팎으로 줄인다.
-- 폭 390px 화면(카드 폭 342px)에서 표는 이름 열과 숫자 세 열까지 들어간다. 숫자 열이 넷 이상이면 카드 안에서 가로로 밀리므로, 표를 나누거나 증감은 다른 카드에 맡긴다.
-- 상위 N개만 보이는 표에는 합계 줄을 두지 않는다(Grid - Basic은 \`"total": false\`). 표의 합계 줄은 전체 합계로 읽힌다. 전체를 알려야 하면 부제에 "전체 8,756억 중"처럼 적는다.
-- 화면에는 제목 하나와 기준일 · 출처 한 줄만 두고, 카드 줄 사이에 묶음 제목("핵심 지표", "채널")을 넣지 않는다. 카드 제목이 이미 질문이라 묶음 제목은 되풀이가 되고, 줄 사이 간격이 달라져 격자가 흐트러진다.
-- 고른 카드가 데이터를 제대로 그리지 못하면(글자가 겹치거나 잘림) 다른 모양의 카드로 바꾸지 않는다. 항목을 묶거나 이름을 줄이고, 남은 문제는 카드 이름과 함께 사용자에게 알린다.
+${LAYOUT.ko.map((x) => `- ${x}`).join('\n')}
 
 ## 체크리스트
 

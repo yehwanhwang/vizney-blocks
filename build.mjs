@@ -3,7 +3,7 @@
 // the card code and llms.txt keep their published addresses: Korean at /cards/ and /llms.txt, English under /en/),
 // the skill for coding agents in skills/vizney-blocks/ (installed with `npx skills add yehwanhwang/vizney-blocks`), and the
 // one-page gallery in dist/ that is published as an artifact. The site and the gallery embed a renamed subset of Spoqa Han Sans Neo (VZ Sans).
-import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync, rmSync, readdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { join, dirname } from 'node:path';
@@ -12,7 +12,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.40';
+const VERSION = 'v0.41';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -798,6 +798,14 @@ ${LAYOUT.ko.map((x) => `- ${x}`).join('\n')}
   writeFileSync(join(docs, `${L.files}/tokens.css`), `/* Vizney Blocks ${VERSION} · ${NOTICE} · ${en ? 'the same content as the :where(:root) block in the card code' : '카드 코드 안의 :where(:root) 블록과 같은 내용'} */\n${tokensBy[L.lang]}\n`);
 }
 
+// Worked examples for the skill: src/skill/examples/*.md are copied beside SKILL.md, and both skill files list them.
+const EXAMPLES = readdirSync(join(root, 'src/skill/examples')).filter((f) => f.endsWith('.md')).sort().map((file) => {
+  const md = readFileSync(join(root, 'src/skill/examples', file), 'utf8');
+  const [, title] = md.match(/^# (.+)$/m);
+  const desc = md.split('\n\n')[1].split('. ')[0].replace(/ 예시다$/, ' 예시');
+  return { file, title, desc };
+}).sort((a, b) => a.title.localeCompare(b.title));
+
 // Skill for coding agents (Agent Skills format, skills/<name>/SKILL.md), installed with `npx skills add yehwanhwang/vizney-blocks`.
 // It carries the purpose index and the rules, and sends the agent to the plain-text card code instead of rewriting it.
 // The steps run question → check and assume (period, format, better) → pick → design table shown to the user → download →
@@ -924,6 +932,12 @@ ${LAYOUT.ko.map((x) => `- ${x}`).join('\n')}
 - [ ] 폭 1280px과 390px에서 화면을 캡처해 잘리거나 겹친 글자가 없다. 카드는 넘치는 글자를 오류 없이 말줄임(…)으로 자르므로 눈으로 본다. 캡처할 수 없으면 카드 안에서 \`scrollWidth\`가 \`clientWidth\`보다 큰 요소가 없는지 확인한다.
 - [ ] 가정 줄을 사용자에게 알렸다.
 
+## 예시
+
+요청 하나를 질문 · 확인 · 설계표 · 요청과 다르게 한 것 · JSON 핵심 · 확인 결과까지 따라간 예시다. 비슷한 요청을 받으면 먼저 읽는다.
+
+${EXAMPLES.map((e) => `- [${e.title}](examples/${e.file}) — ${e.desc}`).join('\n')}
+
 갤러리: ${SITE}/ (한국어 ${SITE}/ko/) · 소스: ${REPO}
 `;
 // The English skill: the same steps, purpose index, rules and checklist from the same sources, for agents working in
@@ -1046,11 +1060,20 @@ Go through it before handing over the file. If anything is off, fix it and check
 - [ ] Screenshots at 1280px and 390px show no clipped or overlapping text. Cards cut overflowing text with an ellipsis (…) without an error, so look. If you cannot take screenshots, check that no element inside a card has a \`scrollWidth\` larger than its \`clientWidth\`.
 - [ ] The assumptions were shared with the user.
 
+## Examples
+
+Worked examples that follow one request through questions, checks, the design table, what was done differently from the request, the key JSON and the checks. They are written in Korean, but the judgments apply as they are.
+
+${EXAMPLES.map((e) => `- [${e.title}](examples/${e.file})`).join('\n')}
+
 Gallery: ${SITE}/ (Korean ${SITE}/ko/) · Source: ${REPO}
 `;
 mkdirSync(join(root, 'skills/vizney-blocks'), { recursive: true });
 writeFileSync(join(root, 'skills/vizney-blocks/SKILL.md'), skill);
 writeFileSync(join(root, 'skills/vizney-blocks/SKILL.en.md'), skillEn);
+rmSync(join(root, 'skills/vizney-blocks/examples'), { recursive: true, force: true });
+mkdirSync(join(root, 'skills/vizney-blocks/examples'), { recursive: true });
+for (const e of EXAMPLES) copyFileSync(join(root, 'src/skill/examples', e.file), join(root, 'skills/vizney-blocks/examples', e.file));
 
 // The same folder is an OpenDesign plugin (open-design.ai): open-design.json beside SKILL.md names the skill and the output
 // surface, icon.svg is the card icon, and preview/index.html is a real output (the home-page example dashboard). Installed in

@@ -5,7 +5,7 @@ description: "Build dashboard screens with Vizney Blocks (blocks.vizney.com) HTM
 
 # Building dashboards with Vizney Blocks
 
-Vizney Blocks is a set of copy-paste HTML dashboard cards (v0.40, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. Changes, shares, attainment, totals, colors and emphasis are computed and drawn by the card, following the Vizney chart guide.
+Vizney Blocks is a set of copy-paste HTML dashboard cards (v0.41, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. Changes, shares, attainment, totals, colors and emphasis are computed and drawn by the card, following the Vizney chart guide.
 
 ## Steps
 
@@ -193,5 +193,13 @@ Go through it before handing over the file. If anything is off, fix it and check
 - [ ] No errors in the browser console, and no error message (`.vzb-error`) inside a card.
 - [ ] Screenshots at 1280px and 390px show no clipped or overlapping text. Cards cut overflowing text with an ellipsis (…) without an error, so look. If you cannot take screenshots, check that no element inside a card has a `scrollWidth` larger than its `clientWidth`.
 - [ ] The assumptions were shared with the user.
+
+## Examples
+
+Worked examples that follow one request through questions, checks, the design table, what was done differently from the request, the key JSON and the checks. They are written in Korean, but the judgments apply as they are.
+
+- [예시 1 · 영업 월간 보고](examples/sales-monthly.md)
+- [예시 2 · 분기 손익 임원 보고](examples/pnl-quarterly.md)
+- [예시 3 · 마케팅 주간 리포트](examples/growth-weekly.md)
 
 Gallery: https://blocks.vizney.com/ (Korean https://blocks.vizney.com/ko/) · Source: https://github.com/yehwanhwang/vizney-blocks

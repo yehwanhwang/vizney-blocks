@@ -1,0 +1,46 @@
+# build.mjs의 VERSION이 바뀐 커밋이 main에 들어오면 그 버전의 GitHub 릴리스를 만듭니다.
+# 노트는 releases/<VERSION>.md(첫 줄 "# 제목"), 없으면 그 머지를 만든 PR의 제목과 설명입니다. 이미 있는 릴리스는 건드리지 않습니다.
+name: release
+
+on:
+  push:
+    branches: [main]
+    paths: ['build.mjs', 'releases/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 새 VERSION이면 릴리스 만들기
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          v=$(grep -oP "^const VERSION = '\Kv[0-9.]+(?=';)" build.mjs)
+          if gh release view "$v" -R "$REPO" >/dev/null 2>&1; then
+            echo "$v 릴리스가 이미 있습니다."; exit 0
+          fi
+          f="releases/$v.md"
+          if [ -f "$f" ]; then
+            title=$(head -n 1 "$f" | sed 's/^# *//')
+            tail -n +2 "$f" | sed '/./,$!d' > notes.md
+          else
+            pr=$(gh api "repos/$REPO/commits/$SHA/pulls" --jq '.[0].number // empty')
+            if [ -n "$pr" ]; then
+              title="$v · $(gh pr view "$pr" -R "$REPO" --json title --jq .title)"
+              gh pr view "$pr" -R "$REPO" --json body --jq .body | sed '/Generated with \[Claude Code\]/,$d' > notes.md
+            else
+              title="$v"
+              git log -1 --format=%B > notes.md
+            fi
+          fi
+          gh release create "$v" -R "$REPO" --target "$SHA" -t "$title" -F notes.md --latest
+          echo "$v 릴리스를 만들었습니다: $title"

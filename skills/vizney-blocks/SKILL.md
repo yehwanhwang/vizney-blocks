@@ -7,7 +7,7 @@ description: "Vizney Blocks(blocks.vizney.com)의 HTML 대시보드 카드로 �
 
 > 영어로 일할 때(사용자가 영어로 요청하거나 화면 문구가 영어일 때)는 같은 폴더의 `SKILL.en.md`를 읽고 그것을 따른다. Working in English? Read `SKILL.en.md` in this folder and follow it instead.
 
-Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v0.39, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 증감, 비중, 달성률, 합계와 색·강조는 카드가 Vizney 차트 가이드의 규칙대로 계산하고 그린다.
+Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v0.40, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 증감, 비중, 달성률, 합계와 색·강조는 카드가 Vizney 차트 가이드의 규칙대로 계산하고 그린다.
 
 ## 순서
 

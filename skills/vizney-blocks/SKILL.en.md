@@ -5,7 +5,7 @@ description: "Build dashboard screens with Vizney Blocks (blocks.vizney.com) HTM
 
 # Building dashboards with Vizney Blocks
 
-Vizney Blocks is a set of copy-paste HTML dashboard cards (v0.39, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. Changes, shares, attainment, totals, colors and emphasis are computed and drawn by the card, following the Vizney chart guide.
+Vizney Blocks is a set of copy-paste HTML dashboard cards (v0.40, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. Changes, shares, attainment, totals, colors and emphasis are computed and drawn by the card, following the Vizney chart guide.
 
 ## Steps
 

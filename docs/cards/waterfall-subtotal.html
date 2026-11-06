@@ -23,7 +23,7 @@
 </head>
 <body>
 <main style="--w:640px">
-<!-- Vizney Blocks v0.39 · 워터폴 차트 · Waterfall - Subtotal (waterfall-subtotal)
+<!-- Vizney Blocks v0.40 · 워터폴 차트 · Waterfall - Subtotal (waterfall-subtotal)
      https://blocks.vizney.com/cards/waterfall-subtotal.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -823,6 +823,7 @@
       draw(svg, c) {
         const bw = Math.min(24, c.step * 0.6);
         c.bw = bw;
+        const notes = [];
         rows.forEach((r, i) => {
           const x = c.xs[i] - bw / 2;
           if (i) {
@@ -834,7 +835,19 @@
           // 가로축 이름과 겹치지 않게 막대 위에 적습니다(영업이익 236억에서 빼는 영업외손익 −21억처럼).
           const up = r.to >= r.from, below = c.y(r.to) + 17;
           const y = up ? c.y(r.to) - 8 : below + 4 <= c.bottom ? below : c.y(r.from) - 8;
-          svg.append(svgText(c.xs[i], y, r.total ? total(r.value) : sign(r.value), 'vzb-ax-note', 'middle'));
+          const t = svgText(c.xs[i], y, r.total ? total(r.value) : sign(r.value), 'vzb-ax-note', 'middle');
+          svg.append(t);
+          notes.push({ t, r });
+        });
+        // 폭이 좁아 값 글자끼리 닿으면 합계 · 소계 값을 먼저 남기고, 증감 값은 큰 것부터 닿지 않는 것만 남깁니다.
+        // 숨긴 값은 툴팁과 화면 낭독기용 표에 그대로 있습니다(390px의 8항목 손익 구조처럼).
+        requestAnimationFrame(() => {
+          const kept = [], hit = (a, b) => a.x < b.x + b.width + 2 && b.x < a.x + a.width + 2 && a.y < b.y + b.height && b.y < a.y + a.height;
+          notes.slice().sort((a, b) => (b.r.total - a.r.total) || Math.abs(b.r.value) - Math.abs(a.r.value)).forEach((n) => {
+            const box = n.t.getBBox();
+            if (kept.some((k) => hit(k, box))) n.t.setAttribute('visibility', 'hidden');
+            else kept.push(box);
+          });
         });
         return [];
       },

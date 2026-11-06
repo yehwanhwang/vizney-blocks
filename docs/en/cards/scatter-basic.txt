@@ -1,11 +1,11 @@
-<!-- Vizney Blocks v0.42 · Scatter Chart · Scatter - Basic (scatter-basic)
-     https://blocks.vizney.com/en/cards/scatter-basic.html · © 2026 Vizney · MIT License
+<!-- Vizney Blocks v0.43 · Scatter Chart · Scatter - Basic (scatter-basic)
+     https://blocks.vizney.com/cards/scatter-basic.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
 <style>
 /* Vizney Blocks tokens: re-declare the same variables on your page's :root and they apply to every card.
    The colors are the Vizney chart guide's orange, pink-red and yellow with a lighter step of each; the text is Vizney black (#1b1b1b).
-   List: https://blocks.vizney.com/en/tokens.css */
+   List: https://blocks.vizney.com/tokens.css */
 :where(:root) {
   --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* every word on the card */
   --vzb-card: #ffffff;   /* card background */

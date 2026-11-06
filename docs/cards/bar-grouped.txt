@@ -1,12 +1,12 @@
-<!-- Vizney Blocks v0.42 · 막대 차트 · Bar - Grouped (bar-grouped)
-     https://blocks.vizney.com/cards/bar-grouped.html · © 2026 Vizney · MIT License
-     v0.23에 목록에서 내린 카드입니다. 대신 Bar - Compare(https://blocks.vizney.com/cards/bar-compare.txt)를 쓰세요. 같은 질문을 Bar - Compare가 막대 하나와 비교 눈금으로 더 또렷하게 보여줍니다.
+<!-- Vizney Blocks v0.43 · 막대 차트 · Bar - Grouped (bar-grouped)
+     https://blocks.vizney.com/ko/cards/bar-grouped.html · © 2026 Vizney · MIT License
+     v0.23에 목록에서 내린 카드입니다. 대신 Bar - Compare(https://blocks.vizney.com/ko/cards/bar-compare.txt)를 쓰세요. 같은 질문을 Bar - Compare가 막대 하나와 비교 눈금으로 더 또렷하게 보여줍니다.
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
 <style>
 /* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
    색은 Vizney 차트 가이드의 주황 · 분홍빨강 · 노랑과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다.
-   목록: https://blocks.vizney.com/tokens.css */
+   목록: https://blocks.vizney.com/ko/tokens.css */
 :where(:root) {
   --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* 카드의 모든 글자 */
   --vzb-card: #ffffff;   /* 카드 바탕 */

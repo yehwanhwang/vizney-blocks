@@ -1,6 +1,6 @@
 // Builds Vizney Blocks: one self-contained snippet per card, the public site in docs/ (GitHub Pages at blocks.vizney.com:
 // home, a page per chart type, a page and a plain-text copy per card, llms.txt for AI tools, in English at / and in Korean at /ko/;
-// the card code and llms.txt keep their published addresses: Korean at /cards/ and /llms.txt, English under /en/),
+// the card code, llms.txt and tokens.css in English at /cards/ and / and in Korean at /ko/cards/ and /ko/; the old /en/ files stay as copies),
 // the skill for coding agents in skills/vizney-blocks/ (installed with `npx skills add yehwanhwang/vizney-blocks`), and the
 // one-page gallery in dist/ that is published as an artifact. The site and the gallery embed a renamed subset of Spoqa Han Sans Neo (VZ Sans).
 import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync, rmSync, readdirSync } from 'node:fs';
@@ -12,7 +12,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.42';
+const VERSION = 'v0.43';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -67,7 +67,7 @@ ${js(v)}
 const allVariants = cats.flatMap((cat) => cat.variants.map((v) => ({ ...v, cat: cat.id })));
 const nameOf = Object.fromEntries(allVariants.map((v) => [v.id, v.name]));
 for (const v of allVariants) if (v.retired && (!nameOf[v.retired.use] || allVariants.find((x) => x.id === v.retired.use).retired)) throw new Error(`meta.json: ${v.id} points to a missing or retired card`);
-const retiredNote = (v) => `${v.retired.version}에 목록에서 내린 카드입니다. 대신 ${nameOf[v.retired.use]}(${SITE}/cards/${v.retired.use}.txt)를 쓰세요. ${v.retired.note}`;
+const retiredNote = (v) => `${v.retired.version}에 목록에서 내린 카드입니다. 대신 ${nameOf[v.retired.use]}(${SITE}/ko/cards/${v.retired.use}.txt)를 쓰세요. ${v.retired.note}`;
 const PASTE = {
   ko: '<body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요.',
   en: 'Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card\'s own words in English).',
@@ -75,7 +75,7 @@ const PASTE = {
 
 // The English snippet of a card differs from the Korean one only in the header, the token notes and the example data.
 function snippet(v, cat, lang = 'ko') {
-  const base = lang === 'en' ? `${SITE}/en` : SITE;
+  const base = lang === 'en' ? SITE : `${SITE}/ko`;
   return `<!-- Vizney Blocks ${VERSION} · ${cat.name} · ${v.name} (${v.id})
      ${base}/cards/${v.id}.html · ${NOTICE}
 ${v.retired ? `     ${retiredNote(v)}\n` : ''}     ${PASTE[lang]} -->
@@ -124,10 +124,10 @@ const SKILL_CMD = 'npx skills add yehwanhwang/vizney-blocks';
 
 // ---------- Languages ----------
 // Everything a page says, in both languages. A locale (L) carries its cards, purpose index, addresses and strings, and every
-// page part takes one. English is the main site: its pages are at / and the Korean pages at /ko/. The addresses AI tools and
-// links use keep their places (published before English became the main site): the Korean card code and llms.txt at /cards/
-// and /llms.txt, the English at /en/cards/ and /en/llms.txt. L.base is where a locale's pages live, L.files where its cards,
-// llms.txt and tokens.css live. OFL.txt and the fonts are shared; the old /en/ pages redirect to /.
+// page part takes one. English is the main site: its pages, card code, llms.txt and tokens.css are at / (/cards/, /llms.txt, /tokens.css)
+// and the Korean ones at /ko/ (v0.43; before it the Korean files were at / and the English under /en/). L.base is where a
+// locale's pages live, L.files where its cards, llms.txt and tokens.css live (the same path now). OFL.txt and the fonts are
+// shared; the old /en/ pages redirect to /, and the old /en/ files (cards .txt, llms.txt, tokens.css) stay as English copies.
 const WORDS = {
   ko: {
     html: 'ko', og: 'ko_KR', other: { lang: 'en', label: 'English' },
@@ -203,7 +203,7 @@ const WORDS = {
 };
 const locale = (lang) => {
   const base = lang === 'en' ? '' : '/ko';
-  const files = lang === 'en' ? '/en' : '';
+  const files = lang === 'en' ? '' : '/ko';
   const cs = lang === 'en' ? builtEn : built;
   const vs = cs.flatMap((c) => c.variants);
   const ps = lang === 'en' ? purposesEn : purposes;
@@ -227,7 +227,7 @@ const LOGO = readFileSync(join(root, 'page/vizney-logo.png'));
 const FAVICON_V = createHash('sha1').update(readFileSync(join(root, 'page/favicon.png'))).digest('hex').slice(0, 10);
 const LOGO_SRC = `/assets/vizney-logo.png?v=${createHash('sha1').update(LOGO).digest('hex').slice(0, 10)}`;
 const siteMode = (L) => ({ one: false, logo: LOGO_SRC, home: `${L.base}/`, cards: `${L.base}/#cards`, usage: `${L.base}/#usage`, cat: (id) => `${L.base}/${id}/`, card: (v) => `${L.base}/${v.cat}/#${v.id}`, file: (p) => `/${p}`, llms: L.llms, tokens: L.tokens });
-const ONE_M = { one: true, logo: `data:image/png;base64,${LOGO.toString('base64')}`, home: '#top', cards: `#cat-${built[0].id}`, usage: '#usage', cat: (id) => `#cat-${id}`, card: (v) => `#${v.id}`, file: (p) => `${SITE}/${p}`, llms: `${SITE}/llms.txt`, tokens: `${SITE}/tokens.css` };
+const ONE_M = { one: true, logo: `data:image/png;base64,${LOGO.toString('base64')}`, home: '#top', cards: `#cat-${built[0].id}`, usage: '#usage', cat: (id) => `#cat-${id}`, card: (v) => `#${v.id}`, file: (p) => `${SITE}/ko/${p}`, llms: `${SITE}/ko/llms.txt`, tokens: `${SITE}/ko/tokens.css` };
 const NEW = ['sankey', 'radar'];
 const EXAMPLE = [{ id: 'kpi-line' }, { id: 'kpi-bar' }, { id: 'bar-ranking' }, { id: 'sankey-levels', wide: true }, { id: 'radar-basic' }];
 const ART = JSON.parse(r('page/tiles.json'));
@@ -391,7 +391,7 @@ const intro = (L) => `<section class="intro" aria-labelledby="intro-title">
 <p class="eyebrow">${L.t.eyebrow}</p>
 <h1 id="intro-title">${L.t.h1one}</h1>
 <p class="cat-lede">${L.t.lede}</p>
-<div class="cat-links"><a class="pill" ${ext(`${SITE}${L.base}/`)}>blocks.vizney.com${IC.out}</a><a class="pill" ${ext(`${SITE}/llms.txt`)}>${L.t.aiList}${IC.out}</a></div>
+<div class="cat-links"><a class="pill" ${ext(`${SITE}${L.base}/`)}>blocks.vizney.com${IC.out}</a><a class="pill" ${ext(`${SITE}${L.files}/llms.txt`)}>${L.t.aiList}${IC.out}</a></div>
 </section>`;
 
 // Category pages
@@ -651,9 +651,12 @@ for (const [path, html] of Object.entries(pages)) {
 }
 
 // One page per card (the snippet on a plain background, for embedding) and the same snippet as plain text for AI tools.
-// The English cards (/en/cards/) exist for the cards that are not retired; the retired addresses are Korean only (/cards/).
+// The English cards (/cards/) exist for the cards that are not retired; the Korean ones (/ko/cards/) for every card. A retired
+// card has no English version, so its old address /cards/<id> keeps the Korean page. The old English addresses /en/cards/
+// keep the English code (.txt) and send the page (.html) to /cards/.
 const cardCss = `<style>body{margin:0;background:#eef0f4;font:14px/1.6 'Spoqa Han Sans Neo','Noto Sans KR',sans-serif;color:#4a4a4a}main{box-sizing:border-box;max-width:var(--w,640px);margin:0 auto;padding:40px 16px 24px}p{margin:16px 2px 0;font-size:13px}a{color:#1b1b1b}</style>\n`;
 mkdirSync(join(docs, 'en/cards'), { recursive: true });
+mkdirSync(join(docs, 'ko/cards'), { recursive: true });
 for (const [L, all] of [[KO, builtAll], [ENL, builtEnAll]]) {
   for (const c of all) {
     for (const v of c.variants) {
@@ -661,7 +664,8 @@ for (const [L, all] of [[KO, builtAll], [ENL, builtEnAll]]) {
       const gone = v.retired && `<p>${h(v.retired.version)}에 목록에서 내린 카드입니다. 대신 <a href="${v.retired.use}.html">${h(nameOf[v.retired.use])}</a>를 쓰세요. ${h(v.retired.note)}</p>\n`;
       const path = `${L.files}/cards/${v.id}.html`;
       writeFileSync(join(docs, `${L.files}/cards`, `${v.id}.txt`), v.code);
-      writeFileSync(join(docs, path), `${head({ title: `${v.name} · Vizney Blocks`, desc: `${c.name} · ${v.name}. ${plain(v.when)}`, path, L, alt: v.retired ? null : `${(L.lang === 'ko' ? ENL : KO).files}/cards/${v.id}.html`, extra: (gone ? '<meta name="robots" content="noindex">\n' : '') + cardCss })}
+      if (L === ENL) { writeFileSync(join(docs, 'en/cards', `${v.id}.txt`), v.code); writeFileSync(join(docs, 'en/cards', `${v.id}.html`), moved(`/cards/${v.id}.html`)); }
+      const page = `${head({ title: `${v.name} · Vizney Blocks`, desc: `${c.name} · ${v.name}. ${plain(v.when)}`, path, L, alt: v.retired ? null : `${(L.lang === 'ko' ? ENL : KO).files}/cards/${v.id}.html`, extra: (gone ? '<meta name="robots" content="noindex">\n' : '') + cardCss })}
 <body>
 <main style="--w:${w}px">
 ${v.code}
@@ -669,7 +673,9 @@ ${gone || ''}<p><a href="${L.base}/${c.id}/${gone ? '' : `#${v.id}`}">Vizney Blo
 </main>
 </body>
 </html>
-`);
+`;
+      writeFileSync(join(docs, path), page);
+      if (v.retired) { writeFileSync(join(docs, 'cards', `${v.id}.txt`), v.code); writeFileSync(join(docs, 'cards', `${v.id}.html`), page); }
     }
   }
 }
@@ -728,7 +734,7 @@ const RULES = (from, lang = 'ko') => (lang === 'en' ? [
   `Paste the card code ${from} as it is and change only the JSON values. Do not edit the styles or the script. To use the same card several times, paste the whole card code again and change each JSON.`,
   `A card fills the width of its slot, and its height is one of 1 · 1.5 · 2 units (1 unit = 168px, --vzb-unit): ${HEIGHTS('en')}. Cards in a row stretch to the tallest one and their graphics sit on the bottom, so to leave no gaps, put cards of the same height in a row.`,
   `For several cards, give the wrapper a grid: ${GRID}. Below 340px, the text in tables, donuts, funnels and waterfalls clips or overlaps. A row of KPI cards alone can go down to 280px, so four fit across a 1280px page.`,
-  `Change colors and the font with the --vzb-* variables on :root (--vzb-primary, --vzb-font, …). The variable list and what each one does are in ${SITE}/en/tokens.css (the same content as the :where(:root) block in the card code). To match a whole page, re-declare that file's values on :root.`,
+  `Change colors and the font with the --vzb-* variables on :root (--vzb-primary, --vzb-font, …). The variable list and what each one does are in ${SITE}/tokens.css (the same content as the :where(:root) block in the card code). To match a whole page, re-declare that file's values on :root.`,
   'Common fields: title (metric name), subtitle (period), value (the headline figure of a KPI card; KPI - Line and KPI - Bar use the last value when it is empty), format (usd dollar amounts, shortened to $745.6K · $1.2M · count a count, with its unit in unit · pct a percentage (3.4 is 3.4%), changes in pp · days a number of days · eok and krw are Korean won notations; krw writes amounts under 100,000 won in full), decimals (decimal places of the numbers; empty lets the card decide, and pct changes follow it too), better (up · down · neutral: the change color), compare ({ label, value }), labels (period names, the same length as values; null for a period without a value), series ([{ name, values }]), rows (table rows), curve (line shape of the line cards: smooth · linear · step), lang (en: the words the card prints itself, like Total, Other and Met, in English).',
   'Changes, shares, attainment and totals are computed by the card, so do not write them in the JSON. Ranking and share cards also sort by size and fold the rest into Other, so do not sort or fold the data beforehand.',
   'Give amounts as raw values, not rounded or divided into thousands or millions. The card shortens them to the format (usd) and computes totals and changes from the raw values, so totals agree across cards and decimals match. usd tables and scatter axes pick one of K · M · B per column or axis and write it in the column heading or axis name, like $K. Grid - Basic takes "format": "usd" on amount columns.',
@@ -736,7 +742,7 @@ const RULES = (from, lang = 'ko') => (lang === 'en' ? [
   `${from} 카드 코드를 그대로 붙여 넣고 JSON 값만 바꾼다. 스타일과 스크립트는 고치지 않는다. 같은 카드를 여러 장 쓸 때는 카드 코드를 통째로 다시 붙여 넣고 각 JSON만 바꾼다.`,
   `카드는 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위(1단위 168px, --vzb-unit) 중 하나다: ${HEIGHTS('ko')}. 같은 줄의 카드는 가장 높은 카드에 맞춰 늘어나고 그래픽은 바닥에 붙으므로, 빈 곳이 없게 하려면 높이가 같은 카드끼리 한 줄에 둔다.`,
   `여러 장은 감싸는 요소에 격자를 준다: ${GRID}. 카드 폭이 340px보다 좁으면 표, 도넛, 퍼널, 워터폴의 글자가 잘리거나 겹친다. KPI 카드만 둔 줄은 280px까지 줄여도 되어, 폭 1280px 화면에 네 장이 한 줄에 들어간다.`,
-  `색과 글꼴은 :root의 --vzb-* 변수(--vzb-primary, --vzb-font 등)로 바꾼다. 변수 목록과 쓰임은 ${SITE}/tokens.css 에 있다(카드 코드의 :where(:root) 블록과 같은 내용). 페이지 전체를 맞출 때는 그 파일의 값을 :root에 다시 적는다.`,
+  `색과 글꼴은 :root의 --vzb-* 변수(--vzb-primary, --vzb-font 등)로 바꾼다. 변수 목록과 쓰임은 ${SITE}/ko/tokens.css 에 있다(카드 코드의 :where(:root) 블록과 같은 내용). 페이지 전체를 맞출 때는 그 파일의 값을 :root에 다시 적는다.`,
   '공통 필드: title(지표명), subtitle(기간 부제), value(KPI 카드의 대표 수치. KPI - Line과 KPI - Bar는 비우면 마지막 값), format(eok 억 단위 숫자 · krw 원 단위 숫자를 만·억·조로 줄여 적음. 10만 원 미만은 87,324원처럼 원 단위 그대로 · usd 달러 금액을 $745.6K·$1.2M처럼 줄여 적음 · count 개수, 단위는 unit · pct 퍼센트 숫자(3.4는 3.4%), 증감은 %p · days 일수), decimals(숫자의 소수 자릿수. 비우면 카드가 정하고, pct의 증감도 이 자릿수를 따름), better(up · down · neutral, 증감 색), compare({ label, value }), labels(기간 이름. values와 같은 길이로 적고, 값이 없는 기간의 값은 null), series([{ name, values }]), rows(표의 줄), curve(라인 카드의 선 모양: smooth · linear · step), lang(en이면 합계 · 기타 · 달성처럼 카드가 직접 적는 문구가 영어. 비우면 한국어).',
   '증감, 비중, 달성률, 합계는 카드가 계산하므로 JSON에 적지 않는다. 순위·비중 카드는 큰 순서 정렬과 "기타" 묶기도 직접 하므로 데이터를 미리 정렬하거나 묶지 않는다.',
   '금액은 미리 반올림하거나 천·백만 단위로 나누지 않고 원래 값을 넣는다. 카드가 형식(krw · usd)에 맞춰 줄여 적고 합계와 증감도 원래 값으로 계산하므로, 카드끼리 합계가 맞고 소수 자릿수도 맞는다. usd 표와 스캐터 축은 열·축마다 K · M · B 하나를 골라 열 제목과 축 이름에 $K처럼 적는다. Grid - Basic은 금액 열에 "format": "usd"를 적는다.',
@@ -753,8 +759,8 @@ for (const L of LOCALES) {
 How to use:
 - ${PICK.en}
 ${RULES('from the links (.txt) below', 'en').map((x) => `- ${x}`).join('\n')}
-- Coding agents can install the skill (its text is in Korean; the purpose index and rules are the ones above): ${SKILL_CMD}
-- Gallery: ${SITE}/ · Korean: ${SITE}/ko/ (llms.txt: ${SITE}/llms.txt) · Source: ${REPO}
+- Coding agents can install the skill (the purpose index and rules are the ones above): ${SKILL_CMD}
+- Gallery: ${SITE}/ · Korean: ${SITE}/ko/ (llms.txt: ${SITE}/ko/llms.txt) · Source: ${REPO}
 
 ## Pick by purpose
 
@@ -775,7 +781,7 @@ ${LAYOUT.en.map((x) => `- ${x}`).join('\n')}
 - ${PICK.ko}
 ${RULES('아래 링크(.txt)의').map((x) => `- ${x}`).join('\n')}
 - 코딩 에이전트에는 스킬로 설치한다: ${SKILL_CMD}
-- 갤러리: ${SITE}/ko/ · 영어: ${SITE}/ (llms.txt: ${SITE}/en/llms.txt) · 소스: ${REPO}
+- 갤러리: ${SITE}/ko/ · 영어: ${SITE}/ (llms.txt: ${SITE}/llms.txt) · 소스: ${REPO}
 
 ## 목적으로 고르기
 
@@ -794,8 +800,10 @@ ${LAYOUT.ko.map((x) => `- ${x}`).join('\n')}
     for (const v of c.variants) llms += `- [${v.name}](${txt(v.id, L)}): ${plain(v.when)} ${en ? 'Rules:' : '규칙:'} ${v.rules.map(plain).join(' ')}\n`;
   }
   writeFileSync(join(docs, `${L.files}/llms.txt`), llms);
+  if (L === ENL) writeFileSync(join(docs, 'en/llms.txt'), llms);
   // tokens.css at a stable address: the variable list with what each one does, for people and AI tools to re-declare in :root.
   writeFileSync(join(docs, `${L.files}/tokens.css`), `/* Vizney Blocks ${VERSION} · ${NOTICE} · ${en ? 'the same content as the :where(:root) block in the card code' : '카드 코드 안의 :where(:root) 블록과 같은 내용'} */\n${tokensBy[L.lang]}\n`);
+  if (L === ENL) copyFileSync(join(docs, 'tokens.css'), join(docs, 'en/tokens.css'));
 }
 
 // Worked examples for the skill: src/skill/examples/*.md are copied beside SKILL.md, and both skill files list them.
@@ -816,7 +824,7 @@ const skill = `<!-- Vizney Blocks 스킬의 한국어판. 스킬 입구는 같�
 
 # Vizney Blocks로 대시보드 만들기
 
-> 스킬의 한국어판이다. 영어판은 같은 폴더의 \`SKILL.md\`다. 단계, 목적 색인, 규칙, 체크리스트는 같은 원본에서 만들어져 내용이 같고, 카드 코드 주소(\`/cards/\`)와 카드 문구가 한국어다.
+> 스킬의 한국어판이다. 영어판은 같은 폴더의 \`SKILL.md\`다. 단계, 목적 색인, 규칙, 체크리스트는 같은 원본에서 만들어져 내용이 같고, 카드 코드 주소(\`/ko/cards/\`)와 카드 문구가 한국어다.
 
 Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(${VERSION}, MIT License). 카드 하나는 \`<style>\`, 데이터 JSON, \`<script>\`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 증감, 비중, 달성률, 합계와 색·강조는 카드가 Vizney 차트 가이드의 규칙대로 계산하고 그린다.
 
@@ -826,13 +834,13 @@ Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다($
 2. 지표마다 기간, \`format\`, \`better\`를 확인한다. 요청과 데이터에서 알 수 없는 것만 모아 한 번에 묻는다(하나씩 묻지 않는다). 답을 받을 수 없으면 가장 그럴듯한 값으로 가정하고, 가정을 한 줄로 적은 뒤 계속한다. \`better\`는 잘못 짐작하면 증감 색이 거꾸로 나오므로, 지표 이름으로 판단하기 어려우면 꼭 가정 줄에 적는다.
 3. 질문마다 아래 "목적으로 고르기"에서 카드를 고른다. 기본 카드를 먼저 쓰고, 다른 카드는 조건이 정확히 맞을 때만 쓴다. 애매하면 기본 카드를 쓴다. 카드 이름은 지표가 아니라 모양이므로, 지표 이름은 JSON의 \`title\`로 바꾼다.
 4. 카드 코드를 쓰기 전에 아래 "설계표"를 만들어 가정 줄과 함께 사용자에게 보여 준다. 사용자가 고치라고 하면 고친 뒤 진행하고, 답을 기다릴 수 없으면 그대로 진행한다.
-5. 카드 코드를 내려받는다. \`${SITE}/cards/<카드 id>.txt\`가 카드 코드 원문이다. 코드를 다시 쓰거나 줄이지 말고 받은 그대로 쓴다. 내려받을 수 없으면 사용자에게 그 주소의 내용을 붙여 달라고 한다.
+5. 카드 코드를 내려받는다. \`${SITE}/ko/cards/<카드 id>.txt\`가 카드 코드 원문이다(카드 문구가 한국어). 코드를 다시 쓰거나 줄이지 말고 받은 그대로 쓴다. 내려받을 수 없으면 사용자에게 그 주소의 내용을 붙여 달라고 한다.
 
    \`\`\`bash
-   curl -fsSL ${SITE}/cards/kpi-line.txt -o kpi-line.html
+   curl -fsSL ${SITE}/ko/cards/kpi-line.txt -o kpi-line.html
    \`\`\`
 
-6. 카드 안 \`<script type="application/json">\`과 \`</script>\` 사이의 JSON 값만 바꾼다. 필드는 카드 코드에 든 예시 JSON이 기준이다. 예시에 없는 필드는 아래 규칙의 공통 필드와, ${SITE}/llms.txt 의 그 카드 줄에 이름이 나온 것만 더한다(예: \`sort\`, \`max\`, \`focus\`). 그 줄에는 카드가 그리는 규칙도 있다.
+6. 카드 안 \`<script type="application/json">\`과 \`</script>\` 사이의 JSON 값만 바꾼다. 필드는 카드 코드에 든 예시 JSON이 기준이다. 예시에 없는 필드는 아래 규칙의 공통 필드와, ${SITE}/ko/llms.txt 의 그 카드 줄에 이름이 나온 것만 더한다(예: \`sort\`, \`max\`, \`focus\`). 그 줄에는 카드가 그리는 규칙도 있다.
 7. 설계표의 줄마다 격자 요소를 하나씩 두고, 줄 순서대로 카드를 붙여 한 HTML 문서로 만든다. KPI 카드만 둔 줄은 최소 폭 280px, 나머지 줄은 340px이다.
 
    \`\`\`html
@@ -956,13 +964,13 @@ Vizney Blocks is a set of copy-paste HTML dashboard cards (${VERSION}, MIT Licen
 2. For each metric, check the period, \`format\` and \`better\`. Gather only what the request and the data do not tell you and ask it in one go (not one by one). If no answer can come, assume the most likely value, write the assumption on one line and go on. A wrong guess of \`better\` flips the change colors, so when the metric name does not settle it, always put it in the assumptions.
 3. For each question, pick a card in "Pick by purpose" below. Use the base card first, and another card only when its condition fits exactly. When unsure, use the base card. Card names describe the shape, not the metric, so put the metric name in the JSON \`title\`.
 4. Before writing any card code, make the "Design table" below and show it to the user with the assumptions. If the user asks for changes, make them and go on; if you cannot wait for an answer, go on as it is.
-5. Download the card code. \`${SITE}/en/cards/<card id>.txt\` is the card code as published (card text in English). Use it as received; do not rewrite or shorten it. If you cannot download it, ask the user to paste the content of that address.
+5. Download the card code. \`${SITE}/cards/<card id>.txt\` is the card code as published (card text in English). Use it as received; do not rewrite or shorten it. If you cannot download it, ask the user to paste the content of that address.
 
    \`\`\`bash
-   curl -fsSL ${SITE}/en/cards/kpi-line.txt -o kpi-line.html
+   curl -fsSL ${SITE}/cards/kpi-line.txt -o kpi-line.html
    \`\`\`
 
-6. Change only the JSON values between \`<script type="application/json">\` and \`</script>\` in the card. The example JSON in the card code is the reference for fields. Add a field the example lacks only when it is a common field in the rules below or is named in that card's line in ${SITE}/en/llms.txt (for example \`sort\`, \`max\`, \`focus\`). That line also carries the rules the card draws by.
+6. Change only the JSON values between \`<script type="application/json">\` and \`</script>\` in the card. The example JSON in the card code is the reference for fields. Add a field the example lacks only when it is a common field in the rules below or is named in that card's line in ${SITE}/llms.txt (for example \`sort\`, \`max\`, \`focus\`). That line also carries the rules the card draws by.
 7. Give each row of the design table its own grid element, paste the cards in row order, and make one HTML document. A row of KPI cards alone has a 280px minimum; other rows 340px.
 
    \`\`\`html

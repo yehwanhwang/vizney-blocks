@@ -13,6 +13,7 @@
 .vzb-li-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 0 4px 4px 0; background: var(--vzb-primary-soft); }
 .vzb-li-row.is-on .vzb-li-bar .vzb-li-fill { background: var(--vzb-primary); }
 .vzb-li-mark { position: absolute; top: -3px; bottom: -3px; width: 2px; margin-left: -1px; border-radius: 1px; background: var(--vzb-ink); }
+.vzb-li-mark.is-split { background: linear-gradient(var(--vzb-ink) 0 8px, transparent 8px calc(100% - 8px), var(--vzb-ink) calc(100% - 8px)); }   /* 이름 글자 위: 위아래 끝 8px만 */
 .vzb-li-name { position: relative; display: block; padding: 0 8px; line-height: 26px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .vzb-li-name.is-rest { color: var(--vzb-muted); }
 .vzb-li-val { font-weight: 500; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }

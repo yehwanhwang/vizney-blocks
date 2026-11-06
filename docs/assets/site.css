@@ -1,6 +1,6 @@
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/vz-sans-400.woff?v=837aaeb50b) format('woff');}
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/vz-sans-500.woff?v=837aaeb50b) format('woff');}
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/vz-sans-700.woff?v=837aaeb50b) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/vz-sans-400.woff?v=d6abc1816a) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/vz-sans-500.woff?v=d6abc1816a) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/vz-sans-700.woff?v=d6abc1816a) format('woff');}
 /* Vizney Blocks site: the Vizney common header (the blog's header, kr.vizney.com · www.vizney.com: the blog is the
    reference and Blocks follows it), the line's tab row, then a white page. Text and frame are ink and grays; the one UI
    accent is the Vizney yellow #ffcc00 of the blog's post images (primary buttons, the current chart, focus, link underlines).

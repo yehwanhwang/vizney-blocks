@@ -189,7 +189,7 @@
    "rules": [
     "Items are sorted from largest to smallest. Items with a set order, like age bands or ranges, keep the written order with `\"sort\": false`.",
     "Up to five rows are shown and the rest fold into one 'Other (n)' row. Other has no bar, only its total, so the folded sum does not blur the ranking. Change the row count with `max`.",
-    "The name is laid over the bar, so the bars use the full width with no name column. The tooltip gives the share of the total."
+    "The name is laid over the bar, so the bars use the full width with no name column. The tooltip gives the share of the total. A ratio metric (`pct`) cannot be added up, so it gets no share and the Other row gets no value."
    ]
   },
   "bar-compare": {
@@ -197,7 +197,7 @@
    "rules": [
     "The comparison value is a vertical tick, not a second bar. Whether the bar's end passed the tick tells at once whether the item grew or shrank.",
     "The change badge is the same as the KPI cards': the arrow shows the direction and the color shows good or bad (`better`).",
-    "Sorting is by the current period's value. The folded Other row also gets a change, computed from the two totals. Up to five rows are shown and the rest fold into one Other row; change the count with `max`. The two period names in the legend are `currentLabel` and `compareLabel`."
+    "Sorting is by the current period's value. The folded Other row also gets a change, computed from the two totals. When a short bar puts the comparison tick over the name, the tick's middle is left open so it does not cross the letters. Up to five rows are shown and the rest fold into one Other row; change the count with `max`. The two period names in the legend are `currentLabel` and `compareLabel`."
    ]
   },
   "bar-butterfly": {

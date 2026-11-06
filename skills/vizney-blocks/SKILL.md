@@ -7,7 +7,7 @@ description: "Build dashboard screens with Vizney Blocks (blocks.vizney.com) HTM
 
 > 한국어로 일할 때(사용자가 한국어로 요청하거나 화면 문구가 한국어일 때)는 같은 폴더의 `SKILL.ko.md`를 읽고 그것을 따른다. Working in Korean? Read `SKILL.ko.md` in this folder and follow it instead; it has the same steps and rules with Korean card code.
 
-Vizney Blocks is a set of copy-paste HTML dashboard cards (v0.42, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. Changes, shares, attainment, totals, colors and emphasis are computed and drawn by the card, following the Vizney chart guide.
+Vizney Blocks is a set of copy-paste HTML dashboard cards (v0.43, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. Changes, shares, attainment, totals, colors and emphasis are computed and drawn by the card, following the Vizney chart guide.
 
 ## Steps
 
@@ -15,13 +15,13 @@ Vizney Blocks is a set of copy-paste HTML dashboard cards (v0.42, MIT License). 
 2. For each metric, check the period, `format` and `better`. Gather only what the request and the data do not tell you and ask it in one go (not one by one). If no answer can come, assume the most likely value, write the assumption on one line and go on. A wrong guess of `better` flips the change colors, so when the metric name does not settle it, always put it in the assumptions.
 3. For each question, pick a card in "Pick by purpose" below. Use the base card first, and another card only when its condition fits exactly. When unsure, use the base card. Card names describe the shape, not the metric, so put the metric name in the JSON `title`.
 4. Before writing any card code, make the "Design table" below and show it to the user with the assumptions. If the user asks for changes, make them and go on; if you cannot wait for an answer, go on as it is.
-5. Download the card code. `https://blocks.vizney.com/en/cards/<card id>.txt` is the card code as published (card text in English). Use it as received; do not rewrite or shorten it. If you cannot download it, ask the user to paste the content of that address.
+5. Download the card code. `https://blocks.vizney.com/cards/<card id>.txt` is the card code as published (card text in English). Use it as received; do not rewrite or shorten it. If you cannot download it, ask the user to paste the content of that address.
 
    ```bash
-   curl -fsSL https://blocks.vizney.com/en/cards/kpi-line.txt -o kpi-line.html
+   curl -fsSL https://blocks.vizney.com/cards/kpi-line.txt -o kpi-line.html
    ```
 
-6. Change only the JSON values between `<script type="application/json">` and `</script>` in the card. The example JSON in the card code is the reference for fields. Add a field the example lacks only when it is a common field in the rules below or is named in that card's line in https://blocks.vizney.com/en/llms.txt (for example `sort`, `max`, `focus`). That line also carries the rules the card draws by.
+6. Change only the JSON values between `<script type="application/json">` and `</script>` in the card. The example JSON in the card code is the reference for fields. Add a field the example lacks only when it is a common field in the rules below or is named in that card's line in https://blocks.vizney.com/llms.txt (for example `sort`, `max`, `focus`). That line also carries the rules the card draws by.
 7. Give each row of the design table its own grid element, paste the cards in row order, and make one HTML document. A row of KPI cards alone has a 280px minimum; other rows 340px.
 
    ```html
@@ -129,7 +129,7 @@ Assumptions: return rate `"better": "down"`; amounts as raw values with `"format
 - Paste the card code you downloaded as it is and change only the JSON values. Do not edit the styles or the script. To use the same card several times, paste the whole card code again and change each JSON.
 - A card fills the width of its slot, and its height is one of 1 · 1.5 · 2 units (1 unit = 168px, --vzb-unit): KPI - Number 1 unit, KPI - Gauge · KPI - Stacked Bar 1.5 units, the rest 2 units. Cards in a row stretch to the tallest one and their graphics sit on the bottom, so to leave no gaps, put cards of the same height in a row.
 - For several cards, give the wrapper a grid: display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:16px. Below 340px, the text in tables, donuts, funnels and waterfalls clips or overlaps. A row of KPI cards alone can go down to 280px, so four fit across a 1280px page.
-- Change colors and the font with the --vzb-* variables on :root (--vzb-primary, --vzb-font, …). The variable list and what each one does are in https://blocks.vizney.com/en/tokens.css (the same content as the :where(:root) block in the card code). To match a whole page, re-declare that file's values on :root.
+- Change colors and the font with the --vzb-* variables on :root (--vzb-primary, --vzb-font, …). The variable list and what each one does are in https://blocks.vizney.com/tokens.css (the same content as the :where(:root) block in the card code). To match a whole page, re-declare that file's values on :root.
 - Common fields: title (metric name), subtitle (period), value (the headline figure of a KPI card; KPI - Line and KPI - Bar use the last value when it is empty), format (usd dollar amounts, shortened to $745.6K · $1.2M · count a count, with its unit in unit · pct a percentage (3.4 is 3.4%), changes in pp · days a number of days · eok and krw are Korean won notations; krw writes amounts under 100,000 won in full), decimals (decimal places of the numbers; empty lets the card decide, and pct changes follow it too), better (up · down · neutral: the change color), compare ({ label, value }), labels (period names, the same length as values; null for a period without a value), series ([{ name, values }]), rows (table rows), curve (line shape of the line cards: smooth · linear · step), lang (en: the words the card prints itself, like Total, Other and Met, in English).
 - Changes, shares, attainment and totals are computed by the card, so do not write them in the JSON. Ranking and share cards also sort by size and fold the rest into Other, so do not sort or fold the data beforehand.
 - Give amounts as raw values, not rounded or divided into thousands or millions. The card shortens them to the format (usd) and computes totals and changes from the raw values, so totals agree across cards and decimals match. usd tables and scatter axes pick one of K · M · B per column or axis and write it in the column heading or axis name, like $K. Grid - Basic takes "format": "usd" on amount columns.

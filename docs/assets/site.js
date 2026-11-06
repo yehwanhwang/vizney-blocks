@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  // window.VZB: mode('site' | 'one'), page('home' | 'cat' | 'one' | 'none'), site(공개 주소), base(언어별 페이지 경로: 영어 '' · 한국어 '/ko'), files(카드 코드 경로: 한국어 '' · 영어 '/en'), t(이 스크립트가 적는 문구),
+  // window.VZB: mode('site' | 'one'), page('home' | 'cat' | 'one' | 'none'), site(공개 주소), base(언어별 페이지 경로: 영어 '' · 한국어 '/ko'), files(카드 코드 경로: 영어 '' · 한국어 '/ko'), t(이 스크립트가 적는 문구),
   // cats([{ id, name }]), retired({ 내린 카드 id: 대신 쓸 카드 주소 }), index([{ id, name, cat, catName, when, tags(목적 색인의 목적과 조건), url }]),
   // code({ 카드 id: 코드 }), example([{ id, wide }]).
   const V = window.VZB || {};

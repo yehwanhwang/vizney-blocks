@@ -1,40 +1,40 @@
-<!-- Vizney Blocks v0.42 · 스캐터 차트 · Scatter - Quadrant (scatter-quadrant)
+<!-- Vizney Blocks v0.43 · Scatter Chart · Scatter - Quadrant (scatter-quadrant)
      https://blocks.vizney.com/cards/scatter-quadrant.html · © 2026 Vizney · MIT License
-     <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
+     Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
 <style>
-/* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
-   색은 Vizney 차트 가이드의 주황 · 분홍빨강 · 노랑과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다.
-   목록: https://blocks.vizney.com/tokens.css */
+/* Vizney Blocks tokens: re-declare the same variables on your page's :root and they apply to every card.
+   The colors are the Vizney chart guide's orange, pink-red and yellow with a lighter step of each; the text is Vizney black (#1b1b1b).
+   List: https://blocks.vizney.com/tokens.css */
 :where(:root) {
-  --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* 카드의 모든 글자 */
-  --vzb-card: #ffffff;   /* 카드 바탕 */
-  --vzb-edge: rgba(17, 24, 39, 0.05);   /* 카드 테두리 */
-  --vzb-ink: #1b1b1b;   /* 제목과 대표 수치 */
-  --vzb-ink-2: #4a4a4a;   /* 본문 글자, 변화 없음 배지 */
-  --vzb-muted: #737373;   /* 부제, 단위, 축 눈금 */
-  --vzb-grid: #ebebeb;   /* 격자와 머리 아래 선. 바탕에서 한 단계 떨어진 회색 실선 */
-  --vzb-primary: #ff9500;   /* 첫째 데이터 색(주황). 선, 막대, 가장 큰 항목 */
-  --vzb-primary-tint: #fff1de;   /* 주황의 옅은 바탕. 선 아래 음영, 레이더 면 */
-  --vzb-primary-soft: #ffd9a6;   /* 이름을 얹는 바 리스트 막대 */
-  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
-  --vzb-tertiary: #ffcc00;   /* 셋째 데이터 색(노랑). 가는 선에는 쓰지 않음 */
-  --vzb-primary-mid: #ffb54d;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
-  --vzb-secondary-mid: #ff7a93;   /* 분홍빨강의 넓은 면 */
-  --vzb-tertiary-mid: #ffdc4d;   /* 노랑의 넓은 면 */
-  --vzb-other-mid: #e3e3e3;   /* 기타 묶음의 넓은 면 */
-  --vzb-line-3: #007aff;   /* 선의 셋째 색. 노랑은 흰 바탕의 가는 선으로는 잘 보이지 않아 파랑을 씁니다 */
-  --vzb-base: #c4c4c4;   /* 비교 기준(작년 선, 레이더의 기준 면 테두리) */
-  --vzb-track: #f1f1f1;   /* 게이지 · 달성률 막대의 바탕 */
-  --vzb-other: #d9d9d9;   /* 기타로 묶은 항목, 넷째부터의 항목 */
-  --vzb-good: #12814a;   /* 좋은 증감(배지, 워터폴의 늘린 요인) */
-  --vzb-good-tint: #e5f5ec;   /* 좋은 증감 배지의 바탕 */
-  --vzb-bad: #d42346;   /* 나쁜 증감, 한도 초과, 오류 문구 */
-  --vzb-bad-tint: #fdebef;   /* 나쁜 증감 배지의 바탕 */
-  --vzb-tip: #1b1b1b;   /* 툴팁 바탕 */
-  --vzb-radius: 18px;   /* 카드 모서리 */
-  --vzb-unit: 168px;   /* 높이 1단위(KPI - Number). Line · Bar는 2배, 나머지 KPI는 1.5배, 차트 카드는 2배 */
-  --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* 카드 그림자 */
+  --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* every word on the card */
+  --vzb-card: #ffffff;   /* card background */
+  --vzb-edge: rgba(17, 24, 39, 0.05);   /* card border */
+  --vzb-ink: #1b1b1b;   /* title and headline figure */
+  --vzb-ink-2: #4a4a4a;   /* body text, the no-change badge */
+  --vzb-muted: #737373;   /* subtitle, units, axis ticks */
+  --vzb-grid: #ebebeb;   /* grid lines and the line under the head: a solid gray one step off the background */
+  --vzb-primary: #ff9500;   /* first data color (orange): lines, bars, the largest item */
+  --vzb-primary-tint: #fff1de;   /* light orange background: the shade under a line, the radar area */
+  --vzb-primary-soft: #ffd9a6;   /* bar-list bars that carry the name */
+  --vzb-secondary: #ff2d55;   /* second data color (pink-red) */
+  --vzb-tertiary: #ffcc00;   /* third data color (yellow); not used for thin lines */
+  --vzb-primary-mid: #ffb54d;     /* one step lighter, for wide areas (treemap cells) */
+  --vzb-secondary-mid: #ff7a93;   /* pink-red for wide areas */
+  --vzb-tertiary-mid: #ffdc4d;   /* yellow for wide areas */
+  --vzb-other-mid: #e3e3e3;   /* the Other group on wide areas */
+  --vzb-line-3: #007aff;   /* third line color: yellow is hard to see as a thin line on white, so blue */
+  --vzb-base: #c4c4c4;   /* the baseline (last year's line, the radar baseline outline) */
+  --vzb-track: #f1f1f1;   /* track behind the gauge and attainment bars */
+  --vzb-other: #d9d9d9;   /* items folded into Other, items from the fourth on */
+  --vzb-good: #12814a;   /* a good change (badges, increases in a waterfall) */
+  --vzb-good-tint: #e5f5ec;   /* background of a good-change badge */
+  --vzb-bad: #d42346;   /* a bad change, over the limit, error text */
+  --vzb-bad-tint: #fdebef;   /* background of a bad-change badge */
+  --vzb-tip: #1b1b1b;   /* tooltip background */
+  --vzb-radius: 18px;   /* card corners */
+  --vzb-unit: 168px;   /* height unit 1 (KPI - Number); Line and Bar are 2, the other KPI cards 1.5, chart cards 2 */
+  --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* card shadow */
 }
 /* 카드: 놓인 자리의 폭을 채우고, 높이는 세 단계입니다(Number 1 · Line, Bar 2 · 나머지 1.5, 단위 --vzb-unit). */
 .vzb-card {
@@ -157,52 +157,53 @@
 <div class="vzb-card" data-vzb="scatter-quadrant">
 <script type="application/json">
 {
-  "title": "대리점 규모와 성장",
-  "subtitle": "2026년 9월, 전년 동월 대비",
-  "x": { "label": "출고 금액", "format": "eok", "decimals": 1 },
-  "y": { "label": "전년 대비", "format": "pct", "decimals": 1 },
-  "quadrants": ["작지만 성장", "크고 성장", "작고 감소", "크지만 감소"],
+  "title": "Dealer Size and Growth",
+  "subtitle": "September 2026, year over year",
+  "lang": "en",
+  "x": { "label": "Shipments", "format": "usd", "decimals": 1 },
+  "y": { "label": "YoY", "format": "pct", "decimals": 1 },
+  "quadrants": ["Small but growing", "Large and growing", "Small and shrinking", "Large but shrinking"],
   "points": [
-    { "name": "강남", "group": "수도권", "x": 8.2, "y": -10.4 },
-    { "name": "서초", "group": "수도권", "x": 7.6, "y": -8 },
-    { "name": "송파", "group": "수도권", "x": 8.3, "y": -12.6 },
-    { "name": "강동", "group": "수도권", "x": 13.8, "y": -24, "label": true },
-    { "name": "마포", "group": "수도권", "x": 9.9, "y": 4 },
-    { "name": "영등포", "group": "수도권", "x": 12.7, "y": 8 },
-    { "name": "구로", "group": "수도권", "x": 14.6, "y": 1 },
-    { "name": "노원", "group": "수도권", "x": 8.3, "y": 4.6 },
-    { "name": "은평", "group": "수도권", "x": 9.8, "y": -17.1 },
-    { "name": "분당", "group": "수도권", "x": 5.4, "y": 2.1 },
-    { "name": "일산", "group": "수도권", "x": 9.9, "y": -4.1 },
-    { "name": "수원", "group": "수도권", "x": 5.6, "y": 19.1, "label": true },
-    { "name": "용인", "group": "수도권", "x": 6.5, "y": -11.1 },
-    { "name": "안양", "group": "수도권", "x": 12.9, "y": 17 },
-    { "name": "부천", "group": "수도권", "x": 2.9, "y": -8.4 },
-    { "name": "의정부", "group": "수도권", "x": 10.5, "y": 6.5 },
-    { "name": "송도", "group": "수도권", "x": 6, "y": -11.2 },
-    { "name": "부평", "group": "수도권", "x": 17.4, "y": -11.4, "label": true },
-    { "name": "김포", "group": "수도권", "x": 6.6, "y": -3.5 },
-    { "name": "평택", "group": "수도권", "x": 8.2, "y": 17.8 },
-    { "name": "둔산", "group": "충청", "x": 15.1, "y": 6.1 },
-    { "name": "유성", "group": "충청", "x": 5.4, "y": -16.8 },
-    { "name": "청주", "group": "충청", "x": 8, "y": -1.5 },
-    { "name": "천안", "group": "충청", "x": 12.1, "y": -5.5 },
-    { "name": "세종", "group": "충청", "x": 13.1, "y": -5.5 },
-    { "name": "상무", "group": "호남", "x": 8.3, "y": -15.6 },
-    { "name": "첨단", "group": "호남", "x": 3.5, "y": -1.9 },
-    { "name": "전주", "group": "호남", "x": 5.2, "y": 5 },
-    { "name": "춘천", "group": "강원", "x": 1.9, "y": -13.6 },
-    { "name": "원주", "group": "강원", "x": 5.2, "y": -4.6 },
-    { "name": "수성", "group": "영남", "x": 17.7, "y": 6.4 },
-    { "name": "달서", "group": "영남", "x": 8.9, "y": -6 },
-    { "name": "해운대", "group": "영남", "x": 13.8, "y": 3.8 },
-    { "name": "서면", "group": "영남", "x": 8.7, "y": -20 },
-    { "name": "삼산", "group": "영남", "x": 10.7, "y": -16.6 },
-    { "name": "창원", "group": "영남", "x": 12, "y": -10.3 },
-    { "name": "김해", "group": "영남", "x": 16.9, "y": 7.4 },
-    { "name": "포항", "group": "영남", "x": 4.2, "y": -9 },
-    { "name": "구미", "group": "영남", "x": 11.9, "y": -8.2 },
-    { "name": "진주", "group": "영남", "x": 4.3, "y": -8.5 }
+    { "name": "Boston", "group": "Northeast", "x": 8200000, "y": -10.4 },
+    { "name": "Albany", "group": "Northeast", "x": 7600000, "y": -8 },
+    { "name": "Hartford", "group": "Northeast", "x": 8300000, "y": -12.6 },
+    { "name": "Newark", "group": "Northeast", "x": 13800000, "y": -24, "label": true },
+    { "name": "Buffalo", "group": "Northeast", "x": 9900000, "y": 4 },
+    { "name": "Providence", "group": "Northeast", "x": 12700000, "y": 8 },
+    { "name": "Rochester", "group": "Northeast", "x": 14600000, "y": 1 },
+    { "name": "Jersey City", "group": "Northeast", "x": 8300000, "y": 4.6 },
+    { "name": "Stamford", "group": "Northeast", "x": 9800000, "y": -17.1 },
+    { "name": "Syracuse", "group": "Northeast", "x": 5400000, "y": 2.1 },
+    { "name": "Worcester", "group": "Northeast", "x": 9900000, "y": -4.1 },
+    { "name": "Trenton", "group": "Northeast", "x": 5600000, "y": 19.1, "label": true },
+    { "name": "Bridgeport", "group": "Northeast", "x": 6500000, "y": -11.1 },
+    { "name": "Yonkers", "group": "Northeast", "x": 12900000, "y": 17 },
+    { "name": "Springfield", "group": "Northeast", "x": 2900000, "y": -8.4 },
+    { "name": "Manchester", "group": "Northeast", "x": 10500000, "y": 6.5 },
+    { "name": "Portland", "group": "Northeast", "x": 6000000, "y": -11.2 },
+    { "name": "Burlington", "group": "Northeast", "x": 17400000, "y": -11.4, "label": true },
+    { "name": "Scranton", "group": "Northeast", "x": 6600000, "y": -3.5 },
+    { "name": "Allentown", "group": "Northeast", "x": 8200000, "y": 17.8 },
+    { "name": "Chicago", "group": "Midwest", "x": 15100000, "y": 6.1 },
+    { "name": "Columbus", "group": "Midwest", "x": 5400000, "y": -16.8 },
+    { "name": "Detroit", "group": "Midwest", "x": 8000000, "y": -1.5 },
+    { "name": "Milwaukee", "group": "Midwest", "x": 12100000, "y": -5.5 },
+    { "name": "Cleveland", "group": "Midwest", "x": 13100000, "y": -5.5 },
+    { "name": "Atlanta", "group": "South", "x": 8300000, "y": -15.6 },
+    { "name": "Charlotte", "group": "South", "x": 3500000, "y": -1.9 },
+    { "name": "Nashville", "group": "South", "x": 5200000, "y": 5 },
+    { "name": "Denver", "group": "Mountain", "x": 1900000, "y": -13.6 },
+    { "name": "Boise", "group": "Mountain", "x": 5200000, "y": -4.6 },
+    { "name": "Seattle", "group": "West", "x": 17700000, "y": 6.4 },
+    { "name": "Tacoma", "group": "West", "x": 8900000, "y": -6 },
+    { "name": "San Jose", "group": "West", "x": 13800000, "y": 3.8 },
+    { "name": "Oakland", "group": "West", "x": 8700000, "y": -20 },
+    { "name": "Sacramento", "group": "West", "x": 10700000, "y": -16.6 },
+    { "name": "Fresno", "group": "West", "x": 12000000, "y": -10.3 },
+    { "name": "Las Vegas", "group": "West", "x": 16900000, "y": 7.4 },
+    { "name": "Phoenix", "group": "West", "x": 4200000, "y": -9 },
+    { "name": "San Diego", "group": "West", "x": 11900000, "y": -8.2 },
+    { "name": "Anaheim", "group": "West", "x": 4300000, "y": -8.5 }
   ]
 }
 </script>

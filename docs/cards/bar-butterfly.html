@@ -1,65 +1,65 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Bar - Butterfly · Vizney Blocks</title>
-<meta name="description" content="막대 차트 · Bar - Butterfly. 가운데에 항목 이름을 두고 두 집단의 막대를 좌우로 펼친 카드입니다. 남녀나 두 지역처럼 같은 항목을 두 집단으로 나눠 견줄 때 씁니다.">
+<meta name="description" content="Bar Chart · Bar - Butterfly. A card with the item names in the middle and the two groups' bars spread left and right. Use it to compare two groups, like men and women or two regions, on the same items.">
 <link rel="canonical" href="https://blocks.vizney.com/cards/bar-butterfly.html">
-<link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/cards/bar-butterfly.html">
-<link rel="alternate" hreflang="en" href="https://blocks.vizney.com/en/cards/bar-butterfly.html">
-<link rel="alternate" hreflang="x-default" href="https://blocks.vizney.com/en/cards/bar-butterfly.html">
+<link rel="alternate" hreflang="en" href="https://blocks.vizney.com/cards/bar-butterfly.html">
+<link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/ko/cards/bar-butterfly.html">
+<link rel="alternate" hreflang="x-default" href="https://blocks.vizney.com/cards/bar-butterfly.html">
 <link rel="icon" href="/favicon.png?v=15ae76869d" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=15ae76869d">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vizney Blocks">
-<meta property="og:locale" content="ko_KR">
+<meta property="og:locale" content="en_US">
 <meta property="og:title" content="Bar - Butterfly · Vizney Blocks">
-<meta property="og:description" content="막대 차트 · Bar - Butterfly. 가운데에 항목 이름을 두고 두 집단의 막대를 좌우로 펼친 카드입니다. 남녀나 두 지역처럼 같은 항목을 두 집단으로 나눠 견줄 때 씁니다.">
+<meta property="og:description" content="Bar Chart · Bar - Butterfly. A card with the item names in the middle and the two groups' bars spread left and right. Use it to compare two groups, like men and women or two regions, on the same items.">
 <meta property="og:url" content="https://blocks.vizney.com/cards/bar-butterfly.html">
-<meta property="og:image" content="https://blocks.vizney.com/og-ko.png">
+<meta property="og:image" content="https://blocks.vizney.com/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <style>body{margin:0;background:#eef0f4;font:14px/1.6 'Spoqa Han Sans Neo','Noto Sans KR',sans-serif;color:#4a4a4a}main{box-sizing:border-box;max-width:var(--w,640px);margin:0 auto;padding:40px 16px 24px}p{margin:16px 2px 0;font-size:13px}a{color:#1b1b1b}</style>
 </head>
 <body>
 <main style="--w:640px">
-<!-- Vizney Blocks v0.42 · 막대 차트 · Bar - Butterfly (bar-butterfly)
+<!-- Vizney Blocks v0.43 · Bar Chart · Bar - Butterfly (bar-butterfly)
      https://blocks.vizney.com/cards/bar-butterfly.html · © 2026 Vizney · MIT License
-     <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
+     Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
 <style>
-/* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
-   색은 Vizney 차트 가이드의 주황 · 분홍빨강 · 노랑과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다.
-   목록: https://blocks.vizney.com/tokens.css */
+/* Vizney Blocks tokens: re-declare the same variables on your page's :root and they apply to every card.
+   The colors are the Vizney chart guide's orange, pink-red and yellow with a lighter step of each; the text is Vizney black (#1b1b1b).
+   List: https://blocks.vizney.com/tokens.css */
 :where(:root) {
-  --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* 카드의 모든 글자 */
-  --vzb-card: #ffffff;   /* 카드 바탕 */
-  --vzb-edge: rgba(17, 24, 39, 0.05);   /* 카드 테두리 */
-  --vzb-ink: #1b1b1b;   /* 제목과 대표 수치 */
-  --vzb-ink-2: #4a4a4a;   /* 본문 글자, 변화 없음 배지 */
-  --vzb-muted: #737373;   /* 부제, 단위, 축 눈금 */
-  --vzb-grid: #ebebeb;   /* 격자와 머리 아래 선. 바탕에서 한 단계 떨어진 회색 실선 */
-  --vzb-primary: #ff9500;   /* 첫째 데이터 색(주황). 선, 막대, 가장 큰 항목 */
-  --vzb-primary-tint: #fff1de;   /* 주황의 옅은 바탕. 선 아래 음영, 레이더 면 */
-  --vzb-primary-soft: #ffd9a6;   /* 이름을 얹는 바 리스트 막대 */
-  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
-  --vzb-tertiary: #ffcc00;   /* 셋째 데이터 색(노랑). 가는 선에는 쓰지 않음 */
-  --vzb-primary-mid: #ffb54d;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
-  --vzb-secondary-mid: #ff7a93;   /* 분홍빨강의 넓은 면 */
-  --vzb-tertiary-mid: #ffdc4d;   /* 노랑의 넓은 면 */
-  --vzb-other-mid: #e3e3e3;   /* 기타 묶음의 넓은 면 */
-  --vzb-line-3: #007aff;   /* 선의 셋째 색. 노랑은 흰 바탕의 가는 선으로는 잘 보이지 않아 파랑을 씁니다 */
-  --vzb-base: #c4c4c4;   /* 비교 기준(작년 선, 레이더의 기준 면 테두리) */
-  --vzb-track: #f1f1f1;   /* 게이지 · 달성률 막대의 바탕 */
-  --vzb-other: #d9d9d9;   /* 기타로 묶은 항목, 넷째부터의 항목 */
-  --vzb-good: #12814a;   /* 좋은 증감(배지, 워터폴의 늘린 요인) */
-  --vzb-good-tint: #e5f5ec;   /* 좋은 증감 배지의 바탕 */
-  --vzb-bad: #d42346;   /* 나쁜 증감, 한도 초과, 오류 문구 */
-  --vzb-bad-tint: #fdebef;   /* 나쁜 증감 배지의 바탕 */
-  --vzb-tip: #1b1b1b;   /* 툴팁 바탕 */
-  --vzb-radius: 18px;   /* 카드 모서리 */
-  --vzb-unit: 168px;   /* 높이 1단위(KPI - Number). Line · Bar는 2배, 나머지 KPI는 1.5배, 차트 카드는 2배 */
-  --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* 카드 그림자 */
+  --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* every word on the card */
+  --vzb-card: #ffffff;   /* card background */
+  --vzb-edge: rgba(17, 24, 39, 0.05);   /* card border */
+  --vzb-ink: #1b1b1b;   /* title and headline figure */
+  --vzb-ink-2: #4a4a4a;   /* body text, the no-change badge */
+  --vzb-muted: #737373;   /* subtitle, units, axis ticks */
+  --vzb-grid: #ebebeb;   /* grid lines and the line under the head: a solid gray one step off the background */
+  --vzb-primary: #ff9500;   /* first data color (orange): lines, bars, the largest item */
+  --vzb-primary-tint: #fff1de;   /* light orange background: the shade under a line, the radar area */
+  --vzb-primary-soft: #ffd9a6;   /* bar-list bars that carry the name */
+  --vzb-secondary: #ff2d55;   /* second data color (pink-red) */
+  --vzb-tertiary: #ffcc00;   /* third data color (yellow); not used for thin lines */
+  --vzb-primary-mid: #ffb54d;     /* one step lighter, for wide areas (treemap cells) */
+  --vzb-secondary-mid: #ff7a93;   /* pink-red for wide areas */
+  --vzb-tertiary-mid: #ffdc4d;   /* yellow for wide areas */
+  --vzb-other-mid: #e3e3e3;   /* the Other group on wide areas */
+  --vzb-line-3: #007aff;   /* third line color: yellow is hard to see as a thin line on white, so blue */
+  --vzb-base: #c4c4c4;   /* the baseline (last year's line, the radar baseline outline) */
+  --vzb-track: #f1f1f1;   /* track behind the gauge and attainment bars */
+  --vzb-other: #d9d9d9;   /* items folded into Other, items from the fourth on */
+  --vzb-good: #12814a;   /* a good change (badges, increases in a waterfall) */
+  --vzb-good-tint: #e5f5ec;   /* background of a good-change badge */
+  --vzb-bad: #d42346;   /* a bad change, over the limit, error text */
+  --vzb-bad-tint: #fdebef;   /* background of a bad-change badge */
+  --vzb-tip: #1b1b1b;   /* tooltip background */
+  --vzb-radius: 18px;   /* card corners */
+  --vzb-unit: 168px;   /* height unit 1 (KPI - Number); Line and Bar are 2, the other KPI cards 1.5, chart cards 2 */
+  --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* card shadow */
 }
 /* 카드: 놓인 자리의 폭을 채우고, 높이는 세 단계입니다(Number 1 · Line, Bar 2 · 나머지 1.5, 단위 --vzb-unit). */
 .vzb-card {
@@ -205,34 +205,34 @@
 <div class="vzb-card" data-vzb="bar-butterfly">
 <script type="application/json">
 {
-  "title": "연령대별 구매 고객",
-  "subtitle": "2026년 9월, 온라인 채널",
+  "title": "Buyers by Age Group",
+  "subtitle": "September 2026, online channel",
+  "lang": "en",
   "format": "count",
-  "unit": "명",
-  "groups": ["남성", "여성"],
+  "groups": ["Men", "Women"],
   "items": [
     {
-      "name": "10대",
+      "name": "Teens",
       "values": [320, 410]
     },
     {
-      "name": "20대",
+      "name": "20s",
       "values": [1840, 2630]
     },
     {
-      "name": "30대",
+      "name": "30s",
       "values": [2960, 3520]
     },
     {
-      "name": "40대",
+      "name": "40s",
       "values": [2410, 2180]
     },
     {
-      "name": "50대",
+      "name": "50s",
       "values": [1280, 1050]
     },
     {
-      "name": "60대 이상",
+      "name": "60+",
       "values": [540, 380]
     }
   ]
@@ -708,7 +708,7 @@
 })();
 </script>
 
-<p><a href="/ko/bar/#bar-butterfly">Vizney Blocks · 막대 차트</a> · <a href="bar-butterfly.txt">코드(텍스트)</a> · © 2026 Vizney · MIT License</p>
+<p><a href="/bar/#bar-butterfly">Vizney Blocks · Bar Chart</a> · <a href="bar-butterfly.txt">Code (text)</a> · © 2026 Vizney · MIT License</p>
 </main>
 </body>
 </html>

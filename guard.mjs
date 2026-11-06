@@ -219,7 +219,7 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
   }
 
   // Snippet checks (1, 5, 7) on the code people copy, in both languages.
-  for (const [v, code, where] of [...all.map((v) => [v, snippets[v.id], `cards/${v.id}.txt`]), ...live.map((v) => [v, (snippetsEn || {})[v.id], `en/cards/${v.id}.txt`])]) {
+  for (const [v, code, where] of [...all.map((v) => [v, snippets[v.id], `ko/cards/${v.id}.txt`]), ...live.map((v) => [v, (snippetsEn || {})[v.id], `cards/${v.id}.txt`])]) {
     if (!code) continue;
     // Comments (the header, tokens.css notes, JS notes) may name addresses; only live references count.
     const body = code.replace(fontLink, '').replace(/<!--[\s\S]*?-->/, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');

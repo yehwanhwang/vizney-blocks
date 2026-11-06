@@ -1,6 +1,6 @@
 # Vizney Blocks
 
-> Copy-paste HTML dashboard cards: 37 cards (v0.41). One card is an HTML snippet that bundles <style>, a JSON data block and <script>; paste it inside <body> and it draws itself. Change only the values in the card's <script type="application/json">. © 2026 Vizney · MIT License.
+> Copy-paste HTML dashboard cards: 37 cards (v0.42). One card is an HTML snippet that bundles <style>, a JSON data block and <script>; paste it inside <body> and it draws itself. Change only the values in the card's <script type="application/json">. © 2026 Vizney · MIT License.
 
 How to use:
 - Pick cards in "Pick by purpose". For each question the screen answers, use the base card first and another card only when its condition fits exactly. When unsure, use the base card. Card names describe the shape, not the metric, so put the metric name in the JSON title.

@@ -12,7 +12,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.41';
+const VERSION = 'v0.42';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -810,16 +810,13 @@ const EXAMPLES = readdirSync(join(root, 'src/skill/examples')).filter((f) => f.e
 // It carries the purpose index and the rules, and sends the agent to the plain-text card code instead of rewriting it.
 // The steps run question → check and assume (period, format, better) → pick → design table shown to the user → download →
 // JSON → paste in table order → checklist, so a wrong guess (say, better reversed) surfaces before any card code is written.
-const SKILL_DESC = 'Vizney Blocks(blocks.vizney.com)의 HTML 대시보드 카드로 대시보드 화면을 만든다. 한 파일짜리 HTML 대시보드, KPI 카드, 차트나 표가 든 보고 화면을 만들거나 고칠 때, 사용자가 Vizney Blocks를 언급할 때 쓴다. 화면이 답할 질문마다 목적 색인에서 카드를 고르고, 카드 코드는 그대로 둔 채 JSON 데이터만 바꾼다. 영어로 일할 때는 같은 폴더의 SKILL.en.md를 따른다. English: build dashboard screens with Vizney Blocks HTML cards; pick a card per question and change only its JSON (instructions in SKILL.en.md).';
+const SKILL_DESC = 'Vizney Blocks(blocks.vizney.com)의 HTML 대시보드 카드로 대시보드 화면을 만든다. 한 파일짜리 HTML 대시보드, KPI 카드, 차트나 표가 든 보고 화면을 만들거나 고칠 때, 사용자가 Vizney Blocks를 언급할 때 쓴다. 화면이 답할 질문마다 목적 색인에서 카드를 고르고, 카드 코드는 그대로 둔 채 JSON 데이터만 바꾼다.';
 const SKILL_DESC_EN = 'Build dashboard screens with Vizney Blocks (blocks.vizney.com) HTML dashboard cards. Use it when making or editing a single-file HTML dashboard, KPI cards, or a report screen with charts or tables, or when the user mentions Vizney Blocks. For each question the screen answers, pick a card from the purpose index, keep the card code and change only its JSON data.';
-const skill = `---
-name: vizney-blocks
-description: ${JSON.stringify(SKILL_DESC)}
----
+const skill = `<!-- Vizney Blocks 스킬의 한국어판. 스킬 입구는 같은 폴더의 SKILL.md(영어)이고, 한국어로 일할 때 이 파일을 따른다. ${SKILL_DESC} -->
 
 # Vizney Blocks로 대시보드 만들기
 
-> 영어로 일할 때(사용자가 영어로 요청하거나 화면 문구가 영어일 때)는 같은 폴더의 \`SKILL.en.md\`를 읽고 그것을 따른다. Working in English? Read \`SKILL.en.md\` in this folder and follow it instead.
+> 스킬의 한국어판이다. 영어판은 같은 폴더의 \`SKILL.md\`다. 단계, 목적 색인, 규칙, 체크리스트는 같은 원본에서 만들어져 내용이 같고, 카드 코드 주소(\`/cards/\`)와 카드 문구가 한국어다.
 
 Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(${VERSION}, MIT License). 카드 하나는 \`<style>\`, 데이터 JSON, \`<script>\`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 증감, 비중, 달성률, 합계와 색·강조는 카드가 Vizney 차트 가이드의 규칙대로 계산하고 그린다.
 
@@ -941,13 +938,15 @@ ${EXAMPLES.map((e) => `- [${e.title}](examples/${e.file}) — ${e.desc}`).join('
 갤러리: ${SITE}/ (한국어 ${SITE}/ko/) · 소스: ${REPO}
 `;
 // The English skill: the same steps, purpose index, rules and checklist from the same sources, for agents working in
-// English. One skill folder keeps the install command and the plugin ID; SKILL.md sends English work here.
+// English. It is SKILL.md, the entry; one skill folder keeps the install command and the plugin ID, and Korean work goes to SKILL.ko.md.
 const skillEn = `---
 name: vizney-blocks
-description: ${JSON.stringify(SKILL_DESC_EN)}
+description: ${JSON.stringify(`${SKILL_DESC_EN} 한국어 요청이나 한국어 화면에도 쓴다(한국어판 SKILL.ko.md).`)}
 ---
 
 # Building dashboards with Vizney Blocks
+
+> 한국어로 일할 때(사용자가 한국어로 요청하거나 화면 문구가 한국어일 때)는 같은 폴더의 \`SKILL.ko.md\`를 읽고 그것을 따른다. Working in Korean? Read \`SKILL.ko.md\` in this folder and follow it instead; it has the same steps and rules with Korean card code.
 
 Vizney Blocks is a set of copy-paste HTML dashboard cards (${VERSION}, MIT License). One card is an HTML snippet that bundles \`<style>\`, a JSON data block and \`<script>\`, so there is no library to install. Changes, shares, attainment, totals, colors and emphasis are computed and drawn by the card, following the Vizney chart guide.
 
@@ -1069,8 +1068,10 @@ ${EXAMPLES.map((e) => `- [${e.title}](examples/${e.file})`).join('\n')}
 Gallery: ${SITE}/ (Korean ${SITE}/ko/) · Source: ${REPO}
 `;
 mkdirSync(join(root, 'skills/vizney-blocks'), { recursive: true });
-writeFileSync(join(root, 'skills/vizney-blocks/SKILL.md'), skill);
-writeFileSync(join(root, 'skills/vizney-blocks/SKILL.en.md'), skillEn);
+// SKILL.md (the entry agents and OpenDesign read) is English; SKILL.ko.md is the Korean edition it sends Korean work to.
+writeFileSync(join(root, 'skills/vizney-blocks/SKILL.md'), skillEn);
+writeFileSync(join(root, 'skills/vizney-blocks/SKILL.ko.md'), skill);
+rmSync(join(root, 'skills/vizney-blocks/SKILL.en.md'), { force: true });
 rmSync(join(root, 'skills/vizney-blocks/examples'), { recursive: true, force: true });
 mkdirSync(join(root, 'skills/vizney-blocks/examples'), { recursive: true });
 for (const e of EXAMPLES) copyFileSync(join(root, 'src/skill/examples', e.file), join(root, 'skills/vizney-blocks/examples', e.file));
@@ -1141,5 +1142,5 @@ writeFileSync(join(docs, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SIT
 const kb = (p) => `${(readFileSync(join(docs, p)).length / 1024).toFixed(0)} KB`;
 console.log(`docs/: home ${kb('index.html')}, ${built.length} chart pages (bar ${kb('bar/index.html')}), ${variants.length + retired.length} card pages and .txt files (${retired.length} retired), llms.txt ${kb('llms.txt')}, fonts ${W.map((w) => `${(woff[w].length / 1024).toFixed(0)}`).join('/')} KB`);
 console.log(`docs/ko/: home ${kb('ko/index.html')}, ${built.length} chart pages · docs/en/: ${builtEn.flatMap((c) => c.variants).length} English card pages and .txt files, llms.txt ${kb('en/llms.txt')}, redirects from the old English pages`);
-console.log(`skills/vizney-blocks/SKILL.md: ${(skill.length / 1024).toFixed(0)} KB · purpose index: ${purposes.length} purposes, ${picked.size} cards; not in the index: ${unpicked.join(', ') || 'none'}`);
+console.log(`skills/vizney-blocks/SKILL.md: ${(skillEn.length / 1024).toFixed(0)} KB · purpose index: ${purposes.length} purposes, ${picked.size} cards; not in the index: ${unpicked.join(', ') || 'none'}`);
 console.log(`retired (addresses kept): ${retired.map((v) => `${v.id} → ${v.retired.use}`).join(', ') || 'none'}`);

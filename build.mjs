@@ -12,7 +12,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.38';
+const VERSION = 'v0.39';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -802,13 +802,16 @@ ${LAYOUT.ko.map((x) => `- ${x}`).join('\n')}
 // It carries the purpose index and the rules, and sends the agent to the plain-text card code instead of rewriting it.
 // The steps run question → check and assume (period, format, better) → pick → design table shown to the user → download →
 // JSON → paste in table order → checklist, so a wrong guess (say, better reversed) surfaces before any card code is written.
-const SKILL_DESC = 'Vizney Blocks(blocks.vizney.com)의 HTML 대시보드 카드로 대시보드 화면을 만든다. 한 파일짜리 HTML 대시보드, KPI 카드, 차트나 표가 든 보고 화면을 만들거나 고칠 때, 사용자가 Vizney Blocks를 언급할 때 쓴다. 화면이 답할 질문마다 목적 색인에서 카드를 고르고, 카드 코드는 그대로 둔 채 JSON 데이터만 바꾼다.';
+const SKILL_DESC = 'Vizney Blocks(blocks.vizney.com)의 HTML 대시보드 카드로 대시보드 화면을 만든다. 한 파일짜리 HTML 대시보드, KPI 카드, 차트나 표가 든 보고 화면을 만들거나 고칠 때, 사용자가 Vizney Blocks를 언급할 때 쓴다. 화면이 답할 질문마다 목적 색인에서 카드를 고르고, 카드 코드는 그대로 둔 채 JSON 데이터만 바꾼다. 영어로 일할 때는 같은 폴더의 SKILL.en.md를 따른다. English: build dashboard screens with Vizney Blocks HTML cards; pick a card per question and change only its JSON (instructions in SKILL.en.md).';
+const SKILL_DESC_EN = 'Build dashboard screens with Vizney Blocks (blocks.vizney.com) HTML dashboard cards. Use it when making or editing a single-file HTML dashboard, KPI cards, or a report screen with charts or tables, or when the user mentions Vizney Blocks. For each question the screen answers, pick a card from the purpose index, keep the card code and change only its JSON data.';
 const skill = `---
 name: vizney-blocks
 description: ${JSON.stringify(SKILL_DESC)}
 ---
 
 # Vizney Blocks로 대시보드 만들기
+
+> 영어로 일할 때(사용자가 영어로 요청하거나 화면 문구가 영어일 때)는 같은 폴더의 \`SKILL.en.md\`를 읽고 그것을 따른다. Working in English? Read \`SKILL.en.md\` in this folder and follow it instead.
 
 Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(${VERSION}, MIT License). 카드 하나는 \`<style>\`, 데이터 JSON, \`<script>\`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 증감, 비중, 달성률, 합계와 색·강조는 카드가 Vizney 차트 가이드의 규칙대로 계산하고 그린다.
 
@@ -923,8 +926,131 @@ ${LAYOUT.ko.map((x) => `- ${x}`).join('\n')}
 
 갤러리: ${SITE}/ (한국어 ${SITE}/ko/) · 소스: ${REPO}
 `;
+// The English skill: the same steps, purpose index, rules and checklist from the same sources, for agents working in
+// English. One skill folder keeps the install command and the plugin ID; SKILL.md sends English work here.
+const skillEn = `---
+name: vizney-blocks
+description: ${JSON.stringify(SKILL_DESC_EN)}
+---
+
+# Building dashboards with Vizney Blocks
+
+Vizney Blocks is a set of copy-paste HTML dashboard cards (${VERSION}, MIT License). One card is an HTML snippet that bundles \`<style>\`, a JSON data block and \`<script>\`, so there is no library to install. Changes, shares, attainment, totals, colors and emphasis are computed and drawn by the card, following the Vizney chart guide.
+
+## Steps
+
+1. Write down the questions the screen answers. One card answers one question.
+2. For each metric, check the period, \`format\` and \`better\`. Gather only what the request and the data do not tell you and ask it in one go (not one by one). If no answer can come, assume the most likely value, write the assumption on one line and go on. A wrong guess of \`better\` flips the change colors, so when the metric name does not settle it, always put it in the assumptions.
+3. For each question, pick a card in "Pick by purpose" below. Use the base card first, and another card only when its condition fits exactly. When unsure, use the base card. Card names describe the shape, not the metric, so put the metric name in the JSON \`title\`.
+4. Before writing any card code, make the "Design table" below and show it to the user with the assumptions. If the user asks for changes, make them and go on; if you cannot wait for an answer, go on as it is.
+5. Download the card code. \`${SITE}/en/cards/<card id>.txt\` is the card code as published (card text in English). Use it as received; do not rewrite or shorten it. If you cannot download it, ask the user to paste the content of that address.
+
+   \`\`\`bash
+   curl -fsSL ${SITE}/en/cards/kpi-line.txt -o kpi-line.html
+   \`\`\`
+
+6. Change only the JSON values between \`<script type="application/json">\` and \`</script>\` in the card. The example JSON in the card code is the reference for fields. Add a field the example lacks only when it is a common field in the rules below or is named in that card's line in ${SITE}/en/llms.txt (for example \`sort\`, \`max\`, \`focus\`). That line also carries the rules the card draws by.
+7. Give each row of the design table its own grid element, paste the cards in row order, and make one HTML document. A row of KPI cards alone has a 280px minimum; other rows 340px.
+
+   \`\`\`html
+   <!doctype html>
+   <html lang="en">
+   <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sales overview</title></head>
+   <body style="margin:0; padding:24px; background:#f4f5f7;">
+   <h1 style="margin:0; font:700 22px/1.4 var(--vzb-font); color:var(--vzb-ink);">Sales overview</h1>
+   <p style="margin:2px 0 16px; font:400 13px/1.5 var(--vzb-font); color:var(--vzb-muted);">FY2024 · Data source</p>
+   <!-- Design table row 1: KPI cards -->
+   <div style="${GRID.replace('340px', '280px')};">
+   <!-- paste the card code here, one after another -->
+   </div>
+   <!-- Design table row 2 -->
+   <div style="${GRID}; margin-top:16px;">
+   <!-- paste the card code here, one after another -->
+   </div>
+   </body>
+   </html>
+   \`\`\`
+
+8. Open it in a browser and go through the "Checklist" below. When you hand over the file, repeat the assumptions.
+
+## Pick by purpose
+
+${PICK_NOTE.en}
+
+${purposesEn.map((p) => `### ${p.name} · ${p.question}\n\n${p.picks.map((k, i) => `- ${i ? '' : 'Base: '}${byId[k.id].name} (\`${k.id}\`) — ${k.when}`).join('\n')}`).join('\n\n')}
+
+## Design table
+
+Before writing any card code, lay the screen out as a "row · question · card (id) · height" table, write the assumptions under it, and show it to the user. Put cards of the same height in the same row (${HEIGHTS('en')}). Paste the cards in the table's row order.
+
+| Row | Question | Card (id) | Height |
+|---|---|---|---|
+| 1 | How much are sales, orders and the return rate now? | \`kpi-number\` ×3 (sales · orders · return rate) | 1 unit |
+| 2 | How have sales moved? · Which branches are largest? | \`line-basic\` + \`bar-ranking\` | 2 units |
+
+Assumptions: return rate \`"better": "down"\`; amounts as raw values with \`"format": "usd"\`.
+
+## Rules
+
+${RULES('you downloaded', 'en').map((x) => `- ${x}`).join('\n')}
+- A metric where lower is better (return rate, cost, defect rate) gets \`"better": "down"\`. An increase becomes a red badge.
+- A ratio metric gets \`"format": "pct"\`. Its change is written in pp.
+- A monthly trend gets 13 months when the data has them. The first and last are the same month, so the year-over-year comparison is visible.
+- A period still in progress, like this month, is compared with the same days of the previous period (month to date), and that basis goes in \`compare.label\` and \`subtitle\`.
+- Keep period names short, like \`Sep '25\` or \`3Q26\`. Long ones clip or run together on axes and under bars.
+- When the same metric appears on several cards, check that their periods and totals agree. If they do not, do not fix the values; ask the user.
+- Keep item names (regions, categories) in one language across the screen. Translate all of them or keep all of them as they are.
+- A card is a snippet pasted into the HTML document as it is. Inserted with innerHTML or React's dangerouslySetInnerHTML, the card's \`<script>\` does not run.
+
+### Picking and layout
+
+${LAYOUT_NOTE.en}
+
+${LAYOUT.en.map((x) => `- ${x}`).join('\n')}
+
+## Checklist
+
+Go through it before handing over the file. If anything is off, fix it and check again.
+
+### Card code
+
+- [ ] The card code is as downloaded; only the JSON values changed.
+- [ ] Fields are only those in the example JSON, the common fields in the rules, or that card's line in llms.txt.
+- [ ] No changes, shares, attainment or totals in the JSON, and no data sorted or folded into "Other" in advance.
+- [ ] Amounts are raw values, not rounded or divided into thousands or millions.
+
+### Data
+
+- [ ] Lower-is-better metrics have \`"better": "down"\`; ratio metrics have \`"format": "pct"\`.
+- [ ] Monthly trends have 13 months when the data has them.
+- [ ] A period in progress names its comparison basis in \`compare.label\` and \`subtitle\`.
+- [ ] Period names are short, and item names are in one language across the screen.
+- [ ] Periods and totals of the same metric agree across cards. Where they do not, the values were left as they are and the user was asked.
+- [ ] A share card's "Other" is smaller than its third slice. If not, it was changed to Bar - Ranking.
+- [ ] The headline figures of daily or weekly tabs and KPIs are the values of the intended period.
+- [ ] A table that shows only the top N has no total row.
+
+### Layout
+
+- [ ] Cards in a row have the same height, and no stretched card has a large gap.
+- [ ] The grid minimum is 340px (280px for a row of KPI cards alone).
+- [ ] At most four KPI cards per row, and each metric is drawn only once on the screen.
+- [ ] Bar lists and tables have six rows or fewer, or the stretched cards share a row.
+- [ ] Wide slots go only to cards whose width carries information, and no table scrolls sideways at 390px.
+- [ ] No group headings between card rows besides the screen title and one line for the date and source.
+- [ ] No card was inserted with innerHTML or dangerouslySetInnerHTML.
+
+### Screen
+
+- [ ] No errors in the browser console, and no error message (\`.vzb-error\`) inside a card.
+- [ ] Screenshots at 1280px and 390px show no clipped or overlapping text. Cards cut overflowing text with an ellipsis (…) without an error, so look. If you cannot take screenshots, check that no element inside a card has a \`scrollWidth\` larger than its \`clientWidth\`.
+- [ ] The assumptions were shared with the user.
+
+Gallery: ${SITE}/ (Korean ${SITE}/ko/) · Source: ${REPO}
+`;
 mkdirSync(join(root, 'skills/vizney-blocks'), { recursive: true });
 writeFileSync(join(root, 'skills/vizney-blocks/SKILL.md'), skill);
+writeFileSync(join(root, 'skills/vizney-blocks/SKILL.en.md'), skillEn);
 
 // The same folder is an OpenDesign plugin (open-design.ai): open-design.json beside SKILL.md names the skill and the output
 // surface, icon.svg is the card icon, and preview/index.html is a real output (the home-page example dashboard). Installed in

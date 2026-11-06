@@ -1,6 +1,6 @@
 # Vizney Blocks
 
-> Copy-paste HTML dashboard cards: 37 cards (v0.37). One card is an HTML snippet that bundles <style>, a JSON data block and <script>; paste it inside <body> and it draws itself. Change only the values in the card's <script type="application/json">. © 2026 Vizney · MIT License.
+> Copy-paste HTML dashboard cards: 37 cards (v0.38). One card is an HTML snippet that bundles <style>, a JSON data block and <script>; paste it inside <body> and it draws itself. Change only the values in the card's <script type="application/json">. © 2026 Vizney · MIT License.
 
 How to use:
 - Pick cards in "Pick by purpose". For each question the screen answers, use the base card first and another card only when its condition fits exactly. When unsure, use the base card. Card names describe the shape, not the metric, so put the metric name in the JSON title.
@@ -64,6 +64,22 @@ For each question the screen answers, use the base card first and another card o
   - Base: [Scatter - Basic](https://blocks.vizney.com/en/cards/scatter-basic.txt): Whether two measures move together
   - [Scatter - Quadrant](https://blocks.vizney.com/en/cards/scatter-quadrant.txt): Sorting items into four groups by two criteria
   - [Scatter - Connected](https://blocks.vizney.com/en/cards/scatter-connected.txt): How two metrics moved over time
+
+## Picking and layout
+
+Where AI agents actually went wrong building dashboards with these cards (3 briefs × 2 models). The numbers are measured on the cards drawn with the real font.
+
+- Share cards (Donut - Basic, Waffle - Basic, KPI - Stacked Bar) color only the three largest items and fold the rest into "Other". When Other is larger than the third slice, the screen cannot say what is second largest, so use Bar - Ranking. The same holds when a pie was asked for; tell the user why it changed.
+- KPI - Number is the default in a KPI row. When the metric has its own trend card, do not use KPI - Line or KPI - Bar. A metric drawn in two places leaves the reader unsure which to read and leaves room for periods and totals to disagree.
+- Up to four KPI cards per row. With five or more metrics, drop the least important or put two or three with different units into one Line - Tabs. Do not lower the grid minimum below 280px to fit five, and do not split them into rows of different widths such as 3 + 2.
+- For daily or weekly data, where the last value is not the headline, put the period total in `value` on Line - Tabs tabs and KPI - Line, and name that basis in the subtitle. Left empty, the last day's value becomes the headline and clashes with the weekly KPI on the same screen. For a ratio, where a total means nothing, leave it empty and write "as of the last day" in the subtitle.
+- Bar lists and tables (Bar - Ranking, Bar - Compare, Grid - Basic, Grid - Target) fit 2 units up to six rows; from the seventh row each row adds 32px and stretches the other cards in that row. Use the default five rows plus "Other". If every item must show, put cards with the same number of rows in one row. With no card to pair, give that row's grid `auto-fill` instead of `auto-fit` so the card keeps one column's width instead of stretching across.
+- Give the full width, or a two-column slot, only to cards whose width carries information: a 13-month line with several series, a table or heatmap with seven or more columns, a waterfall with seven or more items, a sankey. Do not put those at half width. A bar list or a short table gains nothing from the width; the eye only travels farther.
+- A waterfall with seven or more items has its value labels touch at 390px. If it must read on a phone, fold small items (non-operating items and tax into "Non-operating & tax") to about six.
+- On a 390px screen (cards 342px wide) a table fits a name column and three number columns. With four or more number columns it scrolls sideways inside the card, so split the table or move the change to another card.
+- A table that shows only the top N gets no total row (Grid - Basic: `"total": false`). A total row reads as the grand total. To give the whole, write it in the subtitle, such as "of 875.6B total".
+- Keep one screen title and one line for the as-of date and source; put no group headings ("Key metrics", "Channels") between rows of cards. The card titles are already the questions, so group headings repeat them and change the row spacing, which breaks the grid.
+- When the chosen card cannot draw the data well (overlapping or clipped text), do not switch to a card of another shape. Fold items or shorten names, and tell the user what is left, with the card's name.
 
 ## KPI Cards
 

@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.39 · 스캐터 차트 · Scatter - Quadrant (scatter-quadrant)
+<!-- Vizney Blocks v0.40 · 스캐터 차트 · Scatter - Quadrant (scatter-quadrant)
      https://blocks.vizney.com/cards/scatter-quadrant.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -765,7 +765,10 @@
     // 묶음(group)이 있으면 점 수가 많은 세 묶음만 주황 · 분홍빨강 · 파랑으로, 나머지는 회색으로 칠합니다(같은 수면 먼저 나온 묶음이 앞).
     const groups = [];
     pts.forEach((p) => { if (p.group == null) return; const g = groups.find((x) => x.name === p.group); if (g) g.count += 1; else groups.push({ name: p.group, count: 1 }); });
-    const ranked = cfg.rankGroups ? cfg.rankGroups(groups) : groups.slice().sort((a, b) => b.count - a.count);
+    // focus에 묶음 이름을 적으면(세 개까지) 그 묶음이 점 수와 상관없이 색을 먼저 받습니다. 색은 셋까지라, 묶음이 더 많으면 이야기할 묶음을 고릅니다.
+    const pick = [].concat(d.focus == null ? [] : d.focus).map(String);
+    const by = (g) => { const k = pick.indexOf(String(g.name)); return k < 0 ? pick.length : k; };
+    const ranked = cfg.rankGroups ? cfg.rankGroups(groups) : groups.slice().sort((a, b) => by(a) - by(b) || b.count - a.count);
     ranked.forEach((g, i) => { g.tone = ['f1', 'f2', 't3'][i] || 'f0'; });
     const groupOf = (p) => groups.find((x) => x.name === p.group);
     const toneOf = (p) => (cfg.toneOf ? cfg.toneOf(p) : (groupOf(p) || {}).tone || 'f1');

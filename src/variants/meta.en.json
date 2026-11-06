@@ -300,7 +300,7 @@
   "scatter-basic": {
    "when": "A card that plots two measures per item as one point, colored by group. Use it to see whether two values move together, like sales activity and results, and whether that differs by group.",
    "rules": [
-    "With groups (`group`), only the three groups with the most points are colored orange, pink-red and blue; the rest are gray, and a dot legend is shown. A 2px white outline keeps overlapping points apart.",
+    "With groups (`group`), only the three groups with the most points are colored orange, pink-red and blue; the rest are gray, and a dot legend is shown. A 2px white outline keeps overlapping points apart. There are only three colors, so with more groups name up to three in `focus` to choose which get color.",
     "Names are written only on the points worth talking about, like the largest or a clear outlier, with `\"label\": true`. Named on every point, they cannot be read.",
     "When all values are zero or more, the axes do not go below zero, and the range gets 8% of room above and below. The two axes are set in `x` and `y` with `label`, `format`, `unit` and `decimals`."
    ]
@@ -353,7 +353,7 @@
    "rules": [
     "A total without a value (`\"type\": \"total\"`) is the running total so far, so subtotals like gross profit and operating profit come out right on their own.",
     "Totals and subtotals are orange, deducted items gray, and added items light orange. Costs are part of the structure, not bad values, so red is not used.",
-    "Change bars are rounded only at the end that moved, and a deducted item's value is written under its bar. When the bar sits on the baseline and the value would run into the axis labels, it is written above the bar."
+    "Change bars are rounded only at the end that moved, and a deducted item's value is written under its bar. When the bar sits on the baseline and the value would run into the axis labels, it is written above the bar. When a narrow card makes values touch, totals and subtotals keep theirs and changes keep theirs from the largest down only where they do not touch; the rest are in the tooltip."
    ]
   },
   "funnel-flow": {

@@ -23,7 +23,7 @@
 </head>
 <body>
 <main style="--w:640px">
-<!-- Vizney Blocks v0.34 · 퍼널 차트 · Funnel - Flow (funnel-flow)
+<!-- Vizney Blocks v0.35 · 퍼널 차트 · Funnel - Flow (funnel-flow)
      https://blocks.vizney.com/cards/funnel-flow.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -82,13 +82,15 @@
 }
 .vzb-card *, .vzb-card *::before, .vzb-card *::after { box-sizing: border-box; }
 
-/* 머리: 제목과 기간 부제, 그 아래 대표 수치와 바로 뒤의 증감 배지 */
+/* 머리: 제목과 기간 부제, 그 아래 대표 수치와 바로 뒤의 증감 배지.
+   배지와 비교 문구는 숫자와 같은 줄의 항목이라, 좁으면 비교 문구만 아래 줄로 내려가고 배지는 숫자 뒤에 남습니다. */
 .vzb-title { font-size: 17px; line-height: 24px; font-weight: 500; }
 .vzb-sub { margin-top: 2px; color: var(--vzb-muted); }
-.vzb-fig { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin-top: 20px; }
-.vzb-num { font-size: 34px; line-height: 40px; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap; }
+.vzb-fig { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; margin-top: 20px; }   /* 숫자 줄은 기준선 아래에 16px이 남아 줄 사이를 따로 두지 않습니다 */
+.vzb-num { margin-right: 4px; font-size: 34px; line-height: 40px; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap; }   /* 숫자와 배지 사이 12px, 배지와 비교 문구 사이 8px */
 .vzb-unit { margin-left: 4px; font-size: 16px; letter-spacing: 0; color: var(--vzb-muted); }
-.vzb-delta { display: inline-flex; align-items: center; gap: 8px; color: var(--vzb-muted); white-space: nowrap; }
+.vzb-delta { display: contents; color: var(--vzb-muted); white-space: nowrap; }
+.vzb-vs { min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
 .vzb-badge { display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px 3px 6px; border-radius: 7px; font-weight: 500; }
 .vzb-badge.vzb-good { color: var(--vzb-good); background: var(--vzb-good-tint); }
 .vzb-badge.vzb-bad { color: var(--vzb-bad); background: var(--vzb-bad-tint); }
@@ -301,7 +303,7 @@
       case 'eok': return F({ parts: (v) => [num(v, dec(v, Number.isInteger(v) || Math.abs(v) >= 100 ? 0 : 1)), '억'], rel: true });
       case 'krw': return F({ parts: krw, rel: true });
       case 'usd': return F({ parts: (v) => usd(v, d.decimals), rel: true, usd: true });
-      case 'pct': return F({ parts: (v) => [num(v, dec(v, 1)), '%'], rel: false });
+      case 'pct': return F({ parts: (v) => [num(v, dec(v, 1)), '%'], rel: false, dp: d.decimals });
       case 'days': return F({ parts: (v) => [num(v, dec(v, 1)), tx(root || d, '일')], rel: true });
       default: return F({ parts: (v) => [num(v, dec(v, Number.isInteger(v) ? 0 : 1)), d.unit || ''], rel: true });
     }
@@ -309,6 +311,14 @@
   const show = (f, v) => withUnit(...f.parts(v));
   // 그릴 수 있는 숫자인지(빈 값 · 빈 글자 · NaN 제외)
   const fin = (v) => v != null && v !== '' && isFinite(v);
+  // 비율의 차이(%p) 숫자: 소수 자릿수는 decimals(비우면 한 자리)를 따릅니다. 0이 아닌 차이가 0.0으로 보일 만큼 작으면
+  // 자리를 늘려(최대 세 자리) 1.12%에서 1.16%로 오른 것을 0.0%p가 아니라 0.03%p로 적습니다.
+  function pp(f, diff) {
+    const a = Math.abs(diff);
+    let k = f.dp != null ? f.dp : 1;
+    while (k < 3 && a > 1e-9 && Math.round(a * 10 ** k) === 0) k++;
+    return num(a, k);
+  }
   // 증감: 방향은 화살표로, 좋고 나쁨(tone)은 better(up · down · neutral)로 정합니다. 비율은 %p로 적습니다.
   function delta(f, value, base, better) {
     const diff = value - base;
@@ -316,7 +326,7 @@
     const want = better === 'down' ? -1 : better === 'neutral' ? 0 : 1;
     const tone = dir === 0 || want === 0 ? 'flat' : dir === want ? 'good' : 'bad';
     let text;
-    if (!f.rel) text = tx(f, '%s%p', num(Math.abs(diff), 1));
+    if (!f.rel) text = tx(f, '%s%p', pp(f, diff));
     else if (base) text = `${num(Math.abs(diff / base) * 100, 1)}%`;
     else text = show(f, Math.abs(diff));
     return { dir, tone, text };
@@ -343,6 +353,8 @@
     return b;
   }
   // 머리: 제목 · 기간 부제(subtitle) · 대표 수치와 바로 뒤의 증감 배지. value가 null이면 제목만 둡니다.
+  // 배지는 숫자 바로 뒤에 붙어 있고, 카드가 좁아 한 줄에 다 들어가지 않으면 비교 문구만 숫자 아래 줄로 내려갑니다.
+  // 내려갔는지는 카드의 vzb-wrapped로 알려, 높이가 1단위인 KPI - Number가 아래 여백으로 그 줄을 받게 합니다.
   function head(card, d, f, value, cmp, cmpText) {
     const hd = el('div', 'vzb-hd');
     hd.append(el('div', 'vzb-title', d.title || ''));
@@ -350,11 +362,13 @@
     card.append(hd);
     if (value == null) return;
     const fig = el('div', 'vzb-fig');
-    fig.append(figure(f, value));
+    const n = figure(f, value);
+    fig.append(n);
     if (cmp && cmp.value != null) {
-      const line = el('span', 'vzb-delta');
-      line.append(badge(f, value, cmp.value, d.better), el('span', null, cmpText || tx(d, '%s 대비', cmp.label || tx(d, '비교 기간'))));
+      const line = el('span', 'vzb-delta'), vs = el('span', 'vzb-vs', cmpText || tx(d, '%s 대비', cmp.label || tx(d, '비교 기간')));
+      line.append(badge(f, value, cmp.value, d.better), vs);
       fig.append(line);
+      onSize(fig, () => card.classList.toggle('vzb-wrapped', vs.offsetTop >= n.offsetTop + n.offsetHeight - 1));   // 숫자 칸 아래에서 시작하면 내려간 것
     }
     card.append(fig);
   }
@@ -462,7 +476,7 @@
   // 차이를 부호와 함께 적습니다. 비율 지표는 %p입니다.
   function signed(f, diff) {
     const s = diff > 0 ? '+' : diff < 0 ? '−' : '';
-    return f.rel ? `${s}${show(f, Math.abs(diff))}` : `${s}${num(Math.abs(diff), 1)}%p`;
+    return f.rel ? `${s}${show(f, Math.abs(diff))}` : `${s}${pp(f, diff)}%p`;
   }
   // pick(clientX, clientY) → 순번, point(순번) → { x, y, label, value, text, side }(화면 좌표), clear() → 강조 해제
   // n은 개수나 개수를 돌려주는 함수입니다. vertical이면 위아래 화살표로 옮깁니다. 돌려주는 { show(순번), at() }로 키를 더 붙입니다.

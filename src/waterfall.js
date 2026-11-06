@@ -26,8 +26,11 @@
             svg.append(svgEl('line', { x1: c.xs[i - 1] + bw / 2, x2: x, y1: y, y2: y, class: 'vzb-wf-link' }));
           }
           svg.append(svgEl('path', { d: barPath(x, bw, c.y(r.from), c.y(r.to), true), class: `vzb-bar vzb-${cfg.toneOf(r)}` }));
-          const up = r.to >= r.from;
-          svg.append(svgText(c.xs[i], up ? c.y(r.to) - 8 : c.y(r.to) + 17, r.total ? total(r.value) : sign(r.value), 'vzb-ax-note', 'middle'));
+          // 값은 바뀐 쪽 끝에 적습니다(늘면 위, 줄면 아래). 줄어든 막대가 바닥선에 붙어 아래에 적을 자리가 없으면
+          // 가로축 이름과 겹치지 않게 막대 위에 적습니다(영업이익 236억에서 빼는 영업외손익 −21억처럼).
+          const up = r.to >= r.from, below = c.y(r.to) + 17;
+          const y = up ? c.y(r.to) - 8 : below + 4 <= c.bottom ? below : c.y(r.from) - 8;
+          svg.append(svgText(c.xs[i], y, r.total ? total(r.value) : sign(r.value), 'vzb-ax-note', 'middle'));
         });
         return [];
       },

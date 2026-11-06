@@ -9,5 +9,8 @@
 .vzb-sp-legend li { display: grid; grid-template-columns: 8px minmax(0, 1fr) auto; align-items: center; column-gap: 8px; cursor: default; transition: opacity 0.15s; }
 .vzb-sp-key { width: 8px; height: 8px; border-radius: 50%; }
 .vzb-sp-legend b { font-weight: 500; text-align: right; font-variant-numeric: tabular-nums; }
+/* 비교 문구가 숫자 아래 줄로 내려가면(vzb-wrapped) 그 줄(18px)을 막대 위 여백과 범례 간격에서 받아 1.5단위를 지킵니다. */
+.vzb-card[data-vzb="kpi-stacked-bar"].vzb-wrapped .vzb-foot { padding-top: 10px; }
+.vzb-card[data-vzb="kpi-stacked-bar"].vzb-wrapped .vzb-sp-legend { margin-top: 10px; row-gap: 8px; }
 .vzb-dim { opacity: 0.35; }
 @media (prefers-reduced-motion: reduce) { .vzb-sp-seg, .vzb-sp-legend li { transition: none; } }

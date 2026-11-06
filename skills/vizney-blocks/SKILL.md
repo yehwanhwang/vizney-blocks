@@ -7,7 +7,7 @@ description: "Vizney Blocks(blocks.vizney.com)의 HTML 대시보드 카드로 �
 
 > 영어로 일할 때(사용자가 영어로 요청하거나 화면 문구가 영어일 때)는 같은 폴더의 `SKILL.en.md`를 읽고 그것을 따른다. Working in English? Read `SKILL.en.md` in this folder and follow it instead.
 
-Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v0.40, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 증감, 비중, 달성률, 합계와 색·강조는 카드가 Vizney 차트 가이드의 규칙대로 계산하고 그린다.
+Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v0.41, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 증감, 비중, 달성률, 합계와 색·강조는 카드가 Vizney 차트 가이드의 규칙대로 계산하고 그린다.
 
 ## 순서
 
@@ -195,5 +195,13 @@ AI가 이 카드로 대시보드를 만든 실험(브리프 3개 × 모델 2개)
 - [ ] 브라우저 콘솔에 오류가 없고, 카드 안에 오류 문구(`.vzb-error`)가 없다.
 - [ ] 폭 1280px과 390px에서 화면을 캡처해 잘리거나 겹친 글자가 없다. 카드는 넘치는 글자를 오류 없이 말줄임(…)으로 자르므로 눈으로 본다. 캡처할 수 없으면 카드 안에서 `scrollWidth`가 `clientWidth`보다 큰 요소가 없는지 확인한다.
 - [ ] 가정 줄을 사용자에게 알렸다.
+
+## 예시
+
+요청 하나를 질문 · 확인 · 설계표 · 요청과 다르게 한 것 · JSON 핵심 · 확인 결과까지 따라간 예시다. 비슷한 요청을 받으면 먼저 읽는다.
+
+- [예시 1 · 영업 월간 보고](examples/sales-monthly.md) — 진행 중인 달을 견주는 KPI, 작년과 견주는 추이, 항목이 많은 목록을 한 화면에 둔 예시
+- [예시 2 · 분기 손익 임원 보고](examples/pnl-quarterly.md) — 비율 지표, 손익 구조와 증감 요인(워터폴), 표의 열 수를 다룬 예시
+- [예시 3 · 마케팅 주간 리포트](examples/growth-weekly.md) — 지표가 다섯 개인 KPI, 일별 데이터의 대표 수치, 비율 지표의 순위, 묶음이 많은 산점도, 요일 히트맵을 다룬 예시
 
 갤러리: https://blocks.vizney.com/ (한국어 https://blocks.vizney.com/ko/) · 소스: https://github.com/yehwanhwang/vizney-blocks

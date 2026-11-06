@@ -141,7 +141,7 @@
    "rules": [
     "Up to four segments are drawn. Only the three largest items get a color; the rest fold into a gray Other. Hover to see the items inside Other.",
     "The largest item goes on the left, colored orange, pink-red and yellow in turn. Segments are spaced apart so adjacent colors do not blend.",
-    "The legend is two rows of two with only names and shares, so it is not read by color alone. Writing amounts on a share card blurs what is being compared, so amounts appear on hover over a segment or a legend row."
+    "The legend is two rows of two with only names and shares, so it is not read by color alone. Writing amounts on a share card blurs what is being compared, so amounts appear on hover over a segment or a legend row. If the data already has an \"Other\" part, mark it `\"other\": true` so it goes into Other."
    ]
   },
   "bar-basic": {
@@ -157,7 +157,7 @@
    "rules": [
     "The largest item goes at the bottom. Only a segment that starts at the zero line compares directly by length, so the most important item's course can be read.",
     "Only the three largest items get a color; the rest fold into a gray Other. The rule matches KPI - Stacked Bar, so the same item gets the same color.",
-    "Segments are 2px apart so the colors do not blend, and the total is written to the right of the last bar and in the tooltip."
+    "Segments are 2px apart so the colors do not blend, and the total is written to the right of the last bar and in the tooltip. If the data already has an \"Other\" series, mark it `\"other\": true` so it goes into Other."
    ]
   },
   "bar-stacked-100": {
@@ -165,7 +165,7 @@
    "rules": [
     "Every bar is scaled to 100%, so only the change in shares shows even as the total rises and falls. To see the change in the total as well, use Bar - Stacked.",
     "The largest item goes at the bottom. A bottom segment that starts at the zero line shows the rise and fall of its share directly.",
-    "The tooltip gives both the share and the amount, to tell whether a share grew because that item grew or because another shrank."
+    "The tooltip gives both the share and the amount, to tell whether a share grew because that item grew or because another shrank. If the data already has an \"Other\" series, mark it `\"other\": true` so it goes into Other."
    ]
   },
   "bar-target": {
@@ -173,7 +173,7 @@
    "rules": [
     "The target is a short horizontal line over the bar. Even when the target differs by period, the bar and its target are compared in the same place.",
     "Periods that missed their target get a lighter bar, so attainment is read first. For a metric where lower is better, flip it with `\"better\": \"down\"`.",
-    "The tooltip gives the target and the attainment rate together."
+    "The tooltip gives the target and the attainment rate together. The legend names are set with `targetLabel` (Target when empty) and `valueLabel` (Actual when empty)."
    ]
   },
   "bar-diverging": {
@@ -197,7 +197,7 @@
    "rules": [
     "The comparison value is a vertical tick, not a second bar. Whether the bar's end passed the tick tells at once whether the item grew or shrank.",
     "The change badge is the same as the KPI cards': the arrow shows the direction and the color shows good or bad (`better`).",
-    "Sorting is by the current period's value. The folded Other row also gets a change, computed from the two totals."
+    "Sorting is by the current period's value. The folded Other row also gets a change, computed from the two totals. Up to five rows are shown and the rest fold into one Other row; change the count with `max`. The two period names in the legend are `currentLabel` and `compareLabel`."
    ]
   },
   "bar-butterfly": {
@@ -222,7 +222,7 @@
    "rules": [
     "Metrics with different units are split into tabs rather than overlaid on one plot. Amounts, counts and percentages on one axis either need two axes or hide the small values' movement.",
     "Each tab shows the metric's name and headline figure, so the numbers are compared before the line is seen. The figure is the last period's value and can be changed per tab with `value`.",
-    "The tabs split the width into three equal cells, up to three tabs. From the fourth on, the cells become too narrow for the numbers, so split the card."
+    "The tabs split the width into three equal cells, up to three tabs. From the fourth on, the cells become too narrow for the numbers, so split the card. Each tab can carry its own `format`, `decimals` and `value`. When the last value is not the headline, as with daily data, put the period total in `value`."
    ]
   },
   "line-multiple": {
@@ -246,7 +246,7 @@
    "rules": [
     "Give daily values and the card accumulates them. A running total stacks up from zero, so the vertical axis starts at zero too.",
     "The pace toward the target is read against last month's cumulative line, not a straight line. With weekends and holidays, daily results are uneven, and a straight-line pace makes every month look behind at the start.",
-    "The tooltip gives both months' totals to that day, the change versus the same day last month, and the attainment rate. The target line's name and value sit at its right end."
+    "The tooltip gives both months' totals to that day, the change versus the same day last month, and the attainment rate. The target line's name and value sit at its right end. Put daily values in `values` and the card makes the running total. If they are already cumulative, set `\"accumulate\": false`."
    ]
   },
   "line-reference": {
@@ -262,7 +262,7 @@
    "rules": [
     "The initial order is by the most important number column, largest first (`sortKey`). Number columns sort largest first, name columns alphabetically, and a second click reverses the order.",
     "The total row stays at the bottom whatever the sort. The total of a change column is not the sum or average of the cells; it is recomputed from the totals.",
-    "Columns are set in `columns`. `\"total\": \"sum\"` writes the sum, and a `\"type\": \"change\"` column writes the change between the `of` and `base` values as the same badge as the KPI cards. For a dollar column, set `\"format\": \"usd\"` and give the raw values: the heading gets $K or $M and the cells get the divided values."
+    "Columns are set in `columns`. `\"total\": \"sum\"` writes the sum, and a `\"type\": \"change\"` column writes the change between the `of` and `base` values as the same badge as the KPI cards. For a dollar column, set `\"format\": \"usd\"` and give the raw values: the heading gets $K or $M and the cells get the divided values. For a table that shows only part of the items, such as a top N, turn the total row off with `\"total\": false`. A total row reads as the grand total."
    ]
   },
   "grid-spark": {
@@ -270,7 +270,7 @@
    "rules": [
     "Each sparkline is drawn to its own row's range, but a range narrower than 10% of the value is widened to 10%, so a nearly flat row does not look like a big swing. Size is compared between rows in the number column.",
     "A dot marks the last value at the end of the line, and the same row gives the last value and its change from the first. With 13 months, the change from the first is a year-over-year change.",
-    "No axis, grid or tooltip. To look closely at one item's course, use Line - Basic or Line - Multiple."
+    "No axis, grid or tooltip. To look closely at one item's course, use Line - Basic or Line - Multiple. The last-value column is headed by `valueLabel` (the last period name when empty) with its unit in `unit`, and a table showing only part of the items turns the total row off with `\"total\": false`."
    ]
   },
   "grid-target": {
@@ -278,7 +278,7 @@
    "rules": [
     "The attainment bar starts at zero, the track ends at the highest attainment, and the vertical tick is the target (100%). Rows past the target grow by the excess too, so the differences between rows show. The bar color matches the status: green or red.",
     "The status is written as Met or Missed alongside its color, so it is not told by color alone. The colors are the KPI badge's green and red.",
-    "Rows are ordered by attainment, and the total row's attainment is recomputed as total actual over total target. For a metric where lower is better, switch with `\"better\": \"down\"`."
+    "Rows are ordered by attainment, and the total row's attainment is recomputed as total actual over total target. For a metric where lower is better, switch with `\"better\": \"down\"`. The amount columns take their unit from `unit`, and a table showing only part of the items turns the total row off with `\"total\": false`."
    ]
   },
   "grid-pivot": {
@@ -294,7 +294,7 @@
    "rules": [
     "A donut instead of a pie. The total fits in the center, and the slices are read by arc length rather than angle.",
     "Up to four slices. Only the three largest items get a color; the rest fold into a gray Other, and the items inside Other are listed in the tooltip. With many items of even size, Other becomes the largest slice, so Bar - Ranking is the right card.",
-    "The legend carries only names and shares. Writing amounts on a share card blurs what is being compared, so amounts go in the tooltip."
+    "The legend carries only names and shares. Writing amounts on a share card blurs what is being compared, so amounts go in the tooltip. If the data already has an \"Other\" item, mark it `\"other\": true` so it goes into the Other slice whatever its size."
    ]
   },
   "scatter-basic": {
@@ -302,7 +302,7 @@
    "rules": [
     "With groups (`group`), only the three groups with the most points are colored orange, pink-red and blue; the rest are gray, and a dot legend is shown. A 2px white outline keeps overlapping points apart.",
     "Names are written only on the points worth talking about, like the largest or a clear outlier, with `\"label\": true`. Named on every point, they cannot be read.",
-    "When all values are zero or more, the axes do not go below zero, and the range gets 8% of room above and below."
+    "When all values are zero or more, the axes do not go below zero, and the range gets 8% of room above and below. The two axes are set in `x` and `y` with `label`, `format`, `unit` and `decimals`."
    ]
   },
   "scatter-quadrant": {
@@ -369,7 +369,7 @@
    "rules": [
     "One square is 1%. So the rounded counts add up to 100, one square is added at a time to the items with the largest remainders first.",
     "Squares fill from the top left, largest item first, so same-colored squares gather in one block. The square size is set between 10 and 24px to fit the room left on the card, so no large gap remains.",
-    "The color rule is the same as the donut's. Beyond the three largest items, the rest fold into a gray Other."
+    "The color rule is the same as the donut's. Beyond the three largest items, the rest fold into a gray Other. If the data already has an \"Other\" item, mark it `\"other\": true` so it goes into the Other cells."
    ]
   },
   "bump-basic": {
@@ -401,7 +401,7 @@
    "rules": [
     "The baseline is marked in `series` with `\"base\": true`. It is laid underneath as a light gray area with a gray outline, and the subject is overlaid as a light orange area with an orange outline. No dots at the vertices.",
     "When the card is wide enough, a list on the right gives each axis's score and a badge against the baseline; when narrow, the score sits beside the vertex name. The tooltip gives the difference from the baseline.",
-    "Keep five to eight axes. The scale's end is set with `max`; left empty, it is a round number that wraps the values."
+    "Keep five to eight axes. The scale's end is set with `max`; left empty, it is a round number that wraps the values. The scale starts at `min` (0 when empty)."
    ]
   }
  }

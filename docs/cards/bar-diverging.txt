@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.35 · 막대 차트 · Bar - Diverging (bar-diverging)
+<!-- Vizney Blocks v0.36 · 막대 차트 · Bar - Diverging (bar-diverging)
      https://blocks.vizney.com/cards/bar-diverging.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -230,11 +230,13 @@
     nfs[d] = nfs[d] || new Intl.NumberFormat('ko-KR', { minimumFractionDigits: d, maximumFractionDigits: d });
     return nfs[d].format(v);
   }
-  function krw(v) {
-    const a = Math.abs(v);
-    if (a >= 1e12) return [num(v / 1e12, 1), '조'];
-    if (a >= 1e8) return [num(v / 1e8, a >= 1e10 ? 0 : 1), '억'];
-    if (a >= 1e4) return [num(v / 1e4, 0), '만'];
+  // 원 금액: 조 · 억 · 만으로 줄여 적습니다. 10만 원보다 작으면 87,324원처럼 원 단위 그대로 적어 객단가 · CAC가 "9만"으로
+  // 뭉개지지 않게 합니다. decimals를 주면 줄인 숫자의 소수 자릿수를 그 값으로 맞춥니다(1억 8,600만 원은 2면 1.86억).
+  function krw(v, d) {
+    const a = Math.abs(v), k = (x) => (d != null ? d : x);
+    if (a >= 1e12) return [num(v / 1e12, k(1)), '조'];
+    if (a >= 1e8) return [num(v / 1e8, k(a >= 1e10 ? 0 : 1)), '억'];
+    if (a >= 1e5) return [num(v / 1e4, k(0)), '만'];
     return [num(v, 0), '원'];
   }
   // 달러 금액: 원래 값을 받아 K · M · B로 줄이고 소수 한 자리로 맞춥니다($745.6K). 접미사는 단위처럼 작게 씁니다.
@@ -250,7 +252,7 @@
     const F = (o) => Object.assign(o, { lang: (root || d).lang });
     switch (d.format) {
       case 'eok': return F({ parts: (v) => [num(v, dec(v, Number.isInteger(v) || Math.abs(v) >= 100 ? 0 : 1)), '억'], rel: true });
-      case 'krw': return F({ parts: krw, rel: true });
+      case 'krw': return F({ parts: (v) => krw(v, d.decimals), rel: true });
       case 'usd': return F({ parts: (v) => usd(v, d.decimals), rel: true, usd: true });
       case 'pct': return F({ parts: (v) => [num(v, dec(v, 1)), '%'], rel: false, dp: d.decimals });
       case 'days': return F({ parts: (v) => [num(v, dec(v, 1)), tx(root || d, '일')], rel: true });

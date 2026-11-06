@@ -12,7 +12,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.35';
+const VERSION = 'v0.36';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -687,7 +687,7 @@ const RULES = (from, lang = 'ko') => (lang === 'en' ? [
   `A card fills the width of its slot, and its height is one of 1 · 1.5 · 2 units (1 unit = 168px, --vzb-unit): ${HEIGHTS('en')}. Cards in a row stretch to the tallest one and their graphics sit on the bottom, so to leave no gaps, put cards of the same height in a row.`,
   `For several cards, give the wrapper a grid: ${GRID}. Below 340px, the text in tables, donuts, funnels and waterfalls clips or overlaps. A row of KPI cards alone can go down to 280px, so four fit across a 1280px page.`,
   `Change colors and the font with the --vzb-* variables on :root (--vzb-primary, --vzb-font, …). The variable list and what each one does are in ${SITE}/en/tokens.css (the same content as the :where(:root) block in the card code). To match a whole page, re-declare that file's values on :root.`,
-  'Common fields: title (metric name), subtitle (period), value (the headline figure of a KPI card; KPI - Line and KPI - Bar use the last value when it is empty), format (usd dollar amounts, shortened to $745.6K · $1.2M · count a count, with its unit in unit · pct a percentage (3.4 is 3.4%), changes in pp · days a number of days · eok and krw are Korean won notations), decimals (decimal places of the numbers; empty lets the card decide, and pct changes follow it too), better (up · down · neutral: the change color), compare ({ label, value }), labels (period names, the same length as values; null for a period without a value), series ([{ name, values }]), rows (table rows), curve (line shape of the line cards: smooth · linear · step), lang (en: the words the card prints itself, like Total, Other and Met, in English).',
+  'Common fields: title (metric name), subtitle (period), value (the headline figure of a KPI card; KPI - Line and KPI - Bar use the last value when it is empty), format (usd dollar amounts, shortened to $745.6K · $1.2M · count a count, with its unit in unit · pct a percentage (3.4 is 3.4%), changes in pp · days a number of days · eok and krw are Korean won notations; krw writes amounts under 100,000 won in full), decimals (decimal places of the numbers; empty lets the card decide, and pct changes follow it too), better (up · down · neutral: the change color), compare ({ label, value }), labels (period names, the same length as values; null for a period without a value), series ([{ name, values }]), rows (table rows), curve (line shape of the line cards: smooth · linear · step), lang (en: the words the card prints itself, like Total, Other and Met, in English).',
   'Changes, shares, attainment and totals are computed by the card, so do not write them in the JSON. Ranking and share cards also sort by size and fold the rest into Other, so do not sort or fold the data beforehand.',
   'Give amounts as raw values, not rounded or divided into thousands or millions. The card shortens them to the format (usd) and computes totals and changes from the raw values, so totals agree across cards and decimals match. usd tables and scatter axes pick one of K · M · B per column or axis and write it in the column heading or axis name, like $K. Grid - Basic takes "format": "usd" on amount columns.',
 ] : [
@@ -695,7 +695,7 @@ const RULES = (from, lang = 'ko') => (lang === 'en' ? [
   `카드는 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위(1단위 168px, --vzb-unit) 중 하나다: ${HEIGHTS('ko')}. 같은 줄의 카드는 가장 높은 카드에 맞춰 늘어나고 그래픽은 바닥에 붙으므로, 빈 곳이 없게 하려면 높이가 같은 카드끼리 한 줄에 둔다.`,
   `여러 장은 감싸는 요소에 격자를 준다: ${GRID}. 카드 폭이 340px보다 좁으면 표, 도넛, 퍼널, 워터폴의 글자가 잘리거나 겹친다. KPI 카드만 둔 줄은 280px까지 줄여도 되어, 폭 1280px 화면에 네 장이 한 줄에 들어간다.`,
   `색과 글꼴은 :root의 --vzb-* 변수(--vzb-primary, --vzb-font 등)로 바꾼다. 변수 목록과 쓰임은 ${SITE}/tokens.css 에 있다(카드 코드의 :where(:root) 블록과 같은 내용). 페이지 전체를 맞출 때는 그 파일의 값을 :root에 다시 적는다.`,
-  '공통 필드: title(지표명), subtitle(기간 부제), value(KPI 카드의 대표 수치. KPI - Line과 KPI - Bar는 비우면 마지막 값), format(eok 억 단위 숫자 · krw 원 단위 숫자를 만·억·조로 줄여 적음 · usd 달러 금액을 $745.6K·$1.2M처럼 줄여 적음 · count 개수, 단위는 unit · pct 퍼센트 숫자(3.4는 3.4%), 증감은 %p · days 일수), decimals(숫자의 소수 자릿수. 비우면 카드가 정하고, pct의 증감도 이 자릿수를 따름), better(up · down · neutral, 증감 색), compare({ label, value }), labels(기간 이름. values와 같은 길이로 적고, 값이 없는 기간의 값은 null), series([{ name, values }]), rows(표의 줄), curve(라인 카드의 선 모양: smooth · linear · step), lang(en이면 합계 · 기타 · 달성처럼 카드가 직접 적는 문구가 영어. 비우면 한국어).',
+  '공통 필드: title(지표명), subtitle(기간 부제), value(KPI 카드의 대표 수치. KPI - Line과 KPI - Bar는 비우면 마지막 값), format(eok 억 단위 숫자 · krw 원 단위 숫자를 만·억·조로 줄여 적음. 10만 원 미만은 87,324원처럼 원 단위 그대로 · usd 달러 금액을 $745.6K·$1.2M처럼 줄여 적음 · count 개수, 단위는 unit · pct 퍼센트 숫자(3.4는 3.4%), 증감은 %p · days 일수), decimals(숫자의 소수 자릿수. 비우면 카드가 정하고, pct의 증감도 이 자릿수를 따름), better(up · down · neutral, 증감 색), compare({ label, value }), labels(기간 이름. values와 같은 길이로 적고, 값이 없는 기간의 값은 null), series([{ name, values }]), rows(표의 줄), curve(라인 카드의 선 모양: smooth · linear · step), lang(en이면 합계 · 기타 · 달성처럼 카드가 직접 적는 문구가 영어. 비우면 한국어).',
   '증감, 비중, 달성률, 합계는 카드가 계산하므로 JSON에 적지 않는다. 순위·비중 카드는 큰 순서 정렬과 "기타" 묶기도 직접 하므로 데이터를 미리 정렬하거나 묶지 않는다.',
   '금액은 미리 반올림하거나 천·백만 단위로 나누지 않고 원래 값을 넣는다. 카드가 형식(krw · usd)에 맞춰 줄여 적고 합계와 증감도 원래 값으로 계산하므로, 카드끼리 합계가 맞고 소수 자릿수도 맞는다. usd 표와 스캐터 축은 열·축마다 K · M · B 하나를 골라 열 제목과 축 이름에 $K처럼 적는다. Grid - Basic은 금액 열에 "format": "usd"를 적는다.',
 ]);
@@ -823,6 +823,22 @@ ${RULES('내려받은', 'ko').map((x) => `- ${x}`).join('\n')}
 - 항목 이름(지역, 카테고리 등)은 화면 전체에서 한 언어로 맞춘다. 번역하면 모두 번역하고, 원문을 쓰면 모두 원문으로 둔다.
 - 카드는 HTML 문서에 그대로 붙이는 조각이다. innerHTML이나 React의 dangerouslySetInnerHTML로 넣으면 카드의 \`<script>\`가 실행되지 않는다.
 
+### 고르기와 배치
+
+AI가 이 스킬로 대시보드를 만든 실험(브리프 3개 × 모델 2개)에서 실제로 어긋난 자리다. 숫자는 카드를 실제 글꼴로 그려 잰 값이다.
+
+- 비중 카드(Donut - Basic, Waffle - Basic, KPI - Stacked Bar)는 큰 세 항목에만 색을 주고 나머지를 "기타"로 묶는다. 기타가 셋째 조각보다 크면 둘째로 큰 것이 무엇인지 화면이 답하지 못하므로 Bar - Ranking을 쓴다. 파이를 요청받아도 같고, 바꾼 이유를 사용자에게 알린다.
+- KPI 줄은 KPI - Number가 기본이다. 같은 지표의 추이 카드가 따로 있으면 KPI - Line · KPI - Bar를 쓰지 않는다. 한 지표의 그래픽이 두 곳에 있으면 어느 쪽을 읽을지 모르고, 기간과 합계가 어긋날 자리가 생긴다.
+- KPI 카드는 한 줄에 네 장까지다. 지표가 다섯 개 이상이면 덜 중요한 것을 빼거나, 단위가 다른 두세 개를 Line - Tabs 한 장으로 묶는다. 다섯 장을 한 줄에 넣으려고 격자의 최소 폭을 280px 아래로 내리지 않고, 3장 + 2장처럼 폭이 다른 두 줄로 나누지도 않는다.
+- 일별 · 주별처럼 마지막 값이 대표가 아닌 데이터는 Line - Tabs의 탭과 KPI - Line에 \`value\`로 기간 합계를 적고 부제에 그 기준을 쓴다. 비우면 마지막 하루의 값이 대표 수치가 되어, 같은 화면의 주간 KPI와 부딪힌다. 합계가 뜻이 없는 비율 지표는 비우고 부제에 "마지막 날 기준"을 쓴다.
+- 바 리스트와 표(Bar - Ranking, Bar - Compare, Grid - Basic, Grid - Target)는 여섯 줄까지 2단위에 들어가고, 일곱 줄부터 한 줄에 32px씩 길어져 같은 줄의 카드도 함께 늘어난다. 기본인 다섯 줄과 "기타"를 쓰고, 항목을 모두 보여야 하면 줄 수가 같은 카드끼리 한 줄에 둔다. 짝 지을 카드가 없으면 그 줄의 격자를 \`auto-fit\` 대신 \`auto-fill\`로 두어, 카드가 혼자 전체 폭으로 늘어나지 않고 한 칸 폭을 지키게 한다.
+- 전체 폭이나 두 칸에 걸친 자리는 폭이 정보량인 카드에만 준다: 여러 선의 13개월 라인, 열이 일곱 개 이상인 표와 히트맵, 항목이 일곱 개 이상인 워터폴, 생키. 이 카드들은 반 폭에 두지 않고 넓은 자리에 둔다. 바 리스트와 짧은 표는 넓혀도 정보가 늘지 않고 눈만 멀리 움직인다.
+- 항목이 일곱 개 이상인 워터폴은 폭 390px에서 값 글자가 서로 닿는다. 모바일에서도 읽혀야 하면 작은 항목을 묶어(영업외손익과 법인세를 "영업외 · 세금"으로) 여섯 개 안팎으로 줄인다.
+- 폭 390px 화면(카드 폭 342px)에서 표는 이름 열과 숫자 세 열까지 들어간다. 숫자 열이 넷 이상이면 카드 안에서 가로로 밀리므로, 표를 나누거나 증감은 다른 카드에 맡긴다.
+- 상위 N개만 보이는 표에는 합계 줄을 두지 않는다(Grid - Basic은 \`"total": false\`). 표의 합계 줄은 전체 합계로 읽힌다. 전체를 알려야 하면 부제에 "전체 8,756억 중"처럼 적는다.
+- 화면에는 제목 하나와 기준일 · 출처 한 줄만 두고, 카드 줄 사이에 묶음 제목("핵심 지표", "채널")을 넣지 않는다. 카드 제목이 이미 질문이라 묶음 제목은 되풀이가 되고, 줄 사이 간격이 달라져 격자가 흐트러진다.
+- 고른 카드가 데이터를 제대로 그리지 못하면(글자가 겹치거나 잘림) 다른 모양의 카드로 바꾸지 않는다. 항목을 묶거나 이름을 줄이고, 남은 문제는 카드 이름과 함께 사용자에게 알린다.
+
 ## 체크리스트
 
 완성한 파일을 넘기기 전에 하나씩 확인한다. 하나라도 어긋나면 고친 뒤 다시 확인한다.
@@ -841,11 +857,18 @@ ${RULES('내려받은', 'ko').map((x) => `- ${x}`).join('\n')}
 - [ ] 진행 중인 기간은 \`compare.label\`과 \`subtitle\`에 비교 기준을 적었다.
 - [ ] 기간 이름은 짧고, 항목 이름은 화면 전체에서 한 언어다.
 - [ ] 같은 지표의 기간과 합계가 카드끼리 맞는다. 맞지 않으면 값을 고치지 않고 사용자에게 물었다.
+- [ ] 비중 카드의 "기타"가 셋째 조각보다 작다. 크면 Bar - Ranking으로 바꿨다.
+- [ ] 일별 · 주별 탭과 KPI의 대표 수치가 뜻한 기간의 값이다.
+- [ ] 상위 N개만 보이는 표에 합계 줄이 없다.
 
 ### 배치
 
 - [ ] 같은 줄의 카드 높이가 같고, 늘어난 카드에 큰 빈 곳이 없다.
 - [ ] 격자의 최소 폭은 340px이다(KPI 카드만 둔 줄은 280px).
+- [ ] KPI 카드는 한 줄에 네 장까지이고, 한 지표의 그래픽은 화면에 한 번만 있다.
+- [ ] 바 리스트와 표는 여섯 줄까지이거나, 늘어난 카드끼리 한 줄에 있다.
+- [ ] 넓은 자리는 폭이 정보량인 카드에만 줬고, 390px에서 표가 가로로 밀리지 않는다.
+- [ ] 화면 제목과 기준일 · 출처 한 줄 말고는 카드 사이에 묶음 제목이 없다.
 - [ ] 카드를 innerHTML이나 dangerouslySetInnerHTML로 넣지 않았다.
 
 ### 화면

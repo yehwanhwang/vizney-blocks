@@ -12,7 +12,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.43';
+const VERSION = 'v0.44';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -133,7 +133,7 @@ const WORDS = {
     html: 'ko', og: 'ko_KR', other: { lang: 'en', label: 'English' },
     skip: '본문으로 건너뛰기', menu: '주 메뉴', more: '더 보기', cards: '카드', usage: '쓰는 법', guide: '차트 가이드', find: '카드 찾기', found: '찾은 카드',
     footFont: '글꼴 VZ Sans(Spoqa Han Sans Neo 부분 글꼴)', footNav: '바닥글', footBlog: '블로그', footContact: '문의',
-    copy: '복사', aiLink: 'AI용 링크', close: '닫기', code: '코드', viewCode: '코드 보기', copyCode: '카드 코드 복사', copyCodeNote: 'HTML에 붙여 넣습니다', copyLink: 'AI용 링크 복사', copyLinkNote: (id) => `${id}.txt 주소를 AI에 줍니다`,
+    copy: '복사', aiLink: 'AI용 링크', close: '닫기', code: '코드', viewCode: '코드 보기', copyCode: '카드 코드 복사', copyCodeNote: 'HTML에 붙여 넣습니다', copyPrompt: '프롬프트 복사', copyPromptNote: '규칙과 코드를 채팅 AI에 줍니다', copyLink: 'AI용 링크 복사', copyLinkNote: (id) => `${id}.txt 주소를 AI에 줍니다`,
     eyebrow: `카드 ${N.cards}종 · 차트 ${N.cats}가지 · MIT 라이선스`, h1: '분석가의 판단을 담은<br>대시보드 카드', h1one: '분석가의 판단을 담은 대시보드 카드',
     lede: '카드를 복사해 HTML에 붙여 넣고 JSON만 바꾸세요. 증감, 비중, 달성률은 카드가 계산하고, 색과 강조는 Vizney 차트 가이드의 규칙을 따릅니다.',
     browse: '카드 둘러보기', onGithub: 'GitHub에서 보기', hint: (llms) => `AI에게 맡길 때는 카드 링크나 <a href="${llms}">llms.txt</a>를 주고, 코딩 에이전트에는 <a href="#usage">스킬</a>을 설치하세요.`,
@@ -144,7 +144,7 @@ const WORDS = {
     step1: '복사해서 붙이기', step1p: '카드의 <b>복사</b>를 눌러 HTML의 &lt;body&gt; 안 원하는 자리에 붙여 넣습니다.',
     step2: 'JSON만 바꾸기', step2p: '카드 안 JSON의 값만 바꿉니다. 증감, 비중, 달성률은 카드가 계산합니다.', step2code: '"title": "분기별 출고 금액",\n"format": "eok",\n"labels": ["1Q26", "2Q26", "3Q26"],\n"values": [2561, 2654, 2750]',
     step3: '변수로 맞추기', step3p: (tokens) => `색과 글꼴은 :root의 변수로 바꿉니다. 모든 카드에 한 번에 적용됩니다. 변수 목록은 <a href="${tokens}">tokens.css</a>에 있습니다.`,
-    step4: 'AI에게 맡기기', step4p: '채팅 AI에는 카드의 <b>AI용 링크</b>를 주고, 코딩 에이전트에는 스킬을 설치합니다. 스킬은 카드 코드를 쓰기 전에 설계표(줄 · 질문 · 카드)를 보여 주고, 다 만든 뒤 체크리스트로 확인합니다. 새 판단은 <code>npx skills update</code>로 받습니다.', step4code: (base) => `blocks.vizney.com${base}/cards/\n  bar-basic.txt\n이 카드로 지점별 월 매출을\n그려줘\n\nnpx skills add\n  yehwanhwang/vizney-blocks`,
+    step4: 'AI에게 맡기기', step4p: '채팅 AI에는 카드의 <b>프롬프트 복사</b>로 규칙과 코드를 함께 붙여 넣거나, 주소를 열 수 있으면 <b>AI용 링크</b>를 줍니다. 코딩 에이전트에는 스킬을 설치합니다. 스킬은 카드 코드를 쓰기 전에 설계표(줄 · 질문 · 카드)를 보여 주고, 다 만든 뒤 체크리스트로 확인합니다. 새 판단은 <code>npx skills update</code>로 받습니다.', step4code: (base) => `blocks.vizney.com${base}/cards/\n  bar-basic.txt\n이 카드로 지점별 월 매출을\n그려줘\n\nnpx skills add\n  yehwanhwang/vizney-blocks`,
     fields: '공통 필드와 여러 장 배치',
     fieldList: [
       ['title', '지표명'], ['subtitle', '기간 부제. 무엇을 언제 기준으로 보는지 적습니다.'], ['value', 'KPI 카드의 대표 수치. KPI - Line과 KPI - Bar는 생략하면 마지막 값을 씁니다.'],
@@ -163,13 +163,13 @@ const WORDS = {
     homeTitle: 'Vizney Blocks · 복사해 쓰는 대시보드 카드', catTitle: (name) => `${name} · Vizney Blocks`, catDesc: (lede, n) => `${lede} 복사해 붙여 쓰는 HTML 카드 ${n}종.`,
     homeDesc: `복사해 붙여 쓰는 HTML 대시보드 카드 ${N.cards}종. KPI, 막대, 라인, 그리드, 도넛, 스캐터, 생키, 레이더 등 차트 ${N.cats}가지를 Vizney 차트 가이드의 판단 규칙으로 만들었습니다. MIT License.`,
     // site.js
-    js: { copied: '복사됨', linkCopied: '링크 복사됨', sub: '<b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.', blocked: '복사가 막혀 있습니다. 코드를 선택해 두었으니 Ctrl+C(⌘+C)로 복사하세요.', none: '찾는 카드가 없습니다.', exampleTitle: '영업 현황 예시', exampleSub: (n) => `카드 ${n}장을 격자에 넣은 코드입니다. 각 카드의 <b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.`, exampleComment: (n) => `<!-- Vizney Blocks 예시 · 영업 현황(카드 ${n}장)\n     ${SITE}/ko/ · 각 카드의 JSON만 바꾸세요. -->` },
+    js: { copied: '복사됨', linkCopied: '링크 복사됨', promptCopied: '프롬프트 복사됨', sub: '<b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.', blocked: '복사가 막혀 있습니다. 코드를 선택해 두었으니 Ctrl+C(⌘+C)로 복사하세요.', none: '찾는 카드가 없습니다.', exampleTitle: '영업 현황 예시', exampleSub: (n) => `카드 ${n}장을 격자에 넣은 코드입니다. 각 카드의 <b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.`, exampleComment: (n) => `<!-- Vizney Blocks 예시 · 영업 현황(카드 ${n}장)\n     ${SITE}/ko/ · 각 카드의 JSON만 바꾸세요. -->` },
   },
   en: {
     html: 'en', og: 'en_US', other: { lang: 'ko', label: '한국어' },
     skip: 'Skip to content', menu: 'Main menu', more: 'More', cards: 'Cards', usage: 'How to use', guide: 'Chart guide', find: 'Find a card', found: 'Cards found',
     footFont: 'Font VZ Sans (a subset of Spoqa Han Sans Neo)', footNav: 'Footer', footBlog: 'Blog', footContact: 'Contact',
-    copy: 'Copy', aiLink: 'AI link', close: 'Close', code: 'Code', viewCode: 'view code', copyCode: 'Copy card code', copyCodeNote: 'Paste it into your HTML', copyLink: 'Copy AI link', copyLinkNote: (id) => `Give an AI the ${id}.txt address`,
+    copy: 'Copy', aiLink: 'AI link', close: 'Close', code: 'Code', viewCode: 'view code', copyCode: 'Copy card code', copyCodeNote: 'Paste it into your HTML', copyPrompt: 'Copy prompt', copyPromptNote: 'Rules and code for a chat AI', copyLink: 'Copy AI link', copyLinkNote: (id) => `Give an AI the ${id}.txt address`,
     eyebrow: `${N.cards} cards · ${N.cats} chart types · MIT License`, h1: 'Dashboard cards<br>with an analyst’s judgment built in', h1one: 'Dashboard cards with an analyst’s judgment built in',
     lede: 'Copy a card into your HTML and change only its JSON. The card computes changes, shares and attainment, and its colors and emphasis follow the rules of the Vizney chart guide.',
     browse: 'Browse cards', onGithub: 'View on GitHub', hint: (llms) => `Working with an AI? Give it a card link or <a href="${llms}">llms.txt</a>, or install the <a href="#usage">skill</a> in a coding agent.`,
@@ -180,7 +180,7 @@ const WORDS = {
     step1: 'Copy and paste', step1p: 'Press <b>Copy</b> on a card and paste it anywhere inside the &lt;body&gt; of your HTML.',
     step2: 'Change only the JSON', step2p: 'Edit the values in the card’s JSON. The card computes changes, shares and attainment.', step2code: '"title": "Orders by Quarter",\n"format": "count",\n"labels": ["1Q26", "2Q26", "3Q26"],\n"values": [2561, 2654, 2750]',
     step3: 'Tune with variables', step3p: (tokens) => `Set colors and the font with :root variables; they apply to every card at once. The list is in <a href="${tokens}">tokens.css</a>.`,
-    step4: 'Hand it to an AI', step4p: 'Give a chat AI the card’s <b>AI link</b>; install the skill in a coding agent. The skill shows a design table (row · question · card) before writing card code and checks the result against a checklist. Get new judgment with <code>npx skills update</code>.', step4code: (base) => `blocks.vizney.com${base}/cards/\n  bar-basic.txt\nDraw our monthly sales by\nbranch with this card\n\nnpx skills add\n  yehwanhwang/vizney-blocks`,
+    step4: 'Hand it to an AI', step4p: 'Paste a card’s <b>Copy prompt</b> (rules and code together) into a chat AI, or give it the <b>AI link</b> if it can open addresses; install the skill in a coding agent. The skill shows a design table (row · question · card) before writing card code and checks the result against a checklist. Get new judgment with <code>npx skills update</code>.', step4code: (base) => `blocks.vizney.com${base}/cards/\n  bar-basic.txt\nDraw our monthly sales by\nbranch with this card\n\nnpx skills add\n  yehwanhwang/vizney-blocks`,
     fields: 'Common fields and layout',
     fieldList: [
       ['title', 'Metric name'], ['subtitle', 'Period subtitle: what is measured, and as of when.'], ['value', 'The headline figure of a KPI card. KPI - Line and KPI - Bar use the last value when it is omitted.'],
@@ -198,7 +198,7 @@ const WORDS = {
     pagerAria: 'Previous and next chart', prev: 'Previous', next: 'Next', codeText: 'Code (text)',
     homeTitle: 'Vizney Blocks · Copy-paste dashboard cards', catTitle: (name) => `${name} · Vizney Blocks`, catDesc: (lede, n) => `${lede} ${n} copy-paste HTML cards.`,
     homeDesc: `${N.cards} copy-paste HTML dashboard cards. ${N.cats} chart types, from KPI, bar, line and grid to donut, scatter, Sankey and radar, built on the judgment rules of the Vizney chart guide. MIT License.`,
-    js: { copied: 'Copied', linkCopied: 'Link copied', sub: 'Change only the data (JSON) on the <b>orange lines</b>. Leave the rest as it is.', blocked: 'Copying is blocked here. The code is selected; press Ctrl+C (⌘+C) to copy it.', none: 'No card found.', exampleTitle: 'Sales Overview example', exampleSub: (n) => `The code of ${n} cards in a grid. In each card, change only the data (JSON) on the <b>orange lines</b>. Leave the rest as it is.`, exampleComment: (n) => `<!-- Vizney Blocks example · Sales Overview (${n} cards)\n     ${SITE}/ · Change only each card's JSON. -->` },
+    js: { copied: 'Copied', linkCopied: 'Link copied', promptCopied: 'Prompt copied', sub: 'Change only the data (JSON) on the <b>orange lines</b>. Leave the rest as it is.', blocked: 'Copying is blocked here. The code is selected; press Ctrl+C (⌘+C) to copy it.', none: 'No card found.', exampleTitle: 'Sales Overview example', exampleSub: (n) => `The code of ${n} cards in a grid. In each card, change only the data (JSON) on the <b>orange lines</b>. Leave the rest as it is.`, exampleComment: (n) => `<!-- Vizney Blocks example · Sales Overview (${n} cards)\n     ${SITE}/ · Change only each card's JSON. -->` },
   },
 };
 const locale = (lang) => {
@@ -247,6 +247,7 @@ const IC = {
   code: '<svg class="ic" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M5 4L2 7l3 3M9 4l3 3-3 3"/></svg>',
   copy: '<svg class="ic" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><rect x="4.5" y="4.5" width="7.5" height="7.5" rx="1.5"/><path d="M9.5 4.5V3A1 1 0 0 0 8.5 2H3A1 1 0 0 0 2 3v5.5a1 1 0 0 0 1 1h1.5"/></svg>',
   copyLg: '<svg class="ic" width="16" height="16" viewBox="0 0 14 14" aria-hidden="true"><rect x="4.5" y="4.5" width="7.5" height="7.5" rx="1.5"/><path d="M9.5 4.5V3A1 1 0 0 0 8.5 2H3A1 1 0 0 0 2 3v5.5a1 1 0 0 0 1 1h1.5"/></svg>',
+  prompt: '<svg class="ic" width="16" height="16" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 3.5A1.5 1.5 0 0 1 3.5 2h7A1.5 1.5 0 0 1 12 3.5v5A1.5 1.5 0 0 1 10.5 10H6.5L4 12v-2h-.5A1.5 1.5 0 0 1 2 8.5zM4.5 5h5M4.5 7h3"/></svg>',
   link: '<svg class="ic" width="16" height="16" viewBox="0 0 14 14" aria-hidden="true"><path d="M6 8a2.5 2.5 0 0 0 3.5 0l2-2A2.5 2.5 0 0 0 8 2.5l-.5.5M8 6a2.5 2.5 0 0 0-3.5 0l-2 2A2.5 2.5 0 0 0 6 11.5l.5-.5"/></svg>',
   down: '<svg class="ic" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5L6 7.5l3-3"/></svg>',
 };
@@ -414,6 +415,7 @@ const item = (v, c, tag, L) => {
 <button type="button" class="btn is-sm" data-act="code" data-id="${v.id}" aria-label="${h(v.name)} ${L.t.viewCode}">${IC.code}${L.t.code}</button>
 <div class="copy"><button type="button" class="btn is-sm is-primary" data-act="copy" data-id="${v.id}" aria-haspopup="menu" aria-expanded="false" aria-label="${h(v.name)} ${L.t.copy}">${IC.copy}${L.t.copy}${IC.down}</button><div class="menu" role="menu" aria-label="${h(v.name)} ${L.t.copy}" hidden>
 <button type="button" role="menuitem" data-act="copy-code" data-id="${v.id}">${IC.copyLg}<span><b>${L.t.copyCode}</b><small>${L.t.copyCodeNote}</small></span></button>
+<button type="button" role="menuitem" data-act="copy-prompt" data-id="${v.id}">${IC.prompt}<span><b>${L.t.copyPrompt}</b><small>${L.t.copyPromptNote}</small></span></button>
 <button type="button" role="menuitem" data-act="copy-link" data-id="${v.id}">${IC.link}<span><b>${L.t.copyLink}</b><small>${L.t.copyLinkNote(v.id)}</small></span></button>
 </div></div>
 </div></div>
@@ -453,6 +455,82 @@ const pager = (i, m, L) => {
   return `<nav class="pager" aria-label="${L.t.pagerAria}">${prev ? `<a class="is-prev" href="${m.cat(prev.id)}" rel="prev"><span>${L.t.prev}</span><b>← ${h(prev.name)}</b></a>` : '<span></span>'}${next ? `<a class="is-next" href="${m.cat(next.id)}" rel="next"><span>${L.t.next}</span><b>${h(next.name)} →</b></a>` : '<span></span>'}</nav>`;
 };
 
+// Copy prompt (v0.44): what a chat AI that cannot open links needs to draw with one card, in one paste. The head below goes in
+// front of the card code: the request with a place for the user's content, how to use the card, when to use it and its rules
+// (meta.json, as on the card), and the fields (the keys of the example JSON; common fields carry a short note). site.js adds the
+// card code as it is shown on the page, so a line-shape choice made in the gallery is kept.
+const FIELD_NOTE = {
+  ko: {
+    title: '지표명', subtitle: '기간 부제', value: 'KPI 카드의 대표 수치', format: 'eok 억 단위 숫자 · krw 원 단위 숫자 · usd 달러 금액 · count 개수(단위는 unit) · pct 퍼센트 숫자(3.4는 3.4%) · days 일수',
+    unit: 'count의 단위', decimals: '소수 자릿수. 비우면 카드가 정함', better: 'up · down · neutral, 증감 색의 방향', compare: '{ label, value }, 증감을 계산할 비교 기준',
+    labels: '기간 이름. 값과 같은 길이로 적고, 값이 없는 기간의 값은 null', series: '[{ name, values }]', rows: '표의 줄', lang: 'en이면 카드가 직접 적는 문구가 영어. 비우면 한국어',
+  },
+  en: {
+    title: 'metric name', subtitle: 'period', value: 'the headline figure of a KPI card', format: 'usd dollar amounts · count a count (its unit in unit) · pct a percentage (3.4 is 3.4%) · days a number of days · eok and krw are Korean won notations',
+    unit: 'the unit of a count', decimals: 'decimal places; empty lets the card decide', better: 'up · down · neutral: the direction of the change color', compare: '{ label, value }: the baseline the change is computed against',
+    labels: 'period names, the same length as the values; null for a period without a value', series: '[{ name, values }]', rows: 'table rows', lang: 'en: the words the card prints itself in English; empty is Korean',
+  },
+};
+const promptHead = (v, L) => {
+  const en = L.lang === 'en';
+  const keys = Object.keys(JSON.parse(r(vp(v.id, en ? 'en.json' : 'json'))));
+  const N = FIELD_NOTE[L.lang];
+  const noted = keys.filter((k) => N[k]).map((k) => `- ${k}: ${N[k]}`);
+  // Fields the example leaves out but the common-fields rule names for this card.
+  if (!keys.includes('value') && (v.id === 'kpi-line' || v.id === 'kpi-bar')) noted.push(en ? '- value: optional; the last value when it is left out' : '- value: 비우면 마지막 값');
+  if (v.uses.includes('curve')) noted.push(en ? '- curve: optional line shape: smooth (default) · linear · step' : '- curve: 선 모양. smooth(기본) · linear · step');
+  const rules = v.rules.map((x) => `- ${plain(x)}`).join('\n');
+  return en ? `Draw the following with the Vizney Blocks card below (${v.name}).
+
+[Write what to draw here: the metric, the period, the values]
+
+How to use
+- Paste the card code at the bottom as it is inside <body> and change only the values in <script type="application/json">. Do not edit <style> or <script>.
+- Give amounts as raw values. Changes, shares, attainment and totals are computed by the card, so do not write them in the JSON.
+- To use the same card several times, paste the whole card code again and change each JSON.
+- If the values are not given above, ask for them first; do not make them up.
+
+When to use this card
+- ${plain(v.when)}
+
+Rules and reasons
+${rules}
+
+Values to change (JSON)
+- The keys of the example JSON in the card code are the reference: ${keys.join(', ')}
+${noted.join('\n')}
+- Add a field the example lacks only when it is named above.
+
+If this card does not fit, pick another one: ${SITE}/llms.txt
+
+--- Card code (Vizney Blocks ${VERSION} · MIT) ---
+` : `아래 Vizney Blocks 카드(${v.name})로 다음 내용을 그려 줘.
+
+[여기에 그릴 내용을 적으세요: 지표 이름, 기간, 값]
+
+쓰는 법
+- 맨 아래 카드 코드를 그대로 <body> 안에 붙이고, <script type="application/json">의 값만 바꾼다. <style>과 <script>는 고치지 않는다.
+- 금액은 가공하지 않은 원래 값으로 넣는다. 증감, 비중, 달성률, 합계는 카드가 계산하므로 JSON에 적지 않는다.
+- 같은 카드를 여러 장 쓰면 카드 코드 전체를 다시 붙이고 JSON만 각각 바꾼다.
+- 위에 값이 없으면 지어내지 말고 먼저 물어본다.
+
+이 카드를 쓰는 때
+- ${plain(v.when)}
+
+규칙과 이유
+${rules}
+
+바꿀 값(JSON)
+- 카드 코드 안 예시 JSON의 키가 기준이다: ${keys.join(', ')}
+${noted.join('\n')}
+- 예시에 없는 필드는 위에 적힌 것만 더한다.
+
+이 카드가 맞지 않으면 다른 카드를 고른다: ${SITE}/ko/llms.txt
+
+--- 카드 코드 (Vizney Blocks ${VERSION} · MIT) ---
+`;
+};
+
 // Page data for site.js: the search index, the words site.js prints, and the code of the cards this page shows.
 const data = (m, page, ids, L) => `<script>window.VZB = ${esc({
   mode: m.one ? 'one' : 'site',
@@ -466,6 +544,7 @@ const data = (m, page, ids, L) => `<script>window.VZB = ${esc({
   example: page === 'home' ? EXAMPLE : [],
   retired: Object.fromEntries(retired.map((v) => [v.id, m.card(L.byId[v.retired.use])])),
   code: Object.fromEntries(ids.map((id) => [id, L.byId[id].code])),
+  prompt: Object.fromEntries(ids.map((id) => [id, promptHead(L.byId[id], L)])),
 })};</script>`;
 
 // ---------- Site pages (docs/) ----------

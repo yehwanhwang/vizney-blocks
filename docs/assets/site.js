@@ -2,14 +2,14 @@
   'use strict';
   // window.VZB: mode('site' | 'one'), page('home' | 'cat' | 'one' | 'none'), site(공개 주소), base(언어별 페이지 경로: 영어 '' · 한국어 '/ko'), files(카드 코드 경로: 영어 '' · 한국어 '/ko'), t(이 스크립트가 적는 문구),
   // cats([{ id, name }]), retired({ 내린 카드 id: 대신 쓸 카드 주소 }), index([{ id, name, cat, catName, when, tags(목적 색인의 목적과 조건), url }]),
-  // code({ 카드 id: 코드 }), example([{ id, wide }]).
+  // code({ 카드 id: 코드 }), prompt({ 카드 id: 프롬프트 복사에서 코드 앞에 붙는 머리말 }), example([{ id, wide }]).
   const V = window.VZB || {};
   const code = V.code || {};
   const index = V.index || [];
   const SITE = V.site || 'https://blocks.vizney.com';
   const BASE = V.base || '';
   const FILES = V.files || '';
-  const T = Object.assign({ copied: '복사됨', linkCopied: '링크 복사됨', sub: '<b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.', blocked: '복사가 막혀 있습니다. 코드를 선택해 두었으니 Ctrl+C(⌘+C)로 복사하세요.', none: '찾는 카드가 없습니다.', exampleTitle: '영업 현황 예시', exampleSub: '', exampleComment: '' }, V.t || {});
+  const T = Object.assign({ copied: '복사됨', linkCopied: '링크 복사됨', promptCopied: '프롬프트 복사됨', sub: '<b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.', blocked: '복사가 막혀 있습니다. 코드를 선택해 두었으니 Ctrl+C(⌘+C)로 복사하세요.', none: '찾는 카드가 없습니다.', exampleTitle: '영업 현황 예시', exampleSub: '', exampleComment: '' }, V.t || {});
   const current = {};
   const $ = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
@@ -181,7 +181,7 @@
   const linkOf = (id) => `${SITE}${FILES}/cards/${id}.txt`;
   const nameOf = (id) => (index.find((x) => x.id === id) || {}).name || id;
 
-  // 복사 메뉴: 카드 코드 복사, AI용 링크 복사
+  // 복사 메뉴: 카드 코드 복사, 프롬프트 복사(규칙과 쓰는 법을 앞에 붙인 카드 코드), AI용 링크 복사
   let menu = null;
   function closeMenu(focus) {
     if (!menu) return;
@@ -257,11 +257,12 @@
     const id = t.dataset.id, act = t.dataset.act;
     if (act === 'code') openCode(id);
     else if (act === 'copy') openMenu(t);
-    else if (act === 'copy-code' || act === 'copy-link') {
+    else if (act === 'copy-code' || act === 'copy-prompt' || act === 'copy-link') {
       const btn = menu && menu.btn;
       closeMenu(true);
-      const ok = await copyText(act === 'copy-code' ? current[id] || code[id] : linkOf(id));
-      if (ok) done(btn, act === 'copy-code' ? T.copied : T.linkCopied);
+      const body = current[id] || code[id];
+      const ok = await copyText(act === 'copy-code' ? body : act === 'copy-prompt' ? (V.prompt || {})[id] + body : linkOf(id));
+      if (ok) done(btn, act === 'copy-code' ? T.copied : act === 'copy-prompt' ? T.promptCopied : T.linkCopied);
       else if (act === 'copy-code') openCode(id, true);
     } else if (act === 'example') {
       show({ title: T.exampleTitle, sub: T.exampleSub, text: exampleCode(), link: false });

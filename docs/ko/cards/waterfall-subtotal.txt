@@ -179,6 +179,11 @@
 .vzb-bar-goal { stroke: var(--vzb-ink); stroke-width: 2; stroke-linecap: round; }
 /* 워터폴: 막대(굵기 최대 24px) 사이를 누계 높이의 1px 회색 실선으로 잇습니다. */
 .vzb-wf-link { stroke: var(--vzb-base); stroke-width: 1; }
+/* 한 요인을 짚을 때(ask · focus): 왼쪽부터 하나씩 나타납니다. 카드가 화면에 보이기 전에는 멈춰 둡니다. */
+.vzb-wf-step { animation: vzb-wf-in 0.36s both paused; }
+.vzb-card.is-in .vzb-wf-step { animation-play-state: running; }
+@keyframes vzb-wf-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .vzb-wf-step { animation: none; } }
 </style>
 <div class="vzb-card" data-vzb="waterfall-subtotal">
 <script type="application/json">
@@ -217,7 +222,7 @@
     '%s %s · 달성률 %s%': '%s %s · Attainment %s%', '목표 %s · 달성률 %s%': 'Target %s · Attainment %s%', '목표의 %s%': '%s% of target',
     '%1 %2의 %3%': '%3% of %1 %2', '%1 %2의 %3% 사용': '%3% of %1 %2 used',
     '평균': 'Average', '기준': 'Reference', '비중': 'Share', '비중 %s%p': 'Share %spp', '이전 대비': 'vs prior', '처음 대비': 'vs first', '흐름': 'Trend', '최근': 'Latest',
-    '누계': 'Running total', '반영 후 누계 %s': 'Running total after: %s', '늘린 요인': 'Increase', '줄인 요인': 'Decrease', '빼는 항목': 'Deduction',
+    '누계': 'Running total', '반영 후 누계 %s': 'Running total after: %s', '늘린 요인': 'Increase', '줄인 요인': 'Decrease', '그 밖의 요인': 'Other factors', '빼는 항목': 'Deduction',
     '왼쪽': 'Left', '오른쪽': 'Right', '출발': 'From', '도착': 'To', '가로값': 'X value', '세로값': 'Y value', '외 %s곳 %s': 'and %s more: %s',
     '%s위': '#%s', '%s %s위': '%s #%s', '%s 순위': '%s ranks', '%1 %2위에서 %3': 'from #%2 in %1, %3', '%s계단 오름': 'up %s', '%s계단 내림': 'down %s', '그대로': 'unchanged',
     '첫 단계': 'First step', '시작': 'Start', '전환 %s': 'Conversion %s', '전체 전환율': 'Overall conversion', '앞 단계 대비 %s': '%s of the previous step',
@@ -842,18 +847,20 @@
         const bw = Math.min(24, c.step * 0.6);
         c.bw = bw;
         const notes = [];
+        // cfg.build면 막대 · 이음선 · 값을 왼쪽부터 0.22초 간격으로 나타냅니다(요인이 하나씩 쌓이는 순서가 곧 설명입니다).
+        const step = (node, i) => { if (cfg.build) { node.classList.add('vzb-wf-step'); node.style.animationDelay = `${i * 220}ms`; } return node; };
         rows.forEach((r, i) => {
           const x = c.xs[i] - bw / 2;
           if (i) {
             const y = Math.round(c.y(rows[i - 1].to)) + 0.5;
-            svg.append(svgEl('line', { x1: c.xs[i - 1] + bw / 2, x2: x, y1: y, y2: y, class: 'vzb-wf-link' }));
+            svg.append(step(svgEl('line', { x1: c.xs[i - 1] + bw / 2, x2: x, y1: y, y2: y, class: 'vzb-wf-link' }), i));
           }
-          svg.append(svgEl('path', { d: barPath(x, bw, c.y(r.from), c.y(r.to), true), class: `vzb-bar vzb-${cfg.toneOf(r)}` }));
+          svg.append(step(svgEl('path', { d: barPath(x, bw, c.y(r.from), c.y(r.to), true), class: `vzb-bar vzb-${cfg.toneOf(r)}` }), i));
           // 값은 바뀐 쪽 끝에 적습니다(늘면 위, 줄면 아래). 줄어든 막대가 바닥선에 붙어 아래에 적을 자리가 없으면
           // 가로축 이름과 겹치지 않게 막대 위에 적습니다(영업이익 236억에서 빼는 영업외손익 −21억처럼).
           const up = r.to >= r.from, below = c.y(r.to) + 17;
           const y = up ? c.y(r.to) - 8 : below + 4 <= c.bottom ? below : c.y(r.from) - 8;
-          const t = svgText(c.xs[i], y, r.total ? total(r.value) : sign(r.value), 'vzb-ax-note', 'middle');
+          const t = step(svgText(c.xs[i], y, r.total ? total(r.value) : sign(r.value), 'vzb-ax-note', 'middle'), i);
           svg.append(t);
           notes.push({ t, r });
         });

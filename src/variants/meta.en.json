@@ -364,6 +364,7 @@
    "rules": [
     "Write `items` in order: the starting total, the changes by factor, the ending total. For the ending total, write only `\"type\": \"total\"` and it is filled from the running total.",
     "Increasing factors are green and decreasing factors red (the same colors as the KPI badge); totals are orange. For a metric where lower is better, flip the colors with `\"better\": \"down\"`.",
+    "To mark one factor and answer \"what drove it\", write `highest` (the largest increase) or `lowest` (the largest decrease) in `ask`. The card finds that factor and marks it in the first color, draws the other factors in gray and the totals in the text color, and the bars appear one by one from the left. For a factor a calculation cannot decide, write its name in `focus` and leave `ask` out. A single color lets the answer read first.",
     "The vertical axis starts at zero. When the changes are too small next to the totals for their bars to show, draw only the changes with Bar - Diverging."
    ]
   },

@@ -8,7 +8,7 @@
 <style>
 /* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
    색은 Vizney 차트 가이드의 파랑 · 분홍빨강 · 주황과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다.
-   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다.
+   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색, 흰색을 둘째 색으로 그립니다.
    목록: https://blocks.vizney.com/ko/tokens.css */
 :where(:root) {
   --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* 카드의 모든 글자 */
@@ -41,7 +41,8 @@
   --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* 카드 그림자 */
 }
 
-/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 · 분홍빨강 · 파랑은 적록 색각 시뮬레이션과 바탕 대비 검사를 통과합니다. */
+/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 하나에 흰색과 회색을 더해 Vizney 검정 · 흰색 · 노랑으로 그립니다.
+   노랑 · 흰색 · 회색은 색각 시뮬레이션(가장 가까운 쌍 ΔE 14.9)과 바탕 대비 검사를 통과합니다. */
 .vzb-dark {
   --vzb-card: #1b1b1b;   /* 카드 바탕(Vizney 검정) */
   --vzb-edge: rgba(255, 255, 255, 0.08);   /* 카드 테두리 */
@@ -52,13 +53,13 @@
   --vzb-primary: #ffcc00;   /* 첫째 데이터 색(Vizney 노랑) */
   --vzb-primary-tint: #362f18;   /* 노랑의 옅은 바탕 */
   --vzb-primary-soft: #5f5013;   /* 이름을 얹는 바 리스트 막대 */
-  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
-  --vzb-tertiary: #007aff;   /* 셋째 데이터 색(파랑) */
+  --vzb-secondary: #f5f5f5;   /* 둘째 데이터 색(흰색) */
+  --vzb-tertiary: #9b9b9b;   /* 셋째 데이터 색(회색) */
   --vzb-primary-mid: #826b0f;   /* 넓은 면. 밝은 글자가 올라가도록 한 단계 어둡게 */
-  --vzb-secondary-mid: #822335;   /* 분홍빨강의 넓은 면 */
-  --vzb-tertiary-mid: #134a82;   /* 파랑의 넓은 면 */
+  --vzb-secondary-mid: #5c5c5c;   /* 흰색의 넓은 면. 흰 글자가 올라가도록 회색으로 */
+  --vzb-tertiary-mid: #424242;   /* 회색의 넓은 면 */
   --vzb-other-mid: #3a3a3a;   /* 기타 묶음의 넓은 면 */
-  --vzb-line-3: #007aff;   /* 선의 셋째 색(파랑) */
+  --vzb-line-3: #9b9b9b;   /* 선의 셋째 색(회색) */
   --vzb-base: #6b6b6b;   /* 비교 기준 */
   --vzb-track: #2c2c2c;   /* 게이지 · 달성률 막대의 바탕 */
   --vzb-other: #4d4d4d;   /* 기타로 묶은 항목 */
@@ -228,11 +229,13 @@
     '%s 목록, %s줄. 위아래 화살표로 항목의 자세한 값을 봅니다.': '%s list, %s rows. Use the up and down arrows to see each item.',
     '%s 순위 변화, %s–%s. 위아래 화살표로 항목을 옮깁니다. 모든 순위는 이어지는 표에 있습니다.': '%s rank changes, %s–%s. Use the up and down arrows to move between items. Every rank is in the table that follows.',
     '%s 퍼널, %s. 좌우 화살표로 단계를 옮깁니다.': '%s funnel, %s. Use the left and right arrows to move between steps.',
+    '%s 막대 경주, %s–%s, 항목 %s개. 위아래 화살표로 지금 순위를 짚고, 아래 막대로 기간을 고릅니다. 모든 값은 이어지는 표에 있습니다.': '%s bar chart race, %s–%s, %s items. Use the up and down arrows to step through the current ranking and the slider below to pick a period. Every value is in the table that follows.',
+    '재생': 'Play', '일시정지': 'Pause', '처음부터 다시': 'Replay', '%1, 1위 %2': '%1, #1 %2',
     '%s 레이더 차트, 항목 %s개와 대상 %s개. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s radar chart, %s axes and %s series. Use the left and right arrows to move between axes. Every value is in the table that follows.',
     '%s 생키 차트, 노드 %s개와 흐름 %s개. 좌우 화살표로 노드와 흐름을 차례로 짚습니다. 모든 흐름은 이어지는 표에 있습니다.': '%s Sankey chart, %s nodes and %s flows. Use the left and right arrows to step through nodes and flows. Every flow is in the table that follows.',
     '%s 산점도, 점 %s개. 좌우 화살표로 점을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s scatter plot, %s points. Use the left and right arrows to move between points. Every value is in the table that follows.',
     '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
-    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
+    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'labels와 items를 확인하세요.': 'Check labels and items.', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
   };
   // tx(d 또는 f, 원문, 값…): d.lang(format()이 f에 옮겨 둡니다)이 en이면 영어 문구를, 아니면 원문을 돌려줍니다.
   function tx(x, s, ...a) {
@@ -614,7 +617,7 @@
 <style>
 /* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
    색은 Vizney 차트 가이드의 파랑 · 분홍빨강 · 주황과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다.
-   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다.
+   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색, 흰색을 둘째 색으로 그립니다.
    목록: https://blocks.vizney.com/ko/tokens.css */
 :where(:root) {
   --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* 카드의 모든 글자 */
@@ -647,7 +650,8 @@
   --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* 카드 그림자 */
 }
 
-/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 · 분홍빨강 · 파랑은 적록 색각 시뮬레이션과 바탕 대비 검사를 통과합니다. */
+/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 하나에 흰색과 회색을 더해 Vizney 검정 · 흰색 · 노랑으로 그립니다.
+   노랑 · 흰색 · 회색은 색각 시뮬레이션(가장 가까운 쌍 ΔE 14.9)과 바탕 대비 검사를 통과합니다. */
 .vzb-dark {
   --vzb-card: #1b1b1b;   /* 카드 바탕(Vizney 검정) */
   --vzb-edge: rgba(255, 255, 255, 0.08);   /* 카드 테두리 */
@@ -658,13 +662,13 @@
   --vzb-primary: #ffcc00;   /* 첫째 데이터 색(Vizney 노랑) */
   --vzb-primary-tint: #362f18;   /* 노랑의 옅은 바탕 */
   --vzb-primary-soft: #5f5013;   /* 이름을 얹는 바 리스트 막대 */
-  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
-  --vzb-tertiary: #007aff;   /* 셋째 데이터 색(파랑) */
+  --vzb-secondary: #f5f5f5;   /* 둘째 데이터 색(흰색) */
+  --vzb-tertiary: #9b9b9b;   /* 셋째 데이터 색(회색) */
   --vzb-primary-mid: #826b0f;   /* 넓은 면. 밝은 글자가 올라가도록 한 단계 어둡게 */
-  --vzb-secondary-mid: #822335;   /* 분홍빨강의 넓은 면 */
-  --vzb-tertiary-mid: #134a82;   /* 파랑의 넓은 면 */
+  --vzb-secondary-mid: #5c5c5c;   /* 흰색의 넓은 면. 흰 글자가 올라가도록 회색으로 */
+  --vzb-tertiary-mid: #424242;   /* 회색의 넓은 면 */
   --vzb-other-mid: #3a3a3a;   /* 기타 묶음의 넓은 면 */
-  --vzb-line-3: #007aff;   /* 선의 셋째 색(파랑) */
+  --vzb-line-3: #9b9b9b;   /* 선의 셋째 색(회색) */
   --vzb-base: #6b6b6b;   /* 비교 기준 */
   --vzb-track: #2c2c2c;   /* 게이지 · 달성률 막대의 바탕 */
   --vzb-other: #4d4d4d;   /* 기타로 묶은 항목 */
@@ -836,11 +840,13 @@
     '%s 목록, %s줄. 위아래 화살표로 항목의 자세한 값을 봅니다.': '%s list, %s rows. Use the up and down arrows to see each item.',
     '%s 순위 변화, %s–%s. 위아래 화살표로 항목을 옮깁니다. 모든 순위는 이어지는 표에 있습니다.': '%s rank changes, %s–%s. Use the up and down arrows to move between items. Every rank is in the table that follows.',
     '%s 퍼널, %s. 좌우 화살표로 단계를 옮깁니다.': '%s funnel, %s. Use the left and right arrows to move between steps.',
+    '%s 막대 경주, %s–%s, 항목 %s개. 위아래 화살표로 지금 순위를 짚고, 아래 막대로 기간을 고릅니다. 모든 값은 이어지는 표에 있습니다.': '%s bar chart race, %s–%s, %s items. Use the up and down arrows to step through the current ranking and the slider below to pick a period. Every value is in the table that follows.',
+    '재생': 'Play', '일시정지': 'Pause', '처음부터 다시': 'Replay', '%1, 1위 %2': '%1, #1 %2',
     '%s 레이더 차트, 항목 %s개와 대상 %s개. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s radar chart, %s axes and %s series. Use the left and right arrows to move between axes. Every value is in the table that follows.',
     '%s 생키 차트, 노드 %s개와 흐름 %s개. 좌우 화살표로 노드와 흐름을 차례로 짚습니다. 모든 흐름은 이어지는 표에 있습니다.': '%s Sankey chart, %s nodes and %s flows. Use the left and right arrows to step through nodes and flows. Every flow is in the table that follows.',
     '%s 산점도, 점 %s개. 좌우 화살표로 점을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s scatter plot, %s points. Use the left and right arrows to move between points. Every value is in the table that follows.',
     '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
-    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
+    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'labels와 items를 확인하세요.': 'Check labels and items.', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
   };
   // tx(d 또는 f, 원문, 값…): d.lang(format()이 f에 옮겨 둡니다)이 en이면 영어 문구를, 아니면 원문을 돌려줍니다.
   function tx(x, s, ...a) {
@@ -1183,7 +1189,7 @@
 <style>
 /* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
    색은 Vizney 차트 가이드의 파랑 · 분홍빨강 · 주황과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다.
-   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다.
+   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색, 흰색을 둘째 색으로 그립니다.
    목록: https://blocks.vizney.com/ko/tokens.css */
 :where(:root) {
   --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* 카드의 모든 글자 */
@@ -1216,7 +1222,8 @@
   --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* 카드 그림자 */
 }
 
-/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 · 분홍빨강 · 파랑은 적록 색각 시뮬레이션과 바탕 대비 검사를 통과합니다. */
+/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 하나에 흰색과 회색을 더해 Vizney 검정 · 흰색 · 노랑으로 그립니다.
+   노랑 · 흰색 · 회색은 색각 시뮬레이션(가장 가까운 쌍 ΔE 14.9)과 바탕 대비 검사를 통과합니다. */
 .vzb-dark {
   --vzb-card: #1b1b1b;   /* 카드 바탕(Vizney 검정) */
   --vzb-edge: rgba(255, 255, 255, 0.08);   /* 카드 테두리 */
@@ -1227,13 +1234,13 @@
   --vzb-primary: #ffcc00;   /* 첫째 데이터 색(Vizney 노랑) */
   --vzb-primary-tint: #362f18;   /* 노랑의 옅은 바탕 */
   --vzb-primary-soft: #5f5013;   /* 이름을 얹는 바 리스트 막대 */
-  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
-  --vzb-tertiary: #007aff;   /* 셋째 데이터 색(파랑) */
+  --vzb-secondary: #f5f5f5;   /* 둘째 데이터 색(흰색) */
+  --vzb-tertiary: #9b9b9b;   /* 셋째 데이터 색(회색) */
   --vzb-primary-mid: #826b0f;   /* 넓은 면. 밝은 글자가 올라가도록 한 단계 어둡게 */
-  --vzb-secondary-mid: #822335;   /* 분홍빨강의 넓은 면 */
-  --vzb-tertiary-mid: #134a82;   /* 파랑의 넓은 면 */
+  --vzb-secondary-mid: #5c5c5c;   /* 흰색의 넓은 면. 흰 글자가 올라가도록 회색으로 */
+  --vzb-tertiary-mid: #424242;   /* 회색의 넓은 면 */
   --vzb-other-mid: #3a3a3a;   /* 기타 묶음의 넓은 면 */
-  --vzb-line-3: #007aff;   /* 선의 셋째 색(파랑) */
+  --vzb-line-3: #9b9b9b;   /* 선의 셋째 색(회색) */
   --vzb-base: #6b6b6b;   /* 비교 기준 */
   --vzb-track: #2c2c2c;   /* 게이지 · 달성률 막대의 바탕 */
   --vzb-other: #4d4d4d;   /* 기타로 묶은 항목 */
@@ -1434,11 +1441,13 @@
     '%s 목록, %s줄. 위아래 화살표로 항목의 자세한 값을 봅니다.': '%s list, %s rows. Use the up and down arrows to see each item.',
     '%s 순위 변화, %s–%s. 위아래 화살표로 항목을 옮깁니다. 모든 순위는 이어지는 표에 있습니다.': '%s rank changes, %s–%s. Use the up and down arrows to move between items. Every rank is in the table that follows.',
     '%s 퍼널, %s. 좌우 화살표로 단계를 옮깁니다.': '%s funnel, %s. Use the left and right arrows to move between steps.',
+    '%s 막대 경주, %s–%s, 항목 %s개. 위아래 화살표로 지금 순위를 짚고, 아래 막대로 기간을 고릅니다. 모든 값은 이어지는 표에 있습니다.': '%s bar chart race, %s–%s, %s items. Use the up and down arrows to step through the current ranking and the slider below to pick a period. Every value is in the table that follows.',
+    '재생': 'Play', '일시정지': 'Pause', '처음부터 다시': 'Replay', '%1, 1위 %2': '%1, #1 %2',
     '%s 레이더 차트, 항목 %s개와 대상 %s개. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s radar chart, %s axes and %s series. Use the left and right arrows to move between axes. Every value is in the table that follows.',
     '%s 생키 차트, 노드 %s개와 흐름 %s개. 좌우 화살표로 노드와 흐름을 차례로 짚습니다. 모든 흐름은 이어지는 표에 있습니다.': '%s Sankey chart, %s nodes and %s flows. Use the left and right arrows to step through nodes and flows. Every flow is in the table that follows.',
     '%s 산점도, 점 %s개. 좌우 화살표로 점을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s scatter plot, %s points. Use the left and right arrows to move between points. Every value is in the table that follows.',
     '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
-    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
+    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'labels와 items를 확인하세요.': 'Check labels and items.', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
   };
   // tx(d 또는 f, 원문, 값…): d.lang(format()이 f에 옮겨 둡니다)이 en이면 영어 문구를, 아니면 원문을 돌려줍니다.
   function tx(x, s, ...a) {
@@ -1844,7 +1853,7 @@
 <style>
 /* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
    색은 Vizney 차트 가이드의 파랑 · 분홍빨강 · 주황과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다.
-   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다.
+   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색, 흰색을 둘째 색으로 그립니다.
    목록: https://blocks.vizney.com/ko/tokens.css */
 :where(:root) {
   --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* 카드의 모든 글자 */
@@ -1877,7 +1886,8 @@
   --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* 카드 그림자 */
 }
 
-/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 · 분홍빨강 · 파랑은 적록 색각 시뮬레이션과 바탕 대비 검사를 통과합니다. */
+/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 하나에 흰색과 회색을 더해 Vizney 검정 · 흰색 · 노랑으로 그립니다.
+   노랑 · 흰색 · 회색은 색각 시뮬레이션(가장 가까운 쌍 ΔE 14.9)과 바탕 대비 검사를 통과합니다. */
 .vzb-dark {
   --vzb-card: #1b1b1b;   /* 카드 바탕(Vizney 검정) */
   --vzb-edge: rgba(255, 255, 255, 0.08);   /* 카드 테두리 */
@@ -1888,13 +1898,13 @@
   --vzb-primary: #ffcc00;   /* 첫째 데이터 색(Vizney 노랑) */
   --vzb-primary-tint: #362f18;   /* 노랑의 옅은 바탕 */
   --vzb-primary-soft: #5f5013;   /* 이름을 얹는 바 리스트 막대 */
-  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
-  --vzb-tertiary: #007aff;   /* 셋째 데이터 색(파랑) */
+  --vzb-secondary: #f5f5f5;   /* 둘째 데이터 색(흰색) */
+  --vzb-tertiary: #9b9b9b;   /* 셋째 데이터 색(회색) */
   --vzb-primary-mid: #826b0f;   /* 넓은 면. 밝은 글자가 올라가도록 한 단계 어둡게 */
-  --vzb-secondary-mid: #822335;   /* 분홍빨강의 넓은 면 */
-  --vzb-tertiary-mid: #134a82;   /* 파랑의 넓은 면 */
+  --vzb-secondary-mid: #5c5c5c;   /* 흰색의 넓은 면. 흰 글자가 올라가도록 회색으로 */
+  --vzb-tertiary-mid: #424242;   /* 회색의 넓은 면 */
   --vzb-other-mid: #3a3a3a;   /* 기타 묶음의 넓은 면 */
-  --vzb-line-3: #007aff;   /* 선의 셋째 색(파랑) */
+  --vzb-line-3: #9b9b9b;   /* 선의 셋째 색(회색) */
   --vzb-base: #6b6b6b;   /* 비교 기준 */
   --vzb-track: #2c2c2c;   /* 게이지 · 달성률 막대의 바탕 */
   --vzb-other: #4d4d4d;   /* 기타로 묶은 항목 */
@@ -2013,8 +2023,13 @@
 .vzb-sk-svg.is-hover .vzb-sk-link { fill-opacity: 0.1; }
 .vzb-sk-svg.is-hover .vzb-sk-link.is-on { fill-opacity: 0.62; }
 .vzb-sk-svg.is-hover .vzb-sk-node:not(.is-on), .vzb-sk-svg.is-hover .vzb-sk-lab:not(.is-on) { opacity: 0.3; }
-/* 어두운 바탕: 옅은 띠가 검정에 섞이면 탁해지므로 띠를 진하게 둡니다. */
+/* 글자색 띠(Sankey - Levels의 앞 단)는 한 단계 옅게, 짚은 띠(is-strong)는 한 단계 진하게 두어 첫째 색 띠가 먼저 보이게 합니다. */
+.vzb-sk-link.vzb-ti { fill-opacity: 0.2; }
+.vzb-sk-link.is-strong { fill-opacity: 0.5; }
+/* 어두운 바탕: 옅은 띠가 검정에 섞이면 탁해지므로 띠를 진하게 둡니다. 노랑은 옅게 칠하면 올리브색이 되므로 거의 그대로 칠합니다. */
 .vzb-dark .vzb-sk-link { fill-opacity: 0.56; }
+.vzb-dark .vzb-sk-link.vzb-ti { fill-opacity: 0.42; }
+.vzb-dark .vzb-sk-link.vzb-f1 { fill-opacity: 0.88; }
 .vzb-dark .vzb-sk-svg.is-hover .vzb-sk-link { fill-opacity: 0.16; }
 .vzb-dark .vzb-sk-svg.is-hover .vzb-sk-link.is-on { fill-opacity: 0.85; }
 @media (prefers-reduced-motion: reduce) { .vzb-sk-link, .vzb-sk-node, .vzb-sk-lab { transition: none; } }
@@ -2077,11 +2092,13 @@
     '%s 목록, %s줄. 위아래 화살표로 항목의 자세한 값을 봅니다.': '%s list, %s rows. Use the up and down arrows to see each item.',
     '%s 순위 변화, %s–%s. 위아래 화살표로 항목을 옮깁니다. 모든 순위는 이어지는 표에 있습니다.': '%s rank changes, %s–%s. Use the up and down arrows to move between items. Every rank is in the table that follows.',
     '%s 퍼널, %s. 좌우 화살표로 단계를 옮깁니다.': '%s funnel, %s. Use the left and right arrows to move between steps.',
+    '%s 막대 경주, %s–%s, 항목 %s개. 위아래 화살표로 지금 순위를 짚고, 아래 막대로 기간을 고릅니다. 모든 값은 이어지는 표에 있습니다.': '%s bar chart race, %s–%s, %s items. Use the up and down arrows to step through the current ranking and the slider below to pick a period. Every value is in the table that follows.',
+    '재생': 'Play', '일시정지': 'Pause', '처음부터 다시': 'Replay', '%1, 1위 %2': '%1, #1 %2',
     '%s 레이더 차트, 항목 %s개와 대상 %s개. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s radar chart, %s axes and %s series. Use the left and right arrows to move between axes. Every value is in the table that follows.',
     '%s 생키 차트, 노드 %s개와 흐름 %s개. 좌우 화살표로 노드와 흐름을 차례로 짚습니다. 모든 흐름은 이어지는 표에 있습니다.': '%s Sankey chart, %s nodes and %s flows. Use the left and right arrows to step through nodes and flows. Every flow is in the table that follows.',
     '%s 산점도, 점 %s개. 좌우 화살표로 점을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s scatter plot, %s points. Use the left and right arrows to move between points. Every value is in the table that follows.',
     '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
-    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
+    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'labels와 items를 확인하세요.': 'Check labels and items.', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
   };
   // tx(d 또는 f, 원문, 값…): d.lang(format()이 f에 옮겨 둡니다)이 en이면 영어 문구를, 아니면 원문을 돌려줍니다.
   function tx(x, s, ...a) {
@@ -2359,7 +2376,7 @@
      이름과 값은 첫 단은 노드 왼쪽, 나머지 단은 노드 오른쪽에 두 줄로 적고, 겹치면 위아래로 밀어 냅니다.
      모양만 보이기(vzb-bare)에서는 이름표 없이 노드가 카드 폭을 다 씁니다.
      띠나 노드(이름 포함)에 마우스를 올리거나, 그래프에 포커스한 뒤 좌우 화살표를 누르면(노드 다음 흐름 순서) 나머지를 옅게 하고 툴팁을 띄웁니다.
-     cfg: paint(nodes, links, cols) 노드와 띠의 tone(색 이름)을 정합니다. 띠는 정하지 않으면 출발 노드의 색입니다. */
+     cfg: paint(nodes, links, cols) 노드와 띠의 tone(색 이름)을 정합니다. 띠는 정하지 않으면 출발 노드의 색이고, strong을 주면 한 단계 진하게 칠합니다. */
   function sankeyCard(card, d, f, cfg) {
     const nodes = [], byId = new Map();
     const node = (id) => {
@@ -2454,7 +2471,7 @@
       const linkG = svgEl('g', {}), nodeG = svgEl('g', {}), labG = svgEl('g', {});
       // 굵은 띠를 먼저 그려 가는 띠가 위에 오게 합니다(가는 띠도 짚을 수 있게).
       links.slice().sort((a, b) => b.value - a.value).forEach((l) => {
-        l.el = svgEl('path', { d: ribbon(l), class: `vzb-sk-link vzb-${l.tone}`, 'data-k': l.k });
+        l.el = svgEl('path', { d: ribbon(l), class: `vzb-sk-link vzb-${l.tone}${l.strong ? ' is-strong' : ''}`, 'data-k': l.k });
         linkG.append(l.el);
       });
       nodes.forEach((n) => {
@@ -2517,15 +2534,16 @@
       false, true);
   }
 
-  // Sankey - Levels: 세 단 이상으로 이어지는 흐름에서 마지막 단의 한 노드(focus)를 짚습니다. focus와 focus로 가는 띠는 파랑,
-  // 마지막 단의 나머지 노드로 가는 띠는 회색, 앞 단의 띠는 주황으로 칠해, 들어온 양 가운데 얼마가 focus까지 남는지 보이게 합니다.
-  // 앞 단과 focus의 색을 달리해 앞 단의 특정 노드가 focus로 바로 흘러가는 것처럼 읽히지 않게 합니다. focus를 비우면 모두 주황입니다.
+  // Sankey - Levels: 세 단 이상으로 이어지는 흐름에서 마지막 단의 한 노드(focus)를 짚습니다. focus와 focus로 가는 띠만 첫째 색(밝은 바탕 파랑,
+  // 어두운 바탕 노랑)이고, 앞 단의 띠는 글자색(검정, 어두운 바탕은 흰색), 마지막 단의 나머지 노드로 가는 띠는 회색입니다.
+  // 색을 하나만 써서(focus로 가는 띠는 한 단계 진하게) 들어온 양 가운데 얼마가 focus까지 남는지가 먼저 보이고, 앞 단과 색이 달라 앞 단의 특정 노드가 focus로 바로 흘러가는 것처럼 읽히지 않습니다.
+  // focus를 비우면 모두 첫째 색입니다.
   mount('sankey-levels', (card, d, f) => {
     sankeyCard(card, d, f, {
       paint(nodes, links, cols) {
         const end = cols[cols.length - 1], focus = d.focus == null ? null : String(d.focus);
-        nodes.forEach((n) => { n.tone = focus == null || !end.includes(n) ? 'f1' : n.id === focus ? 't3' : 'f0'; });
-        links.forEach((l) => { l.tone = l.t.tone; });
+        nodes.forEach((n) => { n.tone = focus == null ? 'f1' : !end.includes(n) ? 'ti' : n.id === focus ? 'f1' : 'f0'; });
+        links.forEach((l) => { l.tone = l.t.tone; l.strong = focus != null && l.t.id === focus; });
       },
     });
   });
@@ -2539,7 +2557,7 @@
 <style>
 /* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
    색은 Vizney 차트 가이드의 파랑 · 분홍빨강 · 주황과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다.
-   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다.
+   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색, 흰색을 둘째 색으로 그립니다.
    목록: https://blocks.vizney.com/ko/tokens.css */
 :where(:root) {
   --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* 카드의 모든 글자 */
@@ -2572,7 +2590,8 @@
   --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* 카드 그림자 */
 }
 
-/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 · 분홍빨강 · 파랑은 적록 색각 시뮬레이션과 바탕 대비 검사를 통과합니다. */
+/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 하나에 흰색과 회색을 더해 Vizney 검정 · 흰색 · 노랑으로 그립니다.
+   노랑 · 흰색 · 회색은 색각 시뮬레이션(가장 가까운 쌍 ΔE 14.9)과 바탕 대비 검사를 통과합니다. */
 .vzb-dark {
   --vzb-card: #1b1b1b;   /* 카드 바탕(Vizney 검정) */
   --vzb-edge: rgba(255, 255, 255, 0.08);   /* 카드 테두리 */
@@ -2583,13 +2602,13 @@
   --vzb-primary: #ffcc00;   /* 첫째 데이터 색(Vizney 노랑) */
   --vzb-primary-tint: #362f18;   /* 노랑의 옅은 바탕 */
   --vzb-primary-soft: #5f5013;   /* 이름을 얹는 바 리스트 막대 */
-  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
-  --vzb-tertiary: #007aff;   /* 셋째 데이터 색(파랑) */
+  --vzb-secondary: #f5f5f5;   /* 둘째 데이터 색(흰색) */
+  --vzb-tertiary: #9b9b9b;   /* 셋째 데이터 색(회색) */
   --vzb-primary-mid: #826b0f;   /* 넓은 면. 밝은 글자가 올라가도록 한 단계 어둡게 */
-  --vzb-secondary-mid: #822335;   /* 분홍빨강의 넓은 면 */
-  --vzb-tertiary-mid: #134a82;   /* 파랑의 넓은 면 */
+  --vzb-secondary-mid: #5c5c5c;   /* 흰색의 넓은 면. 흰 글자가 올라가도록 회색으로 */
+  --vzb-tertiary-mid: #424242;   /* 회색의 넓은 면 */
   --vzb-other-mid: #3a3a3a;   /* 기타 묶음의 넓은 면 */
-  --vzb-line-3: #007aff;   /* 선의 셋째 색(파랑) */
+  --vzb-line-3: #9b9b9b;   /* 선의 셋째 색(회색) */
   --vzb-base: #6b6b6b;   /* 비교 기준 */
   --vzb-track: #2c2c2c;   /* 게이지 · 달성률 막대의 바탕 */
   --vzb-other: #4d4d4d;   /* 기타로 묶은 항목 */
@@ -2790,11 +2809,13 @@
     '%s 목록, %s줄. 위아래 화살표로 항목의 자세한 값을 봅니다.': '%s list, %s rows. Use the up and down arrows to see each item.',
     '%s 순위 변화, %s–%s. 위아래 화살표로 항목을 옮깁니다. 모든 순위는 이어지는 표에 있습니다.': '%s rank changes, %s–%s. Use the up and down arrows to move between items. Every rank is in the table that follows.',
     '%s 퍼널, %s. 좌우 화살표로 단계를 옮깁니다.': '%s funnel, %s. Use the left and right arrows to move between steps.',
+    '%s 막대 경주, %s–%s, 항목 %s개. 위아래 화살표로 지금 순위를 짚고, 아래 막대로 기간을 고릅니다. 모든 값은 이어지는 표에 있습니다.': '%s bar chart race, %s–%s, %s items. Use the up and down arrows to step through the current ranking and the slider below to pick a period. Every value is in the table that follows.',
+    '재생': 'Play', '일시정지': 'Pause', '처음부터 다시': 'Replay', '%1, 1위 %2': '%1, #1 %2',
     '%s 레이더 차트, 항목 %s개와 대상 %s개. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s radar chart, %s axes and %s series. Use the left and right arrows to move between axes. Every value is in the table that follows.',
     '%s 생키 차트, 노드 %s개와 흐름 %s개. 좌우 화살표로 노드와 흐름을 차례로 짚습니다. 모든 흐름은 이어지는 표에 있습니다.': '%s Sankey chart, %s nodes and %s flows. Use the left and right arrows to step through nodes and flows. Every flow is in the table that follows.',
     '%s 산점도, 점 %s개. 좌우 화살표로 점을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s scatter plot, %s points. Use the left and right arrows to move between points. Every value is in the table that follows.',
     '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
-    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
+    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'labels와 items를 확인하세요.': 'Check labels and items.', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
   };
   // tx(d 또는 f, 원문, 값…): d.lang(format()이 f에 옮겨 둡니다)이 en이면 영어 문구를, 아니면 원문을 돌려줍니다.
   function tx(x, s, ...a) {

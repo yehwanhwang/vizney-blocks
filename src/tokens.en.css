@@ -1,6 +1,6 @@
 /* Vizney Blocks tokens: re-declare the same variables on your page's :root and they apply to every card.
    The colors are the Vizney chart guide's blue, pink-red and orange with a lighter step of each; the text is Vizney black (#1b1b1b).
-   With "theme": "dark" in the JSON, the .vzb-dark values below draw the card on Vizney black with yellow as the first color.
+   With "theme": "dark" in the JSON, the .vzb-dark values below draw the card on Vizney black with yellow as the first color and white as the second.
    List: https://blocks.vizney.com/tokens.css */
 :where(:root) {
   --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* every word on the card */
@@ -33,7 +33,8 @@
   --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* card shadow */
 }
 
-/* Dark ("theme": "dark"): the same variables, changed inside the card only. Yellow, pink-red and blue pass a red-green color vision simulation and a contrast check against the card. */
+/* Dark ("theme": "dark"): the same variables, changed inside the card only. One yellow plus white and gray draws in Vizney black, white and yellow.
+   Yellow, white and gray pass a color vision simulation (closest pair ΔE 14.9) and a contrast check against the card. */
 .vzb-dark {
   --vzb-card: #1b1b1b;   /* card background (Vizney black) */
   --vzb-edge: rgba(255, 255, 255, 0.08);   /* card border */
@@ -44,13 +45,13 @@
   --vzb-primary: #ffcc00;   /* first data color (Vizney yellow) */
   --vzb-primary-tint: #362f18;   /* dim yellow background */
   --vzb-primary-soft: #5f5013;   /* bar-list bars that carry the name */
-  --vzb-secondary: #ff2d55;   /* second data color (pink-red) */
-  --vzb-tertiary: #007aff;   /* third data color (blue) */
+  --vzb-secondary: #f5f5f5;   /* second data color (white) */
+  --vzb-tertiary: #9b9b9b;   /* third data color (gray) */
   --vzb-primary-mid: #826b0f;   /* wide areas, one step darker so light text sits on them */
-  --vzb-secondary-mid: #822335;   /* pink-red for wide areas */
-  --vzb-tertiary-mid: #134a82;   /* blue for wide areas */
+  --vzb-secondary-mid: #5c5c5c;   /* white for wide areas, gray so white text reads on it */
+  --vzb-tertiary-mid: #424242;   /* gray for wide areas */
   --vzb-other-mid: #3a3a3a;   /* the Other group for wide areas */
-  --vzb-line-3: #007aff;   /* third line color (blue) */
+  --vzb-line-3: #9b9b9b;   /* third line color (gray) */
   --vzb-base: #6b6b6b;   /* comparison baseline */
   --vzb-track: #2c2c2c;   /* gauge and attainment-bar track */
   --vzb-other: #4d4d4d;   /* items folded into Other */

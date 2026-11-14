@@ -311,12 +311,14 @@ const dialog = (L) => `<dialog class="dlg" id="dlg" aria-labelledby="dlg-title" 
 const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 
 // Home (v0.45): the title area of a Vizney blog category page (title and description, sized from the blog), then a
-// gallery of the cards that take real work to build by hand. Each tile holds the live card, its name and chart type, and two
-// copy buttons, so a button always belongs to the chart above it.
-// Cards that draw a shape-only view (data-vzb-view="shape"): no title, subtitle or labels on the first screen; the chart pages
-// and the copied code show everything.
+// gallery of the cards that take real work to build by hand. Each tile holds the live card (its head shows the card name and
+// the first sentence of its "when") with a light/dark switch in its top right corner, and two copy buttons under it, so a
+// button always belongs to the chart above it. Clicking the card or its title opens the card on its chart page.
+// Cards that draw a shape-only view (data-vzb-view="shape"): no labels on the first screen; the chart pages and the copied
+// code show everything. Cards that move (data-vzb-loop) replay on the first screen instead of stopping at the end.
 const SHAPE = new Set(['sankey-levels', 'sankey-basic']);
-const GALLERY = ['sankey-levels', 'bump-basic', 'funnel-flow', 'treemap-basic', 'waterfall-subtotal', 'radar-basic', 'sankey-basic', 'scatter-connected', 'waterfall-basic'];
+const LOOP = new Set(['bar-race']);
+const GALLERY = ['bar-race', 'sankey-levels', 'bump-basic', 'funnel-flow', 'treemap-basic', 'waterfall-subtotal', 'radar-basic', 'sankey-basic', 'scatter-connected'];
 const galleryHead = (L) => `<section class="wrap ghead" aria-labelledby="ghead-title">
 <h1 id="ghead-title">${L.t.gTitle}</h1>
 <p>${L.t.gDesc}</p>
@@ -325,9 +327,11 @@ const gallery = (m, L) => `<section class="wrap gal" id="cards" aria-label="${L.
 <ul class="gal-grid">
 ${GALLERY.map((id) => {
     const v = L.byId[id];
-    return `<li class="gt is-dark" data-gal="${id}" aria-label="${h(v.name)}">
-<div class="gt-pv" data-mount="${id}"${SHAPE.has(id) ? ' data-vzb-view="shape"' : ''} style="min-height:${tierPx(v)}px"></div>
-<div class="gt-meta"><a class="gt-kind" href="${m.card(v)}">${h(L.catName[v.cat])} <span aria-hidden="true">→</span></a><button type="button" class="gt-theme" data-act="theme" data-id="${id}" aria-label="${L.t.toLight}" title="${L.t.toLight}">${IC.sun}${IC.moon}</button></div>
+    return `<li class="gt is-dark" data-gal="${id}" data-href="${m.card(v)}" aria-label="${h(v.name)}">
+<div class="gt-box">
+<div class="gt-pv" data-mount="${id}"${SHAPE.has(id) ? ' data-vzb-view="shape"' : ''}${LOOP.has(id) ? ' data-vzb-loop' : ''} style="min-height:${tierPx(v)}px"></div>
+<button type="button" class="gt-theme" data-act="theme" data-id="${id}" aria-label="${L.t.toLight}" title="${L.t.toLight}">${IC.sun}${IC.moon}</button>
+</div>
 <div class="gt-acts"><button type="button" class="btn" data-act="copy-prompt" data-id="${id}" aria-label="${h(v.name)} ${L.t.tPrompt}">${IC.prompt}<span>${L.t.tPrompt}</span></button><button type="button" class="btn" data-act="copy-code" data-id="${id}" aria-label="${h(v.name)} ${L.t.tCode}">${IC.copy}<span>${L.t.tCode}</span></button></div>
 </li>`;
   }).join('\n')}

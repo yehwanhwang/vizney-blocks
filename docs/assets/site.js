@@ -140,7 +140,8 @@
     });
   }
   // 갤러리 타일: 카드 머리에 카드 이름과 한 줄 설명을 넣어 그립니다. 바탕은 어둡게(Vizney 검정 · 노랑) 시작하고
-  // 타일마다 밝게(파랑) 바꿀 수 있습니다. 복사하는 코드는 예시 데이터 그대로에 보이는 바탕만 따라갑니다("theme": "dark").
+  // 카드 오른쪽 위 단추로 타일마다 밝게(파랑) 바꿀 수 있습니다. 복사하는 코드는 예시 데이터 그대로에 보이는 바탕만 따라갑니다("theme": "dark").
+  // 카드 제목은 차트 페이지로 가는 링크이고, 카드의 빈 곳을 눌러도 같은 곳으로 갑니다(단추 · 입력 칸 · 링크는 제 역할만 합니다).
   const GAL = V.gal || {};
   function setTheme(tile, dark) {
     const id = tile.dataset.gal, host = $('[data-mount]', tile), btn = $('[data-act="theme"]', tile), [name, desc] = GAL[id] || [];
@@ -148,10 +149,30 @@
     current[id] = dark ? withField(code[id], 'theme', 'dark') : code[id];
     let src = withField(withField(current[id], 'title', name), 'subtitle', desc);
     mount(host, src);
+    // 카드는 문서를 다 읽은 뒤에 그려지기도 하므로(DOMContentLoaded), 제목 링크는 그 뒤에 겁니다.
+    const linkTitle = () => {
+      const title = $('.vzb-title', host);
+      if (!title || !tile.dataset.href || $('a', title)) return;
+      const a = document.createElement('a');
+      a.href = tile.dataset.href;
+      a.textContent = title.textContent;
+      title.replaceChildren(a);
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', linkTitle, { once: true });
+    else linkTitle();
     btn.setAttribute('aria-label', dark ? T.toLight : T.toDark);
     btn.title = dark ? T.toLight : T.toDark;
   }
-  $$('.gt[data-gal]').forEach((tile) => { if (code[tile.dataset.gal]) setTheme(tile, tile.classList.contains('is-dark')); });
+  $$('.gt[data-gal]').forEach((tile) => {
+    if (!code[tile.dataset.gal]) return;
+    setTheme(tile, tile.classList.contains('is-dark'));
+    $('.gt-box', tile).addEventListener('click', (e) => {
+      if (e.button !== 0 || e.target.closest('a, button, input, select, textarea, label')) return;
+      if (String(window.getSelection ? window.getSelection() : '').length) return;   // 글자를 고르는 중이면 그대로 둡니다
+      if (e.metaKey || e.ctrlKey) window.open(tile.dataset.href, '_blank', 'noopener');
+      else location.href = tile.dataset.href;
+    });
+  });
 
   $$('[data-opt]').forEach((bar) => {
     const field = bar.dataset.opt, scope = bar.closest('.cat') || document;

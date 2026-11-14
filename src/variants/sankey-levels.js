@@ -5,7 +5,7 @@
     sankeyCard(card, d, f, {
       paint(nodes, links, cols) {
         const end = cols[cols.length - 1], focus = d.focus == null ? null : String(d.focus);
-        nodes.forEach((n) => { n.tone = focus == null || !end.includes(n) ? 'f1' : n.id === focus ? 'f2' : 'f0'; });
+        nodes.forEach((n) => { n.tone = focus == null || !end.includes(n) ? 'f1' : n.id === focus ? 't3' : 'f0'; });
         links.forEach((l) => { l.tone = l.t.tone; });
       },
     });

@@ -138,7 +138,7 @@ const WORDS = {
     html: 'ko', og: 'ko_KR', other: { lang: 'en', label: 'English' },
     skip: '본문으로 건너뛰기', menu: '주 메뉴', more: '더 보기', cards: '카드', usage: '쓰는 법', guide: '차트 가이드', find: '카드 찾기', found: '찾은 카드',
     footFont: '글꼴 VZ Sans(Spoqa Han Sans Neo 부분 글꼴)', footNav: '바닥글', footBlog: '블로그', footContact: '문의',
-    copy: '복사', aiLink: 'AI용 링크', close: '닫기', code: '코드', viewCode: '코드 보기', copyCode: '카드 코드 복사', copyCodeNote: 'HTML에 붙여 넣습니다', gTitle: 'Blocks', gDesc: GDESC.ko, gAria: '카드 갤러리', tPrompt: '프롬프트 복사', tCode: '코드 복사', copyPrompt: '프롬프트 복사', copyPromptNote: '규칙과 코드를 채팅 AI에 줍니다', copyLink: 'AI용 링크 복사', copyLinkNote: (id) => `${id}.txt 주소를 AI에 줍니다`,
+    copy: '복사', aiLink: 'AI용 링크', close: '닫기', code: '코드', viewCode: '코드 보기', copyCode: '카드 코드 복사', copyCodeNote: 'HTML에 붙여 넣습니다', gTitle: 'Blocks', gDesc: GDESC.ko, toLight: '밝은 바탕으로 보기', toDark: '어두운 바탕으로 보기', gAria: '카드 갤러리', tPrompt: '프롬프트 복사', tCode: '코드 복사', copyPrompt: '프롬프트 복사', copyPromptNote: '규칙과 코드를 채팅 AI에 줍니다', copyLink: 'AI용 링크 복사', copyLinkNote: (id) => `${id}.txt 주소를 AI에 줍니다`,
     eyebrow: `카드 ${N.cards}종 · 차트 ${N.cats}가지 · MIT 라이선스`, h1one: '분석가의 판단을 담은 대시보드 카드',
     lede: '카드를 복사해 HTML에 붙여 넣고 JSON만 바꾸세요. 증감, 비중, 달성률은 카드가 계산하고, 색과 강조는 Vizney 차트 가이드의 규칙을 따릅니다.',
     purposeTitle: '목적으로 고르기', purposeSub: '보여줄 것부터 정하세요. 목적마다 기본 카드를 먼저 쓰고, 다른 카드는 조건이 맞을 때만 고릅니다.', base: '기본',
@@ -166,13 +166,13 @@ const WORDS = {
     homeTitle: 'Vizney Blocks · 만들기 까다로운 차트를 붙여 넣기 한 번으로', catTitle: (name) => `${name} · Vizney Blocks`, catDesc: (lede, n) => `${lede} 복사해 붙여 쓰는 HTML 카드 ${n}종.`,
     homeDesc: GDESC.ko,
     // site.js
-    js: { copied: '복사됨', linkCopied: '링크 복사됨', promptCopied: '프롬프트 복사됨', sub: '<b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.', blocked: '복사가 막혀 있습니다. 코드를 선택해 두었으니 Ctrl+C(⌘+C)로 복사하세요.', none: '찾는 카드가 없습니다.', exampleTitle: '영업 현황 예시', exampleSub: (n) => `카드 ${n}장을 격자에 넣은 코드입니다. 각 카드의 <b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.`, exampleComment: (n) => `<!-- Vizney Blocks 예시 · 영업 현황(카드 ${n}장)\n     ${SITE}/ko/ · 각 카드의 JSON만 바꾸세요. -->` },
+    js: { copied: '복사됨', linkCopied: '링크 복사됨', promptCopied: '프롬프트 복사됨', toLight: '밝은 바탕으로 보기', toDark: '어두운 바탕으로 보기', sub: '<b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.', blocked: '복사가 막혀 있습니다. 코드를 선택해 두었으니 Ctrl+C(⌘+C)로 복사하세요.', none: '찾는 카드가 없습니다.', exampleTitle: '영업 현황 예시', exampleSub: (n) => `카드 ${n}장을 격자에 넣은 코드입니다. 각 카드의 <b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.`, exampleComment: (n) => `<!-- Vizney Blocks 예시 · 영업 현황(카드 ${n}장)\n     ${SITE}/ko/ · 각 카드의 JSON만 바꾸세요. -->` },
   },
   en: {
     html: 'en', og: 'en_US', other: { lang: 'ko', label: '한국어' },
     skip: 'Skip to content', menu: 'Main menu', more: 'More', cards: 'Cards', usage: 'How to use', guide: 'Chart guide', find: 'Find a card', found: 'Cards found',
     footFont: 'Font VZ Sans (a subset of Spoqa Han Sans Neo)', footNav: 'Footer', footBlog: 'Blog', footContact: 'Contact',
-    copy: 'Copy', aiLink: 'AI link', close: 'Close', code: 'Code', viewCode: 'view code', copyCode: 'Copy card code', copyCodeNote: 'Paste it into your HTML', gTitle: 'Blocks', gDesc: GDESC.en, gAria: 'Card gallery', tPrompt: 'Copy prompt', tCode: 'Copy code', copyPrompt: 'Copy prompt', copyPromptNote: 'Rules and code for a chat AI', copyLink: 'Copy AI link', copyLinkNote: (id) => `Give an AI the ${id}.txt address`,
+    copy: 'Copy', aiLink: 'AI link', close: 'Close', code: 'Code', viewCode: 'view code', copyCode: 'Copy card code', copyCodeNote: 'Paste it into your HTML', gTitle: 'Blocks', gDesc: GDESC.en, toLight: 'Show on light', toDark: 'Show on dark', gAria: 'Card gallery', tPrompt: 'Copy prompt', tCode: 'Copy code', copyPrompt: 'Copy prompt', copyPromptNote: 'Rules and code for a chat AI', copyLink: 'Copy AI link', copyLinkNote: (id) => `Give an AI the ${id}.txt address`,
     eyebrow: `${N.cards} cards · ${N.cats} chart types · MIT License`, h1one: 'Dashboard cards with an analyst’s judgment built in',
     lede: 'Copy a card into your HTML and change only its JSON. The card computes changes, shares and attainment, and its colors and emphasis follow the rules of the Vizney chart guide.',
     purposeTitle: 'Pick by purpose', purposeSub: 'Decide what to show first. Each purpose has a base card; pick another card only when its condition fits.', base: 'Base',
@@ -199,7 +199,7 @@ const WORDS = {
     pagerAria: 'Previous and next chart', prev: 'Previous', next: 'Next', codeText: 'Code (text)',
     homeTitle: 'Vizney Blocks · Hard-to-build charts in a single paste', catTitle: (name) => `${name} · Vizney Blocks`, catDesc: (lede, n) => `${lede} ${n} copy-paste HTML cards.`,
     homeDesc: GDESC.en,
-    js: { copied: 'Copied', linkCopied: 'Link copied', promptCopied: 'Prompt copied', sub: 'Change only the data (JSON) on the <b>orange lines</b>. Leave the rest as it is.', blocked: 'Copying is blocked here. The code is selected; press Ctrl+C (⌘+C) to copy it.', none: 'No card found.', exampleTitle: 'Sales Overview example', exampleSub: (n) => `The code of ${n} cards in a grid. In each card, change only the data (JSON) on the <b>orange lines</b>. Leave the rest as it is.`, exampleComment: (n) => `<!-- Vizney Blocks example · Sales Overview (${n} cards)\n     ${SITE}/ · Change only each card's JSON. -->` },
+    js: { copied: 'Copied', linkCopied: 'Link copied', promptCopied: 'Prompt copied', toLight: 'Show on light', toDark: 'Show on dark', sub: 'Change only the data (JSON) on the <b>orange lines</b>. Leave the rest as it is.', blocked: 'Copying is blocked here. The code is selected; press Ctrl+C (⌘+C) to copy it.', none: 'No card found.', exampleTitle: 'Sales Overview example', exampleSub: (n) => `The code of ${n} cards in a grid. In each card, change only the data (JSON) on the <b>orange lines</b>. Leave the rest as it is.`, exampleComment: (n) => `<!-- Vizney Blocks example · Sales Overview (${n} cards)\n     ${SITE}/ · Change only each card's JSON. -->` },
   },
 };
 const locale = (lang) => {
@@ -244,6 +244,8 @@ const ext = (href) => `href="${href}" target="_blank" rel="noopener"`;
 
 const IC = {
   search: '<svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>',
+  sun: '<svg class="ic ic-sun" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1.5v1.6M8 12.9v1.6M1.5 8h1.6M12.9 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1"/></svg>',
+  moon: '<svg class="ic ic-moon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 9.6A5.8 5.8 0 0 1 6.4 2.5a5.8 5.8 0 1 0 7.1 7.1z"/></svg>',
   out: '<svg class="ic" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2.5h5.5V8M9.5 2.5L3 9"/></svg>',
   code: '<svg class="ic" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M5 4L2 7l3 3M9 4l3 3-3 3"/></svg>',
   copy: '<svg class="ic" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><rect x="4.5" y="4.5" width="7.5" height="7.5" rx="1.5"/><path d="M9.5 4.5V3A1 1 0 0 0 8.5 2H3A1 1 0 0 0 2 3v5.5a1 1 0 0 0 1 1h1.5"/></svg>',
@@ -323,9 +325,9 @@ const gallery = (m, L) => `<section class="wrap gal" id="cards" aria-label="${L.
 <ul class="gal-grid">
 ${GALLERY.map((id) => {
     const v = L.byId[id];
-    return `<li class="gt" aria-labelledby="gt-${id}">
+    return `<li class="gt is-dark" data-gal="${id}" aria-label="${h(v.name)}">
 <div class="gt-pv" data-mount="${id}"${SHAPE.has(id) ? ' data-vzb-view="shape"' : ''} style="min-height:${tierPx(v)}px"></div>
-<div class="gt-meta"><a class="gt-name" id="gt-${id}" href="${m.card(v)}">${h(v.name)}</a><span class="gt-kind">${h(L.catName[v.cat])}</span></div>
+<div class="gt-meta"><a class="gt-kind" href="${m.card(v)}">${h(L.catName[v.cat])} <span aria-hidden="true">→</span></a><button type="button" class="gt-theme" data-act="theme" data-id="${id}" aria-label="${L.t.toLight}" title="${L.t.toLight}">${IC.sun}${IC.moon}</button></div>
 <div class="gt-acts"><button type="button" class="btn" data-act="copy-prompt" data-id="${id}" aria-label="${h(v.name)} ${L.t.tPrompt}">${IC.prompt}<span>${L.t.tPrompt}</span></button><button type="button" class="btn" data-act="copy-code" data-id="${id}" aria-label="${h(v.name)} ${L.t.tCode}">${IC.copy}<span>${L.t.tCode}</span></button></div>
 </li>`;
   }).join('\n')}
@@ -486,6 +488,7 @@ const promptHead = (v, L) => {
   const noted = keys.filter((k) => N[k]).map((k) => `- ${k}: ${N[k]}`);
   // Fields the example leaves out but the common-fields rule names for this card.
   if (!keys.includes('value') && (v.id === 'kpi-line' || v.id === 'kpi-bar')) noted.push(en ? '- value: optional; the last value when it is left out' : '- value: 비우면 마지막 값');
+  noted.push(en ? '- theme: optional; dark draws the card on Vizney black with yellow as the first color, empty is white' : '- theme: dark면 Vizney 검정 바탕에 노랑을 첫째 색으로 그린다. 비우면 흰 바탕');
   if (v.uses.includes('curve')) noted.push(en ? '- curve: optional line shape: smooth (default) · linear · step' : '- curve: 선 모양. smooth(기본) · linear · step');
   const rules = v.rules.map((x) => `- ${plain(x)}`).join('\n');
   return en ? `Draw the following with the Vizney Blocks card below (${v.name}).
@@ -539,6 +542,8 @@ ${noted.join('\n')}
 `;
 };
 
+// The first sentence of a card's "when" text: the gallery's subtitle.
+const firstSentence = (s) => (s.match(/^.+?[.!?](?=\s|$)/) || [s])[0];
 // Page data for site.js: the search index, the words site.js prints, and the code of the cards this page shows.
 const data = (m, page, ids, L) => `<script>window.VZB = ${esc({
   mode: m.one ? 'one' : 'site',
@@ -553,6 +558,7 @@ const data = (m, page, ids, L) => `<script>window.VZB = ${esc({
   retired: Object.fromEntries(retired.map((v) => [v.id, m.card(L.byId[v.retired.use])])),
   code: Object.fromEntries(ids.map((id) => [id, L.byId[id].code])),
   prompt: Object.fromEntries(ids.map((id) => [id, promptHead(L.byId[id], L)])),
+  gal: page === 'home' ? Object.fromEntries(GALLERY.map((id) => [id, [L.byId[id].name, firstSentence(plain(L.byId[id].when))]])) : {},
 })};</script>`;
 
 // ---------- Site pages (docs/) ----------

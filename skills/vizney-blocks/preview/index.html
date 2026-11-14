@@ -7,8 +7,8 @@
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
 <style>
 /* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
-   색은 남색 · 산호 · 복숭아 세 색(해 질 녘 팔레트)과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다.
-   세 색은 색각 이상 시뮬레이션(적록)과 바탕 대비 검사를 통과한 값입니다.
+   색은 Vizney 차트 가이드의 파랑 · 분홍빨강 · 주황과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다.
+   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다.
    목록: https://blocks.vizney.com/ko/tokens.css */
 :where(:root) {
   --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* 카드의 모든 글자 */
@@ -18,16 +18,16 @@
   --vzb-ink-2: #4a4a4a;   /* 본문 글자, 변화 없음 배지 */
   --vzb-muted: #737373;   /* 부제, 단위, 축 눈금 */
   --vzb-grid: #ebebeb;   /* 격자와 머리 아래 선. 바탕에서 한 단계 떨어진 회색 실선 */
-  --vzb-primary: #255e90;   /* 첫째 데이터 색(남색). 선, 막대, 가장 큰 항목 */
-  --vzb-primary-tint: #edf4fb;   /* 남색의 옅은 바탕. 선 아래 음영, 레이더 면 */
-  --vzb-primary-soft: #c9ddf1;   /* 이름을 얹는 바 리스트 막대 */
-  --vzb-secondary: #e0576a;   /* 둘째 데이터 색(산호). 짚어 보일 한 항목 */
-  --vzb-tertiary: #e79d7b;   /* 셋째 데이터 색(복숭아). 가는 선에는 쓰지 않음 */
-  --vzb-primary-mid: #88b6e2;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
-  --vzb-secondary-mid: #fca0a7;   /* 산호의 넓은 면 */
-  --vzb-tertiary-mid: #f6cfa8;   /* 복숭아의 넓은 면 */
+  --vzb-primary: #007aff;   /* 첫째 데이터 색(파랑). 선, 막대, 가장 큰 항목 */
+  --vzb-primary-tint: #e6f2ff;   /* 파랑의 옅은 바탕. 선 아래 음영, 레이더 면 */
+  --vzb-primary-soft: #bfdeff;   /* 이름을 얹는 바 리스트 막대 */
+  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
+  --vzb-tertiary: #ff9500;   /* 셋째 데이터 색(주황) */
+  --vzb-primary-mid: #8cc3ff;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
+  --vzb-secondary-mid: #ff7a93;   /* 분홍빨강의 넓은 면 */
+  --vzb-tertiary-mid: #ffb54d;   /* 주황의 넓은 면 */
   --vzb-other-mid: #e3e3e3;   /* 기타 묶음의 넓은 면 */
-  --vzb-line-3: #7d3b5d;   /* 선의 셋째 색(자두). 복숭아는 흰 바탕의 가는 선으로는 잘 보이지 않아 자두색을 씁니다 */
+  --vzb-line-3: #ff9500;   /* 선의 셋째 색(주황) */
   --vzb-base: #c4c4c4;   /* 비교 기준(작년 선, 레이더의 기준 면 테두리) */
   --vzb-track: #f1f1f1;   /* 게이지 · 달성률 막대의 바탕 */
   --vzb-other: #d9d9d9;   /* 기타로 묶은 항목, 넷째부터의 항목 */
@@ -39,6 +39,35 @@
   --vzb-radius: 18px;   /* 카드 모서리 */
   --vzb-unit: 168px;   /* 높이 1단위(KPI - Number). Line · Bar는 2배, 나머지 KPI는 1.5배, 차트 카드는 2배 */
   --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* 카드 그림자 */
+}
+
+/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 · 분홍빨강 · 파랑은 적록 색각 시뮬레이션과 바탕 대비 검사를 통과합니다. */
+.vzb-dark {
+  --vzb-card: #1b1b1b;   /* 카드 바탕(Vizney 검정) */
+  --vzb-edge: rgba(255, 255, 255, 0.08);   /* 카드 테두리 */
+  --vzb-ink: #f5f5f5;   /* 제목과 대표 수치 */
+  --vzb-ink-2: #cfcfcf;   /* 본문 글자 */
+  --vzb-muted: #9b9b9b;   /* 부제, 단위, 축 눈금 */
+  --vzb-grid: #2f2f2f;   /* 격자와 머리 아래 선 */
+  --vzb-primary: #ffcc00;   /* 첫째 데이터 색(Vizney 노랑) */
+  --vzb-primary-tint: #362f18;   /* 노랑의 옅은 바탕 */
+  --vzb-primary-soft: #5f5013;   /* 이름을 얹는 바 리스트 막대 */
+  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
+  --vzb-tertiary: #007aff;   /* 셋째 데이터 색(파랑) */
+  --vzb-primary-mid: #826b0f;   /* 넓은 면. 밝은 글자가 올라가도록 한 단계 어둡게 */
+  --vzb-secondary-mid: #822335;   /* 분홍빨강의 넓은 면 */
+  --vzb-tertiary-mid: #134a82;   /* 파랑의 넓은 면 */
+  --vzb-other-mid: #3a3a3a;   /* 기타 묶음의 넓은 면 */
+  --vzb-line-3: #007aff;   /* 선의 셋째 색(파랑) */
+  --vzb-base: #6b6b6b;   /* 비교 기준 */
+  --vzb-track: #2c2c2c;   /* 게이지 · 달성률 막대의 바탕 */
+  --vzb-other: #4d4d4d;   /* 기타로 묶은 항목 */
+  --vzb-good: #30d158;   /* 좋은 증감 */
+  --vzb-good-tint: #1e3624;   /* 좋은 증감 배지의 바탕 */
+  --vzb-bad: #ff453a;   /* 나쁜 증감, 한도 초과 */
+  --vzb-bad-tint: #3d2120;   /* 나쁜 증감 배지의 바탕 */
+  --vzb-tip: #3a3a3a;   /* 툴팁 바탕 */
+  --vzb-shadow: none;   /* 카드 그림자 */
 }
 /* 카드: 놓인 자리의 폭을 채우고, 높이는 세 단계입니다(Number 1 · Line, Bar 2 · 나머지 1.5, 단위 --vzb-unit). */
 .vzb-card {
@@ -107,7 +136,7 @@
 .vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-value { font-size: 13px; font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { .vzb-tip { transition: none; } }
-/* 색 이름: t1 · t2 · t3 선(남색 · 산호 · 자두), f1 · f2 · f3 막대와 면(남색 · 산호 · 복숭아), fs 옅은 남색,
+/* 색 이름: t1 · t2 · t3 선(파랑 · 분홍빨강 · 주황, 어두운 바탕은 노랑 · 분홍빨강 · 파랑), f1 · f2 · f3 막대와 면(같은 순서), fs 옅은 첫째 색,
    t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
 .vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
 .vzb-t2, .vzb-f2 { --vzb-c: var(--vzb-secondary); }
@@ -306,7 +335,6 @@
   // 배지는 숫자 바로 뒤에 붙어 있고, 카드가 좁아 한 줄에 다 들어가지 않으면 비교 문구만 숫자 아래 줄로 내려갑니다.
   // 내려갔는지는 카드의 vzb-wrapped로 알려, 높이가 1단위인 KPI - Number가 아래 여백으로 그 줄을 받게 합니다.
   function head(card, d, f, value, cmp, cmpText) {
-    if (card.classList.contains('vzb-bare')) return;   // 모양만 보이기: 제목 · 부제 · 수치 없이 그림만
     const hd = el('div', 'vzb-hd');
     hd.append(el('div', 'vzb-title', d.title || ''));
     if (d.subtitle) hd.append(el('div', 'vzb-sub', d.subtitle));
@@ -337,9 +365,11 @@
         }
         card.setAttribute('role', 'group');
         if (d.title) card.setAttribute('aria-label', d.title);
-        // 모양만 보이기: 카드를 감싼 요소에 data-vzb-view="shape"가 있으면 제목과 이름표 없이 그림만 그립니다(갤러리 첫 화면).
+        // 모양만 보이기: 카드를 감싼 요소에 data-vzb-view="shape"가 있으면 이름표 없이 그림만 그립니다(갤러리 첫 화면).
         // 붙여 넣은 카드에는 이 속성이 없으므로 모두 그립니다. 값은 마우스를 올리거나 화살표 키로 그대로 볼 수 있습니다.
         if (card.closest('[data-vzb-view="shape"]')) card.classList.add('vzb-bare');
+        // 어두운 바탕: JSON에 "theme": "dark"를 적으면 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다(tokens.css의 .vzb-dark).
+        card.classList.toggle('vzb-dark', d.theme === 'dark');
         try { draw(card, d, format(d)); } catch (e) {
           card.append(el('p', 'vzb-error', tx(d, '카드를 그리지 못했습니다: %s', e.message)));
         }
@@ -359,7 +389,7 @@
 
   /* 툴팁과 조작: 마우스는 올리면 보이고 벗어나면 숨깁니다. 터치는 탭하면 보이고 다른 곳을 탭하면 닫힙니다.
      키보드는 그래프에 포커스한 뒤 화살표로 옮깁니다(가로 그래프는 좌우, 목록은 위아래). */
-  let tip;
+  let tip, tipDark = false;
   // value는 글자나 요소입니다. side가 참이면 점 위가 아니라 세로선 옆, 그래프 윗선에 맞춰 둡니다(선 · 막대 차트).
   function showTip(x, y, label, value, side) {
     if (!tip) {
@@ -367,6 +397,7 @@
       tip.setAttribute('aria-hidden', 'true');
       document.body.append(tip);
     }
+    tip.classList.toggle('vzb-dark', tipDark);
     tip.replaceChildren(el('span', 'vzb-tip-label', label), typeof value === 'string' ? el('span', 'vzb-tip-value', value) : value);
     tip.classList.add('is-on');
     const w = tip.offsetWidth, h = tip.offsetHeight, W = window.innerWidth, H = window.innerHeight;
@@ -445,6 +476,7 @@
       if (i < 0 || i >= count()) return;
       idx = i;
       const p = point(i);
+      tipDark = !!plot.closest('.vzb-dark');
       showTip(p.x, p.y, p.label, p.value, p.side);
       live.textContent = p.text || `${p.label} ${p.value}`;
     };
@@ -581,8 +613,8 @@
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
 <style>
 /* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
-   색은 남색 · 산호 · 복숭아 세 색(해 질 녘 팔레트)과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다.
-   세 색은 색각 이상 시뮬레이션(적록)과 바탕 대비 검사를 통과한 값입니다.
+   색은 Vizney 차트 가이드의 파랑 · 분홍빨강 · 주황과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다.
+   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다.
    목록: https://blocks.vizney.com/ko/tokens.css */
 :where(:root) {
   --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* 카드의 모든 글자 */
@@ -592,16 +624,16 @@
   --vzb-ink-2: #4a4a4a;   /* 본문 글자, 변화 없음 배지 */
   --vzb-muted: #737373;   /* 부제, 단위, 축 눈금 */
   --vzb-grid: #ebebeb;   /* 격자와 머리 아래 선. 바탕에서 한 단계 떨어진 회색 실선 */
-  --vzb-primary: #255e90;   /* 첫째 데이터 색(남색). 선, 막대, 가장 큰 항목 */
-  --vzb-primary-tint: #edf4fb;   /* 남색의 옅은 바탕. 선 아래 음영, 레이더 면 */
-  --vzb-primary-soft: #c9ddf1;   /* 이름을 얹는 바 리스트 막대 */
-  --vzb-secondary: #e0576a;   /* 둘째 데이터 색(산호). 짚어 보일 한 항목 */
-  --vzb-tertiary: #e79d7b;   /* 셋째 데이터 색(복숭아). 가는 선에는 쓰지 않음 */
-  --vzb-primary-mid: #88b6e2;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
-  --vzb-secondary-mid: #fca0a7;   /* 산호의 넓은 면 */
-  --vzb-tertiary-mid: #f6cfa8;   /* 복숭아의 넓은 면 */
+  --vzb-primary: #007aff;   /* 첫째 데이터 색(파랑). 선, 막대, 가장 큰 항목 */
+  --vzb-primary-tint: #e6f2ff;   /* 파랑의 옅은 바탕. 선 아래 음영, 레이더 면 */
+  --vzb-primary-soft: #bfdeff;   /* 이름을 얹는 바 리스트 막대 */
+  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
+  --vzb-tertiary: #ff9500;   /* 셋째 데이터 색(주황) */
+  --vzb-primary-mid: #8cc3ff;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
+  --vzb-secondary-mid: #ff7a93;   /* 분홍빨강의 넓은 면 */
+  --vzb-tertiary-mid: #ffb54d;   /* 주황의 넓은 면 */
   --vzb-other-mid: #e3e3e3;   /* 기타 묶음의 넓은 면 */
-  --vzb-line-3: #7d3b5d;   /* 선의 셋째 색(자두). 복숭아는 흰 바탕의 가는 선으로는 잘 보이지 않아 자두색을 씁니다 */
+  --vzb-line-3: #ff9500;   /* 선의 셋째 색(주황) */
   --vzb-base: #c4c4c4;   /* 비교 기준(작년 선, 레이더의 기준 면 테두리) */
   --vzb-track: #f1f1f1;   /* 게이지 · 달성률 막대의 바탕 */
   --vzb-other: #d9d9d9;   /* 기타로 묶은 항목, 넷째부터의 항목 */
@@ -613,6 +645,35 @@
   --vzb-radius: 18px;   /* 카드 모서리 */
   --vzb-unit: 168px;   /* 높이 1단위(KPI - Number). Line · Bar는 2배, 나머지 KPI는 1.5배, 차트 카드는 2배 */
   --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* 카드 그림자 */
+}
+
+/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 · 분홍빨강 · 파랑은 적록 색각 시뮬레이션과 바탕 대비 검사를 통과합니다. */
+.vzb-dark {
+  --vzb-card: #1b1b1b;   /* 카드 바탕(Vizney 검정) */
+  --vzb-edge: rgba(255, 255, 255, 0.08);   /* 카드 테두리 */
+  --vzb-ink: #f5f5f5;   /* 제목과 대표 수치 */
+  --vzb-ink-2: #cfcfcf;   /* 본문 글자 */
+  --vzb-muted: #9b9b9b;   /* 부제, 단위, 축 눈금 */
+  --vzb-grid: #2f2f2f;   /* 격자와 머리 아래 선 */
+  --vzb-primary: #ffcc00;   /* 첫째 데이터 색(Vizney 노랑) */
+  --vzb-primary-tint: #362f18;   /* 노랑의 옅은 바탕 */
+  --vzb-primary-soft: #5f5013;   /* 이름을 얹는 바 리스트 막대 */
+  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
+  --vzb-tertiary: #007aff;   /* 셋째 데이터 색(파랑) */
+  --vzb-primary-mid: #826b0f;   /* 넓은 면. 밝은 글자가 올라가도록 한 단계 어둡게 */
+  --vzb-secondary-mid: #822335;   /* 분홍빨강의 넓은 면 */
+  --vzb-tertiary-mid: #134a82;   /* 파랑의 넓은 면 */
+  --vzb-other-mid: #3a3a3a;   /* 기타 묶음의 넓은 면 */
+  --vzb-line-3: #007aff;   /* 선의 셋째 색(파랑) */
+  --vzb-base: #6b6b6b;   /* 비교 기준 */
+  --vzb-track: #2c2c2c;   /* 게이지 · 달성률 막대의 바탕 */
+  --vzb-other: #4d4d4d;   /* 기타로 묶은 항목 */
+  --vzb-good: #30d158;   /* 좋은 증감 */
+  --vzb-good-tint: #1e3624;   /* 좋은 증감 배지의 바탕 */
+  --vzb-bad: #ff453a;   /* 나쁜 증감, 한도 초과 */
+  --vzb-bad-tint: #3d2120;   /* 나쁜 증감 배지의 바탕 */
+  --vzb-tip: #3a3a3a;   /* 툴팁 바탕 */
+  --vzb-shadow: none;   /* 카드 그림자 */
 }
 /* 카드: 놓인 자리의 폭을 채우고, 높이는 세 단계입니다(Number 1 · Line, Bar 2 · 나머지 1.5, 단위 --vzb-unit). */
 .vzb-card {
@@ -681,7 +742,7 @@
 .vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-value { font-size: 13px; font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { .vzb-tip { transition: none; } }
-/* 색 이름: t1 · t2 · t3 선(남색 · 산호 · 자두), f1 · f2 · f3 막대와 면(남색 · 산호 · 복숭아), fs 옅은 남색,
+/* 색 이름: t1 · t2 · t3 선(파랑 · 분홍빨강 · 주황, 어두운 바탕은 노랑 · 분홍빨강 · 파랑), f1 · f2 · f3 막대와 면(같은 순서), fs 옅은 첫째 색,
    t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
 .vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
 .vzb-t2, .vzb-f2 { --vzb-c: var(--vzb-secondary); }
@@ -882,7 +943,6 @@
   // 배지는 숫자 바로 뒤에 붙어 있고, 카드가 좁아 한 줄에 다 들어가지 않으면 비교 문구만 숫자 아래 줄로 내려갑니다.
   // 내려갔는지는 카드의 vzb-wrapped로 알려, 높이가 1단위인 KPI - Number가 아래 여백으로 그 줄을 받게 합니다.
   function head(card, d, f, value, cmp, cmpText) {
-    if (card.classList.contains('vzb-bare')) return;   // 모양만 보이기: 제목 · 부제 · 수치 없이 그림만
     const hd = el('div', 'vzb-hd');
     hd.append(el('div', 'vzb-title', d.title || ''));
     if (d.subtitle) hd.append(el('div', 'vzb-sub', d.subtitle));
@@ -913,9 +973,11 @@
         }
         card.setAttribute('role', 'group');
         if (d.title) card.setAttribute('aria-label', d.title);
-        // 모양만 보이기: 카드를 감싼 요소에 data-vzb-view="shape"가 있으면 제목과 이름표 없이 그림만 그립니다(갤러리 첫 화면).
+        // 모양만 보이기: 카드를 감싼 요소에 data-vzb-view="shape"가 있으면 이름표 없이 그림만 그립니다(갤러리 첫 화면).
         // 붙여 넣은 카드에는 이 속성이 없으므로 모두 그립니다. 값은 마우스를 올리거나 화살표 키로 그대로 볼 수 있습니다.
         if (card.closest('[data-vzb-view="shape"]')) card.classList.add('vzb-bare');
+        // 어두운 바탕: JSON에 "theme": "dark"를 적으면 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다(tokens.css의 .vzb-dark).
+        card.classList.toggle('vzb-dark', d.theme === 'dark');
         try { draw(card, d, format(d)); } catch (e) {
           card.append(el('p', 'vzb-error', tx(d, '카드를 그리지 못했습니다: %s', e.message)));
         }
@@ -935,7 +997,7 @@
 
   /* 툴팁과 조작: 마우스는 올리면 보이고 벗어나면 숨깁니다. 터치는 탭하면 보이고 다른 곳을 탭하면 닫힙니다.
      키보드는 그래프에 포커스한 뒤 화살표로 옮깁니다(가로 그래프는 좌우, 목록은 위아래). */
-  let tip;
+  let tip, tipDark = false;
   // value는 글자나 요소입니다. side가 참이면 점 위가 아니라 세로선 옆, 그래프 윗선에 맞춰 둡니다(선 · 막대 차트).
   function showTip(x, y, label, value, side) {
     if (!tip) {
@@ -943,6 +1005,7 @@
       tip.setAttribute('aria-hidden', 'true');
       document.body.append(tip);
     }
+    tip.classList.toggle('vzb-dark', tipDark);
     tip.replaceChildren(el('span', 'vzb-tip-label', label), typeof value === 'string' ? el('span', 'vzb-tip-value', value) : value);
     tip.classList.add('is-on');
     const w = tip.offsetWidth, h = tip.offsetHeight, W = window.innerWidth, H = window.innerHeight;
@@ -1021,6 +1084,7 @@
       if (i < 0 || i >= count()) return;
       idx = i;
       const p = point(i);
+      tipDark = !!plot.closest('.vzb-dark');
       showTip(p.x, p.y, p.label, p.value, p.side);
       live.textContent = p.text || `${p.label} ${p.value}`;
     };
@@ -1118,8 +1182,8 @@
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
 <style>
 /* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
-   색은 남색 · 산호 · 복숭아 세 색(해 질 녘 팔레트)과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다.
-   세 색은 색각 이상 시뮬레이션(적록)과 바탕 대비 검사를 통과한 값입니다.
+   색은 Vizney 차트 가이드의 파랑 · 분홍빨강 · 주황과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다.
+   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다.
    목록: https://blocks.vizney.com/ko/tokens.css */
 :where(:root) {
   --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* 카드의 모든 글자 */
@@ -1129,16 +1193,16 @@
   --vzb-ink-2: #4a4a4a;   /* 본문 글자, 변화 없음 배지 */
   --vzb-muted: #737373;   /* 부제, 단위, 축 눈금 */
   --vzb-grid: #ebebeb;   /* 격자와 머리 아래 선. 바탕에서 한 단계 떨어진 회색 실선 */
-  --vzb-primary: #255e90;   /* 첫째 데이터 색(남색). 선, 막대, 가장 큰 항목 */
-  --vzb-primary-tint: #edf4fb;   /* 남색의 옅은 바탕. 선 아래 음영, 레이더 면 */
-  --vzb-primary-soft: #c9ddf1;   /* 이름을 얹는 바 리스트 막대 */
-  --vzb-secondary: #e0576a;   /* 둘째 데이터 색(산호). 짚어 보일 한 항목 */
-  --vzb-tertiary: #e79d7b;   /* 셋째 데이터 색(복숭아). 가는 선에는 쓰지 않음 */
-  --vzb-primary-mid: #88b6e2;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
-  --vzb-secondary-mid: #fca0a7;   /* 산호의 넓은 면 */
-  --vzb-tertiary-mid: #f6cfa8;   /* 복숭아의 넓은 면 */
+  --vzb-primary: #007aff;   /* 첫째 데이터 색(파랑). 선, 막대, 가장 큰 항목 */
+  --vzb-primary-tint: #e6f2ff;   /* 파랑의 옅은 바탕. 선 아래 음영, 레이더 면 */
+  --vzb-primary-soft: #bfdeff;   /* 이름을 얹는 바 리스트 막대 */
+  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
+  --vzb-tertiary: #ff9500;   /* 셋째 데이터 색(주황) */
+  --vzb-primary-mid: #8cc3ff;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
+  --vzb-secondary-mid: #ff7a93;   /* 분홍빨강의 넓은 면 */
+  --vzb-tertiary-mid: #ffb54d;   /* 주황의 넓은 면 */
   --vzb-other-mid: #e3e3e3;   /* 기타 묶음의 넓은 면 */
-  --vzb-line-3: #7d3b5d;   /* 선의 셋째 색(자두). 복숭아는 흰 바탕의 가는 선으로는 잘 보이지 않아 자두색을 씁니다 */
+  --vzb-line-3: #ff9500;   /* 선의 셋째 색(주황) */
   --vzb-base: #c4c4c4;   /* 비교 기준(작년 선, 레이더의 기준 면 테두리) */
   --vzb-track: #f1f1f1;   /* 게이지 · 달성률 막대의 바탕 */
   --vzb-other: #d9d9d9;   /* 기타로 묶은 항목, 넷째부터의 항목 */
@@ -1150,6 +1214,35 @@
   --vzb-radius: 18px;   /* 카드 모서리 */
   --vzb-unit: 168px;   /* 높이 1단위(KPI - Number). Line · Bar는 2배, 나머지 KPI는 1.5배, 차트 카드는 2배 */
   --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* 카드 그림자 */
+}
+
+/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 · 분홍빨강 · 파랑은 적록 색각 시뮬레이션과 바탕 대비 검사를 통과합니다. */
+.vzb-dark {
+  --vzb-card: #1b1b1b;   /* 카드 바탕(Vizney 검정) */
+  --vzb-edge: rgba(255, 255, 255, 0.08);   /* 카드 테두리 */
+  --vzb-ink: #f5f5f5;   /* 제목과 대표 수치 */
+  --vzb-ink-2: #cfcfcf;   /* 본문 글자 */
+  --vzb-muted: #9b9b9b;   /* 부제, 단위, 축 눈금 */
+  --vzb-grid: #2f2f2f;   /* 격자와 머리 아래 선 */
+  --vzb-primary: #ffcc00;   /* 첫째 데이터 색(Vizney 노랑) */
+  --vzb-primary-tint: #362f18;   /* 노랑의 옅은 바탕 */
+  --vzb-primary-soft: #5f5013;   /* 이름을 얹는 바 리스트 막대 */
+  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
+  --vzb-tertiary: #007aff;   /* 셋째 데이터 색(파랑) */
+  --vzb-primary-mid: #826b0f;   /* 넓은 면. 밝은 글자가 올라가도록 한 단계 어둡게 */
+  --vzb-secondary-mid: #822335;   /* 분홍빨강의 넓은 면 */
+  --vzb-tertiary-mid: #134a82;   /* 파랑의 넓은 면 */
+  --vzb-other-mid: #3a3a3a;   /* 기타 묶음의 넓은 면 */
+  --vzb-line-3: #007aff;   /* 선의 셋째 색(파랑) */
+  --vzb-base: #6b6b6b;   /* 비교 기준 */
+  --vzb-track: #2c2c2c;   /* 게이지 · 달성률 막대의 바탕 */
+  --vzb-other: #4d4d4d;   /* 기타로 묶은 항목 */
+  --vzb-good: #30d158;   /* 좋은 증감 */
+  --vzb-good-tint: #1e3624;   /* 좋은 증감 배지의 바탕 */
+  --vzb-bad: #ff453a;   /* 나쁜 증감, 한도 초과 */
+  --vzb-bad-tint: #3d2120;   /* 나쁜 증감 배지의 바탕 */
+  --vzb-tip: #3a3a3a;   /* 툴팁 바탕 */
+  --vzb-shadow: none;   /* 카드 그림자 */
 }
 /* 카드: 놓인 자리의 폭을 채우고, 높이는 세 단계입니다(Number 1 · Line, Bar 2 · 나머지 1.5, 단위 --vzb-unit). */
 .vzb-card {
@@ -1218,7 +1311,7 @@
 .vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-value { font-size: 13px; font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { .vzb-tip { transition: none; } }
-/* 색 이름: t1 · t2 · t3 선(남색 · 산호 · 자두), f1 · f2 · f3 막대와 면(남색 · 산호 · 복숭아), fs 옅은 남색,
+/* 색 이름: t1 · t2 · t3 선(파랑 · 분홍빨강 · 주황, 어두운 바탕은 노랑 · 분홍빨강 · 파랑), f1 · f2 · f3 막대와 면(같은 순서), fs 옅은 첫째 색,
    t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
 .vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
 .vzb-t2, .vzb-f2 { --vzb-c: var(--vzb-secondary); }
@@ -1448,7 +1541,6 @@
   // 배지는 숫자 바로 뒤에 붙어 있고, 카드가 좁아 한 줄에 다 들어가지 않으면 비교 문구만 숫자 아래 줄로 내려갑니다.
   // 내려갔는지는 카드의 vzb-wrapped로 알려, 높이가 1단위인 KPI - Number가 아래 여백으로 그 줄을 받게 합니다.
   function head(card, d, f, value, cmp, cmpText) {
-    if (card.classList.contains('vzb-bare')) return;   // 모양만 보이기: 제목 · 부제 · 수치 없이 그림만
     const hd = el('div', 'vzb-hd');
     hd.append(el('div', 'vzb-title', d.title || ''));
     if (d.subtitle) hd.append(el('div', 'vzb-sub', d.subtitle));
@@ -1479,9 +1571,11 @@
         }
         card.setAttribute('role', 'group');
         if (d.title) card.setAttribute('aria-label', d.title);
-        // 모양만 보이기: 카드를 감싼 요소에 data-vzb-view="shape"가 있으면 제목과 이름표 없이 그림만 그립니다(갤러리 첫 화면).
+        // 모양만 보이기: 카드를 감싼 요소에 data-vzb-view="shape"가 있으면 이름표 없이 그림만 그립니다(갤러리 첫 화면).
         // 붙여 넣은 카드에는 이 속성이 없으므로 모두 그립니다. 값은 마우스를 올리거나 화살표 키로 그대로 볼 수 있습니다.
         if (card.closest('[data-vzb-view="shape"]')) card.classList.add('vzb-bare');
+        // 어두운 바탕: JSON에 "theme": "dark"를 적으면 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다(tokens.css의 .vzb-dark).
+        card.classList.toggle('vzb-dark', d.theme === 'dark');
         try { draw(card, d, format(d)); } catch (e) {
           card.append(el('p', 'vzb-error', tx(d, '카드를 그리지 못했습니다: %s', e.message)));
         }
@@ -1501,7 +1595,7 @@
 
   /* 툴팁과 조작: 마우스는 올리면 보이고 벗어나면 숨깁니다. 터치는 탭하면 보이고 다른 곳을 탭하면 닫힙니다.
      키보드는 그래프에 포커스한 뒤 화살표로 옮깁니다(가로 그래프는 좌우, 목록은 위아래). */
-  let tip;
+  let tip, tipDark = false;
   // value는 글자나 요소입니다. side가 참이면 점 위가 아니라 세로선 옆, 그래프 윗선에 맞춰 둡니다(선 · 막대 차트).
   function showTip(x, y, label, value, side) {
     if (!tip) {
@@ -1509,6 +1603,7 @@
       tip.setAttribute('aria-hidden', 'true');
       document.body.append(tip);
     }
+    tip.classList.toggle('vzb-dark', tipDark);
     tip.replaceChildren(el('span', 'vzb-tip-label', label), typeof value === 'string' ? el('span', 'vzb-tip-value', value) : value);
     tip.classList.add('is-on');
     const w = tip.offsetWidth, h = tip.offsetHeight, W = window.innerWidth, H = window.innerHeight;
@@ -1587,6 +1682,7 @@
       if (i < 0 || i >= count()) return;
       idx = i;
       const p = point(i);
+      tipDark = !!plot.closest('.vzb-dark');
       showTip(p.x, p.y, p.label, p.value, p.side);
       live.textContent = p.text || `${p.label} ${p.value}`;
     };
@@ -1747,8 +1843,8 @@
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
 <style>
 /* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
-   색은 남색 · 산호 · 복숭아 세 색(해 질 녘 팔레트)과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다.
-   세 색은 색각 이상 시뮬레이션(적록)과 바탕 대비 검사를 통과한 값입니다.
+   색은 Vizney 차트 가이드의 파랑 · 분홍빨강 · 주황과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다.
+   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다.
    목록: https://blocks.vizney.com/ko/tokens.css */
 :where(:root) {
   --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* 카드의 모든 글자 */
@@ -1758,16 +1854,16 @@
   --vzb-ink-2: #4a4a4a;   /* 본문 글자, 변화 없음 배지 */
   --vzb-muted: #737373;   /* 부제, 단위, 축 눈금 */
   --vzb-grid: #ebebeb;   /* 격자와 머리 아래 선. 바탕에서 한 단계 떨어진 회색 실선 */
-  --vzb-primary: #255e90;   /* 첫째 데이터 색(남색). 선, 막대, 가장 큰 항목 */
-  --vzb-primary-tint: #edf4fb;   /* 남색의 옅은 바탕. 선 아래 음영, 레이더 면 */
-  --vzb-primary-soft: #c9ddf1;   /* 이름을 얹는 바 리스트 막대 */
-  --vzb-secondary: #e0576a;   /* 둘째 데이터 색(산호). 짚어 보일 한 항목 */
-  --vzb-tertiary: #e79d7b;   /* 셋째 데이터 색(복숭아). 가는 선에는 쓰지 않음 */
-  --vzb-primary-mid: #88b6e2;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
-  --vzb-secondary-mid: #fca0a7;   /* 산호의 넓은 면 */
-  --vzb-tertiary-mid: #f6cfa8;   /* 복숭아의 넓은 면 */
+  --vzb-primary: #007aff;   /* 첫째 데이터 색(파랑). 선, 막대, 가장 큰 항목 */
+  --vzb-primary-tint: #e6f2ff;   /* 파랑의 옅은 바탕. 선 아래 음영, 레이더 면 */
+  --vzb-primary-soft: #bfdeff;   /* 이름을 얹는 바 리스트 막대 */
+  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
+  --vzb-tertiary: #ff9500;   /* 셋째 데이터 색(주황) */
+  --vzb-primary-mid: #8cc3ff;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
+  --vzb-secondary-mid: #ff7a93;   /* 분홍빨강의 넓은 면 */
+  --vzb-tertiary-mid: #ffb54d;   /* 주황의 넓은 면 */
   --vzb-other-mid: #e3e3e3;   /* 기타 묶음의 넓은 면 */
-  --vzb-line-3: #7d3b5d;   /* 선의 셋째 색(자두). 복숭아는 흰 바탕의 가는 선으로는 잘 보이지 않아 자두색을 씁니다 */
+  --vzb-line-3: #ff9500;   /* 선의 셋째 색(주황) */
   --vzb-base: #c4c4c4;   /* 비교 기준(작년 선, 레이더의 기준 면 테두리) */
   --vzb-track: #f1f1f1;   /* 게이지 · 달성률 막대의 바탕 */
   --vzb-other: #d9d9d9;   /* 기타로 묶은 항목, 넷째부터의 항목 */
@@ -1779,6 +1875,35 @@
   --vzb-radius: 18px;   /* 카드 모서리 */
   --vzb-unit: 168px;   /* 높이 1단위(KPI - Number). Line · Bar는 2배, 나머지 KPI는 1.5배, 차트 카드는 2배 */
   --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* 카드 그림자 */
+}
+
+/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 · 분홍빨강 · 파랑은 적록 색각 시뮬레이션과 바탕 대비 검사를 통과합니다. */
+.vzb-dark {
+  --vzb-card: #1b1b1b;   /* 카드 바탕(Vizney 검정) */
+  --vzb-edge: rgba(255, 255, 255, 0.08);   /* 카드 테두리 */
+  --vzb-ink: #f5f5f5;   /* 제목과 대표 수치 */
+  --vzb-ink-2: #cfcfcf;   /* 본문 글자 */
+  --vzb-muted: #9b9b9b;   /* 부제, 단위, 축 눈금 */
+  --vzb-grid: #2f2f2f;   /* 격자와 머리 아래 선 */
+  --vzb-primary: #ffcc00;   /* 첫째 데이터 색(Vizney 노랑) */
+  --vzb-primary-tint: #362f18;   /* 노랑의 옅은 바탕 */
+  --vzb-primary-soft: #5f5013;   /* 이름을 얹는 바 리스트 막대 */
+  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
+  --vzb-tertiary: #007aff;   /* 셋째 데이터 색(파랑) */
+  --vzb-primary-mid: #826b0f;   /* 넓은 면. 밝은 글자가 올라가도록 한 단계 어둡게 */
+  --vzb-secondary-mid: #822335;   /* 분홍빨강의 넓은 면 */
+  --vzb-tertiary-mid: #134a82;   /* 파랑의 넓은 면 */
+  --vzb-other-mid: #3a3a3a;   /* 기타 묶음의 넓은 면 */
+  --vzb-line-3: #007aff;   /* 선의 셋째 색(파랑) */
+  --vzb-base: #6b6b6b;   /* 비교 기준 */
+  --vzb-track: #2c2c2c;   /* 게이지 · 달성률 막대의 바탕 */
+  --vzb-other: #4d4d4d;   /* 기타로 묶은 항목 */
+  --vzb-good: #30d158;   /* 좋은 증감 */
+  --vzb-good-tint: #1e3624;   /* 좋은 증감 배지의 바탕 */
+  --vzb-bad: #ff453a;   /* 나쁜 증감, 한도 초과 */
+  --vzb-bad-tint: #3d2120;   /* 나쁜 증감 배지의 바탕 */
+  --vzb-tip: #3a3a3a;   /* 툴팁 바탕 */
+  --vzb-shadow: none;   /* 카드 그림자 */
 }
 /* 카드: 놓인 자리의 폭을 채우고, 높이는 세 단계입니다(Number 1 · Line, Bar 2 · 나머지 1.5, 단위 --vzb-unit). */
 .vzb-card {
@@ -1847,7 +1972,7 @@
 .vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-value { font-size: 13px; font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { .vzb-tip { transition: none; } }
-/* 색 이름: t1 · t2 · t3 선(남색 · 산호 · 자두), f1 · f2 · f3 막대와 면(남색 · 산호 · 복숭아), fs 옅은 남색,
+/* 색 이름: t1 · t2 · t3 선(파랑 · 분홍빨강 · 주황, 어두운 바탕은 노랑 · 분홍빨강 · 파랑), f1 · f2 · f3 막대와 면(같은 순서), fs 옅은 첫째 색,
    t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
 .vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
 .vzb-t2, .vzb-f2 { --vzb-c: var(--vzb-secondary); }
@@ -1877,7 +2002,6 @@
    이름표는 이름(12px)과 값(13px 굵게, 단위는 작게) 두 줄이고, 가운데 단 이름표는 띠 위에 흰 테두리를 둘러 읽히게 합니다. */
 .vzb-card[data-vzb^="sankey-"] { min-height: calc(var(--vzb-unit) * 2); }
 .vzb-sk.vzb-foot { padding-top: 16px; }
-.vzb-bare .vzb-sk.vzb-foot { padding-top: 0; }
 .vzb-sk-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-sk-link { fill: var(--vzb-c); fill-opacity: 0.32; transition: fill-opacity 0.12s; }
 .vzb-sk-node, .vzb-sk-lab { transition: opacity 0.12s; }
@@ -1889,6 +2013,10 @@
 .vzb-sk-svg.is-hover .vzb-sk-link { fill-opacity: 0.1; }
 .vzb-sk-svg.is-hover .vzb-sk-link.is-on { fill-opacity: 0.62; }
 .vzb-sk-svg.is-hover .vzb-sk-node:not(.is-on), .vzb-sk-svg.is-hover .vzb-sk-lab:not(.is-on) { opacity: 0.3; }
+/* 어두운 바탕: 옅은 띠가 검정에 섞이면 탁해지므로 띠를 진하게 둡니다. */
+.vzb-dark .vzb-sk-link { fill-opacity: 0.56; }
+.vzb-dark .vzb-sk-svg.is-hover .vzb-sk-link { fill-opacity: 0.16; }
+.vzb-dark .vzb-sk-svg.is-hover .vzb-sk-link.is-on { fill-opacity: 0.85; }
 @media (prefers-reduced-motion: reduce) { .vzb-sk-link, .vzb-sk-node, .vzb-sk-lab { transition: none; } }
 </style>
 <div class="vzb-card" data-vzb="sankey-levels">
@@ -2056,7 +2184,6 @@
   // 배지는 숫자 바로 뒤에 붙어 있고, 카드가 좁아 한 줄에 다 들어가지 않으면 비교 문구만 숫자 아래 줄로 내려갑니다.
   // 내려갔는지는 카드의 vzb-wrapped로 알려, 높이가 1단위인 KPI - Number가 아래 여백으로 그 줄을 받게 합니다.
   function head(card, d, f, value, cmp, cmpText) {
-    if (card.classList.contains('vzb-bare')) return;   // 모양만 보이기: 제목 · 부제 · 수치 없이 그림만
     const hd = el('div', 'vzb-hd');
     hd.append(el('div', 'vzb-title', d.title || ''));
     if (d.subtitle) hd.append(el('div', 'vzb-sub', d.subtitle));
@@ -2087,9 +2214,11 @@
         }
         card.setAttribute('role', 'group');
         if (d.title) card.setAttribute('aria-label', d.title);
-        // 모양만 보이기: 카드를 감싼 요소에 data-vzb-view="shape"가 있으면 제목과 이름표 없이 그림만 그립니다(갤러리 첫 화면).
+        // 모양만 보이기: 카드를 감싼 요소에 data-vzb-view="shape"가 있으면 이름표 없이 그림만 그립니다(갤러리 첫 화면).
         // 붙여 넣은 카드에는 이 속성이 없으므로 모두 그립니다. 값은 마우스를 올리거나 화살표 키로 그대로 볼 수 있습니다.
         if (card.closest('[data-vzb-view="shape"]')) card.classList.add('vzb-bare');
+        // 어두운 바탕: JSON에 "theme": "dark"를 적으면 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다(tokens.css의 .vzb-dark).
+        card.classList.toggle('vzb-dark', d.theme === 'dark');
         try { draw(card, d, format(d)); } catch (e) {
           card.append(el('p', 'vzb-error', tx(d, '카드를 그리지 못했습니다: %s', e.message)));
         }
@@ -2109,7 +2238,7 @@
 
   /* 툴팁과 조작: 마우스는 올리면 보이고 벗어나면 숨깁니다. 터치는 탭하면 보이고 다른 곳을 탭하면 닫힙니다.
      키보드는 그래프에 포커스한 뒤 화살표로 옮깁니다(가로 그래프는 좌우, 목록은 위아래). */
-  let tip;
+  let tip, tipDark = false;
   // value는 글자나 요소입니다. side가 참이면 점 위가 아니라 세로선 옆, 그래프 윗선에 맞춰 둡니다(선 · 막대 차트).
   function showTip(x, y, label, value, side) {
     if (!tip) {
@@ -2117,6 +2246,7 @@
       tip.setAttribute('aria-hidden', 'true');
       document.body.append(tip);
     }
+    tip.classList.toggle('vzb-dark', tipDark);
     tip.replaceChildren(el('span', 'vzb-tip-label', label), typeof value === 'string' ? el('span', 'vzb-tip-value', value) : value);
     tip.classList.add('is-on');
     const w = tip.offsetWidth, h = tip.offsetHeight, W = window.innerWidth, H = window.innerHeight;
@@ -2195,6 +2325,7 @@
       if (i < 0 || i >= count()) return;
       idx = i;
       const p = point(i);
+      tipDark = !!plot.closest('.vzb-dark');
       showTip(p.x, p.y, p.label, p.value, p.side);
       live.textContent = p.text || `${p.label} ${p.value}`;
     };
@@ -2393,7 +2524,7 @@
     sankeyCard(card, d, f, {
       paint(nodes, links, cols) {
         const end = cols[cols.length - 1], focus = d.focus == null ? null : String(d.focus);
-        nodes.forEach((n) => { n.tone = focus == null || !end.includes(n) ? 'f1' : n.id === focus ? 'f2' : 'f0'; });
+        nodes.forEach((n) => { n.tone = focus == null || !end.includes(n) ? 'f1' : n.id === focus ? 't3' : 'f0'; });
         links.forEach((l) => { l.tone = l.t.tone; });
       },
     });
@@ -2407,8 +2538,8 @@
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
 <style>
 /* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
-   색은 남색 · 산호 · 복숭아 세 색(해 질 녘 팔레트)과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다.
-   세 색은 색각 이상 시뮬레이션(적록)과 바탕 대비 검사를 통과한 값입니다.
+   색은 Vizney 차트 가이드의 파랑 · 분홍빨강 · 주황과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다.
+   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다.
    목록: https://blocks.vizney.com/ko/tokens.css */
 :where(:root) {
   --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* 카드의 모든 글자 */
@@ -2418,16 +2549,16 @@
   --vzb-ink-2: #4a4a4a;   /* 본문 글자, 변화 없음 배지 */
   --vzb-muted: #737373;   /* 부제, 단위, 축 눈금 */
   --vzb-grid: #ebebeb;   /* 격자와 머리 아래 선. 바탕에서 한 단계 떨어진 회색 실선 */
-  --vzb-primary: #255e90;   /* 첫째 데이터 색(남색). 선, 막대, 가장 큰 항목 */
-  --vzb-primary-tint: #edf4fb;   /* 남색의 옅은 바탕. 선 아래 음영, 레이더 면 */
-  --vzb-primary-soft: #c9ddf1;   /* 이름을 얹는 바 리스트 막대 */
-  --vzb-secondary: #e0576a;   /* 둘째 데이터 색(산호). 짚어 보일 한 항목 */
-  --vzb-tertiary: #e79d7b;   /* 셋째 데이터 색(복숭아). 가는 선에는 쓰지 않음 */
-  --vzb-primary-mid: #88b6e2;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
-  --vzb-secondary-mid: #fca0a7;   /* 산호의 넓은 면 */
-  --vzb-tertiary-mid: #f6cfa8;   /* 복숭아의 넓은 면 */
+  --vzb-primary: #007aff;   /* 첫째 데이터 색(파랑). 선, 막대, 가장 큰 항목 */
+  --vzb-primary-tint: #e6f2ff;   /* 파랑의 옅은 바탕. 선 아래 음영, 레이더 면 */
+  --vzb-primary-soft: #bfdeff;   /* 이름을 얹는 바 리스트 막대 */
+  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
+  --vzb-tertiary: #ff9500;   /* 셋째 데이터 색(주황) */
+  --vzb-primary-mid: #8cc3ff;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
+  --vzb-secondary-mid: #ff7a93;   /* 분홍빨강의 넓은 면 */
+  --vzb-tertiary-mid: #ffb54d;   /* 주황의 넓은 면 */
   --vzb-other-mid: #e3e3e3;   /* 기타 묶음의 넓은 면 */
-  --vzb-line-3: #7d3b5d;   /* 선의 셋째 색(자두). 복숭아는 흰 바탕의 가는 선으로는 잘 보이지 않아 자두색을 씁니다 */
+  --vzb-line-3: #ff9500;   /* 선의 셋째 색(주황) */
   --vzb-base: #c4c4c4;   /* 비교 기준(작년 선, 레이더의 기준 면 테두리) */
   --vzb-track: #f1f1f1;   /* 게이지 · 달성률 막대의 바탕 */
   --vzb-other: #d9d9d9;   /* 기타로 묶은 항목, 넷째부터의 항목 */
@@ -2439,6 +2570,35 @@
   --vzb-radius: 18px;   /* 카드 모서리 */
   --vzb-unit: 168px;   /* 높이 1단위(KPI - Number). Line · Bar는 2배, 나머지 KPI는 1.5배, 차트 카드는 2배 */
   --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* 카드 그림자 */
+}
+
+/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 · 분홍빨강 · 파랑은 적록 색각 시뮬레이션과 바탕 대비 검사를 통과합니다. */
+.vzb-dark {
+  --vzb-card: #1b1b1b;   /* 카드 바탕(Vizney 검정) */
+  --vzb-edge: rgba(255, 255, 255, 0.08);   /* 카드 테두리 */
+  --vzb-ink: #f5f5f5;   /* 제목과 대표 수치 */
+  --vzb-ink-2: #cfcfcf;   /* 본문 글자 */
+  --vzb-muted: #9b9b9b;   /* 부제, 단위, 축 눈금 */
+  --vzb-grid: #2f2f2f;   /* 격자와 머리 아래 선 */
+  --vzb-primary: #ffcc00;   /* 첫째 데이터 색(Vizney 노랑) */
+  --vzb-primary-tint: #362f18;   /* 노랑의 옅은 바탕 */
+  --vzb-primary-soft: #5f5013;   /* 이름을 얹는 바 리스트 막대 */
+  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
+  --vzb-tertiary: #007aff;   /* 셋째 데이터 색(파랑) */
+  --vzb-primary-mid: #826b0f;   /* 넓은 면. 밝은 글자가 올라가도록 한 단계 어둡게 */
+  --vzb-secondary-mid: #822335;   /* 분홍빨강의 넓은 면 */
+  --vzb-tertiary-mid: #134a82;   /* 파랑의 넓은 면 */
+  --vzb-other-mid: #3a3a3a;   /* 기타 묶음의 넓은 면 */
+  --vzb-line-3: #007aff;   /* 선의 셋째 색(파랑) */
+  --vzb-base: #6b6b6b;   /* 비교 기준 */
+  --vzb-track: #2c2c2c;   /* 게이지 · 달성률 막대의 바탕 */
+  --vzb-other: #4d4d4d;   /* 기타로 묶은 항목 */
+  --vzb-good: #30d158;   /* 좋은 증감 */
+  --vzb-good-tint: #1e3624;   /* 좋은 증감 배지의 바탕 */
+  --vzb-bad: #ff453a;   /* 나쁜 증감, 한도 초과 */
+  --vzb-bad-tint: #3d2120;   /* 나쁜 증감 배지의 바탕 */
+  --vzb-tip: #3a3a3a;   /* 툴팁 바탕 */
+  --vzb-shadow: none;   /* 카드 그림자 */
 }
 /* 카드: 놓인 자리의 폭을 채우고, 높이는 세 단계입니다(Number 1 · Line, Bar 2 · 나머지 1.5, 단위 --vzb-unit). */
 .vzb-card {
@@ -2507,7 +2667,7 @@
 .vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-value { font-size: 13px; font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { .vzb-tip { transition: none; } }
-/* 색 이름: t1 · t2 · t3 선(남색 · 산호 · 자두), f1 · f2 · f3 막대와 면(남색 · 산호 · 복숭아), fs 옅은 남색,
+/* 색 이름: t1 · t2 · t3 선(파랑 · 분홍빨강 · 주황, 어두운 바탕은 노랑 · 분홍빨강 · 파랑), f1 · f2 · f3 막대와 면(같은 순서), fs 옅은 첫째 색,
    t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
 .vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
 .vzb-t2, .vzb-f2 { --vzb-c: var(--vzb-secondary); }
@@ -2737,7 +2897,6 @@
   // 배지는 숫자 바로 뒤에 붙어 있고, 카드가 좁아 한 줄에 다 들어가지 않으면 비교 문구만 숫자 아래 줄로 내려갑니다.
   // 내려갔는지는 카드의 vzb-wrapped로 알려, 높이가 1단위인 KPI - Number가 아래 여백으로 그 줄을 받게 합니다.
   function head(card, d, f, value, cmp, cmpText) {
-    if (card.classList.contains('vzb-bare')) return;   // 모양만 보이기: 제목 · 부제 · 수치 없이 그림만
     const hd = el('div', 'vzb-hd');
     hd.append(el('div', 'vzb-title', d.title || ''));
     if (d.subtitle) hd.append(el('div', 'vzb-sub', d.subtitle));
@@ -2768,9 +2927,11 @@
         }
         card.setAttribute('role', 'group');
         if (d.title) card.setAttribute('aria-label', d.title);
-        // 모양만 보이기: 카드를 감싼 요소에 data-vzb-view="shape"가 있으면 제목과 이름표 없이 그림만 그립니다(갤러리 첫 화면).
+        // 모양만 보이기: 카드를 감싼 요소에 data-vzb-view="shape"가 있으면 이름표 없이 그림만 그립니다(갤러리 첫 화면).
         // 붙여 넣은 카드에는 이 속성이 없으므로 모두 그립니다. 값은 마우스를 올리거나 화살표 키로 그대로 볼 수 있습니다.
         if (card.closest('[data-vzb-view="shape"]')) card.classList.add('vzb-bare');
+        // 어두운 바탕: JSON에 "theme": "dark"를 적으면 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다(tokens.css의 .vzb-dark).
+        card.classList.toggle('vzb-dark', d.theme === 'dark');
         try { draw(card, d, format(d)); } catch (e) {
           card.append(el('p', 'vzb-error', tx(d, '카드를 그리지 못했습니다: %s', e.message)));
         }
@@ -2790,7 +2951,7 @@
 
   /* 툴팁과 조작: 마우스는 올리면 보이고 벗어나면 숨깁니다. 터치는 탭하면 보이고 다른 곳을 탭하면 닫힙니다.
      키보드는 그래프에 포커스한 뒤 화살표로 옮깁니다(가로 그래프는 좌우, 목록은 위아래). */
-  let tip;
+  let tip, tipDark = false;
   // value는 글자나 요소입니다. side가 참이면 점 위가 아니라 세로선 옆, 그래프 윗선에 맞춰 둡니다(선 · 막대 차트).
   function showTip(x, y, label, value, side) {
     if (!tip) {
@@ -2798,6 +2959,7 @@
       tip.setAttribute('aria-hidden', 'true');
       document.body.append(tip);
     }
+    tip.classList.toggle('vzb-dark', tipDark);
     tip.replaceChildren(el('span', 'vzb-tip-label', label), typeof value === 'string' ? el('span', 'vzb-tip-value', value) : value);
     tip.classList.add('is-on');
     const w = tip.offsetWidth, h = tip.offsetHeight, W = window.innerWidth, H = window.innerHeight;
@@ -2876,6 +3038,7 @@
       if (i < 0 || i >= count()) return;
       idx = i;
       const p = point(i);
+      tipDark = !!plot.closest('.vzb-dark');
       showTip(p.x, p.y, p.label, p.value, p.side);
       live.textContent = p.text || `${p.label} ${p.value}`;
     };

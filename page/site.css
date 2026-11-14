@@ -160,10 +160,24 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 .gal-grid { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
 .gt { display: flex; flex-direction: column; min-width: 0; padding: 12px; border-radius: 20px; background: var(--soft); }
 .gt-pv { display: grid; }
-.gt-meta { display: flex; align-items: baseline; gap: 8px; min-width: 0; padding: 14px 4px 0; }
-.gt-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 700; color: var(--ink); text-decoration: none; }
-.gt-name:hover { text-decoration: underline; text-decoration-color: var(--yellow); text-decoration-thickness: 2px; text-underline-offset: 4px; }
-.gt-kind { flex: none; font-size: 13px; color: var(--muted); }
+.gt-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; padding: 10px 2px 0 4px; }
+.gt-kind { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; color: var(--muted); text-decoration: none; }
+.gt-kind:hover { color: var(--ink); }
+.gt-theme { flex: none; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 8px; background: none; color: var(--muted); cursor: pointer; }
+.gt-theme:hover { color: var(--ink); background: #e9ebef; }
+.gt-theme .ic { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.gt .ic-sun, .gt.is-dark .ic-moon { display: none; }
+.gt.is-dark .ic-sun { display: block; }
+/* Dark tile (the default): Vizney black around a card drawn on Vizney black, as in the blog's dark post images. */
+.gt.is-dark { background: #111111; }
+.gt.is-dark .gt-kind { color: #a8a8a8; }
+.gt.is-dark .gt-kind:hover { color: #ffffff; }
+.gt.is-dark .gt-theme { color: #bdbdbd; }
+.gt.is-dark .gt-theme:hover { color: #ffffff; background: #262626; }
+.gt.is-dark .gt-acts .btn { background: #1f1f1f; border-color: #343434; color: #f2f2f2; }
+.gt.is-dark .gt-acts .btn:hover { border-color: #5a5a5a; color: #ffffff; }
+.gt.is-dark .gt-acts .btn.is-done { border-color: var(--yellow); }
+.gt.is-dark :focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; box-shadow: none; }
 .gt-acts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding-top: 12px; }
 .gt-acts .btn { height: 38px; padding: 0 10px; font-size: 13.5px; }
 .gt-acts .btn span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -358,7 +372,7 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
   .gal { padding-top: 32px; }
   .gal-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .gt { padding: 8px; border-radius: 18px; }
-  .gt-meta { padding: 12px 4px 0; }
+  .gt-meta { padding: 8px 2px 0 4px; }
   .gt-acts { padding-top: 10px; }
   .hero { padding-top: 44px; }
   .hero .lede { font-size: 16px; }

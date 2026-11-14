@@ -117,7 +117,7 @@
   }
   $$('[data-mount]').forEach((host) => {
     const id = host.dataset.mount;
-    if (!code[id]) return;
+    if (!code[id] || host.closest('.gt')) return;
     current[id] = current[id] || code[id];
     mount(host, current[id]);
   });
@@ -139,6 +139,20 @@
       return a + pretty(out) + b;
     });
   }
+  // 갤러리 타일: 카드 머리에 카드 이름과 한 줄 설명을 넣어 그립니다. 바탕은 어둡게(Vizney 검정 · 노랑) 시작하고
+  // 타일마다 밝게(파랑) 바꿀 수 있습니다. 복사하는 코드는 예시 데이터 그대로에 보이는 바탕만 따라갑니다("theme": "dark").
+  const GAL = V.gal || {};
+  function setTheme(tile, dark) {
+    const id = tile.dataset.gal, host = $('[data-mount]', tile), btn = $('[data-act="theme"]', tile), [name, desc] = GAL[id] || [];
+    tile.classList.toggle('is-dark', dark);
+    current[id] = dark ? withField(code[id], 'theme', 'dark') : code[id];
+    let src = withField(withField(current[id], 'title', name), 'subtitle', desc);
+    mount(host, src);
+    btn.setAttribute('aria-label', dark ? T.toLight : T.toDark);
+    btn.title = dark ? T.toLight : T.toDark;
+  }
+  $$('.gt[data-gal]').forEach((tile) => { if (code[tile.dataset.gal]) setTheme(tile, tile.classList.contains('is-dark')); });
+
   $$('[data-opt]').forEach((bar) => {
     const field = bar.dataset.opt, scope = bar.closest('.cat') || document;
     bar.addEventListener('click', (e) => {
@@ -256,6 +270,7 @@
     if (!t) return;
     const id = t.dataset.id, act = t.dataset.act;
     if (act === 'code') openCode(id);
+    else if (act === 'theme') { const tile = t.closest('.gt'); setTheme(tile, !tile.classList.contains('is-dark')); }
     else if (act === 'copy') openMenu(t);
     else if (act === 'copy-code' || act === 'copy-prompt' || act === 'copy-link') {
       const inMenu = Boolean(t.closest('.menu'));   // 갤러리 타일의 버튼은 메뉴 없이 바로 복사합니다

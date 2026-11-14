@@ -1,6 +1,6 @@
   /* 툴팁과 조작: 마우스는 올리면 보이고 벗어나면 숨깁니다. 터치는 탭하면 보이고 다른 곳을 탭하면 닫힙니다.
      키보드는 그래프에 포커스한 뒤 화살표로 옮깁니다(가로 그래프는 좌우, 목록은 위아래). */
-  let tip;
+  let tip, tipDark = false;
   // value는 글자나 요소입니다. side가 참이면 점 위가 아니라 세로선 옆, 그래프 윗선에 맞춰 둡니다(선 · 막대 차트).
   function showTip(x, y, label, value, side) {
     if (!tip) {
@@ -8,6 +8,7 @@
       tip.setAttribute('aria-hidden', 'true');
       document.body.append(tip);
     }
+    tip.classList.toggle('vzb-dark', tipDark);
     tip.replaceChildren(el('span', 'vzb-tip-label', label), typeof value === 'string' ? el('span', 'vzb-tip-value', value) : value);
     tip.classList.add('is-on');
     const w = tip.offsetWidth, h = tip.offsetHeight, W = window.innerWidth, H = window.innerHeight;
@@ -86,6 +87,7 @@
       if (i < 0 || i >= count()) return;
       idx = i;
       const p = point(i);
+      tipDark = !!plot.closest('.vzb-dark');
       showTip(p.x, p.y, p.label, p.value, p.side);
       live.textContent = p.text || `${p.label} ${p.value}`;
     };

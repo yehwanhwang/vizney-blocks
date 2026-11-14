@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.47 · Sankey Chart · Sankey - Levels (sankey-levels)
+<!-- Vizney Blocks v0.48 · Sankey Chart · Sankey - Levels (sankey-levels)
      https://blocks.vizney.com/cards/sankey-levels.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">

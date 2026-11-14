@@ -103,7 +103,9 @@
     plot.addEventListener('pointermove', (e) => { if (e.pointerType !== 'touch' || touched) at(e); });
     plot.addEventListener('pointerdown', (e) => { if (e.pointerType === 'touch') { touched = true; at(e); } });
     plot.addEventListener('pointerleave', (e) => { if (e.pointerType !== 'touch') end(); });
-    document.addEventListener('pointerdown', (e) => { if (touched && !plot.contains(e.target)) { touched = false; end(); } }, true);
+    // 문서와 창에 건 듣기는 그래프가 페이지에서 빠지면(카드를 다시 그리면) 스스로 풉니다.
+    const away = (e) => { if (!plot.isConnected) document.removeEventListener('pointerdown', away, true); else if (touched && !plot.contains(e.target)) { touched = false; end(); } };
+    document.addEventListener('pointerdown', away, true);
     plot.addEventListener('keydown', (e) => {
       if (e.key !== back && e.key !== next) return;
       e.preventDefault();
@@ -111,6 +113,7 @@
       go(idx < 0 ? (vertical || first ? 0 : last) : Math.max(0, Math.min(last, idx + (e.key === next ? 1 : -1))));
     });
     plot.addEventListener('blur', end);
-    window.addEventListener('scroll', end, { passive: true });
+    const scrolled = () => { if (!plot.isConnected) window.removeEventListener('scroll', scrolled); else end(); };
+    window.addEventListener('scroll', scrolled, { passive: true });
     return { show: go, at: () => idx, end };
   }

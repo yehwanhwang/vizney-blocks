@@ -100,6 +100,12 @@
    "intro": "Radar charts join several scores into one polygon to show a subject's strengths and weaknesses at a glance. The chart is read by its overall shape rather than exact values, so axes with different units are rescaled to a shared range such as 0–100. The grid is four light solid polygons with spokes, and axis names sit outside the vertices. Hover toward an axis, or focus the chart and press the left and right arrows, to see that axis's value for every series. Height: 2 units.",
    "lede": "Several scores joined into one polygon, to show strengths and weaknesses at a glance. Axes with different units are rescaled to a shared range such as 0–100.",
    "height": "2 units"
+  },
+  "control": {
+   "name": "Controls",
+   "intro": "Controls set the period and the ranges of a screen. They use the same head as a card (title and subtitle) and are 1 unit high. When the value changes, the card sends a `vzb-change` event (`detail: { name, value }`), and the current value is also written on the card as `data-vzb-value`. Listen for the event and change the text of the JSON inside a chart card, and that card draws again with the new data. The selected span and the thumbs are drawn in the text color so they do not compete with the data colors of the charts.",
+   "lede": "Controls set the period and the ranges of a screen. They send a `vzb-change` event when the value changes, and a chart card draws again when the JSON inside it changes.",
+   "height": "1 unit"
   }
  },
  "cards": {
@@ -210,7 +216,7 @@
    "guide": { "name": "Butterfly chart", "url": "https://www.vizney.com/butterfly-chart-in-tableau/" }
   },
   "bar-race": {
-   "when": "A bar chart race: bars re-rank every period and overtake each other, showing how the order changed over time. Use it when the race itself is the story, in a presentation or a report. To compare values period by period, use Bump - Basic or Line - Multiple.",
+   "when": "A bar chart race: bars re-rank every period and overtake each other, showing how the order changed over time. Use it when the race itself is the story, in a presentation or a report. To compare values period by period, use Bump Chart or Line - Multiple.",
    "rules": [
     "Give only the `values`: the card fills in between periods and re-sorts the bars by size at every moment. When one item overtakes another, the two bars swap places, so you see when the order changed. Bar length is relative to the current leader, which always spans the width, so read it as the gap within the ranking.",
     "Only the `focus` item gets the first color; the rest are gray. The color follows the item, not the rank, so the eye can track one bar to the end. Leave it out and the card picks the item that climbed the most. Only the top `max` (8 by default) are shown; items that fall out slide down and fade.",
@@ -228,13 +234,13 @@
     "The card plays once when it comes into view and stops on the last scene, where the answer is written. That still frame alone shows the answer and its evidence, so a screenshot keeps the meaning. Replay it with the button; with reduced motion turned on, it does not move and shows the last scene."
    ]
   },
-  "bar-overflow": {
-   "when": "The amount over the limit breaks off the bar and piles up on the floor. Use it for values with a limit they should not cross, such as budgets, headcount or capacity. For targets where more is better, use Bar - Target.",
+  "bar-budget": {
+   "when": "Each item gets a tick at its limit and a bar for the amount used so far, and only the part over the limit turns red. Use it for values with a limit they should not cross, such as budgets, headcount or capacity. For targets where more is better, use Bar - Target.",
    "rules": [
-    "Give each of the `items` a `value` (the amount used) and a `limit`. The outlined box is the limit and the gray bar fills it. Whatever goes past the limit sticks out of the box, breaks off and piles up on the floor. Taking the excess off the bar keeps how much each item went over from blending into the rest of the bar.",
-    "Only the fallen pieces take the first color, and a piece's length is the amount over. The card computes the difference from the limit at the right end (+ when over, − when under) and, on the line below, how many items went over and the total spilled. For a rate (`pct`) it leaves the total out.",
-    "Use it only for limits that should not be crossed. On a target where more is better, the breaking-off reads as \"thrown away\".",
-    "It plays once when the card comes into view (about 2.5 s) and stops with the pieces piled up; that still frame alone shows which items went over and by how much. Replay it with the button; with reduced motion turned on, it draws the piled-up scene right away. Items are drawn in the order given, up to 6 (`max`)."
+    "Give each of the `items` a `value` (the amount used so far) and a `limit`. The limit is a vertical tick longer than the bar, named once above the first row by `limitLabel` (Limit when empty). Even when every item has a different limit, the end of the bar and the tick sit on the same row to compare.",
+    "The bar is gray within the limit and red only past it. Rows over the limit get a bold name and value, and the line below gives how many items went over and the total excess, computed by the card. Keeping color for the part over the limit makes where and by how much come first. For a rate (`pct`) the total is left out.",
+    "Use it only for limits that should not be crossed. On a target where more is better, the items that met it would blink red like a warning.",
+    "When the card comes into view the ticks stand first, the bars fill one at a time, then only the parts over the limit blink three times and stop. No bar outline is drawn before a bar fills. The still frame alone shows which items went over and by how much. Replay it with the button; with reduced motion turned on, the last frame is drawn right away. Items are drawn in the order given, up to 6 (`max`)."
    ]
   },
   "line-basic": {
@@ -431,6 +437,24 @@
     "The baseline is marked in `series` with `\"base\": true`. It is laid underneath as a light gray area with a gray outline, and the subject is overlaid as a light orange area with an orange outline. No dots at the vertices.",
     "When the card is wide enough, a list on the right gives each axis's score and a badge against the baseline; when narrow, the score sits beside the vertex name. The tooltip gives the difference from the baseline.",
     "Keep five to eight axes. The scale's end is set with `max`; left empty, it is a round number that wraps the values. The scale starts at `min` (0 when empty)."
+   ]
+  },
+  "control-range": {
+   "when": "A control that picks a numeric range with two thumbs. Use it to filter a screen by a continuous value such as an amount or a quantity. The current values always sit in bubbles above the thumbs, and when the thumbs come close the bubbles merge into one range.",
+   "rules": [
+    "Pick between `min` and `max` in steps of `step` (empty splits the range into about 100 steps). Give the first range in `value` as `[start, end]`; empty is the whole range. Values are written by `format`.",
+    "The bubbles above the thumbs always show the current values. When the two bubbles come close enough to overlap, they merge into one \"start – end\" bubble, so the text never overlaps. The two ends that can be picked are written under the track.",
+    "Each time the value changes, the card sends a `vzb-change` event. `detail.name` is `name` and `detail.value` is `[start, end]` as numbers. The current value is also on the card as `data-vzb-value`.",
+    "Drag a thumb, press the track to bring the nearer thumb there, or focus a thumb and press the arrow keys to move one step (Page Up and Down about ten steps, Home and End to the end). The thumbs follow the value like a spring and the bubbles lean into the move. With reduced motion turned on, they move at once."
+   ]
+  },
+  "control-date": {
+   "when": "A control that picks a period with two thumbs. Use it as the date parameter of a whole screen. One step is a month or a day, and putting both thumbs on the same step picks that one month (or day).",
+   "rules": [
+    "Write `min` and `max` as `YYYY-MM` for one month per step, or as `YYYY-MM-DD` for one day. Give the first period in `value` as `[start, end]` in the same form; empty is the whole period.",
+    "The bubbles are written short, like Jun '26, and when they come close they merge into one \"Jun '26 – Nov '26\" bubble. The first and last steps that can be picked are written under the track.",
+    "Each time the value changes, the card sends a `vzb-change` event. `detail.name` is `name` and `detail.value` is `[start, end]` as text in the same form as `min`; the end is part of the period. The current value is also on the card as `data-vzb-value`.",
+    "Drag a thumb, press the track to bring the nearer thumb there, or focus a thumb and press the arrow keys to move one step (Page Up and Down about ten steps, Home and End to the end). The thumbs follow the value like a spring and the bubbles lean into the move. With reduced motion turned on, they move at once."
    ]
   }
  }

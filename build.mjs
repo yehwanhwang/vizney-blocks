@@ -34,7 +34,7 @@ const core = r('src/core.js').trimEnd();
 // line and bar (marks drawn on the frame), tabs (equal-width metric tabs), table (sortable tables with total rows),
 // waterfall (floating bars on the bar frame), scatter (x/y frame), bump (rank lines), funnel (stepped flows),
 // sankey (node-and-ribbon flows) and radar (polygons on spokes).
-const parts = ['chart', 'curve', 'axis', 'line', 'bar', 'list', 'share', 'tabs', 'table', 'waterfall', 'scatter', 'bump', 'funnel', 'sankey', 'radar'];
+const parts = ['chart', 'curve', 'axis', 'line', 'bar', 'list', 'share', 'tabs', 'table', 'waterfall', 'scatter', 'bump', 'funnel', 'sankey', 'radar', 'slider'];
 const opt = (p) => (existsSync(join(root, p)) ? r(p) : '');
 const partCss = Object.fromEntries(parts.map((p) => [p, opt(`src/${p}.css`).trim()]));
 const partJs = Object.fromEntries(parts.map((p) => [p, opt(`src/${p}.js`).trimEnd()]));
@@ -96,7 +96,7 @@ const purposes = JSON.parse(r('src/variants/purposes.json'));
 const purposesEn = JSON.parse(r('src/variants/purposes.en.json'));
 // Guard (guard.mjs): self-containment, colors only from tokens, heights, scoping, accessibility hooks, example data,
 // meta ↔ files, public addresses, card words through tx() and the English files. `node build.mjs --check` runs only this and needs no font.
-const TIER = { 'kpi-number': 1, 'kpi-gauge': 1.5, 'kpi-paired-bar': 1.5, 'kpi-stacked-bar': 1.5 };
+const TIER = { 'kpi-number': 1, 'kpi-gauge': 1.5, 'kpi-paired-bar': 1.5, 'kpi-stacked-bar': 1.5, 'control-range': 1, 'control-date': 1 };
 const checked = guard({
   root, cats, parts, partCss, partJs, tokens, tier: TIER, fontLink: FONT_LINK, en: EN, purposes, purposesEn,
   snippets: Object.fromEntries(builtAll.flatMap((c) => c.variants.map((v) => [v.id, v.code]))),
@@ -311,13 +311,14 @@ const dialog = (L) => `<dialog class="dlg" id="dlg" aria-labelledby="dlg-title" 
 const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 
 // Home (v0.45): the title area of a Vizney blog category page (title and description, sized from the blog), then a
-// gallery of the cards that take real work to build by hand. Each tile holds the live card (its head shows the card name and
-// the first sentence of its "when") with a light/dark switch in its top right corner, and two copy buttons under it, so a
-// button always belongs to the chart above it. Clicking the card or its title opens the card on its chart page.
+// gallery of blocks. Each tile holds the live card as it is copied (its head shows the title of the example data) with a
+// light/dark switch in its top right corner; under it come the block name (a link to its chart page) and two copy buttons,
+// so a button always belongs to the block above it. Clicking the empty part of the card opens the same page. A block lower
+// than its row (a 1-unit control) sits in the middle of the tile.
 // Cards that draw a shape-only view (data-vzb-view="shape"): no labels on the first screen; the chart pages and the copied
 // code show everything. Cards that move (data-vzb-loop) replay on the first screen instead of stopping at the end.
 const SHAPE = new Set(['sankey-levels', 'sankey-basic']);
-const LOOP = new Set(['bar-overflow', 'bar-sort', 'bar-race']);
+const LOOP = new Set(['bar-budget', 'bar-sort', 'bar-race', 'control-range', 'control-date']);
 // Question chips on a tile: the same example data answers a different question (the card's `ask`) and plays again. Each chip
 // carries the conclusion title that goes with its question, so the copied code never pairs a title with the wrong answer.
 const ASKS = {
@@ -326,7 +327,7 @@ const ASKS = {
     { ask: 'lowest', ko: ['어디가 제일 부진한가', '3분기 달성률은 대전팀이 가장 낮습니다'], en: ['Who is furthest behind?', 'Central is furthest from its Q3 target'] },
   ],
 };
-const GALLERY = ['bar-overflow', 'bar-race', 'sankey-levels', 'bump-basic', 'funnel-flow', 'treemap-basic', 'waterfall-subtotal', 'radar-basic', 'sankey-basic'];
+const GALLERY = ['bar-budget', 'control-range', 'bar-race', 'sankey-levels', 'control-date', 'bump-basic', 'funnel-flow', 'treemap-basic', 'waterfall-subtotal', 'radar-basic', 'sankey-basic'];
 const galleryHead = (L) => `<section class="wrap ghead" aria-labelledby="ghead-title">
 <h1 id="ghead-title">${L.t.gTitle}</h1>
 <p>${L.t.gDesc}</p>
@@ -335,12 +336,13 @@ const gallery = (m, L) => `<section class="wrap gal" id="cards" aria-label="${L.
 <ul class="gal-grid">
 ${GALLERY.map((id) => {
     const v = L.byId[id];
-    return `<li class="gt is-dark" data-gal="${id}" data-href="${m.card(v)}" aria-label="${h(v.name)}">
-<div class="gt-box">
+    return `<li class="gt is-dark" data-gal="${id}" data-href="${m.card(v)}" aria-labelledby="gt-${id}">
+<div class="gt-box"><div class="gt-in">
 <div class="gt-pv" data-mount="${id}"${SHAPE.has(id) ? ' data-vzb-view="shape"' : ''}${LOOP.has(id) ? ' data-vzb-loop' : ''} style="min-height:${tierPx(v)}px"></div>
 <button type="button" class="gt-theme" data-act="theme" data-id="${id}" aria-label="${L.t.toLight}" title="${L.t.toLight}">${IC.sun}${IC.moon}</button>
-</div>${ASKS[id] ? `
+</div></div>${ASKS[id] ? `
 <div class="gt-asks" role="group" aria-label="${L.t.asks}">${ASKS[id].map((q, i) => `<button type="button" class="gt-ask" data-act="ask" data-ask="${q.ask}" data-title="${h(q[L.lang][1])}" aria-pressed="${i === 0}">${h(q[L.lang][0])}</button>`).join('')}</div>` : ''}
+<div class="gt-meta"><a class="gt-name" id="gt-${id}" href="${m.card(v)}">${h(v.name)}</a></div>
 <div class="gt-acts"><button type="button" class="btn" data-act="copy-prompt" data-id="${id}" aria-label="${h(v.name)} ${L.t.tPrompt}">${IC.prompt}<span>${L.t.tPrompt}</span></button><button type="button" class="btn" data-act="copy-code" data-id="${id}" aria-label="${h(v.name)} ${L.t.tCode}">${IC.copy}<span>${L.t.tCode}</span></button></div>
 </li>`;
   }).join('\n')}
@@ -496,9 +498,17 @@ const FIELD_NOTE = {
 };
 // Cards whose fields mean something other than the common note.
 const FIELD_OVERRIDE = {
-  'bar-overflow': {
-    ko: { items: '[{ name, value, limit }]. value는 쓴 양, limit은 넘으면 안 되는 한도. 받은 순서대로 6개까지' },
-    en: { items: '[{ name, value, limit }]: value is the amount used, limit the cap it should not cross; drawn in the order given, up to 6' },
+  'bar-budget': {
+    ko: { title: '무엇의 값인지(예: 채널별 광고비)', subtitle: '기간과 한도의 기준(예: 11월 1일–14일 집행액, 월 예산 대비)', limitLabel: '한도의 이름(예: 예산 · 정원). 눈금 위와 문구에 쓴다. 비우면 한도', items: '[{ name, value, limit }]. value는 지금까지 쓴 양, limit은 넘으면 안 되는 한도. 받은 순서대로 6개까지' },
+    en: { title: 'what the values are (e.g. Ad Spend by Channel)', subtitle: 'the period and what the limit is (e.g. Nov 1–14 spend against the monthly budget)', limitLabel: 'the name of the limit (e.g. Budget, Seats), written above the tick and in the summary; Limit when empty', items: '[{ name, value, limit }]: value is the amount used so far, limit the cap it should not cross; drawn in the order given, up to 6' },
+  },
+  'control-range': {
+    ko: { title: '무엇을 거르는지(예: 예산 규모)', subtitle: '기준(예: 채널 월 예산). 없어도 된다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '고를 수 있는 가장 작은 값', max: '고를 수 있는 가장 큰 값', step: '한 칸의 크기. 비우면 범위를 100칸쯤으로 나눈다', value: '[시작, 끝]. 비우면 전체 범위' },
+    en: { title: 'what it filters (e.g. Budget Size)', subtitle: 'the basis (e.g. monthly budget per channel); optional', name: 'detail.name of the vzb-change event sent when the value changes', min: 'the smallest value that can be picked', max: 'the largest value that can be picked', step: 'the size of one step; empty splits the range into about 100 steps', value: '[start, end]; empty is the whole range' },
+  },
+  'control-date': {
+    ko: { title: '무엇의 기간인지(예: 기간)', subtitle: '기준(예: 집행일 기준). 없어도 된다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '고를 수 있는 첫 달(YYYY-MM)이나 첫 날(YYYY-MM-DD). 적은 모양이 한 칸의 단위가 된다', max: '고를 수 있는 마지막 달이나 날. min과 같은 모양으로', value: '[시작, 끝]. min과 같은 모양으로 적고, 비우면 전체 기간' },
+    en: { title: 'what the period is of (e.g. Period)', subtitle: 'the basis (e.g. by spend date); optional', name: 'detail.name of the vzb-change event sent when the value changes', min: 'the first month (YYYY-MM) or day (YYYY-MM-DD) that can be picked; the form you write sets the step', max: 'the last month or day, in the same form as min', value: '[start, end] in the same form as min; empty is the whole period' },
   },
   'bar-sort': {
     ko: { title: '결론 문장(카드가 짚는 항목과 같아야 하고, 순위나 차이 숫자는 적지 않는다)이나 지표명', subtitle: '무엇으로 쟀는지: 지표와 기간(계산한 지표면 산식)', ask: 'highest · lowest, 질문의 종류. 카드가 그 항목을 찾아 짚는다', focus: '이름으로 짚을 때만. 적으면 ask는 뺀다', items: '[{ name, value }], 받은 순서 그대로' },
@@ -568,8 +578,6 @@ ${noted.join('\n')}
 `;
 };
 
-// The first sentence of a card's "when" text: the gallery's subtitle.
-const firstSentence = (s) => (s.match(/^.+?[.!?](?=\s|$)/) || [s])[0];
 // Page data for site.js: the search index, the words site.js prints, and the code of the cards this page shows.
 const data = (m, page, ids, L) => `<script>window.VZB = ${esc({
   mode: m.one ? 'one' : 'site',
@@ -584,7 +592,6 @@ const data = (m, page, ids, L) => `<script>window.VZB = ${esc({
   retired: Object.fromEntries(retired.map((v) => [v.id, m.card(L.byId[v.retired.use])])),
   code: Object.fromEntries(ids.map((id) => [id, L.byId[id].code])),
   prompt: Object.fromEntries(ids.map((id) => [id, promptHead(L.byId[id], L)])),
-  gal: page === 'home' ? Object.fromEntries(GALLERY.map((id) => [id, [L.byId[id].name, firstSentence(plain(L.byId[id].when))]])) : {},
 })};</script>`;
 
 // ---------- Site pages (docs/) ----------

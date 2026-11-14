@@ -141,29 +141,17 @@
       return a + pretty(out) + b;
     });
   }
-  // 갤러리 타일: 카드 머리에 카드 이름과 한 줄 설명을 넣어 그립니다. 바탕은 어둡게(Vizney 검정 · 노랑) 시작하고
-  // 카드 오른쪽 위 단추로 타일마다 밝게(파랑) 바꿀 수 있습니다. 복사하는 코드는 예시 데이터 그대로에 보이는 바탕만 따라갑니다("theme": "dark").
-  // 카드 제목은 차트 페이지로 가는 링크이고, 카드의 빈 곳을 눌러도 같은 곳으로 갑니다(단추 · 입력 칸 · 링크는 제 역할만 합니다).
-  const GAL = V.gal || {};
+  // 갤러리 타일: 카드는 복사되는 그대로(예시 데이터의 제목과 부제) 그립니다. 바탕은 어둡게(Vizney 검정) 시작하고
+  // 카드 오른쪽 위 단추로 타일마다 밝게 바꿀 수 있습니다. 복사하는 코드는 예시 데이터 그대로에 보이는 바탕만 따라갑니다("theme": "dark").
+  // 차트 이름은 카드 아래에 있고 차트 페이지로 가는 링크입니다. 카드의 빈 곳을 눌러도 같은 곳으로 갑니다
+  // (단추 · 입력 칸 · 링크 · 컨트롤의 조작 영역은 제 역할만 합니다).
   function setTheme(tile, dark) {
-    const id = tile.dataset.gal, host = $('[data-mount]', tile), btn = $('[data-act="theme"]', tile), [name, desc] = GAL[id] || [];
+    const id = tile.dataset.gal, host = $('[data-mount]', tile), btn = $('[data-act="theme"]', tile);
     tile.classList.toggle('is-dark', dark);
     // 질문 단추가 있는 타일: 고른 질문(ask)과 그 질문의 결론 제목을 예시 데이터에 넣습니다. 복사하는 코드도 같은 질문을 따라갑니다.
     const base = tile.dataset.ask ? withField(withField(code[id], 'ask', tile.dataset.ask), 'title', tile.dataset.askTitle) : code[id];
     current[id] = dark ? withField(base, 'theme', 'dark') : base;
-    let src = withField(withField(current[id], 'title', name), 'subtitle', desc);
-    mount(host, src);
-    // 카드는 문서를 다 읽은 뒤에 그려지기도 하므로(DOMContentLoaded), 제목 링크는 그 뒤에 겁니다.
-    const linkTitle = () => {
-      const title = $('.vzb-title', host);
-      if (!title || !tile.dataset.href || $('a', title)) return;
-      const a = document.createElement('a');
-      a.href = tile.dataset.href;
-      a.textContent = title.textContent;
-      title.replaceChildren(a);
-    };
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', linkTitle, { once: true });
-    else linkTitle();
+    mount(host, current[id]);
     btn.setAttribute('aria-label', dark ? T.toLight : T.toDark);
     btn.title = dark ? T.toLight : T.toDark;
   }
@@ -171,7 +159,7 @@
     if (!code[tile.dataset.gal]) return;
     setTheme(tile, tile.classList.contains('is-dark'));
     $('.gt-box', tile).addEventListener('click', (e) => {
-      if (e.button !== 0 || e.target.closest('a, button, input, select, textarea, label')) return;
+      if (e.button !== 0 || e.target.closest('a, button, input, select, textarea, label, [data-vzb-input]')) return;
       if (String(window.getSelection ? window.getSelection() : '').length) return;   // 글자를 고르는 중이면 그대로 둡니다
       if (e.metaKey || e.ctrlKey) window.open(tile.dataset.href, '_blank', 'noopener');
       else location.href = tile.dataset.href;

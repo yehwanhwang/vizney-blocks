@@ -159,13 +159,16 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 .gal { padding-top: 49px; }
 .gal-grid { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
 .gt { display: flex; flex-direction: column; min-width: 0; padding: 12px; border-radius: 20px; background: var(--soft); }
-.gt-box { position: relative; }
+.gt-box { flex: 1 1 auto; display: grid; align-content: center; min-width: 0; }   /* 줄보다 낮은 블록(1단위 컨트롤)은 타일 가운데에 둡니다 */
+.gt-in { position: relative; min-width: 0; }
 .gt-pv { display: grid; }
 /* 카드 전체가 차트 페이지로 가는 자리: 제목은 링크(키보드와 화면 낭독기용), 나머지 빈 곳은 누르면 같은 곳으로 갑니다. */
 .gt .vzb-card { cursor: pointer; }
 .gt .vzb-hd { padding-right: 36px; }   /* 오른쪽 위 바탕 전환 단추 자리 */
-.gt .vzb-title a { color: inherit; text-decoration: none; }
-.gt-box:hover .vzb-title a, .gt .vzb-title a:focus-visible { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.gt-meta { display: flex; align-items: baseline; gap: 8px; min-width: 0; padding: 14px 4px 0; }
+.gt-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 700; color: var(--ink); text-decoration: none; }
+.gt-name:hover { text-decoration: underline; text-decoration-color: var(--yellow); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.gt.is-dark .gt-name { color: #f5f5f5; }
 .gt-theme { position: absolute; top: 20px; right: 16px; z-index: 1; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 8px; background: none; color: var(--muted); cursor: pointer; }
 .gt-theme:hover { color: var(--ink); background: #f1f1f1; }
 .gt-theme .ic { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
@@ -187,7 +190,7 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 .gt.is-dark .gt-ask { background: #1f1f1f; border-color: #343434; color: #f2f2f2; }
 .gt.is-dark .gt-ask:hover { border-color: #5a5a5a; }
 .gt.is-dark .gt-ask[aria-pressed="true"] { background: var(--yellow); border-color: var(--yellow); color: #1b1b1b; }
-.gt-acts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: auto; padding-top: 12px; }
+.gt-acts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding-top: 12px; }
 .gt-acts .btn { height: 38px; padding: 0 10px; font-size: 13.5px; }
 .gt-acts .btn span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .lost { min-height: 46vh; }

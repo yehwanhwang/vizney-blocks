@@ -34,7 +34,8 @@
 }
 
 /* Dark ("theme": "dark"): the same variables, changed inside the card only. One yellow plus white and gray draws in Vizney black, white and yellow.
-   Yellow, white and gray pass a color vision simulation (closest pair ΔE 14.9) and a contrast check against the card. */
+   Yellow, white and gray pass a color vision simulation (closest pair ΔE 14.9) and a contrast check against the card.
+   Warnings (over the limit, a bad change) use the pink-red of the same palette (#ff2d55, the second data color on white) instead of yellow; its contrast against the card is 4.7:1. */
 .vzb-dark {
   --vzb-card: #1b1b1b;   /* card background (Vizney black) */
   --vzb-edge: rgba(255, 255, 255, 0.08);   /* card border */
@@ -57,8 +58,8 @@
   --vzb-other: #4d4d4d;   /* items folded into Other */
   --vzb-good: #30d158;   /* good change */
   --vzb-good-tint: #1e3624;   /* good badge background */
-  --vzb-bad: #ff453a;   /* bad change, over the limit */
-  --vzb-bad-tint: #3d2120;   /* bad badge background */
+  --vzb-bad: #ff2d55;   /* bad change, over the limit */
+  --vzb-bad-tint: #3d1e24;   /* bad badge background */
   --vzb-tip: #3a3a3a;   /* tooltip background */
   --vzb-shadow: none;   /* card shadow */
 }

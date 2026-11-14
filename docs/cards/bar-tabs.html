@@ -63,7 +63,8 @@
 }
 
 /* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 하나에 흰색과 회색을 더해 Vizney 검정 · 흰색 · 노랑으로 그립니다.
-   노랑 · 흰색 · 회색은 색각 시뮬레이션(가장 가까운 쌍 ΔE 14.9)과 바탕 대비 검사를 통과합니다. */
+   노랑 · 흰색 · 회색은 색각 시뮬레이션(가장 가까운 쌍 ΔE 14.9)과 바탕 대비 검사를 통과합니다.
+   경고(한도 초과 · 나쁜 증감)는 노랑 대신 같은 팔레트의 분홍빨강(#ff2d55, 밝은 바탕의 둘째 데이터 색)을 씁니다. 바탕 대비 4.7:1입니다. */
 .vzb-dark {
   --vzb-card: #1b1b1b;   /* 카드 바탕(Vizney 검정) */
   --vzb-edge: rgba(255, 255, 255, 0.08);   /* 카드 테두리 */
@@ -86,8 +87,8 @@
   --vzb-other: #4d4d4d;   /* 기타로 묶은 항목 */
   --vzb-good: #30d158;   /* 좋은 증감 */
   --vzb-good-tint: #1e3624;   /* 좋은 증감 배지의 바탕 */
-  --vzb-bad: #ff453a;   /* 나쁜 증감, 한도 초과 */
-  --vzb-bad-tint: #3d2120;   /* 나쁜 증감 배지의 바탕 */
+  --vzb-bad: #ff2d55;   /* 나쁜 증감, 한도 초과 */
+  --vzb-bad-tint: #3d1e24;   /* 나쁜 증감 배지의 바탕 */
   --vzb-tip: #3a3a3a;   /* 툴팁 바탕 */
   --vzb-shadow: none;   /* 카드 그림자 */
 }
@@ -287,9 +288,10 @@
     '%s 퍼널, %s. 좌우 화살표로 단계를 옮깁니다.': '%s funnel, %s. Use the left and right arrows to move between steps.',
     '%s 막대 경주, %s–%s, 항목 %s개. 위아래 화살표로 지금 순위를 짚고, 아래 막대로 기간을 고릅니다. 모든 값은 이어지는 표에 있습니다.': '%s bar chart race, %s–%s, %s items. Use the up and down arrows to step through the current ranking and the slider below to pick a period. Every value is in the table that follows.',
     '재생': 'Play', '일시정지': 'Pause', '처음부터 다시': 'Replay', '%1, 1위 %2': '%1, #1 %2',
-    '한도': 'Limit', '차이': 'Difference', '%s 넘침': '%s over', '%s 남음': '%s left', '한도 %s': 'Limit %s', '한도와 같음': 'Right at the limit',
-    '%1개 중 %2개가 넘쳤습니다 · 넘친 양 %3': '%2 of %1 went over · %3 spilled', '%1개 중 %2개가 넘쳤습니다': '%2 of %1 went over', '모두 한도 안입니다': 'All within the limit',
-    '%s. 항목 %s개 가운데 %s개가 한도를 넘었습니다. 위아래 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s. %s items, %s over the limit. Use the up and down arrows to move between items. Every value is in the table that follows.',
+    '한도': 'Limit', '차이': 'Difference', '%s 초과|한도': '%s over', '%1 초과 · %2의 %3%': '%1 over · %3% of %2', '%1 남음 · %2의 %3%': '%1 left · %3% of %2',
+    '%1개 중 %2개 %3 초과 · +%4': '%2 of %1 over %3 · +%4', '%1개 중 %2개 %3 초과': '%2 of %1 over %3', '모두 %s 이내': 'All within %s', '표시할 항목이 없습니다.': 'No items to show.',
+    '%1. 항목 %2개 가운데 %3개가 %4 초과입니다. 위아래 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %3 of %2 items are over %4. Use the up and down arrows to move between items. Every value is in the table that follows.',
+    'min과 max를 확인하세요.': 'Check min and max.', '%s 최소': 'Minimum %s', '%s 최대': 'Maximum %s', '%s 시작': 'Start of %s', '%s 끝': 'End of %s',
     '%s개 중 가장 높음': 'Highest of %s', '%s개 중 가장 낮음': 'Lowest of %s', '%1개 중 %2번째': '#%2 of %1',
     '평균보다 %s 높음': '%s above average', '평균보다 %s 낮음': '%s below average', '평균과 같음': 'equal to the average',
     '%s. %s 위아래 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s. %s Use the up and down arrows to move between items. Every value is in the table that follows.',
@@ -417,12 +419,30 @@
     card.append(fig);
   }
   // 같은 종류의 카드를 모두 찾아 그립니다. 코드를 두 번 붙여 넣어도 카드는 한 번만 그립니다.
+  // 데이터가 바뀌면 다시 그립니다: 페이지의 스크립트가 카드 안 JSON(<script type="application/json">)의 글자를 바꾸면 그 카드만
+  // 새 요소로 갈아 끼워 새로 그립니다(필터 · 기간 컨트롤과 잇는 길). 갈아 끼운 카드에는 data-vzb-live가 붙어, 움직이는 카드는
+  // 처음부터 다시 재생하지 않고 마지막 장면을 바로 그립니다. 예전 요소가 페이지에서 빠지므로 그 카드의 움직임도 함께 끝납니다.
   function mount(type, draw) {
+    const watch = (card, src) => {
+      if (!src || !window.MutationObserver) return;
+      const mo = new MutationObserver(() => {
+        mo.disconnect();
+        if (!card.isConnected) return;
+        const next = card.cloneNode(false);
+        next.removeAttribute('data-vzb-ready');
+        next.setAttribute('data-vzb-live', '');
+        next.append(src);
+        card.replaceWith(next);
+        run();
+      });
+      mo.observe(src, { childList: true, characterData: true, subtree: true });
+    };
     const run = () => {
       document.querySelectorAll(`.vzb-card[data-vzb="${type}"]:not([data-vzb-ready])`).forEach((card) => {
         card.setAttribute('data-vzb-ready', '');
         const src = card.querySelector('script[type="application/json"]');
         const raw = src ? src.textContent : '';
+        watch(card, src);
         let d;
         try { d = JSON.parse(raw); } catch (e) {
           card.append(el('p', 'vzb-error', tx(/"lang"\s*:\s*"en"/.test(raw) ? { lang: 'en' } : null, '카드 데이터(JSON)를 읽지 못했습니다: %s', e.message)));
@@ -557,7 +577,9 @@
     plot.addEventListener('pointermove', (e) => { if (e.pointerType !== 'touch' || touched) at(e); });
     plot.addEventListener('pointerdown', (e) => { if (e.pointerType === 'touch') { touched = true; at(e); } });
     plot.addEventListener('pointerleave', (e) => { if (e.pointerType !== 'touch') end(); });
-    document.addEventListener('pointerdown', (e) => { if (touched && !plot.contains(e.target)) { touched = false; end(); } }, true);
+    // 문서와 창에 건 듣기는 그래프가 페이지에서 빠지면(카드를 다시 그리면) 스스로 풉니다.
+    const away = (e) => { if (!plot.isConnected) document.removeEventListener('pointerdown', away, true); else if (touched && !plot.contains(e.target)) { touched = false; end(); } };
+    document.addEventListener('pointerdown', away, true);
     plot.addEventListener('keydown', (e) => {
       if (e.key !== back && e.key !== next) return;
       e.preventDefault();
@@ -565,7 +587,8 @@
       go(idx < 0 ? (vertical || first ? 0 : last) : Math.max(0, Math.min(last, idx + (e.key === next ? 1 : -1))));
     });
     plot.addEventListener('blur', end);
-    window.addEventListener('scroll', end, { passive: true });
+    const scrolled = () => { if (!plot.isConnected) window.removeEventListener('scroll', scrolled); else end(); };
+    window.addEventListener('scroll', scrolled, { passive: true });
     return { show: go, at: () => idx, end };
   }
 

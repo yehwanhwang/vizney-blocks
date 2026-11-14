@@ -60,7 +60,7 @@ Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v
 - Bar - Basic (`bar-basic`) — 흐름보다 기간별 크기를 견줄 때
 - Line - Compare (`line-compare`) — 작년 같은 달과 견줄 때
 - Line - Multiple (`line-multiple`) — 항목 2–3개의 흐름을 함께 볼 때
-- Bump - Basic (`bump-basic`) — 값보다 순위가 바뀐 과정을 볼 때
+- Bump Chart (`bump-basic`) — 값보다 순위가 바뀐 과정을 볼 때
 
 ### 목표 · 목표까지 얼마나 왔나?
 
@@ -75,14 +75,14 @@ Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v
 - 기본: Bar - Ranking (`bar-ranking`) — 항목별 크기와 순위를 볼 때
 - Bar - Compare (`bar-compare`) — 작년이나 지난달 값과 견줄 때
 - Bar - Butterfly (`bar-butterfly`) — 두 집단을 같은 항목으로 견줄 때
-- Radar - Basic (`radar-basic`) — 점수 여러 개로 강점과 약점을 볼 때
+- Radar Chart (`radar-basic`) — 점수 여러 개로 강점과 약점을 볼 때
 
 ### 구성 · 무엇으로 이뤄져 있나?
 
 - 기본: Donut - Basic (`donut-basic`) — 한 시점의 비중을 볼 때
 - Bar - Stacked 100% (`bar-stacked-100`) — 기간별 구성비 변화를 볼 때
 - Bar - Stacked (`bar-stacked`) — 합계의 흐름과 구성을 함께 볼 때
-- Treemap - Basic (`treemap-basic`) — 항목이 많거나 묶음 안에 항목이 있을 때
+- Treemap (`treemap-basic`) — 항목이 많거나 묶음 안에 항목이 있을 때
 - Waffle - Basic (`waffle-basic`) — 비중을 칸 수로 세어 보일 때
 
 ### 표 · 항목마다 정확히 얼마인가?
@@ -95,14 +95,14 @@ Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v
 ### 증감 · 왜 늘고 줄었나?
 
 - 기본: Waterfall - Basic (`waterfall-basic`) — 두 시점 사이의 변화를 요인별로 나눌 때
-- Waterfall - Subtotal (`waterfall-subtotal`) — 손익 구조를 보여줄 때
+- Subtotal Waterfall (`waterfall-subtotal`) — 손익 구조를 보여줄 때
 - Bar - Diverging (`bar-diverging`) — 기간별 증감·목표 차이를 볼 때
 
 ### 흐름 · 어디서 빠지고 어디로 가나?
 
-- 기본: Funnel - Flow (`funnel-flow`) — 단계마다 얼마나 빠져나가는지 볼 때
-- Sankey - Basic (`sankey-basic`) — 두 구분 사이의 흐름을 볼 때
-- Sankey - Levels (`sankey-levels`) — 세 단 이상 이어지는 흐름을 볼 때
+- 기본: Flow Funnel (`funnel-flow`) — 단계마다 얼마나 빠져나가는지 볼 때
+- Sankey Chart (`sankey-basic`) — 두 구분 사이의 흐름을 볼 때
+- Multi-level Sankey (`sankey-levels`) — 세 단 이상 이어지는 흐름을 볼 때
 
 ### 관계 · 두 값은 어떤 관계인가?
 
@@ -112,7 +112,7 @@ Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v
 
 ## 설계표
 
-카드 코드를 쓰기 전에 화면을 「줄 · 질문 · 카드(id) · 높이」 표로 정리하고, 그 아래에 가정 줄을 적어 사용자에게 보여 준다. 높이가 같은 카드끼리 같은 줄로 묶는다(KPI - Number 1단위, KPI - Gauge · KPI - Stacked Bar 1.5단위, 나머지 2단위). 카드는 이 표의 줄 순서대로 붙인다.
+카드 코드를 쓰기 전에 화면을 「줄 · 질문 · 카드(id) · 높이」 표로 정리하고, 그 아래에 가정 줄을 적어 사용자에게 보여 준다. 높이가 같은 카드끼리 같은 줄로 묶는다(KPI - Number · Range Slider · Date Slider 1단위, KPI - Gauge · KPI - Stacked Bar 1.5단위, 나머지 2단위). 카드는 이 표의 줄 순서대로 붙인다.
 
 | 줄 | 질문 | 카드(id) | 높이 |
 |---|---|---|---|
@@ -124,7 +124,7 @@ Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v
 ## 규칙
 
 - 내려받은 카드 코드를 그대로 붙여 넣고 JSON 값만 바꾼다. 스타일과 스크립트는 고치지 않는다. 같은 카드를 여러 장 쓸 때는 카드 코드를 통째로 다시 붙여 넣고 각 JSON만 바꾼다.
-- 카드는 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위(1단위 168px, --vzb-unit) 중 하나다: KPI - Number 1단위, KPI - Gauge · KPI - Stacked Bar 1.5단위, 나머지 2단위. 같은 줄의 카드는 가장 높은 카드에 맞춰 늘어나고 그래픽은 바닥에 붙으므로, 빈 곳이 없게 하려면 높이가 같은 카드끼리 한 줄에 둔다.
+- 카드는 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위(1단위 168px, --vzb-unit) 중 하나다: KPI - Number · Range Slider · Date Slider 1단위, KPI - Gauge · KPI - Stacked Bar 1.5단위, 나머지 2단위. 같은 줄의 카드는 가장 높은 카드에 맞춰 늘어나고 그래픽은 바닥에 붙으므로, 빈 곳이 없게 하려면 높이가 같은 카드끼리 한 줄에 둔다.
 - 여러 장은 감싸는 요소에 격자를 준다: display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:16px. 카드 폭이 340px보다 좁으면 표, 도넛, 퍼널, 워터폴의 글자가 잘리거나 겹친다. KPI 카드만 둔 줄은 280px까지 줄여도 되어, 폭 1280px 화면에 네 장이 한 줄에 들어간다.
 - 색과 글꼴은 :root의 --vzb-* 변수(--vzb-primary, --vzb-font 등)로 바꾼다. 변수 목록과 쓰임은 https://blocks.vizney.com/ko/tokens.css 에 있다(카드 코드의 :where(:root) 블록과 같은 내용). 페이지 전체를 맞출 때는 그 파일의 값을 :root에 다시 적는다.
 - 공통 필드: title(지표명), subtitle(기간 부제), value(KPI 카드의 대표 수치. KPI - Line과 KPI - Bar는 비우면 마지막 값), format(eok 억 단위 숫자 · krw 원 단위 숫자를 만·억·조로 줄여 적음. 10만 원 미만은 87,324원처럼 원 단위 그대로 · usd 달러 금액을 $745.6K·$1.2M처럼 줄여 적음 · count 개수, 단위는 unit · pct 퍼센트 숫자(3.4는 3.4%), 증감은 %p · days 일수), decimals(숫자의 소수 자릿수. 비우면 카드가 정하고, pct의 증감도 이 자릿수를 따름), better(up · down · neutral, 증감 색), compare({ label, value }), labels(기간 이름. values와 같은 길이로 적고, 값이 없는 기간의 값은 null), series([{ name, values }]), rows(표의 줄), curve(라인 카드의 선 모양: smooth · linear · step), lang(en이면 합계 · 기타 · 달성처럼 카드가 직접 적는 문구가 영어. 비우면 한국어).

@@ -1,71 +1,72 @@
-<!-- Vizney Blocks v0.47 · 막대 차트 · Bar - Overflow (bar-overflow)
-     https://blocks.vizney.com/ko/cards/bar-overflow.html · © 2026 Vizney · MIT License
-     <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
+<!-- Vizney Blocks v0.47 · Bar Chart · Budget Bars (bar-budget)
+     https://blocks.vizney.com/cards/bar-budget.html · © 2026 Vizney · MIT License
+     Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
 <style>
-/* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
-   색은 Vizney 차트 가이드의 파랑 · 분홍빨강 · 주황과 각 색의 옅은 단계, 글자는 Vizney 검정(#1b1b1b)입니다.
-   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색, 흰색을 둘째 색으로 그립니다.
-   목록: https://blocks.vizney.com/ko/tokens.css */
+/* Vizney Blocks tokens: re-declare the same variables on your page's :root and they apply to every card.
+   The colors are the Vizney chart guide's blue, pink-red and orange with a lighter step of each; the text is Vizney black (#1b1b1b).
+   With "theme": "dark" in the JSON, the .vzb-dark values below draw the card on Vizney black with yellow as the first color and white as the second.
+   List: https://blocks.vizney.com/tokens.css */
 :where(:root) {
-  --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* 카드의 모든 글자 */
-  --vzb-card: #ffffff;   /* 카드 바탕 */
-  --vzb-edge: rgba(17, 24, 39, 0.05);   /* 카드 테두리 */
-  --vzb-ink: #1b1b1b;   /* 제목과 대표 수치 */
-  --vzb-ink-2: #4a4a4a;   /* 본문 글자, 변화 없음 배지 */
-  --vzb-muted: #737373;   /* 부제, 단위, 축 눈금 */
-  --vzb-grid: #ebebeb;   /* 격자와 머리 아래 선. 바탕에서 한 단계 떨어진 회색 실선 */
-  --vzb-primary: #007aff;   /* 첫째 데이터 색(파랑). 선, 막대, 가장 큰 항목 */
-  --vzb-primary-tint: #e6f2ff;   /* 파랑의 옅은 바탕. 선 아래 음영, 레이더 면 */
-  --vzb-primary-soft: #bfdeff;   /* 이름을 얹는 바 리스트 막대 */
-  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
-  --vzb-tertiary: #ff9500;   /* 셋째 데이터 색(주황) */
-  --vzb-primary-mid: #8cc3ff;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
-  --vzb-secondary-mid: #ff7a93;   /* 분홍빨강의 넓은 면 */
-  --vzb-tertiary-mid: #ffb54d;   /* 주황의 넓은 면 */
-  --vzb-other-mid: #e3e3e3;   /* 기타 묶음의 넓은 면 */
-  --vzb-line-3: #ff9500;   /* 선의 셋째 색(주황) */
-  --vzb-base: #c4c4c4;   /* 비교 기준(작년 선, 레이더의 기준 면 테두리) */
-  --vzb-track: #f1f1f1;   /* 게이지 · 달성률 막대의 바탕 */
-  --vzb-other: #d9d9d9;   /* 기타로 묶은 항목, 넷째부터의 항목 */
-  --vzb-good: #12814a;   /* 좋은 증감(배지, 워터폴의 늘린 요인) */
-  --vzb-good-tint: #e5f5ec;   /* 좋은 증감 배지의 바탕 */
-  --vzb-bad: #d42346;   /* 나쁜 증감, 한도 초과, 오류 문구 */
-  --vzb-bad-tint: #fdebef;   /* 나쁜 증감 배지의 바탕 */
-  --vzb-tip: #1b1b1b;   /* 툴팁 바탕 */
-  --vzb-radius: 18px;   /* 카드 모서리 */
-  --vzb-unit: 168px;   /* 높이 1단위(KPI - Number). Line · Bar는 2배, 나머지 KPI는 1.5배, 차트 카드는 2배 */
-  --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* 카드 그림자 */
+  --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* every word on the card */
+  --vzb-card: #ffffff;   /* card background */
+  --vzb-edge: rgba(17, 24, 39, 0.05);   /* card border */
+  --vzb-ink: #1b1b1b;   /* title and headline figure */
+  --vzb-ink-2: #4a4a4a;   /* body text, the no-change badge */
+  --vzb-muted: #737373;   /* subtitle, units, axis ticks */
+  --vzb-grid: #ebebeb;   /* grid lines and the line under the head: a solid gray one step off the background */
+  --vzb-primary: #007aff;   /* first data color (blue): lines, bars, the largest item */
+  --vzb-primary-tint: #e6f2ff;   /* light blue background: the shade under a line, the radar area */
+  --vzb-primary-soft: #bfdeff;   /* bar-list bars that carry the name */
+  --vzb-secondary: #ff2d55;   /* second data color (pink-red) */
+  --vzb-tertiary: #ff9500;   /* third data color (orange) */
+  --vzb-primary-mid: #8cc3ff;     /* one step lighter, for wide areas (treemap cells) */
+  --vzb-secondary-mid: #ff7a93;   /* pink-red for wide areas */
+  --vzb-tertiary-mid: #ffb54d;   /* orange for wide areas */
+  --vzb-other-mid: #e3e3e3;   /* the Other group on wide areas */
+  --vzb-line-3: #ff9500;   /* third line color (orange) */
+  --vzb-base: #c4c4c4;   /* the baseline (last year's line, the radar baseline outline) */
+  --vzb-track: #f1f1f1;   /* track behind the gauge and attainment bars */
+  --vzb-other: #d9d9d9;   /* items folded into Other, items from the fourth on */
+  --vzb-good: #12814a;   /* a good change (badges, increases in a waterfall) */
+  --vzb-good-tint: #e5f5ec;   /* background of a good-change badge */
+  --vzb-bad: #d42346;   /* a bad change, over the limit, error text */
+  --vzb-bad-tint: #fdebef;   /* background of a bad-change badge */
+  --vzb-tip: #1b1b1b;   /* tooltip background */
+  --vzb-radius: 18px;   /* card corners */
+  --vzb-unit: 168px;   /* height unit 1 (KPI - Number); Line and Bar are 2, the other KPI cards 1.5, chart cards 2 */
+  --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* card shadow */
 }
 
-/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 하나에 흰색과 회색을 더해 Vizney 검정 · 흰색 · 노랑으로 그립니다.
-   노랑 · 흰색 · 회색은 색각 시뮬레이션(가장 가까운 쌍 ΔE 14.9)과 바탕 대비 검사를 통과합니다. */
+/* Dark ("theme": "dark"): the same variables, changed inside the card only. One yellow plus white and gray draws in Vizney black, white and yellow.
+   Yellow, white and gray pass a color vision simulation (closest pair ΔE 14.9) and a contrast check against the card.
+   Warnings (over the limit, a bad change) use the pink-red of the same palette (#ff2d55, the second data color on white) instead of yellow; its contrast against the card is 4.7:1. */
 .vzb-dark {
-  --vzb-card: #1b1b1b;   /* 카드 바탕(Vizney 검정) */
-  --vzb-edge: rgba(255, 255, 255, 0.08);   /* 카드 테두리 */
-  --vzb-ink: #f5f5f5;   /* 제목과 대표 수치 */
-  --vzb-ink-2: #cfcfcf;   /* 본문 글자 */
-  --vzb-muted: #9b9b9b;   /* 부제, 단위, 축 눈금 */
-  --vzb-grid: #2f2f2f;   /* 격자와 머리 아래 선 */
-  --vzb-primary: #ffcc00;   /* 첫째 데이터 색(Vizney 노랑) */
-  --vzb-primary-tint: #362f18;   /* 노랑의 옅은 바탕 */
-  --vzb-primary-soft: #5f5013;   /* 이름을 얹는 바 리스트 막대 */
-  --vzb-secondary: #f5f5f5;   /* 둘째 데이터 색(흰색) */
-  --vzb-tertiary: #9b9b9b;   /* 셋째 데이터 색(회색) */
-  --vzb-primary-mid: #826b0f;   /* 넓은 면. 밝은 글자가 올라가도록 한 단계 어둡게 */
-  --vzb-secondary-mid: #5c5c5c;   /* 흰색의 넓은 면. 흰 글자가 올라가도록 회색으로 */
-  --vzb-tertiary-mid: #424242;   /* 회색의 넓은 면 */
-  --vzb-other-mid: #3a3a3a;   /* 기타 묶음의 넓은 면 */
-  --vzb-line-3: #9b9b9b;   /* 선의 셋째 색(회색) */
-  --vzb-base: #6b6b6b;   /* 비교 기준 */
-  --vzb-track: #2c2c2c;   /* 게이지 · 달성률 막대의 바탕 */
-  --vzb-other: #4d4d4d;   /* 기타로 묶은 항목 */
-  --vzb-good: #30d158;   /* 좋은 증감 */
-  --vzb-good-tint: #1e3624;   /* 좋은 증감 배지의 바탕 */
-  --vzb-bad: #ff453a;   /* 나쁜 증감, 한도 초과 */
-  --vzb-bad-tint: #3d2120;   /* 나쁜 증감 배지의 바탕 */
-  --vzb-tip: #3a3a3a;   /* 툴팁 바탕 */
-  --vzb-shadow: none;   /* 카드 그림자 */
+  --vzb-card: #1b1b1b;   /* card background (Vizney black) */
+  --vzb-edge: rgba(255, 255, 255, 0.08);   /* card border */
+  --vzb-ink: #f5f5f5;   /* title and headline figure */
+  --vzb-ink-2: #cfcfcf;   /* body text */
+  --vzb-muted: #9b9b9b;   /* subtitle, units, axis ticks */
+  --vzb-grid: #2f2f2f;   /* grid lines and the rule under the head */
+  --vzb-primary: #ffcc00;   /* first data color (Vizney yellow) */
+  --vzb-primary-tint: #362f18;   /* dim yellow background */
+  --vzb-primary-soft: #5f5013;   /* bar-list bars that carry the name */
+  --vzb-secondary: #f5f5f5;   /* second data color (white) */
+  --vzb-tertiary: #9b9b9b;   /* third data color (gray) */
+  --vzb-primary-mid: #826b0f;   /* wide areas, one step darker so light text sits on them */
+  --vzb-secondary-mid: #5c5c5c;   /* white for wide areas, gray so white text reads on it */
+  --vzb-tertiary-mid: #424242;   /* gray for wide areas */
+  --vzb-other-mid: #3a3a3a;   /* the Other group for wide areas */
+  --vzb-line-3: #9b9b9b;   /* third line color (gray) */
+  --vzb-base: #6b6b6b;   /* comparison baseline */
+  --vzb-track: #2c2c2c;   /* gauge and attainment-bar track */
+  --vzb-other: #4d4d4d;   /* items folded into Other */
+  --vzb-good: #30d158;   /* good change */
+  --vzb-good-tint: #1e3624;   /* good badge background */
+  --vzb-bad: #ff2d55;   /* bad change, over the limit */
+  --vzb-bad-tint: #3d1e24;   /* bad badge background */
+  --vzb-tip: #3a3a3a;   /* tooltip background */
+  --vzb-shadow: none;   /* card shadow */
 }
 /* 카드: 놓인 자리의 폭을 채우고, 높이는 세 단계입니다(Number 1 · Line, Bar 2 · 나머지 1.5, 단위 --vzb-unit). */
 .vzb-card {
@@ -160,45 +161,50 @@
 .vzb-tip-note + .vzb-tip-note { margin-top: 0; }
 .vzb-fs { --vzb-c: var(--vzb-primary-soft); }
 .vzb-key.is-tick { width: 2px; height: 12px; border-radius: 1px; }
-/* Bar - Overflow: 높이 2단위. 테두리 칸이 한도, 회색 막대가 칸 안의 쓴 양, 칸 밖으로 넘쳐 떨어진 조각은 첫째 색입니다.
-   막대는 굵기 18px까지, 끝만 4px 둥글게 그립니다. 이름은 왼쪽 칸, 한도와의 차이는 오른쪽 끝에 적고, 조각이 쌓이는 바닥은 그래프 맨 아래의 1px 선입니다.
-   그래프 아래 줄에는 다시 보기 단추와 카드가 계산한 한 줄(넘친 항목 수와 넘친 양)을 둡니다. */
-.vzb-card[data-vzb="bar-overflow"] { min-height: calc(var(--vzb-unit) * 2); }
-.vzb-of.vzb-foot { padding-top: 14px; }
-.vzb-of-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
-.vzb-of-box { fill: none; stroke: var(--vzb-base); stroke-width: 1; }
-.vzb-of-fill { fill: var(--vzb-base); }
-.vzb-of-piece { fill: var(--vzb-primary); }
-.vzb-of-tick { stroke: var(--vzb-primary); stroke-width: 2; stroke-linecap: round; }
-.vzb-of-floor { stroke: var(--vzb-base); stroke-width: 1; }
-.vzb-of-name { font-size: 12px; fill: var(--vzb-ink-2); }
-.vzb-of-diff { font-size: 12px; font-weight: 500; fill: var(--vzb-muted); font-variant-numeric: tabular-nums; }
-.vzb-of-row.is-over .vzb-of-name, .vzb-of-row.is-over .vzb-of-diff { font-weight: 700; fill: var(--vzb-ink); }
-.vzb-of-row, .vzb-of-pc { transition: opacity 0.12s; }
-.vzb-of-svg.is-hover .vzb-of-row:not(.is-on), .vzb-of-svg.is-hover .vzb-of-pc:not(.is-on) { opacity: 0.3; }
-.vzb-of-ctl { display: flex; align-items: center; gap: 10px; min-height: 28px; margin-top: 10px; }
-.vzb-of-btn { flex: none; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
-.vzb-of-btn:hover { background: var(--vzb-other); }
-.vzb-of-btn[hidden] { display: none; }
-.vzb-of-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
-.vzb-of-ic { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.vzb-of-sum { flex: 1 1 auto; min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }
-.vzb-of-key { display: inline-block; width: 8px; height: 8px; margin-right: 7px; border-radius: 2px; background: var(--vzb-c); }
-@media (prefers-reduced-motion: reduce) { .vzb-of-row, .vzb-of-pc { transition: none; } }
+/* Budget Bars: 높이 2단위. 세로 눈금이 한도(예산), 회색 막대가 쓴 양, 한도를 넘긴 구간만 빨강(--vzb-bad)입니다.
+   막대는 굵기 16px까지, 끝만 4px 둥글게 그리고 한도에 닿으면 눈금 앞에서 각지게 끊습니다. 눈금은 막대보다 위아래로 4px씩 깁니다.
+   이름은 왼쪽 칸, 값은 오른쪽 끝에 적고, 그래프 아래 줄에는 다시 보기 단추와 카드가 계산한 한 줄(넘친 항목 수와 넘친 양)을 둡니다.
+   넘친 구간의 깜빡임은 스크립트가 불투명도로 그립니다(동작 줄이기 설정에서는 깜빡이지 않습니다). */
+.vzb-card[data-vzb="bar-budget"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-bb.vzb-foot { padding-top: 10px; }
+.vzb-bb-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
+.vzb-bb-fill { fill: var(--vzb-base); }
+.vzb-bb-over { fill: var(--vzb-bad); }
+.vzb-bb-tick { fill: var(--vzb-ink); }
+.vzb-bb-lim { font-size: 11px; fill: var(--vzb-muted); }
+.vzb-bb-name { font-size: 12px; fill: var(--vzb-ink-2); }
+.vzb-bb-val { font-size: 12px; font-weight: 500; fill: var(--vzb-ink-2); font-variant-numeric: tabular-nums; }
+.vzb-bb-unit { font-size: 11px; font-weight: 400; fill: var(--vzb-muted); }
+.vzb-bb-row.is-over .vzb-bb-name, .vzb-bb-row.is-over .vzb-bb-val { font-weight: 700; fill: var(--vzb-ink); }
+.vzb-bb-row { transition: opacity 0.12s; }
+.vzb-bb-svg.is-hover .vzb-bb-row:not(.is-on) { opacity: 0.3; }
+.vzb-bb-ctl { display: flex; align-items: center; gap: 10px; min-height: 28px; margin-top: 10px; }
+.vzb-bb-btn { flex: none; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
+.vzb-bb-btn:hover { background: var(--vzb-other); }
+.vzb-bb-btn[hidden] { display: none; }
+.vzb-bb-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
+.vzb-bb-ic { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-bb-sum { flex: 1 1 auto; min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-bb-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
+.vzb-bb-key { display: inline-block; width: 8px; height: 8px; margin-right: 7px; border-radius: 2px; background: var(--vzb-bad); }
+@media (prefers-reduced-motion: reduce) { .vzb-bb-row { transition: none; } }
 </style>
-<div class="vzb-card" data-vzb="bar-overflow">
+<div class="vzb-card" data-vzb="bar-budget">
 <script type="application/json">
 {
-  "title": "부서별 예산 집행",
-  "subtitle": "2026년 3분기, 예산(테두리 칸) 대비 집행액",
-  "format": "eok",
+  "title": "Ad Spend by Channel",
+  "subtitle": "Nov 1–14 spend against the monthly budget",
+  "lang": "en",
+  "format": "usd",
+  "decimals": 0,
+  "limitLabel": "Budget",
   "items": [
-    { "name": "마케팅", "value": 58, "limit": 46 },
-    { "name": "영업", "value": 72, "limit": 80 },
-    { "name": "개발", "value": 95, "limit": 88 },
-    { "name": "인사", "value": 18, "limit": 22 },
-    { "name": "운영", "value": 51, "limit": 44 },
-    { "name": "디자인", "value": 17, "limit": 20 }
+    { "name": "Social", "value": 58000, "limit": 50000 },
+    { "name": "Search", "value": 42000, "limit": 60000 },
+    { "name": "Display", "value": 36000, "limit": 30000 },
+    { "name": "Video", "value": 29000, "limit": 40000 },
+    { "name": "Affiliate", "value": 12000, "limit": 20000 },
+    { "name": "Retargeting", "value": 9000, "limit": 15000 }
   ]
 }
 </script>
@@ -244,9 +250,10 @@
     '%s 퍼널, %s. 좌우 화살표로 단계를 옮깁니다.': '%s funnel, %s. Use the left and right arrows to move between steps.',
     '%s 막대 경주, %s–%s, 항목 %s개. 위아래 화살표로 지금 순위를 짚고, 아래 막대로 기간을 고릅니다. 모든 값은 이어지는 표에 있습니다.': '%s bar chart race, %s–%s, %s items. Use the up and down arrows to step through the current ranking and the slider below to pick a period. Every value is in the table that follows.',
     '재생': 'Play', '일시정지': 'Pause', '처음부터 다시': 'Replay', '%1, 1위 %2': '%1, #1 %2',
-    '한도': 'Limit', '차이': 'Difference', '%s 넘침': '%s over', '%s 남음': '%s left', '한도 %s': 'Limit %s', '한도와 같음': 'Right at the limit',
-    '%1개 중 %2개가 넘쳤습니다 · 넘친 양 %3': '%2 of %1 went over · %3 spilled', '%1개 중 %2개가 넘쳤습니다': '%2 of %1 went over', '모두 한도 안입니다': 'All within the limit',
-    '%s. 항목 %s개 가운데 %s개가 한도를 넘었습니다. 위아래 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s. %s items, %s over the limit. Use the up and down arrows to move between items. Every value is in the table that follows.',
+    '한도': 'Limit', '차이': 'Difference', '%s 초과|한도': '%s over', '%1 초과 · %2의 %3%': '%1 over · %3% of %2', '%1 남음 · %2의 %3%': '%1 left · %3% of %2',
+    '%1개 중 %2개 %3 초과 · +%4': '%2 of %1 over %3 · +%4', '%1개 중 %2개 %3 초과': '%2 of %1 over %3', '모두 %s 이내': 'All within %s', '표시할 항목이 없습니다.': 'No items to show.',
+    '%1. 항목 %2개 가운데 %3개가 %4 초과입니다. 위아래 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %3 of %2 items are over %4. Use the up and down arrows to move between items. Every value is in the table that follows.',
+    'min과 max를 확인하세요.': 'Check min and max.', '%s 최소': 'Minimum %s', '%s 최대': 'Maximum %s', '%s 시작': 'Start of %s', '%s 끝': 'End of %s',
     '%s개 중 가장 높음': 'Highest of %s', '%s개 중 가장 낮음': 'Lowest of %s', '%1개 중 %2번째': '#%2 of %1',
     '평균보다 %s 높음': '%s above average', '평균보다 %s 낮음': '%s below average', '평균과 같음': 'equal to the average',
     '%s. %s 위아래 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s. %s Use the up and down arrows to move between items. Every value is in the table that follows.',
@@ -374,12 +381,30 @@
     card.append(fig);
   }
   // 같은 종류의 카드를 모두 찾아 그립니다. 코드를 두 번 붙여 넣어도 카드는 한 번만 그립니다.
+  // 데이터가 바뀌면 다시 그립니다: 페이지의 스크립트가 카드 안 JSON(<script type="application/json">)의 글자를 바꾸면 그 카드만
+  // 새 요소로 갈아 끼워 새로 그립니다(필터 · 기간 컨트롤과 잇는 길). 갈아 끼운 카드에는 data-vzb-live가 붙어, 움직이는 카드는
+  // 처음부터 다시 재생하지 않고 마지막 장면을 바로 그립니다. 예전 요소가 페이지에서 빠지므로 그 카드의 움직임도 함께 끝납니다.
   function mount(type, draw) {
+    const watch = (card, src) => {
+      if (!src || !window.MutationObserver) return;
+      const mo = new MutationObserver(() => {
+        mo.disconnect();
+        if (!card.isConnected) return;
+        const next = card.cloneNode(false);
+        next.removeAttribute('data-vzb-ready');
+        next.setAttribute('data-vzb-live', '');
+        next.append(src);
+        card.replaceWith(next);
+        run();
+      });
+      mo.observe(src, { childList: true, characterData: true, subtree: true });
+    };
     const run = () => {
       document.querySelectorAll(`.vzb-card[data-vzb="${type}"]:not([data-vzb-ready])`).forEach((card) => {
         card.setAttribute('data-vzb-ready', '');
         const src = card.querySelector('script[type="application/json"]');
         const raw = src ? src.textContent : '';
+        watch(card, src);
         let d;
         try { d = JSON.parse(raw); } catch (e) {
           card.append(el('p', 'vzb-error', tx(/"lang"\s*:\s*"en"/.test(raw) ? { lang: 'en' } : null, '카드 데이터(JSON)를 읽지 못했습니다: %s', e.message)));
@@ -514,7 +539,9 @@
     plot.addEventListener('pointermove', (e) => { if (e.pointerType !== 'touch' || touched) at(e); });
     plot.addEventListener('pointerdown', (e) => { if (e.pointerType === 'touch') { touched = true; at(e); } });
     plot.addEventListener('pointerleave', (e) => { if (e.pointerType !== 'touch') end(); });
-    document.addEventListener('pointerdown', (e) => { if (touched && !plot.contains(e.target)) { touched = false; end(); } }, true);
+    // 문서와 창에 건 듣기는 그래프가 페이지에서 빠지면(카드를 다시 그리면) 스스로 풉니다.
+    const away = (e) => { if (!plot.isConnected) document.removeEventListener('pointerdown', away, true); else if (touched && !plot.contains(e.target)) { touched = false; end(); } };
+    document.addEventListener('pointerdown', away, true);
     plot.addEventListener('keydown', (e) => {
       if (e.key !== back && e.key !== next) return;
       e.preventDefault();
@@ -522,18 +549,27 @@
       go(idx < 0 ? (vertical || first ? 0 : last) : Math.max(0, Math.min(last, idx + (e.key === next ? 1 : -1))));
     });
     plot.addEventListener('blur', end);
-    window.addEventListener('scroll', end, { passive: true });
+    const scrolled = () => { if (!plot.isConnected) window.removeEventListener('scroll', scrolled); else end(); };
+    window.addEventListener('scroll', scrolled, { passive: true });
     return { show: go, at: () => idx, end };
   }
 
-  // Bar - Overflow: 항목마다 한도(limit)를 테두리 칸으로 그리고 쓴 양(value)으로 채웁니다. 한도를 넘긴 만큼은 칸 밖으로 삐져나왔다가
-  // 떨어져 나가 바닥에 쌓입니다(글자 수를 넘기면 넘친 글자가 떨어지는 입력 칸처럼). 떨어진 조각의 길이가 넘친 양입니다.
-  // 넘친 조각만 첫째 색, 나머지는 회색입니다. 오른쪽 끝에 한도와의 차이(넘치면 +, 남으면 −)를, 아래 줄에 넘친 항목 수와 넘친 양의 합을 카드가 계산해 적습니다.
-  // 움직임: 줄마다 0.14초 간격으로 채우고(0.7초), 넘친 조각은 잠깐 버티다 금이 가며 떨리고, 한도 끝을 경첩 삼아 기운 뒤 떨어져 바닥이나
-  // 먼저 떨어진 조각 위에 내려앉습니다(닿을 때 살짝 눌렸다가 튑니다). 약 2.5초 뒤 쌓인 장면에서 멈춥니다.
-  // 카드가 화면에 보이면 한 번 움직이고, 다시 보기 단추로 되풀이합니다. 동작 줄이기 설정에서는 쌓인 장면을 바로 그립니다.
-  // 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고 되풀이합니다. 항목은 받은 순서대로 max(비우면 6)개까지 그립니다.
-  mount('bar-overflow', (card, d, f) => {
+  // Budget Bars: 항목마다 한도(limit, 예: 예산)를 세로 눈금으로 세워 두고, 지금까지 쓴 양(value)을 가로 막대로 채웁니다.
+  // 눈금은 막대보다 길게 그려 막대 안에 들어가도 보이고, 첫 줄의 눈금 위에 이름(limitLabel, 비우면 한도)을 한 번 적습니다.
+  // 한도 안은 회색, 한도를 넘긴 구간만 빨강(--vzb-bad)입니다. 값은 오른쪽 끝에 적고, 넘친 줄은 이름과 값을 굵게 적습니다.
+  // 아래 줄에는 넘친 항목 수와 넘친 양의 합을 카드가 계산해 적습니다.
+  // 움직임: 눈금이 먼저 서 있고, 막대가 위에서부터 하나씩 차오르며 값이 따라 올라갑니다. 마지막 막대가 다 차면 넘친 구간만
+  // 세 번 깜빡이고 멈춥니다. 막대가 차기 전에는 막대 자리를 미리 그리지 않습니다.
+  // 카드가 화면에 보이면 한 번 움직이고, 다시 보기 단추로 되풀이합니다. 동작 줄이기 설정이거나 데이터가 바뀌어 다시 그릴 때
+  // (data-vzb-live)는 마지막 장면을 바로 그립니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고 되풀이합니다.
+  // 항목은 받은 순서대로 max(비우면 6)개까지 그립니다. items가 빈 배열이면 '표시할 항목이 없습니다.'만 적습니다.
+  mount('bar-budget', (card, d, f) => {
+    // 걸러서 남은 항목이 없을 때(items가 빈 배열)는 오류가 아니라 빈 화면입니다.
+    if (Array.isArray(d.items) && !d.items.length) {
+      head(card, d, f, null);
+      card.append(el('p', 'vzb-bb-none', tx(d, '표시할 항목이 없습니다.')));
+      return;
+    }
     const all = (d.items || []).filter((it) => it && it.name != null && fin(it.value) && fin(it.limit));
     if (!all.length) throw new Error(tx(d, 'items의 value와 limit을 확인하세요.'));
     const N = Math.max(1, Math.min(all.length, fin(d.max) && +d.max >= 1 ? Math.round(+d.max) : 6));
@@ -541,172 +577,137 @@
       const v = Math.max(0, +it.value), lim = Math.max(0, +it.limit);
       return { i, name: String(it.name), v, lim, over: Math.max(0, v - lim) };
     });
+    const label = d.limitLabel || tx(d, '한도');
+    const inText = f.lang === 'en' ? label.toLowerCase() : label;   // 문장 안의 영어 이름은 소문자로
     const spill = items.filter((it) => it.over > 0);
     const sum = spill.reduce((a, it) => a + it.over, 0);
     const top = Math.max(...items.map((it) => Math.max(it.v, it.lim))) || 1;
-    const summary = !spill.length ? tx(d, '모두 한도 안입니다')
-      : f.rel ? tx(d, '%1개 중 %2개가 넘쳤습니다 · 넘친 양 %3', items.length, spill.length, show(f, sum))
-        : tx(d, '%1개 중 %2개가 넘쳤습니다', items.length, spill.length);
+    const summary = !spill.length ? tx(d, '모두 %s 이내', inText)
+      : f.rel ? tx(d, '%1개 중 %2개 %3 초과 · +%4', items.length, spill.length, inText, show(f, sum))
+        : tx(d, '%1개 중 %2개 %3 초과', items.length, spill.length, inText);
 
     head(card, d, f, null);
-    const foot = el('div', 'vzb-foot vzb-fill vzb-of');
+    const foot = el('div', 'vzb-foot vzb-fill vzb-bb');
     const plot = el('div', 'vzb-plot');
     plot.tabIndex = 0;
     plot.setAttribute('role', 'img');
-    plot.setAttribute('aria-label', tx(d, '%s. 항목 %s개 가운데 %s개가 한도를 넘었습니다. 위아래 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.', d.title || '', items.length, spill.length));
-    const svg = svgEl('svg', { class: 'vzb-of-svg', 'aria-hidden': 'true' });
+    plot.setAttribute('aria-label', tx(d, '%1. 항목 %2개 가운데 %3개가 %4 초과입니다. 위아래 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.', d.title || '', items.length, spill.length, inText));
+    const svg = svgEl('svg', { class: 'vzb-bb-svg', 'aria-hidden': 'true' });
     plot.append(svg);
-    const ctl = el('div', 'vzb-of-ctl'), btn = el('button', 'vzb-of-btn'), sumEl = el('p', 'vzb-of-sum');
+    const ctl = el('div', 'vzb-bb-ctl'), btn = el('button', 'vzb-bb-btn'), sumEl = el('p', 'vzb-bb-sum');
     btn.type = 'button';
     btn.setAttribute('aria-label', tx(d, '처음부터 다시'));
-    const ic = svgEl('svg', { class: 'vzb-of-ic', viewBox: '0 0 16 16', 'aria-hidden': 'true' });
+    const ic = svgEl('svg', { class: 'vzb-bb-ic', viewBox: '0 0 16 16', 'aria-hidden': 'true' });
     ic.append(svgEl('path', { d: 'M3.7 9a4.4 4.4 0 1 0 1.2-4.2' }), svgEl('path', { d: 'M4.6 2.6v2.6h2.6' }));
     btn.append(ic);
-    if (spill.length) sumEl.append(el('i', 'vzb-of-key vzb-f1'));
+    if (spill.length) sumEl.append(el('i', 'vzb-bb-key'));
     sumEl.append(summary);
     ctl.append(btn, sumEl);
     foot.append(plot, ctl);
     card.append(foot);
     // 화면 낭독기용 표: 이름 · 값 · 한도 · 차이
     const sr = el('div', 'vzb-sr'), table = el('table'), hr = el('tr');
-    hr.append(...[tx(d, '이름'), tx(d, '값'), tx(d, '한도'), tx(d, '차이')].map((k) => el('th', null, k)));
+    hr.append(...[tx(d, '이름'), tx(d, '값'), label, tx(d, '차이')].map((k) => el('th', null, k)));
     table.append(el('caption', null, d.title || ''), hr);
     items.forEach((it) => { const tr = el('tr'); tr.append(el('th', null, it.name), el('td', null, show(f, it.v)), el('td', null, show(f, it.lim)), el('td', null, signed(f, it.v - it.lim))); table.append(tr); });
     sr.append(table);
     card.append(sr);
 
-    // 줄: 테두리 칸(한도) · 회색 막대(칸 안의 쓴 양) · 이름(왼쪽 칸) · 차이(오른쪽 끝) · 금 간 자리 표시(한도 끝의 짧은 세로선)
-    // 조각은 줄 위의 다른 층에 그려, 떨어지는 동안 아래 줄들 앞을 지나갑니다.
-    const floor = svgEl('line', { class: 'vzb-of-floor' }), rowsG = svgEl('g', {}), piecesG = svgEl('g', {});
+    // 값 글자는 숫자와 단위로 나눠 두고, 차오르는 동안 숫자만 같은 단위로 올립니다(5,800만으로 가는 길에 원 단위로 바뀌지 않게).
     items.forEach((it) => {
-      it.g = svgEl('g', { class: 'vzb-of-row' });
-      it.fill = svgEl('path', { class: 'vzb-of-fill' });
-      it.box = svgEl('path', { class: 'vzb-of-box' });
-      it.tick = svgEl('line', { class: 'vzb-of-tick' });
-      it.nm = svgText(0, 0, it.name, 'vzb-of-name', 'end');
-      it.df = svgText(0, 0, signed(f, it.v - it.lim), 'vzb-of-diff', 'end');
-      it.g.append(it.fill, it.box, it.tick, it.nm, it.df);
-      rowsG.append(it.g);
-      if (it.over > 0) {
-        it.pg = svgEl('g', { class: 'vzb-of-pc' });
-        it.piece = svgEl('path', { class: 'vzb-of-piece' });
-        it.pg.append(it.piece);
-        piecesG.append(it.pg);
-      }
+      const [text, unit] = f.parts(it.v), m = /^(\D*)([\d,]*\.?\d*)(.*)$/.exec(text);
+      const end = parseFloat(m[2].replace(/,/g, '')) || 0, dec = (m[2].split('.')[1] || '').length;
+      it.unitText = unit;
+      it.count = (k) => (k >= 1 ? text : m[1] + num(end * k, dec) + m[3]);
     });
-    svg.append(floor, rowsG, piecesG);
+    // 줄: 회색 막대(한도 안) · 빨간 막대(넘친 구간) · 눈금(한도) · 이름(왼쪽) · 값(오른쪽 끝)
+    const limText = svgText(0, 0, label, 'vzb-bb-lim', 'middle');
+    items.forEach((it) => {
+      it.g = svgEl('g', { class: 'vzb-bb-row' });
+      it.fill = svgEl('path', { class: 'vzb-bb-fill' });
+      it.red = svgEl('path', { class: 'vzb-bb-over' });
+      it.tick = svgEl('rect', { class: 'vzb-bb-tick', width: 2, rx: 1 });
+      it.nm = svgText(0, 0, it.name, 'vzb-bb-name', 'end');
+      it.val = svgText(0, 0, '', 'vzb-bb-val', 'end');
+      it.num = document.createTextNode('');
+      it.val.append(it.num, Object.assign(svgEl('tspan', { class: 'vzb-bb-unit', dx: /^[A-Za-z]{2}/.test(it.unitText) ? 3 : 1 }), { textContent: it.unitText }));
+      it.g.append(it.fill, it.red, it.tick, it.nm, it.val);
+      svg.append(it.g);
+    });
+    svg.append(limText);
     const fam = getComputedStyle(card).fontFamily, fx = (v) => v.toFixed(1), clamp = (v) => Math.max(0, Math.min(1, v));
-    // 끝만 둥근 막대(왼쪽 끝은 각지게)
-    const bar = (x, y, w, h) => {
+    // 가로 막대: round가 참이면 오른쪽 끝만 둥글게, 아니면 각지게(눈금에 닿는 끝)
+    const bar = (x, y, w, h, round) => {
       if (w < 0.5) return '';
-      const r = Math.min(4, w, h / 2);
+      const r = round ? Math.min(4, w, h / 2) : 0;
       return `M${fx(x)},${fx(y)}H${fx(x + w - r)}A${r},${r} 0 0 1 ${fx(x + w)},${fx(y + r)}V${fx(y + h - r)}A${r},${r} 0 0 1 ${fx(x + w - r)},${fx(y + h)}H${fx(x)}Z`;
     };
-    // 시간표(밀리초)와 떨어지는 힘: 채우기 · 버티기 · 금 가기 · 기울기 · 닿은 뒤 눌림과 튐. G는 1초에 px/s²
-    const STAG = 140, TG = 700, HOLD = 220, CR = 140, HG = 200, SQ = 70, BN = 300, G = 2400, TILT = 22, GAP = 2, DRIFT = 3;
-    const easeOut = (k) => 1 - (1 - k) ** 3, smooth = (k) => k * k * (3 - 2 * k);
-    let W = 0, H = 0, x0 = 0, s = 1, rowH = 0, bh = 0, t = 0, TOTAL = 0;
+    // 시간표(밀리초): 눈금만 보이는 처음 · 줄 사이 간격 · 한 줄이 차는 시간 · 다 찬 뒤 쉬는 시간 · 깜빡임 한 번 · 깜빡이는 횟수
+    const T0 = 320, STAG = 320, DUR = 520, WAIT = 260, BLINK = 440, TIMES = 3, GAP = 2, TOPPAD = 16;
+    const easeOut = (k) => 1 - (1 - k) ** 3;
+    let W = 0, H = 0, x0 = 0, s = 1, rowH = 0, bh = 0, t = 0, FULL = 0, TOTAL = 0;
     function layout(w, h) {
       W = w; H = h;
       svg.setAttribute('width', w);
       svg.setAttribute('height', h);
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
       x0 = Math.ceil(Math.max(...items.map((it) => textW(it.name, 700, fam)))) + 10;
-      const dW = Math.ceil(Math.max(...items.map((it) => textW(it.df.textContent, 700, fam)))) + 10;
-      s = Math.max(1, w - x0 - dW - 4) / top;
-      // 조각이 쌓일 층을 먼저 셉니다. 먼저 떨어진 조각과 가로로 겹치면 그 위 층에 놓입니다(위 줄이 먼저 떨어집니다).
-      // 줄 높이는 그 층들이 바닥 위, 마지막 줄 아래에 들어가게 정합니다.
-      let levels = 0, right = x0 + top * s;
-      const landed = [];
-      spill.forEach((it) => {
-        it.pw = it.over * s;
-        it.x1 = x0 + it.lim * s + GAP + DRIFT;
-        it.lv = landed.reduce((lv, o) => (it.x1 < o.x2 - 1 && o.x1 < it.x1 + it.pw - 1 ? Math.max(lv, o.lv + 1) : lv), 0);
-        landed.push({ x1: it.x1, x2: it.x1 + it.pw, lv: it.lv });
-        levels = Math.max(levels, it.lv + 1);
-        right = Math.max(right, it.x1 + it.pw);
-      });
-      rowH = Math.min(30, Math.max(14, (h - 12) / (N + 0.62 * levels)));
-      bh = Math.max(6, Math.min(18, Math.round(rowH * 0.62)));
-      const floorY = h - 0.5;
-      floor.setAttribute('x1', x0);
-      floor.setAttribute('x2', fx(right));
-      floor.setAttribute('y1', floorY);
-      floor.setAttribute('y2', floorY);
-      floor.setAttribute('opacity', spill.length ? 1 : 0);   // 넘친 항목이 없으면 바닥도 그리지 않습니다
+      const vW = Math.ceil(Math.max(...items.map((it) => textW(show(f, it.v), 700, fam)))) + 4;
+      s = Math.max(1, w - x0 - vW - 12) / top;
+      rowH = Math.min(32, Math.max(14, (h - TOPPAD) / N));
+      bh = Math.max(6, Math.min(16, Math.round(rowH * 0.5)));
+      const th = Math.min(rowH - 2, bh + 8);   // 눈금은 막대보다 위아래로 4px씩 깁니다
       items.forEach((it) => {
-        it.y = it.i * rowH + (rowH - bh) / 2;
+        it.y = TOPPAD + it.i * rowH + (rowH - bh) / 2;
         it.yc = it.y + bh / 2;
-        const xl = x0 + it.lim * s;
-        it.box.setAttribute('d', bar(x0 + 0.5, it.y + 0.5, Math.max(0, it.lim * s - 1), bh - 1));
-        it.tick.setAttribute('x1', fx(xl));
-        it.tick.setAttribute('x2', fx(xl));
-        it.tick.setAttribute('y1', fx(it.y - 3));
-        it.tick.setAttribute('y2', fx(it.y + bh + 3));
+        it.xl = x0 + it.lim * s;
+        it.tick.setAttribute('x', fx(it.xl - 1));
+        it.tick.setAttribute('y', fx(it.yc - th / 2));
+        it.tick.setAttribute('height', fx(th));
         it.nm.setAttribute('x', x0 - 8);
         it.nm.setAttribute('y', fx(it.yc + 4));
-        it.df.setAttribute('x', w);
-        it.df.setAttribute('y', fx(it.yc + 4));
-        it.start = 120 + it.i * STAG;
-        it.end = it.start + TG + 200;   // 차이 글자가 다 보일 때까지
-        it.tick.setAttribute('opacity', 0);
-        if (!it.pg) return;
-        // 내려앉을 자리(조각 가운데의 높이): 바닥에서 층 수만큼 위입니다. 층 사이는 1px 띄웁니다.
-        it.ly = floorY - 0.5 - it.lv * (bh + 1) - bh / 2;
-        it.tf = Math.sqrt((2 * Math.max(1, it.ly - it.yc)) / G) * 1000;
-        it.hb = Math.min(7, Math.max(2, (it.ly - it.yc) * 0.05));
-        it.end = it.start + TG + HOLD + CR + HG + it.tf + BN;
+        it.val.setAttribute('x', w);
+        it.val.setAttribute('y', fx(it.yc + 4));
+        it.start = T0 + it.i * STAG;
       });
-      TOTAL = Math.max(...items.map((it) => it.end));
+      // 눈금 이름은 첫 줄의 눈금 위에 한 번만 적습니다. 그래프 밖으로 나가지 않게 당깁니다.
+      const lw = textW(label, 400, fam, 11) / 2;
+      limText.setAttribute('x', fx(Math.max(lw, Math.min(w - lw, items[0].xl))));
+      limText.setAttribute('y', fx(items[0].yc - th / 2 - 5));
+      FULL = T0 + (N - 1) * STAG + DUR;
+      TOTAL = FULL + (spill.length ? WAIT + BLINK * TIMES : 240);
       render();
     }
     function render() {
       if (!W) return;
+      // 깜빡임: 다 찬 뒤 넘친 구간만 옅어졌다 돌아오기를 되풀이하고, 진한 상태로 끝납니다.
+      const b = (t - FULL - WAIT) / BLINK;
+      const glow = b <= 0 || b >= TIMES || holds.size ? 1 : 1 - 0.84 * (0.5 - 0.5 * Math.cos(2 * Math.PI * b));   // 멈춰서 값을 읽는 동안은 진하게
+      const alert = t >= FULL + WAIT;
       items.forEach((it) => {
-        const k = t - it.start, now = it.v * easeOut(clamp(k / TG)), inBox = Math.min(now, it.lim) * s;
-        it.fill.setAttribute('d', bar(x0, it.y, inBox, bh));
-        if (!it.pg) {
-          it.df.setAttribute('opacity', fx(clamp((k - TG) / 200)));
-          return;
-        }
-        const tb = k - TG - HOLD;   // 금 가기 시작한 뒤
-        let pw = it.pw, px = x0 + it.lim * s + GAP, py = it.yc, rot = 0, pivot = 0, sx = 1, sy = 1, landedFor = -1;
-        if (tb < 0) { pw = Math.max(0, now - it.lim) * s; px = x0 + it.lim * s; }
-        else if (tb < CR) { const q = tb / CR; px = x0 + it.lim * s + GAP * Math.min(1, tb / 60); rot = 2.5 * Math.sin((tb / 70) * Math.PI * 2) * (1 - q); pivot = pw / 2; }
-        else if (tb < CR + HG) { const q = (tb - CR) / HG; rot = TILT * q * q; }
-        else {
-          const tf = tb - CR - HG;
-          if (tf < it.tf) {
-            const u = tf / it.tf, sec = tf / 1000;
-            px += DRIFT * u;
-            py = it.yc + 0.5 * G * sec * sec;
-            rot = TILT * (1 - smooth(u));
-          } else {
-            landedFor = tf - it.tf;
-            px += DRIFT;
-            py = it.ly;
-            if (landedFor < SQ) { const q = 1 - landedFor / SQ; sy = 1 - 0.28 * q; sx = 1 + 0.08 * q; }
-            else if (landedFor < BN) { const b = (landedFor - SQ) / (BN - SQ); py = it.ly - it.hb * 4 * b * (1 - b); }
-          }
-        }
-        it.piece.setAttribute('d', bar(0, -bh / 2, pw, bh));
-        it.pg.setAttribute('transform', `translate(${fx(px)},${fx(py)}) rotate(${fx(rot)},${fx(pivot)},0)${sx !== 1 ? ` translate(${fx(pw / 2)},${fx(bh / 2)}) scale(${sx.toFixed(3)},${sy.toFixed(3)}) translate(${fx(-pw / 2)},${fx(-bh / 2)})` : ''}`);
-        it.tick.setAttribute('opacity', tb >= 0 ? 1 : 0);
-        it.g.classList.toggle('is-over', tb >= 0);
-        it.df.setAttribute('opacity', fx(landedFor < 0 ? 0 : clamp(landedFor / 200)));
+        const k = clamp((t - it.start) / DUR), e = easeOut(k), xv = x0 + it.v * s * e;
+        // 한도에 닿은 막대는 눈금 앞에서 각지게 끊고, 넘친 만큼은 눈금 뒤에서 빨강으로 잇습니다.
+        const hit = it.v >= it.lim && xv >= it.xl - GAP;
+        it.fill.setAttribute('d', bar(x0, it.y, (hit ? it.xl - GAP : xv) - x0, bh, !hit));
+        it.red.setAttribute('d', it.over > 0 ? bar(it.xl + GAP, it.y, xv - it.xl - GAP, bh, true) : '');
+        it.red.setAttribute('opacity', fx(glow));
+        it.num.nodeValue = it.count(e);
+        it.val.setAttribute('opacity', fx(clamp((t - it.start) / 140)));
+        it.g.classList.toggle('is-over', it.over > 0 && alert);
       });
-      sumEl.style.opacity = fx(clamp((t - TOTAL + 250) / 250));
+      sumEl.style.opacity = fx(clamp((t - (spill.length ? FULL + WAIT : FULL)) / 240));
     }
 
     // 재생: 화면에 보이고(inView) 마우스 · 포커스로 잠시 멈추지 않았을 때(holds)만 움직입니다. 카드가 페이지에서 빠지면 멈춥니다.
-    const reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    const still = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    const live = card.hasAttribute('data-vzb-live');   // 데이터가 바뀌어 다시 그린 카드: 처음부터 재생하지 않습니다
     const loop = !!card.closest('[data-vzb-loop]');
     const holds = new Set();
     let playing = false, seen = false, inView = false, rest = 0, last = 0, raf = 0;
-    const live = () => playing && inView && !holds.size && card.isConnected;
+    const on = () => playing && inView && !holds.size && card.isConnected;
     function tick(stamp) {
       raf = 0;
-      if (!live()) { last = 0; return; }
+      if (!on()) { last = 0; return; }
       const dt = last ? Math.min(100, stamp - last) : 16;
       last = stamp;
       if (rest > 0) { rest -= dt; if (rest <= 0) t = 0; }
@@ -715,40 +716,41 @@
         if (t >= TOTAL) { if (loop) rest = 2600; else playing = false; }
       }
       render();
-      if (live()) raf = requestAnimationFrame(tick);
+      if (on()) raf = requestAnimationFrame(tick);
     }
-    function kick() { if (!raf && live()) raf = requestAnimationFrame(tick); }
+    function kick() { if (!raf && on()) raf = requestAnimationFrame(tick); }
     function play() { t = 0; rest = 0; last = 0; playing = true; render(); kick(); }
     btn.addEventListener('click', play);
-    plot.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') holds.add('hover'); });
+    plot.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { holds.add('hover'); render(); } });
     plot.addEventListener('pointerleave', () => { holds.delete('hover'); kick(); });
-    plot.addEventListener('focus', () => { if (plot.matches(':focus-visible')) holds.add('focus'); });   // 키보드로 들어왔을 때만 멈춥니다
+    plot.addEventListener('focus', () => { if (plot.matches(':focus-visible')) { holds.add('focus'); render(); } });   // 키보드로 들어왔을 때만 멈춥니다
     plot.addEventListener('blur', () => { holds.delete('focus'); kick(); });
-    // 툴팁: 줄이나 바닥의 조각을 짚으면 그 항목의 쓴 양 · 한도 · 차이를 보여 주고, 줄과 조각을 함께 밝힙니다.
+    // 툴팁: 줄을 짚으면 쓴 양, 한도, 넘치거나 남은 양과 한도 대비 비율을 보여 주고 그 줄만 진하게 남깁니다.
     interact(plot, items.length,
       (cx, cy) => {
-        const r = plot.getBoundingClientRect(), x = cx - r.left, y = cy - r.top;
-        if (y < items.length * rowH) return Math.max(0, Math.min(items.length - 1, Math.floor(y / rowH)));
-        const hit = spill.find((it) => x >= it.x1 - 2 && x <= it.x1 + it.pw + 2 && Math.abs(y - it.ly) <= bh);
-        return hit ? hit.i : -1;
+        const i = Math.floor((cy - plot.getBoundingClientRect().top - TOPPAD) / rowH);
+        return i >= 0 && i < items.length ? i : -1;
       },
       (k) => {
         const it = items[k], r = plot.getBoundingClientRect();
         svg.classList.add('is-hover');
-        items.forEach((x) => { x.g.classList.toggle('is-on', x === it); if (x.pg) x.pg.classList.toggle('is-on', x === it); });
-        const gap = signed(f, it.v - it.lim).replace(/^[+−]/, '');
-        const note = [tx(d, '한도 %s', show(f, it.lim)), it.v > it.lim ? tx(d, '%s 넘침', gap) : it.v < it.lim ? tx(d, '%s 남음', gap) : tx(d, '한도와 같음')];
+        items.forEach((x) => x.g.classList.toggle('is-on', x === it));
+        const gap = show(f, Math.abs(it.v - it.lim)), share = it.lim > 0 ? num((it.v / it.lim) * 100, 0) : null;
+        const note = [`${label} ${show(f, it.lim)}`];
+        if (share == null) note.push(tx(d, '%s 초과|한도', gap));
+        else note.push(it.v > it.lim ? tx(d, '%1 초과 · %2의 %3%', gap, inText, share) : it.v < it.lim ? tx(d, '%1 남음 · %2의 %3%', gap, inText, share) : tx(d, '%1의 %2', inText, `${share}%`));
         const tb = tipBody({ value: show(f, it.v), note }, it.name);
-        return { x: r.left + x0 + Math.min(it.v, it.lim) * s, y: r.top + it.y, label: it.name, value: tb.node, text: tb.text, side: true };
+        return { x: r.left + x0 + Math.max(it.v, it.lim) * s, y: r.top + it.y - 6, label: it.name, value: tb.node, text: tb.text, side: true };
       },
-      () => { svg.classList.remove('is-hover'); items.forEach((x) => { x.g.classList.remove('is-on'); if (x.pg) x.pg.classList.remove('is-on'); }); },
+      () => { svg.classList.remove('is-hover'); items.forEach((x) => x.g.classList.remove('is-on')); },
       true, true);
 
-    btn.hidden = reduce;
-    onSize(plot, (w, h) => { layout(w, h); if (reduce || !seen) { t = reduce ? TOTAL : 0; render(); } });
+    btn.hidden = still;
+    if (still || live) t = 1e9;   // 마지막 장면에서 시작합니다
+    onSize(plot, layout);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (W) layout(W, H); });
     // 화면에 처음 보일 때 움직입니다. 화면 밖에 있는 동안은 멈춰 둡니다.
-    const start = () => { if (!seen) { seen = true; if (!reduce) play(); } };
+    const start = () => { if (!seen) { seen = true; if (!still && !live) play(); } };
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver((es) => {
         if (!card.isConnected) { io.disconnect(); return; }

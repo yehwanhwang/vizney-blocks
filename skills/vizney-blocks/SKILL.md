@@ -63,7 +63,7 @@ For each question the screen answers, use the base card first and another card o
 - Bar - Basic (`bar-basic`) — Size per period rather than the course
 - Line - Compare (`line-compare`) — Against the same month last year
 - Line - Multiple (`line-multiple`) — The course of 2–3 items together
-- Bump - Basic (`bump-basic`) — How rankings changed rather than values
+- Bump Chart (`bump-basic`) — How rankings changed rather than values
 
 ### Target · How far to the target?
 
@@ -78,14 +78,14 @@ For each question the screen answers, use the base card first and another card o
 - Base: Bar - Ranking (`bar-ranking`) — Size and rank per item
 - Bar - Compare (`bar-compare`) — Against last year or last month
 - Bar - Butterfly (`bar-butterfly`) — Two groups on the same items
-- Radar - Basic (`radar-basic`) — Strengths and weaknesses across several scores
+- Radar Chart (`radar-basic`) — Strengths and weaknesses across several scores
 
 ### Composition · What is it made of?
 
 - Base: Donut - Basic (`donut-basic`) — Shares at one point in time
 - Bar - Stacked 100% (`bar-stacked-100`) — How the mix changed over periods
 - Bar - Stacked (`bar-stacked`) — Total and mix over time, together
-- Treemap - Basic (`treemap-basic`) — Many items, or items inside groups
+- Treemap (`treemap-basic`) — Many items, or items inside groups
 - Waffle - Basic (`waffle-basic`) — Shares you can count, in squares
 
 ### Table · Exactly how much, per item?
@@ -98,14 +98,14 @@ For each question the screen answers, use the base card first and another card o
 ### Change · Why did it go up or down?
 
 - Base: Waterfall - Basic (`waterfall-basic`) — The change between two points, by factor
-- Waterfall - Subtotal (`waterfall-subtotal`) — A profit and loss structure
+- Subtotal Waterfall (`waterfall-subtotal`) — A profit and loss structure
 - Bar - Diverging (`bar-diverging`) — Change or variance from target, per period
 
 ### Flow · Where does it drop off, and where does it go?
 
-- Base: Funnel - Flow (`funnel-flow`) — How much drops out at each step
-- Sankey - Basic (`sankey-basic`) — Flows between two breakdowns
-- Sankey - Levels (`sankey-levels`) — Flows across three or more levels
+- Base: Flow Funnel (`funnel-flow`) — How much drops out at each step
+- Sankey Chart (`sankey-basic`) — Flows between two breakdowns
+- Multi-level Sankey (`sankey-levels`) — Flows across three or more levels
 
 ### Relation · How do two values relate?
 
@@ -115,7 +115,7 @@ For each question the screen answers, use the base card first and another card o
 
 ## Design table
 
-Before writing any card code, lay the screen out as a "row · question · card (id) · height" table, write the assumptions under it, and show it to the user. Put cards of the same height in the same row (KPI - Number 1 unit, KPI - Gauge · KPI - Stacked Bar 1.5 units, the rest 2 units). Paste the cards in the table's row order.
+Before writing any card code, lay the screen out as a "row · question · card (id) · height" table, write the assumptions under it, and show it to the user. Put cards of the same height in the same row (KPI - Number · Range Slider · Date Slider 1 unit, KPI - Gauge · KPI - Stacked Bar 1.5 units, the rest 2 units). Paste the cards in the table's row order.
 
 | Row | Question | Card (id) | Height |
 |---|---|---|---|
@@ -127,7 +127,7 @@ Assumptions: return rate `"better": "down"`; amounts as raw values with `"format
 ## Rules
 
 - Paste the card code you downloaded as it is and change only the JSON values. Do not edit the styles or the script. To use the same card several times, paste the whole card code again and change each JSON.
-- A card fills the width of its slot, and its height is one of 1 · 1.5 · 2 units (1 unit = 168px, --vzb-unit): KPI - Number 1 unit, KPI - Gauge · KPI - Stacked Bar 1.5 units, the rest 2 units. Cards in a row stretch to the tallest one and their graphics sit on the bottom, so to leave no gaps, put cards of the same height in a row.
+- A card fills the width of its slot, and its height is one of 1 · 1.5 · 2 units (1 unit = 168px, --vzb-unit): KPI - Number · Range Slider · Date Slider 1 unit, KPI - Gauge · KPI - Stacked Bar 1.5 units, the rest 2 units. Cards in a row stretch to the tallest one and their graphics sit on the bottom, so to leave no gaps, put cards of the same height in a row.
 - For several cards, give the wrapper a grid: display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:16px. Below 340px, the text in tables, donuts, funnels and waterfalls clips or overlaps. A row of KPI cards alone can go down to 280px, so four fit across a 1280px page.
 - Change colors and the font with the --vzb-* variables on :root (--vzb-primary, --vzb-font, …). The variable list and what each one does are in https://blocks.vizney.com/tokens.css (the same content as the :where(:root) block in the card code). To match a whole page, re-declare that file's values on :root.
 - Common fields: title (metric name), subtitle (period), value (the headline figure of a KPI card; KPI - Line and KPI - Bar use the last value when it is empty), format (usd dollar amounts, shortened to $745.6K · $1.2M · count a count, with its unit in unit · pct a percentage (3.4 is 3.4%), changes in pp · days a number of days · eok and krw are Korean won notations; krw writes amounts under 100,000 won in full), decimals (decimal places of the numbers; empty lets the card decide, and pct changes follow it too), better (up · down · neutral: the change color), compare ({ label, value }), labels (period names, the same length as values; null for a period without a value), series ([{ name, values }]), rows (table rows), curve (line shape of the line cards: smooth · linear · step), lang (en: the words the card prints itself, like Total, Other and Met, in English).

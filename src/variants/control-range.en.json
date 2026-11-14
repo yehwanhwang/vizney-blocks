@@ -1,0 +1,15 @@
+{
+  "title": "Budget Size",
+  "subtitle": "Monthly budget per channel",
+  "lang": "en",
+  "name": "budget",
+  "format": "usd",
+  "decimals": 0,
+  "min": 0,
+  "max": 80000,
+  "step": 5000,
+  "value": [
+    15000,
+    60000
+  ]
+}

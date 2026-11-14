@@ -12,7 +12,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.45';
+const VERSION = 'v0.46';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -259,8 +259,8 @@ const IC = {
 // one 64px row (logo, globe, search, burger) and a full-screen menu. Only Vizney links in it, in the same tab.
 // The line's own navigation (Vizney Blocks · cards · how to use · GitHub) is the tab row under it.
 const VIZNEY_NAV = {
-  ko: { home: 'https://kr.vizney.com/', items: [['Chart Guide', 'https://kr.vizney.com/chart-guide/'], ['Blocks', 'https://blocks.vizney.com/ko/', true], ['Styles', 'https://styles.vizney.com/?lang=ko'], ['Tips & Tricks', 'https://kr.vizney.com/tips/'], ['Knowledge Base', 'https://kr.vizney.com/kb/'], ['About', 'https://kr.vizney.com/about/'], ['Contact', 'https://kr.vizney.com/contact-us/']], other: 'Switch to English', otherLang: 'en' },
-  en: { home: 'https://www.vizney.com/', items: [['Chart Guide', 'https://www.vizney.com/chart-guide/'], ['Blocks', 'https://blocks.vizney.com/', true], ['Styles', 'https://styles.vizney.com/'], ['Tips & Tricks', 'https://www.vizney.com/tips/'], ['Knowledge Base', 'https://www.vizney.com/kb/'], ['About', 'https://www.vizney.com/about/'], ['Contact', 'https://www.vizney.com/contact-us/']], other: '한글로 보기', otherLang: 'ko' },
+  ko: { home: 'https://kr.vizney.com/', items: [['Chart Guide', 'https://kr.vizney.com/chart-guide/'], ['Blocks', 'https://blocks.vizney.com/ko/', true], ['Styles', 'https://styles.vizney.com/?lang=ko'], ['Tips & Tricks', 'https://kr.vizney.com/tips/'], ['Knowledge Base', 'https://kr.vizney.com/kb/'], ['Contact', 'https://kr.vizney.com/contact-us/']], other: 'Switch to English', otherLang: 'en' },
+  en: { home: 'https://www.vizney.com/', items: [['Chart Guide', 'https://www.vizney.com/chart-guide/'], ['Blocks', 'https://blocks.vizney.com/', true], ['Styles', 'https://styles.vizney.com/'], ['Tips & Tricks', 'https://www.vizney.com/tips/'], ['Knowledge Base', 'https://www.vizney.com/kb/'], ['Contact', 'https://www.vizney.com/contact-us/']], other: '한글로 보기', otherLang: 'ko' },
 };
 // The blog's icons: the globe of its language switch, the search of Ghost (20px, stroke 2) and Ghost's "more" dots.
 const GLOBE = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>';

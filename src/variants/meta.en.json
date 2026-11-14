@@ -228,6 +228,15 @@
     "The card plays once when it comes into view and stops on the last scene, where the answer is written. That still frame alone shows the answer and its evidence, so a screenshot keeps the meaning. Replay it with the button; with reduced motion turned on, it does not move and shows the last scene."
    ]
   },
+  "bar-overflow": {
+   "when": "The amount over the limit breaks off the bar and piles up on the floor. Use it for values with a limit they should not cross, such as budgets, headcount or capacity. For targets where more is better, use Bar - Target.",
+   "rules": [
+    "Give each of the `items` a `value` (the amount used) and a `limit`. The outlined box is the limit and the gray bar fills it. Whatever goes past the limit sticks out of the box, breaks off and piles up on the floor. Taking the excess off the bar keeps how much each item went over from blending into the rest of the bar.",
+    "Only the fallen pieces take the first color, and a piece's length is the amount over. The card computes the difference from the limit at the right end (+ when over, − when under) and, on the line below, how many items went over and the total spilled. For a rate (`pct`) it leaves the total out.",
+    "Use it only for limits that should not be crossed. On a target where more is better, the breaking-off reads as \"thrown away\".",
+    "It plays once when the card comes into view (about 2.5 s) and stops with the pieces piled up; that still frame alone shows which items went over and by how much. Replay it with the button; with reduced motion turned on, it draws the piled-up scene right away. Items are drawn in the order given, up to 6 (`max`)."
+   ]
+  },
   "line-basic": {
    "when": "A card with one line, vertical-axis ticks and a light solid grid. Use it to read one metric's course along with its values per period.",
    "rules": [

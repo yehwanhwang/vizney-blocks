@@ -317,7 +317,7 @@ const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 // Cards that draw a shape-only view (data-vzb-view="shape"): no labels on the first screen; the chart pages and the copied
 // code show everything. Cards that move (data-vzb-loop) replay on the first screen instead of stopping at the end.
 const SHAPE = new Set(['sankey-levels', 'sankey-basic']);
-const LOOP = new Set(['bar-sort', 'bar-race']);
+const LOOP = new Set(['bar-overflow', 'bar-sort', 'bar-race']);
 // Question chips on a tile: the same example data answers a different question (the card's `ask`) and plays again. Each chip
 // carries the conclusion title that goes with its question, so the copied code never pairs a title with the wrong answer.
 const ASKS = {
@@ -326,7 +326,7 @@ const ASKS = {
     { ask: 'lowest', ko: ['어디가 제일 부진한가', '3분기 달성률은 대전팀이 가장 낮습니다'], en: ['Who is furthest behind?', 'Central is furthest from its Q3 target'] },
   ],
 };
-const GALLERY = ['bar-sort', 'bar-race', 'sankey-levels', 'bump-basic', 'funnel-flow', 'treemap-basic', 'waterfall-subtotal', 'radar-basic', 'sankey-basic'];
+const GALLERY = ['bar-overflow', 'bar-race', 'sankey-levels', 'bump-basic', 'funnel-flow', 'treemap-basic', 'waterfall-subtotal', 'radar-basic', 'sankey-basic'];
 const galleryHead = (L) => `<section class="wrap ghead" aria-labelledby="ghead-title">
 <h1 id="ghead-title">${L.t.gTitle}</h1>
 <p>${L.t.gDesc}</p>
@@ -496,6 +496,10 @@ const FIELD_NOTE = {
 };
 // Cards whose fields mean something other than the common note.
 const FIELD_OVERRIDE = {
+  'bar-overflow': {
+    ko: { items: '[{ name, value, limit }]. value는 쓴 양, limit은 넘으면 안 되는 한도. 받은 순서대로 6개까지' },
+    en: { items: '[{ name, value, limit }]: value is the amount used, limit the cap it should not cross; drawn in the order given, up to 6' },
+  },
   'bar-sort': {
     ko: { title: '결론 문장(카드가 짚는 항목과 같아야 하고, 순위나 차이 숫자는 적지 않는다)이나 지표명', subtitle: '무엇으로 쟀는지: 지표와 기간(계산한 지표면 산식)', ask: 'highest · lowest, 질문의 종류. 카드가 그 항목을 찾아 짚는다', focus: '이름으로 짚을 때만. 적으면 ask는 뺀다', items: '[{ name, value }], 받은 순서 그대로' },
     en: { title: 'the conclusion (it has to name the item the card marks, without rank or gap numbers) or the metric name', subtitle: 'what it is measured by: the metric and period (the formula for a computed metric)', ask: 'highest · lowest: the kind of question; the card finds and marks that item', focus: 'only to mark an item by name; leave ask out then', items: '[{ name, value }], in the order received' },

@@ -1,0 +1,14 @@
+{
+  "title": "Budget Spend by Department",
+  "subtitle": "Q3 2026, spend against budget (the outlined box)",
+  "lang": "en",
+  "format": "usd",
+  "items": [
+    { "name": "Marketing", "value": 5800000, "limit": 4600000 },
+    { "name": "Sales", "value": 7200000, "limit": 8000000 },
+    { "name": "Product", "value": 9500000, "limit": 8800000 },
+    { "name": "People", "value": 1800000, "limit": 2200000 },
+    { "name": "Ops", "value": 5100000, "limit": 4400000 },
+    { "name": "Design", "value": 1700000, "limit": 2000000 }
+  ]
+}

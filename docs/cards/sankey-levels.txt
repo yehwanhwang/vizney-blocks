@@ -247,6 +247,9 @@
     '%s 퍼널, %s. 좌우 화살표로 단계를 옮깁니다.': '%s funnel, %s. Use the left and right arrows to move between steps.',
     '%s 막대 경주, %s–%s, 항목 %s개. 위아래 화살표로 지금 순위를 짚고, 아래 막대로 기간을 고릅니다. 모든 값은 이어지는 표에 있습니다.': '%s bar chart race, %s–%s, %s items. Use the up and down arrows to step through the current ranking and the slider below to pick a period. Every value is in the table that follows.',
     '재생': 'Play', '일시정지': 'Pause', '처음부터 다시': 'Replay', '%1, 1위 %2': '%1, #1 %2',
+    '한도': 'Limit', '차이': 'Difference', '%s 넘침': '%s over', '%s 남음': '%s left', '한도 %s': 'Limit %s', '한도와 같음': 'Right at the limit',
+    '%1개 중 %2개가 넘쳤습니다 · 넘친 양 %3': '%2 of %1 went over · %3 spilled', '%1개 중 %2개가 넘쳤습니다': '%2 of %1 went over', '모두 한도 안입니다': 'All within the limit',
+    '%s. 항목 %s개 가운데 %s개가 한도를 넘었습니다. 위아래 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s. %s items, %s over the limit. Use the up and down arrows to move between items. Every value is in the table that follows.',
     '%s개 중 가장 높음': 'Highest of %s', '%s개 중 가장 낮음': 'Lowest of %s', '%1개 중 %2번째': '#%2 of %1',
     '평균보다 %s 높음': '%s above average', '평균보다 %s 낮음': '%s below average', '평균과 같음': 'equal to the average',
     '%s. %s 위아래 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s. %s Use the up and down arrows to move between items. Every value is in the table that follows.',
@@ -254,7 +257,7 @@
     '%s 생키 차트, 노드 %s개와 흐름 %s개. 좌우 화살표로 노드와 흐름을 차례로 짚습니다. 모든 흐름은 이어지는 표에 있습니다.': '%s Sankey chart, %s nodes and %s flows. Use the left and right arrows to step through nodes and flows. Every flow is in the table that follows.',
     '%s 산점도, 점 %s개. 좌우 화살표로 점을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s scatter plot, %s points. Use the left and right arrows to move between points. Every value is in the table that follows.',
     '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
-    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'labels와 items를 확인하세요.': 'Check labels and items.', 'items를 확인하세요.': 'Check items.', 'ask에는 highest나 lowest를 적으세요.': 'Set ask to highest or lowest.', 'focus의 이름이 items에 없습니다: %s': 'focus is not one of the items: %s', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
+    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'labels와 items를 확인하세요.': 'Check labels and items.', 'items를 확인하세요.': 'Check items.', 'items의 value와 limit을 확인하세요.': 'Check value and limit in items.', 'ask에는 highest나 lowest를 적으세요.': 'Set ask to highest or lowest.', 'focus의 이름이 items에 없습니다: %s': 'focus is not one of the items: %s', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
   };
   // tx(d 또는 f, 원문, 값…): d.lang(format()이 f에 옮겨 둡니다)이 en이면 영어 문구를, 아니면 원문을 돌려줍니다.
   function tx(x, s, ...a) {

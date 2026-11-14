@@ -1,0 +1,25 @@
+/* Bar - Overflow: 높이 2단위. 테두리 칸이 한도, 회색 막대가 칸 안의 쓴 양, 칸 밖으로 넘쳐 떨어진 조각은 첫째 색입니다.
+   막대는 굵기 18px까지, 끝만 4px 둥글게 그립니다. 이름은 왼쪽 칸, 한도와의 차이는 오른쪽 끝에 적고, 조각이 쌓이는 바닥은 그래프 맨 아래의 1px 선입니다.
+   그래프 아래 줄에는 다시 보기 단추와 카드가 계산한 한 줄(넘친 항목 수와 넘친 양)을 둡니다. */
+.vzb-card[data-vzb="bar-overflow"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-of.vzb-foot { padding-top: 14px; }
+.vzb-of-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
+.vzb-of-box { fill: none; stroke: var(--vzb-base); stroke-width: 1; }
+.vzb-of-fill { fill: var(--vzb-base); }
+.vzb-of-piece { fill: var(--vzb-primary); }
+.vzb-of-tick { stroke: var(--vzb-primary); stroke-width: 2; stroke-linecap: round; }
+.vzb-of-floor { stroke: var(--vzb-base); stroke-width: 1; }
+.vzb-of-name { font-size: 12px; fill: var(--vzb-ink-2); }
+.vzb-of-diff { font-size: 12px; font-weight: 500; fill: var(--vzb-muted); font-variant-numeric: tabular-nums; }
+.vzb-of-row.is-over .vzb-of-name, .vzb-of-row.is-over .vzb-of-diff { font-weight: 700; fill: var(--vzb-ink); }
+.vzb-of-row, .vzb-of-pc { transition: opacity 0.12s; }
+.vzb-of-svg.is-hover .vzb-of-row:not(.is-on), .vzb-of-svg.is-hover .vzb-of-pc:not(.is-on) { opacity: 0.3; }
+.vzb-of-ctl { display: flex; align-items: center; gap: 10px; min-height: 28px; margin-top: 10px; }
+.vzb-of-btn { flex: none; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
+.vzb-of-btn:hover { background: var(--vzb-other); }
+.vzb-of-btn[hidden] { display: none; }
+.vzb-of-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
+.vzb-of-ic { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-of-sum { flex: 1 1 auto; min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-of-key { display: inline-block; width: 8px; height: 8px; margin-right: 7px; border-radius: 2px; background: var(--vzb-c); }
+@media (prefers-reduced-motion: reduce) { .vzb-of-row, .vzb-of-pc { transition: none; } }

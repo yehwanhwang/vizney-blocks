@@ -1,11 +1,13 @@
 {
   "title": "Export",
-  "subtitle": "The ad spend shown, as CSV",
+  "subtitle": "Monthly ad spend as a file",
   "lang": "en",
   "name": "export",
-  "label": "Download CSV",
-  "done": "Downloaded",
   "target": "bar-budget",
-  "filename": "ad-spend.csv",
-  "shortcut": "shift+d"
+  "filename": "monthly-ad-spend",
+  "formats": [
+    "csv",
+    "json",
+    "png"
+  ]
 }

@@ -1,21 +1,30 @@
-  // Download Button: 화면에 있는 차트 카드(target)의 데이터를 CSV로 내려받는 단추입니다. 컨트롤로 거른 뒤의 JSON을 읽으므로 보이는 그대로 받습니다.
-  // target에는 카드의 종류(data-vzb, 예: bar-budget)를 적습니다. 페이지에서 처음 만나는 그 카드의 items(없으면 JSON에서 처음 나오는 객체 배열)를
-  // 행으로, 그 안의 숫자 · 글자 필드를 열로 씁니다. 엑셀에서 한글이 깨지지 않게 파일 앞에 BOM을 붙입니다.
-  // 받기 전에 카드에서 vzb-download 이벤트(bubbles, cancelable, detail: { name, target, filename, rows })를 보냅니다. 페이지가
+  // Download Button: 화면에 있는 차트 카드(target)의 데이터를 내려받는 단추입니다. 처음에는 내려받기 아이콘만 있고, 마우스를 올리거나
+  // 키보드로 들어오거나 아이콘을 누르면 단추가 옆으로 늘어나며 받을 형식(formats: csv · json · png, 비우면 셋 다)이 하나씩 나옵니다.
+  // csv · json은 target 카드의 지금 JSON(컨트롤로 거른 뒤)에서 표를 만들어 받습니다: items(객체 배열), 없으면 labels와 values(한도
+  // limit · 목표 target이 있으면 열로 더함), labels와 series, 그 밖에는 JSON에서 처음 나오는 객체 배열입니다. csv 앞에는 엑셀용 BOM을 붙입니다.
+  // png는 target 카드를 보이는 그대로 그림으로 받습니다(글꼴은 기기에 설치된 것으로 그려질 수 있습니다).
+  // 받기 전에 카드에서 vzb-download 이벤트(bubbles, cancelable, detail: { name, target, format, filename, rows })를 보냅니다. 페이지가
   // preventDefault()를 부르면 카드는 파일을 만들지 않습니다(서버에서 원본을 받는 화면 등).
-  // 움직임(control-download.css): 누르면 단추가 눌렸다 튀고, 화살표가 받침으로 떨어져 체크로 바뀌며 받침이 눌렸다 펴지고, 작은 점들이 터집니다.
-  // 이름은 done으로 흐려지며 바뀌고, 옆의 파일 이름 자리에는 받은 행 수가 굴러 올라왔다가 1.8초 뒤 돌아옵니다. 받을 행이 없으면 단추가 좌우로 떱니다.
-  // shortcut(예: shift+d, mod+shift+e. mod는 Mac의 ⌘, 그 밖의 Ctrl)을 적으면 단추 안에 키캡을 그리고, 그 키를 누르면 키캡이 눌리며 받습니다.
-  // 입력 칸에 쓰는 중에는 shift만 붙은 단축키를 듣지 않습니다. 동작 줄이기 설정에서는 움직임 없이 글자만 바뀝니다.
-  // 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 파일은 만들지 않고 받는 모습만 되풀이합니다.
+  // 움직임(control-download.css): 형식은 늘어나는 단추 안에서 차례로 나오고, 받으면 단추가 접히며 화살표가 받침으로 떨어져 체크로 바뀌고
+  // 작은 점들이 터집니다. 옆에는 받은 형식과 행 수가 굴러 올라왔다가 1.8초 뒤 사라집니다. 받을 데이터가 없으면 단추가 좌우로 떱니다.
+  // 열린 상태에서 아이콘을 다시 누르면 첫 형식으로 받습니다. Esc는 닫고, 좌우 화살표는 형식 사이를 옮깁니다.
+  // 동작 줄이기 설정에서는 움직임 없이 상태만 바뀝니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 파일은 만들지 않고 고르는 모습만 되풀이합니다.
   mount('control-download', (card, d, f) => {
     head(card, d, f, null);
-    const label = d.label || tx(d, 'CSV 내려받기'), done = d.done || tx(d, '받았습니다'), none = tx(d, '데이터 없음');
-    const filename = d.filename || 'data.csv';
-    const foot = el('div', 'vzb-foot vzb-dl'), row = el('div', 'vzb-dl-row'), btn = el('button', 'vzb-dl-btn'), say = el('p', 'vzb-sr');
+    const FORMATS = ['csv', 'json', 'png'];
+    const formats = (Array.isArray(d.formats) ? d.formats.map((x) => String(x).toLowerCase()).filter((x) => FORMATS.includes(x)) : FORMATS);
+    const list = formats.length ? formats : FORMATS;
+    const base = String(d.filename || 'data').replace(/\.(csv|json|png)$/i, '');
+    const label = d.label || tx(d, '내려받기');
+    const foot = el('div', 'vzb-foot vzb-dl'), row = el('div', 'vzb-dl-row'), menu = el('div', 'vzb-dl-menu'), say = el('p', 'vzb-sr');
+    menu.setAttribute('role', 'group');
+    menu.setAttribute('aria-label', label);
+    menu.setAttribute('data-vzb-input', '');
+    say.setAttribute('aria-live', 'polite');
+    const btn = el('button', 'vzb-dl-btn');
     btn.type = 'button';
     btn.setAttribute('aria-label', label);
-    say.setAttribute('aria-live', 'polite');
+    btn.setAttribute('aria-expanded', 'false');
     // 아이콘: 화살표 · 체크 · 받침과, 받았을 때 터지는 점 여덟 개(데이터 색 넷을 두 번씩)
     const ic = el('span', 'vzb-dl-ic'), burst = el('span', 'vzb-dl-burst');
     for (let i = 0; i < 8; i++) {
@@ -28,43 +37,75 @@
     arrow.append(svgEl('path', { d: 'M10 3.2v8.6' }), svgEl('path', { d: 'M6.6 8.6l3.4 3.4 3.4-3.4' }));
     svg.append(arrow, svgEl('path', { class: 'vzb-dl-check', d: 'M6.4 9.6l2.5 2.5 4.8-5.2' }), svgEl('path', { class: 'vzb-dl-tray', d: 'M3.6 13.4v1.6a1.6 1.6 0 0 0 1.6 1.6h9.6a1.6 1.6 0 0 0 1.6-1.6v-1.6' }));
     ic.append(burst, svg);
-    const words = el('span', 'vzb-dl-words');
-    words.setAttribute('aria-hidden', 'true');
-    words.append(el('span', 'vzb-dl-w is-idle', label), el('span', 'vzb-dl-w is-done', done), el('span', 'vzb-dl-w is-none', none));
-    btn.append(ic, words);
-    // 단축키: mod · ctrl · alt · shift와 키 하나를 +로 잇습니다. 키캡은 Mac에서 기호(⌘ ⇧ 등), 그 밖에서 글자(Ctrl · Alt · Shift)로 적습니다.
-    const parts = String(d.shortcut || '').toLowerCase().split('+').map((s) => s.trim()).filter(Boolean);
-    const MODS = ['mod', 'ctrl', 'alt', 'shift'], mods = MODS.filter((m) => parts.includes(m)), key = parts.find((p) => !MODS.includes(p));
-    const mac = /mac|iphone|ipad|ipod/i.test((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '');
-    const caps = [];
-    if (key) {
-      // Control(\u2303)과 Option(\u2325) 기호는 카드 글꼴에 없어 시스템 글꼴로 그립니다.
-      const name = { mod: mac ? '⌘' : 'Ctrl', ctrl: mac ? '\u2303' : 'Ctrl', alt: mac ? '\u2325' : 'Alt', shift: mac ? '⇧' : 'Shift' };
-      const aria = { mod: mac ? 'Meta' : 'Control', ctrl: 'Control', alt: 'Alt', shift: 'Shift' };
-      const keys = el('span', 'vzb-dl-keys');
-      keys.setAttribute('aria-hidden', 'true');
-      [...mods, key].forEach((k) => { const cap = el('kbd', 'vzb-dl-key', name[k] || (k.length === 1 ? k.toUpperCase() : k)); cap.dataset.k = k; caps.push(cap); keys.append(cap); });
-      btn.append(keys);
-      btn.setAttribute('aria-keyshortcuts', [...mods.map((m) => aria[m]), key.length === 1 ? key.toUpperCase() : key].join('+'));
-    }
-    btn.classList.toggle('no-keys', !key);
-    const meta = el('span', 'vzb-dl-meta'), file = el('span', 'vzb-dl-file', filename), got = el('span', 'vzb-dl-got'), count = el('span', 'vzb-rl'), unit = el('span', 'vzb-dl-unit');
-    got.append(count, unit);
+    btn.append(ic);
+    const opts = el('span', 'vzb-dl-opts');
+    const items = list.map((fmt, i) => {
+      const o = el('button', 'vzb-dl-opt', fmt.toUpperCase());
+      o.type = 'button';
+      o.tabIndex = -1;
+      o.dataset.fmt = fmt;
+      o.style.setProperty('--vzb-i', i);
+      o.setAttribute('aria-label', tx(d, '%s로 받기', fmt.toUpperCase()));
+      opts.append(o);
+      return o;
+    });
+    menu.append(btn, opts);
+    const meta = el('span', 'vzb-dl-meta'), got = el('span', 'vzb-dl-got'), what = el('span', 'vzb-dl-what'), count = el('span', 'vzb-rl'), unit = el('span', 'vzb-dl-unit');
+    got.append(what, count, unit);
     got.setAttribute('aria-hidden', 'true');
-    meta.append(file, got);
-    row.append(btn, meta);
+    meta.append(got);
+    row.append(menu, meta);
     foot.append(row, say);
     card.append(foot);
 
-    // 받을 행: target 카드의 JSON에서 items, 없으면 처음 나오는 객체 배열
+    // 열고 닫기: 마우스를 올리면 열고, 내리면 잠시 뒤 닫습니다. 키보드로 아이콘에 들어오거나 아이콘을 눌러도 엽니다.
+    let open = false, shut = 0, since = 0, hush = false;   // hush: Esc로 닫고 아이콘에 포커스를 돌려줄 때는 다시 열지 않습니다
+    function setOpen(v) {
+      clearTimeout(shut);
+      if (open === v) return;
+      open = v;
+      since = performance.now();
+      foot.classList.toggle('is-open', v);
+      btn.setAttribute('aria-expanded', String(v));
+      items.forEach((o) => { o.tabIndex = v ? 0 : -1; });
+    }
+    menu.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { idle = performance.now() + 8000; setOpen(true); } });
+    menu.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse' && !menu.contains(document.activeElement)) shut = setTimeout(() => setOpen(false), 280); });
+    btn.addEventListener('focus', () => { if (hush) hush = false; else if (btn.matches(':focus-visible')) setOpen(true); });
+    menu.addEventListener('focusout', (e) => { if (!menu.contains(e.relatedTarget)) shut = setTimeout(() => setOpen(false), 120); });
+    menu.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { setOpen(false); if (document.activeElement !== btn) { hush = true; btn.focus(); } return; }
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      const all = [btn, ...items], i = all.indexOf(document.activeElement);
+      if (i < 0) return;
+      e.preventDefault();
+      setOpen(true);
+      all[Math.max(0, Math.min(all.length - 1, i + (e.key === 'ArrowRight' ? 1 : -1)))].focus();
+    });
+    document.addEventListener('pointerdown', function away(e) {
+      if (!card.isConnected) { document.removeEventListener('pointerdown', away, true); return; }
+      if (open && !menu.contains(e.target)) setOpen(false);
+    }, true);
+
+    // 받을 표: target 카드의 지금 JSON에서 만듭니다.
+    const target = () => (d.target ? document.querySelector(`.vzb-card[data-vzb="${String(d.target).replace(/["\\]/g, '')}"]`) : null);
     const isRows = (a) => Array.isArray(a) && a.length > 0 && a.every((r) => r && typeof r === 'object' && !Array.isArray(r));
-    function rowsOf() {
-      const t = d.target ? document.querySelector(`.vzb-card[data-vzb="${String(d.target).replace(/["\\]/g, '')}"]`) : null;
+    function rowsOf(t) {
       const src = t && t.querySelector('script[type="application/json"]');
       if (!src) return null;
       let data;
       try { data = JSON.parse(src.textContent); } catch (e) { return null; }
       if (isRows(data.items)) return data.items;
+      if (Array.isArray(data.labels) && data.labels.length && Array.isArray(data.values)) {
+        return data.labels.map((l, i) => {
+          const r = { label: l, value: data.values[i] };
+          ['limit', 'target'].forEach((k) => { if (fin(data[k])) r[k] = +data[k]; });
+          return r;
+        });
+      }
+      if (Array.isArray(data.labels) && data.labels.length && isRows(data.series)) {
+        return data.labels.map((l, i) => Object.assign({ label: l }, ...data.series.map((s) => ({ [s.name]: Array.isArray(s.values) ? s.values[i] : null }))));
+      }
       return Object.values(data).find(isRows) || null;
     }
     // CSV: 행마다 숫자 · 글자 필드를 처음 나온 순서대로 열로 둡니다. 쉼표 · 따옴표 · 줄바꿈이 든 칸은 따옴표로 감쌉니다.
@@ -74,76 +115,110 @@
       const cell = (v) => { const s = v == null ? '' : String(v); return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
       return `\ufeff${[cols.map(cell).join(','), ...rows.map((r) => cols.map((k) => cell(r[k])).join(','))].join('\r\n')}\r\n`;
     }
-    function save(text) {
-      const url = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' })), a = el('a');
+    // PNG: 카드를 보이는 그대로 복제해 계산된 스타일을 글자로 옮기고, SVG 그림 안에 넣어 캔버스에 그립니다(외부 라이브러리 없이).
+    function png(t) {
+      const r = t.getBoundingClientRect(), w = Math.ceil(r.width), h = Math.ceil(r.height), clone = t.cloneNode(true);
+      const from = [t, ...t.querySelectorAll('*')], to = [clone, ...clone.querySelectorAll('*')];
+      from.forEach((node, i) => {
+        const out = to[i];
+        if (!out || !out.setAttribute) return;
+        if (node.tagName === 'SCRIPT' || node.closest('button')) { out.setAttribute('style', 'visibility:hidden'); return; }   // 단추(다시 보기 등)는 자리만 남기고 그리지 않습니다
+        const cs = getComputedStyle(node);
+        let css = '';
+        for (let k = 0; k < cs.length; k++) css += `${cs[k]}:${cs.getPropertyValue(cs[k])};`;
+        out.setAttribute('style', css);
+      });
+      clone.querySelectorAll('script').forEach((s) => s.remove());
+      clone.style.margin = '0';
+      const xml = new XMLSerializer().serializeToString(clone);
+      const src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><foreignObject width="100%" height="100%">${xml}</foreignObject></svg>`)}`;
+      return new Promise((done, fail) => {
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const k = 2, c = document.createElement('canvas');
+            c.width = w * k;
+            c.height = h * k;
+            const g = c.getContext('2d');
+            g.scale(k, k);
+            g.drawImage(img, 0, 0);
+            c.toBlob((b) => (b ? done({ blob: b, w: w * k, h: h * k }) : fail(new Error('png'))), 'image/png');
+          } catch (e) { fail(e); }
+        };
+        img.onerror = fail;
+        img.src = src;
+      });
+    }
+    function save(blob, name) {
+      const url = URL.createObjectURL(blob), a = el('a');
       a.href = url;
-      a.download = filename;
+      a.download = name;
       a.hidden = true;
       document.body.append(a);
       a.click();
       a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 2000);
     }
-    // 상태: '' 처음, 'done' 받음, 'none' 받을 행 없음. 같은 상태를 다시 줘도 움직임이 처음부터 다시 돌도록 클래스를 지웠다 붙입니다.
+    // 상태: '' 처음, 'done' 받음, 'none' 받을 데이터 없음. 같은 상태를 다시 줘도 움직임이 처음부터 다시 돌도록 클래스를 지웠다 붙입니다.
     let back = 0;
-    function mark(state, n) {
+    function mark(state, fmt, n, px) {
       clearTimeout(back);
       foot.classList.remove('is-done', 'is-none');
       if (!state) return;
       void foot.offsetWidth;
       foot.classList.add(`is-${state}`);
       if (state === 'done') {
-        unit.textContent = (d.lang === 'en' ? ' ' : '') + tx(d, n === 1 ? '행|1' : '행');
-        roll(count, '0');
-        requestAnimationFrame(() => roll(count, String(n)));
+        what.textContent = `${fmt.toUpperCase()} · `;
+        if (px) { roll(count, '0'); requestAnimationFrame(() => roll(count, String(px[0]))); unit.textContent = `×${px[1]}px`; }
+        else { unit.textContent = (d.lang === 'en' ? ' ' : '') + tx(d, n === 1 ? '행|1' : '행'); roll(count, '0'); requestAnimationFrame(() => roll(count, num(n, 0))); }
+      } else {
+        what.textContent = tx(d, '데이터 없음');
+        count.replaceChildren();
+        unit.textContent = '';
       }
-      back = setTimeout(() => { if (card.isConnected) foot.classList.remove('is-done', 'is-none'); }, state === 'done' ? 1800 : 1200);
+      back = setTimeout(() => { if (card.isConnected) foot.classList.remove('is-done', 'is-none'); }, state === 'done' ? 1800 : 1400);
     }
-    function run(demo) {
-      const rows = rowsOf();
-      if (demo) { mark('done', rows ? rows.length : 6); return; }
-      if (!rows) { mark('none'); say.textContent = tx(d, '받을 데이터가 없습니다.'); return; }
-      const ev = new CustomEvent('vzb-download', { bubbles: true, cancelable: true, detail: { name: d.name || '', target: d.target || '', filename, rows } });
-      if (card.dispatchEvent(ev)) save(csv(rows));
-      mark('done', rows.length);
-      say.textContent = rows.length === 1 ? tx(d, '%s로 1행을 받았습니다.', filename) : tx(d, '%1로 %2행을 받았습니다.', filename, rows.length);
+    async function run(fmt, demo) {
+      setOpen(false);
+      const t = target(), rows = rowsOf(t);
+      if (demo) { mark('done', fmt, rows ? rows.length : 13, fmt === 'png' && t ? [Math.ceil(t.offsetWidth * 2), Math.ceil(t.offsetHeight * 2)] : null); return; }
+      if (!t || (fmt !== 'png' && !rows)) { mark('none'); say.textContent = tx(d, '받을 데이터가 없습니다.'); return; }
+      const name = `${base}.${fmt}`;
+      const ev = new CustomEvent('vzb-download', { bubbles: true, cancelable: true, detail: { name: d.name || '', target: d.target || '', format: fmt, filename: name, rows: rows || [] } });
+      const go = card.dispatchEvent(ev);
+      if (fmt === 'png') {
+        try {
+          const p = await png(t);
+          if (go) save(p.blob, name);
+          mark('done', fmt, 0, [p.w, p.h]);
+          say.textContent = tx(d, '%s로 받았습니다.', name);
+        } catch (e) { mark('none'); say.textContent = tx(d, '받을 데이터가 없습니다.'); }
+        return;
+      }
+      if (go) save(new Blob([fmt === 'csv' ? csv(rows) : JSON.stringify(rows, null, 2)], { type: fmt === 'csv' ? 'text/csv;charset=utf-8' : 'application/json' }), name);
+      mark('done', fmt, rows.length);
+      say.textContent = rows.length === 1 ? tx(d, '%s로 1행을 받았습니다.', name) : tx(d, '%1로 %2행을 받았습니다.', name, rows.length);
     }
     let idle = 0;
-    btn.addEventListener('click', () => { idle = performance.now() + 8000; run(false); });
+    btn.addEventListener('click', () => {
+      idle = performance.now() + 8000;
+      if (!open) setOpen(true);
+      else if (performance.now() - since > 250) run(list[0]);   // 열린 상태에서 아이콘을 다시 누르면 첫 형식으로 받습니다
+    });
+    items.forEach((o) => o.addEventListener('click', () => { idle = performance.now() + 8000; run(o.dataset.fmt); }));
 
-    // 단축키: 페이지 어디서든 듣고, 키캡은 그 키가 눌린 동안 내려앉습니다. 카드가 페이지에서 빠지면 듣기를 풉니다.
-    if (key) {
-      const isKey = (e) => (e.key || '').toLowerCase() === key || e.code === `Key${key.toUpperCase()}` || e.code === `Digit${key}`;
-      const held = (e, k) => (k === 'mod' ? (mac ? e.metaKey : e.ctrlKey) : k === 'ctrl' ? e.ctrlKey : k === 'alt' ? e.altKey : k === 'shift' ? e.shiftKey : null);
-      const exact = (e) => isKey(e) && e.metaKey === (mods.includes('mod') && mac) && e.ctrlKey === (mods.includes('ctrl') || (mods.includes('mod') && !mac))
-        && e.altKey === mods.includes('alt') && e.shiftKey === mods.includes('shift');
-      const typing = (t) => t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
-      const sink = (e, down) => caps.forEach((c) => c.classList.toggle('is-down', c.dataset.k === key ? down && isKey(e) : !!held(e, c.dataset.k)));
-      const off = () => { document.removeEventListener('keydown', onDown); document.removeEventListener('keyup', onUp); window.removeEventListener('blur', onBlur); };
-      const onDown = (e) => {
-        if (!card.isConnected) { off(); return; }
-        if (!mods.some((m) => m !== 'shift') && typing(e.target)) return;
-        sink(e, true);
-        if (!e.repeat && exact(e)) { e.preventDefault(); idle = performance.now() + 8000; run(false); }
-      };
-      const onUp = (e) => { if (!card.isConnected) { off(); return; } sink(e, false); };
-      const onBlur = () => caps.forEach((c) => c.classList.remove('is-down'));
-      document.addEventListener('keydown', onDown);
-      document.addEventListener('keyup', onUp);
-      window.addEventListener('blur', onBlur);
-    }
-
-    // 갤러리(data-vzb-loop): 화면에 보이는 동안, 손을 대기 전과 손을 뗀 지 8초 뒤부터 키캡을 눌러 받는 모습을 되풀이합니다(파일은 만들지 않습니다).
+    // 갤러리(data-vzb-loop): 화면에 보이는 동안, 손을 대기 전과 손을 뗀 지 8초 뒤부터 열어서 형식을 고르는 모습을 되풀이합니다(파일은 만들지 않습니다).
     const reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     if (!reduce && card.closest('[data-vzb-loop]')) {
-      let seen = true;
+      let seen = true, k = 0;
       if ('IntersectionObserver' in window) new IntersectionObserver((es) => { seen = es[es.length - 1].isIntersecting; }).observe(card);
       const timer = setInterval(() => {
         if (!card.isConnected) { clearInterval(timer); return; }
-        if (!seen || performance.now() < idle) return;
-        caps.forEach((c) => c.classList.add('is-down'));
-        btn.classList.add('is-press');
-        setTimeout(() => { caps.forEach((c) => c.classList.remove('is-down')); btn.classList.remove('is-press'); run(true); }, 160);
-      }, 3600);
+        if (!seen || performance.now() < idle || open) return;
+        const o = items[k++ % items.length];
+        setOpen(true);
+        setTimeout(() => { if (performance.now() >= idle) o.classList.add('is-pick'); }, 700);
+        setTimeout(() => { o.classList.remove('is-pick'); if (performance.now() >= idle) run(o.dataset.fmt, true); }, 1150);
+      }, 4200);
     }
   });

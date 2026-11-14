@@ -25,10 +25,10 @@ const T = {
 // The layout of a Vizney blog post image, with the values of its Figma source (file "Draft", page "Cover", 1200 × 660):
 // a frame with 160px side and 120px top and bottom padding and a 20px gap; the tag (white, 2px ink border, radius 24px, padding
 // 10px 18px, a 36px icon, Regular 28px uppercase, tracking 0.84px); the title (Bold 64px, line height 1.28, tracking -1.92px);
-// one line under it (Medium 36px, line height 1.28, tracking -1.08px); the logo (136 × 51) on the bottom padding; a white
-// 473 × 308 rectangle at left 1136, top -176; two 48px squares at 80, 551 and 48, 517. All shapes have a 2px ink border.
+// one line under it (Medium 36px, line height 1.28, tracking -1.08px); the logo (136 × 51) on the bottom padding; two 48px
+// squares with a 2px ink border at 80, 551 and 48, 517.
 // Two things differ from a post image: the background is ink (#1b1b1b) with white words and the white logo, and the place of
-// the chart (and of the lower right rectangle) holds two real cards in their frames. The tag icon is the Blocks mark (2 × 2).
+// the chart holds two real cards in their frames, without the white rectangles of the upper and lower right corners. The tag icon is the Blocks mark (2 × 2).
 const LOGO = `data:image/png;base64,${readFileSync(join(root, 'page/vizney-logo.png')).toString('base64')}`;
 const page = (lang) => `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><style>
 ${[400, 500, 700].map((w) => `@font-face{font-family:'VZ Sans';font-weight:${w};src:url(${BASE}/assets/fonts/vz-sans-${w}.woff) format('woff');}`).join('\n')}
@@ -42,7 +42,6 @@ h1 { margin: 0; font-size: 64px; line-height: 1.28; font-weight: 700; letter-spa
 p { flex: 1 0 0; min-height: 1px; margin: 0; font-size: 36px; line-height: 1.28; font-weight: 500; letter-spacing: -1.08px; }
 .logo { display: block; flex: none; width: 136px; height: 51px; }
 .box { position: absolute; box-sizing: border-box; background: #ffffff; border: 2px solid #1b1b1b; }
-.box.corner { left: 1136px; top: -176px; width: 473px; height: 308px; }
 .box.a { left: 80px; top: 551px; width: 48px; height: 48px; }
 .box.b { left: 48px; top: 517px; width: 48px; height: 48px; }
 .cards { position: absolute; left: 652px; top: 87px; width: 600px; display: grid; grid-template-columns: 360px 360px; align-items: start; gap: 18px; }
@@ -51,7 +50,7 @@ p { flex: 1 0 0; min-height: 1px; margin: 0; font-size: 36px; line-height: 1.28;
 </style></head><body>
 <div class="frame"><div class="tag"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="13" height="13" rx="3" fill="#1b1b1b"/><rect x="17" y="2" width="13" height="13" rx="3" fill="#ff9500"/><rect x="2" y="17" width="13" height="13" rx="3" fill="#ffcc00"/><rect x="17" y="17" width="13" height="13" rx="3" fill="#ff2d55"/></svg>Blocks</div><h1>${T[lang].title}</h1><p>${T[lang].sub}</p><img class="logo" src="${LOGO}" alt="Vizney"></div>
 <div class="cards"><div>${card(lang, 'sankey-levels')}</div><div class="b">${card(lang, 'bump-basic')}</div></div>
-<span class="box corner"></span><span class="box a"></span><span class="box b"></span>
+<span class="box a"></span><span class="box b"></span>
 </body></html>`;
 
 const browser = await chromium.launch();

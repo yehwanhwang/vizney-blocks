@@ -129,6 +129,8 @@
   function withField(src, field, value) {
     return src.replace(/(<script type="application\/json">\n)([\s\S]*?)(\n<\/script>)/, (m, a, body, b) => {
       const data = JSON.parse(body), out = {};
+      // 이미 있는 필드는 제자리에서 값만 바꾸고, 없는 필드는 format(없으면 subtitle) 뒤에 넣습니다.
+      if (field in data && value !== undefined) { data[field] = value; return a + pretty(data) + b; }
       const after = 'format' in data ? 'format' : 'subtitle';
       for (const k of Object.keys(data)) {
         if (k === field) continue;
@@ -146,7 +148,9 @@
   function setTheme(tile, dark) {
     const id = tile.dataset.gal, host = $('[data-mount]', tile), btn = $('[data-act="theme"]', tile), [name, desc] = GAL[id] || [];
     tile.classList.toggle('is-dark', dark);
-    current[id] = dark ? withField(code[id], 'theme', 'dark') : code[id];
+    // 질문 단추가 있는 타일: 고른 질문(ask)과 그 질문의 결론 제목을 예시 데이터에 넣습니다. 복사하는 코드도 같은 질문을 따라갑니다.
+    const base = tile.dataset.ask ? withField(withField(code[id], 'ask', tile.dataset.ask), 'title', tile.dataset.askTitle) : code[id];
+    current[id] = dark ? withField(base, 'theme', 'dark') : base;
     let src = withField(withField(current[id], 'title', name), 'subtitle', desc);
     mount(host, src);
     // 카드는 문서를 다 읽은 뒤에 그려지기도 하므로(DOMContentLoaded), 제목 링크는 그 뒤에 겁니다.
@@ -292,6 +296,14 @@
     const id = t.dataset.id, act = t.dataset.act;
     if (act === 'code') openCode(id);
     else if (act === 'theme') { const tile = t.closest('.gt'); setTheme(tile, !tile.classList.contains('is-dark')); }
+    else if (act === 'ask') {
+      // 질문 단추: 같은 데이터에 질문만 바꿔 카드를 다시 그립니다(처음부터 다시 움직입니다).
+      const tile = t.closest('.gt');
+      tile.dataset.ask = t.dataset.ask;
+      tile.dataset.askTitle = t.dataset.title;
+      $$('[data-act="ask"]', tile).forEach((b) => b.setAttribute('aria-pressed', String(b === t)));
+      setTheme(tile, tile.classList.contains('is-dark'));
+    }
     else if (act === 'copy') openMenu(t);
     else if (act === 'copy-code' || act === 'copy-prompt' || act === 'copy-link') {
       const inMenu = Boolean(t.closest('.menu'));   // 갤러리 타일의 버튼은 메뉴 없이 바로 복사합니다

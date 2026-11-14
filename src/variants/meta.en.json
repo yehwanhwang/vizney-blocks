@@ -217,6 +217,17 @@
     "The race plays once when the card comes into view and stops on the last period, because constant motion makes the cards next to it hard to read. Replay it with the button and pick a period with the slider; each period takes 0.9 s (`step`, in milliseconds). With reduced motion turned on, it does not play and shows the last period."
    ]
   },
+  "bar-sort": {
+   "when": "Re-sorts the items by size and marks one of them, answering who is highest or lowest. Use it when an AI is asked \"Who did best?\" or \"Who is furthest behind?\" and has to show the answer. For a screen that only needs to show a ranking quietly, use Bar - Ranking.",
+   "rules": [
+    "Write the kind of question in `ask`. With `highest` the card finds the item with the largest value itself, with `lowest` the smallest, and marks it in the first color. Because you do not name the item, the answer cannot disagree with the data. For metrics where lower is better, such as defect or churn rate, the best performer is `lowest`.",
+    "What to measure by is the decision of whoever composes the screen. \"Did well\" and \"behind\" give different answers by metric (sales, target attainment, growth), so write the metric and period you chose in `subtitle`, where the reader can check the basis. The card takes one value per item, so for a metric computed from two values, such as attainment or growth, put the computed value in `value` and the formula (sales ÷ target) in the subtitle.",
+    "Write an item name in `focus` only to mark an item that a calculation cannot decide, and leave `ask` out then (with both, `focus` wins). If the name is not in `items`, the card shows an error instead of drawing, so a wrong name never marks the wrong bar.",
+    "The rank (Highest of 8) and the gap to the average are computed by the card and written on one line under the chart, with the average drawn as a dotted line. For a rate (`pct`) the gap is in percentage points. Do not write these numbers (the place, the gap to the average) in the JSON or the title: when the data changes, the title alone would stay wrong. If `title` states a conclusion, it has to name the item the card marks.",
+    "Write `items` in the order you received them. The card shows that order first, then sorts, marks one item and writes the answer, about 2.5 seconds in all. Only one thing moves at a time, so the eye can follow what changes. The other items stay in gray, so the reader can check the answer. Values that can be negative, such as growth, are written as they are and drawn to the left of a zero line. From the ninth item on, only the 8 (`max`) nearest the marked item remain after sorting.",
+    "The card plays once when it comes into view and stops on the last scene, where the answer is written. That still frame alone shows the answer and its evidence, so a screenshot keeps the meaning. Replay it with the button; with reduced motion turned on, it does not move and shows the last scene."
+   ]
+  },
   "line-basic": {
    "when": "A card with one line, vertical-axis ticks and a light solid grid. Use it to read one metric's course along with its values per period.",
    "rules": [

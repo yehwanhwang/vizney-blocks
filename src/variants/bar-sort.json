@@ -1,0 +1,16 @@
+{
+  "title": "3분기 달성률은 판교팀이 가장 높습니다",
+  "subtitle": "팀별 매출 목표 달성률, 2026년 3분기",
+  "format": "pct",
+  "ask": "highest",
+  "items": [
+    { "name": "강남팀", "value": 104.2 },
+    { "name": "판교팀", "value": 118.4 },
+    { "name": "인천팀", "value": 96.1 },
+    { "name": "대전팀", "value": 71.5 },
+    { "name": "대구팀", "value": 88.3 },
+    { "name": "부산팀", "value": 109.7 },
+    { "name": "광주팀", "value": 93.0 },
+    { "name": "제주팀", "value": 101.6 }
+  ]
+}

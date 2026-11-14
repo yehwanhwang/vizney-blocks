@@ -1,6 +1,6 @@
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/vz-sans-400.woff?v=94d0007e32) format('woff');}
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/vz-sans-500.woff?v=94d0007e32) format('woff');}
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/vz-sans-700.woff?v=94d0007e32) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/vz-sans-400.woff?v=4afe92f25e) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/vz-sans-500.woff?v=4afe92f25e) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/vz-sans-700.woff?v=4afe92f25e) format('woff');}
 /* Vizney Blocks site: the Vizney common header (the blog's header, kr.vizney.com · www.vizney.com: the blog is the
    reference and Blocks follows it), the line's tab row (not on the home page, which opens like a blog category page), then a white page. Text and frame are ink and grays; the one UI
    accent is the Vizney yellow #ffcc00 of the blog's post images (primary buttons, the current chart, focus, link underlines).
@@ -182,7 +182,15 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 .gt.is-dark .gt-acts .btn:hover { border-color: #5a5a5a; color: #ffffff; }
 .gt.is-dark .gt-acts .btn.is-done { border-color: var(--yellow); }
 .gt.is-dark :focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; box-shadow: none; }
-.gt-acts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding-top: 12px; }
+/* 질문 단추: 같은 데이터에 질문만 바꿔 카드를 다시 움직입니다. 고른 질문은 노랑입니다. 복사 단추는 줄마다 바닥에 맞춥니다. */
+.gt-asks { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 10px; }
+.gt-ask { box-sizing: border-box; height: 30px; padding: 0 12px; border: 1px solid #e3e5ea; border-radius: 15px; background: #ffffff; color: var(--ink); font: 500 13px/1 var(--font); cursor: pointer; white-space: nowrap; }
+.gt-ask:hover { border-color: #cfd2d8; }
+.gt-ask[aria-pressed="true"] { background: var(--yellow); border-color: var(--yellow); color: var(--ink); }
+.gt.is-dark .gt-ask { background: #1f1f1f; border-color: #343434; color: #f2f2f2; }
+.gt.is-dark .gt-ask:hover { border-color: #5a5a5a; }
+.gt.is-dark .gt-ask[aria-pressed="true"] { background: var(--yellow); border-color: var(--yellow); color: #1b1b1b; }
+.gt-acts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: auto; padding-top: 12px; }
 .gt-acts .btn { height: 38px; padding: 0 10px; font-size: 13.5px; }
 .gt-acts .btn span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .lost { min-height: 46vh; }

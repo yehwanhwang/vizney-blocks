@@ -138,7 +138,7 @@ const WORDS = {
     html: 'ko', og: 'ko_KR', other: { lang: 'en', label: 'English' },
     skip: '본문으로 건너뛰기', menu: '주 메뉴', more: '더 보기', cards: '카드', usage: '쓰는 법', guide: '차트 가이드', find: '카드 찾기', found: '찾은 카드',
     footFont: '글꼴 VZ Sans(Spoqa Han Sans Neo 부분 글꼴)', footNav: '바닥글', footBlog: '블로그', footContact: '문의',
-    copy: '복사', aiLink: 'AI용 링크', close: '닫기', code: '코드', viewCode: '코드 보기', copyCode: '카드 코드 복사', copyCodeNote: 'HTML에 붙여 넣습니다', gTitle: 'Blocks', gDesc: GDESC.ko, toLight: '밝은 바탕으로 보기', toDark: '어두운 바탕으로 보기', gAria: '카드 갤러리', tPrompt: '프롬프트 복사', tCode: '코드 복사', copyPrompt: '프롬프트 복사', copyPromptNote: '규칙과 코드를 채팅 AI에 줍니다', copyLink: 'AI용 링크 복사', copyLinkNote: (id) => `${id}.txt 주소를 AI에 줍니다`,
+    copy: '복사', aiLink: 'AI용 링크', close: '닫기', code: '코드', viewCode: '코드 보기', copyCode: '카드 코드 복사', copyCodeNote: 'HTML에 붙여 넣습니다', gTitle: 'Blocks', gDesc: GDESC.ko, asks: '질문', toLight: '밝은 바탕으로 보기', toDark: '어두운 바탕으로 보기', gAria: '카드 갤러리', tPrompt: '프롬프트 복사', tCode: '코드 복사', copyPrompt: '프롬프트 복사', copyPromptNote: '규칙과 코드를 채팅 AI에 줍니다', copyLink: 'AI용 링크 복사', copyLinkNote: (id) => `${id}.txt 주소를 AI에 줍니다`,
     eyebrow: `카드 ${N.cards}종 · 차트 ${N.cats}가지 · MIT 라이선스`, h1one: '분석가의 판단을 담은 대시보드 카드',
     lede: '카드를 복사해 HTML에 붙여 넣고 JSON만 바꾸세요. 증감, 비중, 달성률은 카드가 계산하고, 색과 강조는 Vizney 차트 가이드의 규칙을 따릅니다.',
     purposeTitle: '목적으로 고르기', purposeSub: '보여줄 것부터 정하세요. 목적마다 기본 카드를 먼저 쓰고, 다른 카드는 조건이 맞을 때만 고릅니다.', base: '기본',
@@ -172,7 +172,7 @@ const WORDS = {
     html: 'en', og: 'en_US', other: { lang: 'ko', label: '한국어' },
     skip: 'Skip to content', menu: 'Main menu', more: 'More', cards: 'Cards', usage: 'How to use', guide: 'Chart guide', find: 'Find a card', found: 'Cards found',
     footFont: 'Font VZ Sans (a subset of Spoqa Han Sans Neo)', footNav: 'Footer', footBlog: 'Blog', footContact: 'Contact',
-    copy: 'Copy', aiLink: 'AI link', close: 'Close', code: 'Code', viewCode: 'view code', copyCode: 'Copy card code', copyCodeNote: 'Paste it into your HTML', gTitle: 'Blocks', gDesc: GDESC.en, toLight: 'Show on light', toDark: 'Show on dark', gAria: 'Card gallery', tPrompt: 'Copy prompt', tCode: 'Copy code', copyPrompt: 'Copy prompt', copyPromptNote: 'Rules and code for a chat AI', copyLink: 'Copy AI link', copyLinkNote: (id) => `Give an AI the ${id}.txt address`,
+    copy: 'Copy', aiLink: 'AI link', close: 'Close', code: 'Code', viewCode: 'view code', copyCode: 'Copy card code', copyCodeNote: 'Paste it into your HTML', gTitle: 'Blocks', gDesc: GDESC.en, asks: 'Questions', toLight: 'Show on light', toDark: 'Show on dark', gAria: 'Card gallery', tPrompt: 'Copy prompt', tCode: 'Copy code', copyPrompt: 'Copy prompt', copyPromptNote: 'Rules and code for a chat AI', copyLink: 'Copy AI link', copyLinkNote: (id) => `Give an AI the ${id}.txt address`,
     eyebrow: `${N.cards} cards · ${N.cats} chart types · MIT License`, h1one: 'Dashboard cards with an analyst’s judgment built in',
     lede: 'Copy a card into your HTML and change only its JSON. The card computes changes, shares and attainment, and its colors and emphasis follow the rules of the Vizney chart guide.',
     purposeTitle: 'Pick by purpose', purposeSub: 'Decide what to show first. Each purpose has a base card; pick another card only when its condition fits.', base: 'Base',
@@ -317,8 +317,16 @@ const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 // Cards that draw a shape-only view (data-vzb-view="shape"): no labels on the first screen; the chart pages and the copied
 // code show everything. Cards that move (data-vzb-loop) replay on the first screen instead of stopping at the end.
 const SHAPE = new Set(['sankey-levels', 'sankey-basic']);
-const LOOP = new Set(['bar-race']);
-const GALLERY = ['bar-race', 'sankey-levels', 'bump-basic', 'funnel-flow', 'treemap-basic', 'waterfall-subtotal', 'radar-basic', 'sankey-basic', 'scatter-connected'];
+const LOOP = new Set(['bar-sort', 'bar-race']);
+// Question chips on a tile: the same example data answers a different question (the card's `ask`) and plays again. Each chip
+// carries the conclusion title that goes with its question, so the copied code never pairs a title with the wrong answer.
+const ASKS = {
+  'bar-sort': [
+    { ask: 'highest', ko: ['누가 제일 잘했나', '3분기 달성률은 판교팀이 가장 높습니다'], en: ['Who did best?', 'Metro leads Q3 target attainment'] },
+    { ask: 'lowest', ko: ['어디가 제일 부진한가', '3분기 달성률은 대전팀이 가장 낮습니다'], en: ['Who is furthest behind?', 'Central is furthest from its Q3 target'] },
+  ],
+};
+const GALLERY = ['bar-sort', 'bar-race', 'sankey-levels', 'bump-basic', 'funnel-flow', 'treemap-basic', 'waterfall-subtotal', 'radar-basic', 'sankey-basic'];
 const galleryHead = (L) => `<section class="wrap ghead" aria-labelledby="ghead-title">
 <h1 id="ghead-title">${L.t.gTitle}</h1>
 <p>${L.t.gDesc}</p>
@@ -331,7 +339,8 @@ ${GALLERY.map((id) => {
 <div class="gt-box">
 <div class="gt-pv" data-mount="${id}"${SHAPE.has(id) ? ' data-vzb-view="shape"' : ''}${LOOP.has(id) ? ' data-vzb-loop' : ''} style="min-height:${tierPx(v)}px"></div>
 <button type="button" class="gt-theme" data-act="theme" data-id="${id}" aria-label="${L.t.toLight}" title="${L.t.toLight}">${IC.sun}${IC.moon}</button>
-</div>
+</div>${ASKS[id] ? `
+<div class="gt-asks" role="group" aria-label="${L.t.asks}">${ASKS[id].map((q, i) => `<button type="button" class="gt-ask" data-act="ask" data-ask="${q.ask}" data-title="${h(q[L.lang][1])}" aria-pressed="${i === 0}">${h(q[L.lang][0])}</button>`).join('')}</div>` : ''}
 <div class="gt-acts"><button type="button" class="btn" data-act="copy-prompt" data-id="${id}" aria-label="${h(v.name)} ${L.t.tPrompt}">${IC.prompt}<span>${L.t.tPrompt}</span></button><button type="button" class="btn" data-act="copy-code" data-id="${id}" aria-label="${h(v.name)} ${L.t.tCode}">${IC.copy}<span>${L.t.tCode}</span></button></div>
 </li>`;
   }).join('\n')}
@@ -485,11 +494,20 @@ const FIELD_NOTE = {
     labels: 'period names, the same length as the values; null for a period without a value', series: '[{ name, values }]', rows: 'table rows', lang: 'en: the words the card prints itself in English; empty is Korean',
   },
 };
+// Cards whose fields mean something other than the common note.
+const FIELD_OVERRIDE = {
+  'bar-sort': {
+    ko: { title: '결론 문장(카드가 짚는 항목과 같아야 하고, 순위나 차이 숫자는 적지 않는다)이나 지표명', subtitle: '무엇으로 쟀는지: 지표와 기간(계산한 지표면 산식)', ask: 'highest · lowest, 질문의 종류. 카드가 그 항목을 찾아 짚는다', focus: '이름으로 짚을 때만. 적으면 ask는 뺀다', items: '[{ name, value }], 받은 순서 그대로' },
+    en: { title: 'the conclusion (it has to name the item the card marks, without rank or gap numbers) or the metric name', subtitle: 'what it is measured by: the metric and period (the formula for a computed metric)', ask: 'highest · lowest: the kind of question; the card finds and marks that item', focus: 'only to mark an item by name; leave ask out then', items: '[{ name, value }], in the order received' },
+  },
+};
 const promptHead = (v, L) => {
   const en = L.lang === 'en';
   const keys = Object.keys(JSON.parse(r(vp(v.id, en ? 'en.json' : 'json'))));
   const N = FIELD_NOTE[L.lang];
-  const noted = keys.filter((k) => N[k]).map((k) => `- ${k}: ${N[k]}`);
+  const O = (FIELD_OVERRIDE[v.id] || {})[L.lang] || {};
+  const noted = keys.filter((k) => O[k] || N[k]).map((k) => `- ${k}: ${O[k] || N[k]}`);
+  Object.keys(O).filter((k) => !keys.includes(k)).forEach((k) => noted.push(`- ${k}: ${O[k]}`));   // fields the example leaves out
   // Fields the example leaves out but the common-fields rule names for this card.
   if (!keys.includes('value') && (v.id === 'kpi-line' || v.id === 'kpi-bar')) noted.push(en ? '- value: optional; the last value when it is left out' : '- value: 비우면 마지막 값');
   noted.push(en ? '- theme: optional; dark draws the card on Vizney black with yellow as the first color, empty is white' : '- theme: dark면 Vizney 검정 바탕에 노랑을 첫째 색으로 그린다. 비우면 흰 바탕');

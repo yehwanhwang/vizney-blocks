@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.45 · Grid Chart · Grid - Basic (grid-basic)
+<!-- Vizney Blocks v0.46 · Grid Chart · Grid - Basic (grid-basic)
      https://blocks.vizney.com/cards/grid-basic.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">

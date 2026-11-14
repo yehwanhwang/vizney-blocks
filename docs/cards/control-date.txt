@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.49 · Controls · Date Slider (control-date)
+<!-- Vizney Blocks v0.50 · Controls · Date Slider (control-date)
      https://blocks.vizney.com/cards/control-date.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">

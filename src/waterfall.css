@@ -1,7 +1,2 @@
 /* 워터폴: 막대(굵기 최대 24px) 사이를 누계 높이의 1px 회색 실선으로 잇습니다. */
 .vzb-wf-link { stroke: var(--vzb-base); stroke-width: 1; }
-/* 한 요인을 짚을 때(ask · focus): 왼쪽부터 하나씩 나타납니다. 카드가 화면에 보이기 전에는 멈춰 둡니다. */
-.vzb-wf-step { animation: vzb-wf-in 0.36s both paused; }
-.vzb-card.is-in .vzb-wf-step { animation-play-state: running; }
-@keyframes vzb-wf-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .vzb-wf-step { animation: none; } }

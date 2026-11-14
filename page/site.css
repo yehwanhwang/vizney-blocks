@@ -163,11 +163,9 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 .gt-in { position: relative; min-width: 0; }
 .gt-pv { display: grid; }
 /* 카드 전체가 차트 페이지로 가는 자리: 제목은 링크(키보드와 화면 낭독기용), 나머지 빈 곳은 누르면 같은 곳으로 갑니다. */
-.gt .vzb-card { cursor: pointer; }
 .gt .vzb-hd { padding-right: 36px; }   /* 오른쪽 위 바탕 전환 단추 자리 */
 .gt-meta { display: flex; align-items: baseline; gap: 8px; min-width: 0; padding: 14px 4px 0; }
 .gt-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 700; color: var(--ink); text-decoration: none; }
-.gt-name:hover { text-decoration: underline; text-decoration-color: var(--yellow); text-decoration-thickness: 2px; text-underline-offset: 4px; }
 .gt.is-dark .gt-name { color: #f5f5f5; }
 .gt-theme { position: absolute; top: 20px; right: 16px; z-index: 1; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 8px; background: none; color: var(--muted); cursor: pointer; }
 .gt-theme:hover { color: var(--ink); background: #f1f1f1; }
@@ -183,13 +181,6 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 .gt.is-dark .gt-acts .btn.is-done { border-color: var(--yellow); }
 .gt.is-dark :focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; box-shadow: none; }
 /* 질문 단추: 같은 데이터에 질문만 바꿔 카드를 다시 움직입니다. 고른 질문은 노랑입니다. 복사 단추는 줄마다 바닥에 맞춥니다. */
-.gt-asks { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 10px; }
-.gt-ask { box-sizing: border-box; height: 30px; padding: 0 12px; border: 1px solid #e3e5ea; border-radius: 15px; background: #ffffff; color: var(--ink); font: 500 13px/1 var(--font); cursor: pointer; white-space: nowrap; }
-.gt-ask:hover { border-color: #cfd2d8; }
-.gt-ask[aria-pressed="true"] { background: var(--yellow); border-color: var(--yellow); color: var(--ink); }
-.gt.is-dark .gt-ask { background: #1f1f1f; border-color: #343434; color: #f2f2f2; }
-.gt.is-dark .gt-ask:hover { border-color: #5a5a5a; }
-.gt.is-dark .gt-ask[aria-pressed="true"] { background: var(--yellow); border-color: var(--yellow); color: #1b1b1b; }
 .gt-acts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding-top: 12px; }
 .gt-acts .btn { height: 38px; padding: 0 10px; font-size: 13.5px; }
 .gt-acts .btn span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

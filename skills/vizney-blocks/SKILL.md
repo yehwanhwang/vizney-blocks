@@ -7,7 +7,7 @@ description: "Build dashboard screens with Vizney Blocks (blocks.vizney.com) HTM
 
 > 한국어로 일할 때(사용자가 한국어로 요청하거나 화면 문구가 한국어일 때)는 같은 폴더의 `SKILL.ko.md`를 읽고 그것을 따른다. Working in Korean? Read `SKILL.ko.md` in this folder and follow it instead; it has the same steps and rules with Korean card code.
 
-Vizney Blocks is a set of copy-paste HTML dashboard cards (v0.48, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. Changes, shares, attainment, totals, colors and emphasis are computed and drawn by the card, following the Vizney chart guide.
+Vizney Blocks is a set of copy-paste HTML dashboard cards (v0.49, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. Changes, shares, attainment, totals, colors and emphasis are computed and drawn by the card, following the Vizney chart guide.
 
 ## Steps
 
@@ -63,7 +63,7 @@ For each question the screen answers, use the base card first and another card o
 - Bar - Basic (`bar-basic`) — Size per period rather than the course
 - Line - Compare (`line-compare`) — Against the same month last year
 - Line - Multiple (`line-multiple`) — The course of 2–3 items together
-- Bump Chart (`bump-basic`) — How rankings changed rather than values
+- Bump - Basic (`bump-basic`) — How rankings changed rather than values
 
 ### Target · How far to the target?
 
@@ -78,14 +78,14 @@ For each question the screen answers, use the base card first and another card o
 - Base: Bar - Ranking (`bar-ranking`) — Size and rank per item
 - Bar - Compare (`bar-compare`) — Against last year or last month
 - Bar - Butterfly (`bar-butterfly`) — Two groups on the same items
-- Radar Chart (`radar-basic`) — Strengths and weaknesses across several scores
+- Radar - Basic (`radar-basic`) — Strengths and weaknesses across several scores
 
 ### Composition · What is it made of?
 
 - Base: Donut - Basic (`donut-basic`) — Shares at one point in time
 - Bar - Stacked 100% (`bar-stacked-100`) — How the mix changed over periods
 - Bar - Stacked (`bar-stacked`) — Total and mix over time, together
-- Treemap (`treemap-basic`) — Many items, or items inside groups
+- Treemap - Basic (`treemap-basic`) — Many items, or items inside groups
 - Waffle - Basic (`waffle-basic`) — Shares you can count, in squares
 
 ### Table · Exactly how much, per item?
@@ -98,14 +98,14 @@ For each question the screen answers, use the base card first and another card o
 ### Change · Why did it go up or down?
 
 - Base: Waterfall - Basic (`waterfall-basic`) — The change between two points, by factor
-- Subtotal Waterfall (`waterfall-subtotal`) — A profit and loss structure
+- Waterfall - Subtotal (`waterfall-subtotal`) — A profit and loss structure
 - Bar - Diverging (`bar-diverging`) — Change or variance from target, per period
 
 ### Flow · Where does it drop off, and where does it go?
 
-- Base: Flow Funnel (`funnel-flow`) — How much drops out at each step
-- Sankey Chart (`sankey-basic`) — Flows between two breakdowns
-- Multi-level Sankey (`sankey-levels`) — Flows across three or more levels
+- Base: Funnel - Flow (`funnel-flow`) — How much drops out at each step
+- Sankey - Basic (`sankey-basic`) — Flows between two breakdowns
+- Sankey - Levels (`sankey-levels`) — Flows across three or more levels
 
 ### Relation · How do two values relate?
 

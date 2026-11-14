@@ -4,7 +4,7 @@
 
 > 스킬의 한국어판이다. 영어판은 같은 폴더의 `SKILL.md`다. 단계, 목적 색인, 규칙, 체크리스트는 같은 원본에서 만들어져 내용이 같고, 카드 코드 주소(`/ko/cards/`)와 카드 문구가 한국어다.
 
-Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v0.48, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 증감, 비중, 달성률, 합계와 색·강조는 카드가 Vizney 차트 가이드의 규칙대로 계산하고 그린다.
+Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v0.49, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 증감, 비중, 달성률, 합계와 색·강조는 카드가 Vizney 차트 가이드의 규칙대로 계산하고 그린다.
 
 ## 순서
 
@@ -60,7 +60,7 @@ Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v
 - Bar - Basic (`bar-basic`) — 흐름보다 기간별 크기를 견줄 때
 - Line - Compare (`line-compare`) — 작년 같은 달과 견줄 때
 - Line - Multiple (`line-multiple`) — 항목 2–3개의 흐름을 함께 볼 때
-- Bump Chart (`bump-basic`) — 값보다 순위가 바뀐 과정을 볼 때
+- Bump - Basic (`bump-basic`) — 값보다 순위가 바뀐 과정을 볼 때
 
 ### 목표 · 목표까지 얼마나 왔나?
 
@@ -75,14 +75,14 @@ Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v
 - 기본: Bar - Ranking (`bar-ranking`) — 항목별 크기와 순위를 볼 때
 - Bar - Compare (`bar-compare`) — 작년이나 지난달 값과 견줄 때
 - Bar - Butterfly (`bar-butterfly`) — 두 집단을 같은 항목으로 견줄 때
-- Radar Chart (`radar-basic`) — 점수 여러 개로 강점과 약점을 볼 때
+- Radar - Basic (`radar-basic`) — 점수 여러 개로 강점과 약점을 볼 때
 
 ### 구성 · 무엇으로 이뤄져 있나?
 
 - 기본: Donut - Basic (`donut-basic`) — 한 시점의 비중을 볼 때
 - Bar - Stacked 100% (`bar-stacked-100`) — 기간별 구성비 변화를 볼 때
 - Bar - Stacked (`bar-stacked`) — 합계의 흐름과 구성을 함께 볼 때
-- Treemap (`treemap-basic`) — 항목이 많거나 묶음 안에 항목이 있을 때
+- Treemap - Basic (`treemap-basic`) — 항목이 많거나 묶음 안에 항목이 있을 때
 - Waffle - Basic (`waffle-basic`) — 비중을 칸 수로 세어 보일 때
 
 ### 표 · 항목마다 정확히 얼마인가?
@@ -95,14 +95,14 @@ Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v
 ### 증감 · 왜 늘고 줄었나?
 
 - 기본: Waterfall - Basic (`waterfall-basic`) — 두 시점 사이의 변화를 요인별로 나눌 때
-- Subtotal Waterfall (`waterfall-subtotal`) — 손익 구조를 보여줄 때
+- Waterfall - Subtotal (`waterfall-subtotal`) — 손익 구조를 보여줄 때
 - Bar - Diverging (`bar-diverging`) — 기간별 증감·목표 차이를 볼 때
 
 ### 흐름 · 어디서 빠지고 어디로 가나?
 
-- 기본: Flow Funnel (`funnel-flow`) — 단계마다 얼마나 빠져나가는지 볼 때
-- Sankey Chart (`sankey-basic`) — 두 구분 사이의 흐름을 볼 때
-- Multi-level Sankey (`sankey-levels`) — 세 단 이상 이어지는 흐름을 볼 때
+- 기본: Funnel - Flow (`funnel-flow`) — 단계마다 얼마나 빠져나가는지 볼 때
+- Sankey - Basic (`sankey-basic`) — 두 구분 사이의 흐름을 볼 때
+- Sankey - Levels (`sankey-levels`) — 세 단 이상 이어지는 흐름을 볼 때
 
 ### 관계 · 두 값은 어떤 관계인가?
 

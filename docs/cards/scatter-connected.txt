@@ -1,10 +1,11 @@
-<!-- Vizney Blocks v0.48 · Scatter Chart · Scatter - Connected (scatter-connected)
+<!-- Vizney Blocks v0.49 · Scatter Chart · Scatter - Connected (scatter-connected)
      https://blocks.vizney.com/cards/scatter-connected.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
 <style>
 /* Vizney Blocks tokens: re-declare the same variables on your page's :root and they apply to every card.
-   The colors are the Vizney chart guide's blue, pink-red and orange with a lighter step of each; the text is Vizney black (#1b1b1b).
+   The colors come from Vizney's Figma palette: blue (#007aff), pink-red (#ff2d55) and orange (#ff9500) for data, green (#34c759) and red (#ff3b30)
+   for good and bad, with lighter steps mixed from the same colors and the background. The text is Vizney black (#1b1b1b).
    With "theme": "dark" in the JSON, the .vzb-dark values below draw the card on Vizney black with yellow as the first color and white as the second.
    List: https://blocks.vizney.com/tokens.css */
 :where(:root) {
@@ -28,10 +29,12 @@
   --vzb-base: #c4c4c4;   /* the baseline (last year's line, the radar baseline outline) */
   --vzb-track: #f1f1f1;   /* track behind the gauge and attainment bars */
   --vzb-other: #d9d9d9;   /* items folded into Other, items from the fourth on */
-  --vzb-good: #12814a;   /* a good change (badges, increases in a waterfall) */
-  --vzb-good-tint: #e5f5ec;   /* background of a good-change badge */
-  --vzb-bad: #d42346;   /* a bad change, over the limit, error text */
-  --vzb-bad-tint: #fdebef;   /* background of a bad-change badge */
+  --vzb-good: #34c759;   /* fill of a good change (increases in a waterfall, met targets). Palette green; 2.2:1 on white, so never for text */
+  --vzb-good-tint: #ebf9ee;   /* background of a good-change badge (green 10%) */
+  --vzb-good-ink: #2a8040;   /* text of a good change (badges): green with 41% black, 4.9:1 on white */
+  --vzb-bad: #ff3b30;   /* fill of a bad change or of the part over a limit. Palette red, 3.6:1 on white */
+  --vzb-bad-tint: #ffebea;   /* background of a bad-change badge (red 10%) */
+  --vzb-bad-ink: #cb342b;   /* text of a bad change and of errors: red with 23% black, 5.2:1 on white */
   --vzb-tip: #1b1b1b;   /* tooltip background */
   --vzb-radius: 18px;   /* card corners */
   --vzb-unit: 168px;   /* height unit 1 (KPI - Number); Line and Bar are 2, the other KPI cards 1.5, chart cards 2 */
@@ -40,7 +43,7 @@
 
 /* Dark ("theme": "dark"): the same variables, changed inside the card only. One yellow plus white and gray draws in Vizney black, white and yellow.
    Yellow, white and gray pass a color vision simulation (closest pair ΔE 14.9) and a contrast check against the card.
-   Warnings (over the limit, a bad change) use the pink-red of the same palette (#ff2d55, the second data color on white) instead of yellow; its contrast against the card is 4.7:1. */
+   Good and bad are the same green (#34c759) and red (#ff3b30) as on white, and on black they serve as text too (7.8:1 and 4.9:1). */
 .vzb-dark {
   --vzb-card: #1b1b1b;   /* card background (Vizney black) */
   --vzb-edge: rgba(255, 255, 255, 0.08);   /* card border */
@@ -61,10 +64,12 @@
   --vzb-base: #6b6b6b;   /* comparison baseline */
   --vzb-track: #2c2c2c;   /* gauge and attainment-bar track */
   --vzb-other: #4d4d4d;   /* items folded into Other */
-  --vzb-good: #30d158;   /* good change */
-  --vzb-good-tint: #1e3624;   /* good badge background */
-  --vzb-bad: #ff2d55;   /* bad change, over the limit */
-  --vzb-bad-tint: #3d1e24;   /* bad badge background */
+  --vzb-good: #34c759;   /* good change (palette green) */
+  --vzb-good-tint: #1f3725;   /* good badge background (green 16%) */
+  --vzb-good-ink: #34c759;   /* text of a good change */
+  --vzb-bad: #ff3b30;   /* bad change, over the limit (palette red) */
+  --vzb-bad-tint: #2d1e1d;   /* bad badge background (red 8%, as much as keeps 4.5:1 for the text) */
+  --vzb-bad-ink: #ff3b30;   /* text of a bad change and of errors */
   --vzb-tip: #3a3a3a;   /* tooltip background */
   --vzb-shadow: none;   /* card shadow */
 }
@@ -99,15 +104,15 @@
 .vzb-delta { display: contents; color: var(--vzb-muted); white-space: nowrap; }
 .vzb-vs { min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
 .vzb-badge { display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px 3px 6px; border-radius: 7px; font-weight: 500; }
-.vzb-badge.vzb-good { color: var(--vzb-good); background: var(--vzb-good-tint); }
-.vzb-badge.vzb-bad { color: var(--vzb-bad); background: var(--vzb-bad-tint); }
+.vzb-badge.vzb-good { color: var(--vzb-good-ink); background: var(--vzb-good-tint); }
+.vzb-badge.vzb-bad { color: var(--vzb-bad-ink); background: var(--vzb-bad-tint); }
 .vzb-badge.vzb-flat { color: var(--vzb-ink-2); background: var(--vzb-track); padding-left: 8px; }
 .vzb-arrow { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .vzb-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* 그래픽은 카드 아래쪽에 붙습니다. 같은 줄의 카드 높이가 맞춰져도 그래픽끼리 바닥이 맞습니다. */
 .vzb-foot { margin-top: auto; padding-top: 20px; }
-.vzb-error { margin: 8px 0 0; color: var(--vzb-bad); }
+.vzb-error { margin: 8px 0 0; color: var(--vzb-bad-ink); }
 /* 그래프 영역: 마우스를 올리거나, 포커스한 뒤 좌우 화살표로 값을 봅니다. */
 .vzb-plot { position: relative; border-radius: 4px; outline: none; touch-action: pan-y; }
 .vzb-plot:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 4px; }
@@ -135,7 +140,7 @@
 .vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-value { font-size: 13px; font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { .vzb-tip { transition: none; } }
-/* 색 이름: t1 · t2 · t3 선(파랑 · 분홍빨강 · 주황, 어두운 바탕은 노랑 · 분홍빨강 · 파랑), f1 · f2 · f3 막대와 면(같은 순서), fs 옅은 첫째 색,
+/* 색 이름: t1 · t2 · t3 선(파랑 · 분홍빨강 · 주황, 어두운 바탕은 노랑 · 흰색 · 회색), f1 · f2 · f3 막대와 면(같은 순서), fs 옅은 첫째 색,
    t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
 .vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
 .vzb-t2, .vzb-f2 { --vzb-c: var(--vzb-secondary); }
@@ -228,7 +233,7 @@
     '%s %s · 달성률 %s%': '%s %s · Attainment %s%', '목표 %s · 달성률 %s%': 'Target %s · Attainment %s%', '목표의 %s%': '%s% of target',
     '%1 %2의 %3%': '%3% of %1 %2', '%1 %2의 %3% 사용': '%3% of %1 %2 used',
     '평균': 'Average', '기준': 'Reference', '비중': 'Share', '비중 %s%p': 'Share %spp', '이전 대비': 'vs prior', '처음 대비': 'vs first', '흐름': 'Trend', '최근': 'Latest',
-    '누계': 'Running total', '반영 후 누계 %s': 'Running total after: %s', '늘린 요인': 'Increase', '줄인 요인': 'Decrease', '그 밖의 요인': 'Other factors', '빼는 항목': 'Deduction',
+    '누계': 'Running total', '반영 후 누계 %s': 'Running total after: %s', '늘린 요인': 'Increase', '줄인 요인': 'Decrease', '빼는 항목': 'Deduction',
     '왼쪽': 'Left', '오른쪽': 'Right', '출발': 'From', '도착': 'To', '가로값': 'X value', '세로값': 'Y value', '외 %s곳 %s': 'and %s more: %s',
     '%s위': '#%s', '%s %s위': '%s #%s', '%s 순위': '%s ranks', '%1 %2위에서 %3': 'from #%2 in %1, %3', '%s계단 오름': 'up %s', '%s계단 내림': 'down %s', '그대로': 'unchanged',
     '첫 단계': 'First step', '시작': 'Start', '전환 %s': 'Conversion %s', '전체 전환율': 'Overall conversion', '앞 단계 대비 %s': '%s of the previous step',
@@ -246,20 +251,16 @@
     '%s 목록, %s줄. 위아래 화살표로 항목의 자세한 값을 봅니다.': '%s list, %s rows. Use the up and down arrows to see each item.',
     '%s 순위 변화, %s–%s. 위아래 화살표로 항목을 옮깁니다. 모든 순위는 이어지는 표에 있습니다.': '%s rank changes, %s–%s. Use the up and down arrows to move between items. Every rank is in the table that follows.',
     '%s 퍼널, %s. 좌우 화살표로 단계를 옮깁니다.': '%s funnel, %s. Use the left and right arrows to move between steps.',
-    '%s 막대 경주, %s–%s, 항목 %s개. 위아래 화살표로 지금 순위를 짚고, 아래 막대로 기간을 고릅니다. 모든 값은 이어지는 표에 있습니다.': '%s bar chart race, %s–%s, %s items. Use the up and down arrows to step through the current ranking and the slider below to pick a period. Every value is in the table that follows.',
-    '재생': 'Play', '일시정지': 'Pause', '처음부터 다시': 'Replay', '%1, 1위 %2': '%1, #1 %2',
+    '처음부터 다시': 'Replay',
     '한도': 'Limit', '차이': 'Difference', '%s 초과|한도': '%s over', '%1 초과 · %2의 %3%': '%1 over · %3% of %2', '%1 남음 · %2의 %3%': '%1 left · %3% of %2',
     '%1개 중 %2개 %3 초과 · +%4': '%2 of %1 over %3 · +%4', '%1개 중 %2개 %3 초과': '%2 of %1 over %3', '모두 %s 이내': 'All within %s', '표시할 항목이 없습니다.': 'No items to show.',
     '%1. 항목 %2개 가운데 %3개가 %4 초과입니다. 위아래 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %3 of %2 items are over %4. Use the up and down arrows to move between items. Every value is in the table that follows.',
     'min과 max를 확인하세요.': 'Check min and max.', '%s 최소': 'Minimum %s', '%s 최대': 'Maximum %s', '%s 시작': 'Start of %s', '%s 끝': 'End of %s',
-    '%s개 중 가장 높음': 'Highest of %s', '%s개 중 가장 낮음': 'Lowest of %s', '%1개 중 %2번째': '#%2 of %1',
-    '평균보다 %s 높음': '%s above average', '평균보다 %s 낮음': '%s below average', '평균과 같음': 'equal to the average',
-    '%s. %s 위아래 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s. %s Use the up and down arrows to move between items. Every value is in the table that follows.',
     '%s 레이더 차트, 항목 %s개와 대상 %s개. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s radar chart, %s axes and %s series. Use the left and right arrows to move between axes. Every value is in the table that follows.',
     '%s 생키 차트, 노드 %s개와 흐름 %s개. 좌우 화살표로 노드와 흐름을 차례로 짚습니다. 모든 흐름은 이어지는 표에 있습니다.': '%s Sankey chart, %s nodes and %s flows. Use the left and right arrows to step through nodes and flows. Every flow is in the table that follows.',
     '%s 산점도, 점 %s개. 좌우 화살표로 점을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s scatter plot, %s points. Use the left and right arrows to move between points. Every value is in the table that follows.',
     '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
-    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'labels와 items를 확인하세요.': 'Check labels and items.', 'items를 확인하세요.': 'Check items.', 'items의 value와 limit을 확인하세요.': 'Check value and limit in items.', 'ask에는 highest나 lowest를 적으세요.': 'Set ask to highest or lowest.', 'focus의 이름이 items에 없습니다: %s': 'focus is not one of the items: %s', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
+    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'items의 value와 limit을 확인하세요.': 'Check value and limit in items.', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
   };
   // tx(d 또는 f, 원문, 값…): d.lang(format()이 f에 옮겨 둡니다)이 en이면 영어 문구를, 아니면 원문을 돌려줍니다.
   function tx(x, s, ...a) {
@@ -410,9 +411,6 @@
         }
         card.setAttribute('role', 'group');
         if (d.title) card.setAttribute('aria-label', d.title);
-        // 모양만 보이기: 카드를 감싼 요소에 data-vzb-view="shape"가 있으면 이름표 없이 그림만 그립니다(갤러리 첫 화면).
-        // 붙여 넣은 카드에는 이 속성이 없으므로 모두 그립니다. 값은 마우스를 올리거나 화살표 키로 그대로 볼 수 있습니다.
-        if (card.closest('[data-vzb-view="shape"]')) card.classList.add('vzb-bare');
         // 어두운 바탕: JSON에 "theme": "dark"를 적으면 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다(tokens.css의 .vzb-dark).
         card.classList.toggle('vzb-dark', d.theme === 'dark');
         try { draw(card, d, format(d)); } catch (e) {

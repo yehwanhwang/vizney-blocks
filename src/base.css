@@ -29,12 +29,12 @@
 .vzb-delta { display: contents; color: var(--vzb-muted); white-space: nowrap; }
 .vzb-vs { min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
 .vzb-badge { display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px 3px 6px; border-radius: 7px; font-weight: 500; }
-.vzb-badge.vzb-good { color: var(--vzb-good); background: var(--vzb-good-tint); }
-.vzb-badge.vzb-bad { color: var(--vzb-bad); background: var(--vzb-bad-tint); }
+.vzb-badge.vzb-good { color: var(--vzb-good-ink); background: var(--vzb-good-tint); }
+.vzb-badge.vzb-bad { color: var(--vzb-bad-ink); background: var(--vzb-bad-tint); }
 .vzb-badge.vzb-flat { color: var(--vzb-ink-2); background: var(--vzb-track); padding-left: 8px; }
 .vzb-arrow { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .vzb-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* 그래픽은 카드 아래쪽에 붙습니다. 같은 줄의 카드 높이가 맞춰져도 그래픽끼리 바닥이 맞습니다. */
 .vzb-foot { margin-top: auto; padding-top: 20px; }
-.vzb-error { margin: 8px 0 0; color: var(--vzb-bad); }
+.vzb-error { margin: 8px 0 0; color: var(--vzb-bad-ink); }

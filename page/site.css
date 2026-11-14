@@ -79,7 +79,7 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 .vz-nav li { margin: 0; padding: 0; }
 .vz-nav a { display: inline-flex; align-items: center; font-size: 16px; font-weight: 500; line-height: 1.7; text-transform: none; white-space: nowrap; }
 .vz-nav a:hover { opacity: 0.9; }
-.vz-nav a[aria-current] { text-decoration: underline; text-decoration-color: currentColor; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+/* The current site keeps aria-current but shows no underline, as on the blog and Vizney Styles (v0.48). */
 /* Items that do not fit the menu row go into Ghost's "more" dropdown (site.js moves them). */
 .vz-more { position: relative; }
 .vz-more > button { position: relative; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; margin: 0 -6px; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; }

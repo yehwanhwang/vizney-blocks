@@ -7,7 +7,7 @@ description: "Build dashboard screens with Vizney Blocks (blocks.vizney.com) HTM
 
 > 한국어로 일할 때(사용자가 한국어로 요청하거나 화면 문구가 한국어일 때)는 같은 폴더의 `SKILL.ko.md`를 읽고 그것을 따른다. Working in Korean? Read `SKILL.ko.md` in this folder and follow it instead; it has the same steps and rules with Korean card code.
 
-Vizney Blocks is a set of copy-paste HTML dashboard cards (v0.47, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. Changes, shares, attainment, totals, colors and emphasis are computed and drawn by the card, following the Vizney chart guide.
+Vizney Blocks is a set of copy-paste HTML dashboard cards (v0.48, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. Changes, shares, attainment, totals, colors and emphasis are computed and drawn by the card, following the Vizney chart guide.
 
 ## Steps
 

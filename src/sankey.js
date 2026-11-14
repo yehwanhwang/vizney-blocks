@@ -2,6 +2,7 @@
      나가는 흐름이 없는 노드는 마지막 단에 모읍니다. 노드 순서는 links에 처음 나온 순서이고, 노드 높이는 들어온 양과 나간 양 중 큰 쪽입니다.
      모든 단이 같은 비율(1px당 값)을 써서 띠 두께를 단끼리 견줄 수 있고, 단마다 세로 가운데에 모읍니다. 노드 사이는 높이의 12%(16–32px)만큼 띄웁니다.
      이름과 값은 첫 단은 노드 왼쪽, 나머지 단은 노드 오른쪽에 두 줄로 적고, 겹치면 위아래로 밀어 냅니다.
+     모양만 보이기(vzb-bare)에서는 이름표 없이 노드가 카드 폭을 다 씁니다.
      띠나 노드(이름 포함)에 마우스를 올리거나, 그래프에 포커스한 뒤 좌우 화살표를 누르면(노드 다음 흐름 순서) 나머지를 옅게 하고 툴팁을 띄웁니다.
      cfg: paint(nodes, links, cols) 노드와 띠의 tone(색 이름)을 정합니다. 띠는 정하지 않으면 출발 노드의 색입니다. */
   function sankeyCard(card, d, f, cfg) {
@@ -54,7 +55,7 @@
     sr.append(table);
     card.append(sr);
 
-    const fam = getComputedStyle(card).fontFamily;
+    const fam = getComputedStyle(card).fontFamily, bare = card.classList.contains('vzb-bare');
     const NW = 8, LH = 32;   // 노드 폭, 이름표(이름 · 값 두 줄) 높이
     const fx = (v) => v.toFixed(1);
     const pct = (a, b) => `${num(b ? (a / b) * 100 : 0, 1)}%`;
@@ -72,8 +73,8 @@
         n.num = t; n.unit = u;
         n.lw = Math.max(textW(n.name, 400, fam), textW(t, 700, fam, 13) + (u ? textW(u, 400, fam, 11) + 2 : 0));
       });
-      const leftW = Math.ceil(Math.max(...cols[0].map((n) => n.lw))) + 10;
-      const rightW = L ? Math.ceil(Math.max(...cols[L].map((n) => n.lw))) + 10 : 0;
+      const leftW = bare ? 0 : Math.ceil(Math.max(...cols[0].map((n) => n.lw))) + 10;
+      const rightW = bare || !L ? 0 : Math.ceil(Math.max(...cols[L].map((n) => n.lw))) + 10;
       const xa = leftW, xb = Math.max(xa, w - rightW - NW);
       const gap = Math.round(Math.max(16, Math.min(32, h * 0.12)));
       const ky = Math.min(...cols.map((c) => (h - (c.length - 1) * gap) / Math.max(1e-9, total(c))));
@@ -110,7 +111,7 @@
         c.forEach((n, i) => { n.ly = Math.max((n.y0 + n.y1) / 2, LH / 2, i ? c[i - 1].ly + LH : -Infinity); });
         for (let i = c.length - 1; i >= 0; i--) c[i].ly = Math.min(c[i].ly, h - LH / 2, i < c.length - 1 ? c[i + 1].ly - LH : Infinity);
       });
-      nodes.forEach((n) => {
+      if (!bare) nodes.forEach((n) => {
         const left = n.col === 0 && L > 0, x = left ? n.x - 8 : n.x + NW + 8, anchor = left ? 'end' : 'start';
         const g = svgEl('g', { class: `vzb-sk-lab${n.col > 0 && n.col < L ? ' is-over' : ''}`, 'data-k': n.k });
         const v = svgText(x, n.ly + 13, n.num, 'vzb-sk-val', anchor);
@@ -133,7 +134,7 @@
         if (it.node) { onN.add(it.node); it.node.ins.concat(it.node.outs).forEach((l) => { onL.add(l); onN.add(l.s); onN.add(l.t); }); }
         else { onL.add(it.link); onN.add(it.link.s); onN.add(it.link.t); }
         svg.classList.add('is-hover');
-        nodes.forEach((n) => { if (n.el) { n.el.classList.toggle('is-on', onN.has(n)); n.lab.classList.toggle('is-on', onN.has(n)); } });
+        nodes.forEach((n) => { if (n.el) n.el.classList.toggle('is-on', onN.has(n)); if (n.lab) n.lab.classList.toggle('is-on', onN.has(n)); });
         links.forEach((l) => { if (l.el) l.el.classList.toggle('is-on', onL.has(l)); });
         const r = plot.getBoundingClientRect();
         if (it.link) {

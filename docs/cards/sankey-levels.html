@@ -29,7 +29,8 @@
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
 <style>
 /* Vizney Blocks tokens: re-declare the same variables on your page's :root and they apply to every card.
-   The colors are the Vizney chart guide's orange, pink-red and yellow with a lighter step of each; the text is Vizney black (#1b1b1b).
+   The colors are navy, coral and peach (a sunset palette) with a lighter step of each; the text is Vizney black (#1b1b1b).
+   The three colors pass a red-green color vision simulation and a contrast check against the card.
    List: https://blocks.vizney.com/tokens.css */
 :where(:root) {
   --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* every word on the card */
@@ -39,16 +40,16 @@
   --vzb-ink-2: #4a4a4a;   /* body text, the no-change badge */
   --vzb-muted: #737373;   /* subtitle, units, axis ticks */
   --vzb-grid: #ebebeb;   /* grid lines and the line under the head: a solid gray one step off the background */
-  --vzb-primary: #ff9500;   /* first data color (orange): lines, bars, the largest item */
-  --vzb-primary-tint: #fff1de;   /* light orange background: the shade under a line, the radar area */
-  --vzb-primary-soft: #ffd9a6;   /* bar-list bars that carry the name */
-  --vzb-secondary: #ff2d55;   /* second data color (pink-red) */
-  --vzb-tertiary: #ffcc00;   /* third data color (yellow); not used for thin lines */
-  --vzb-primary-mid: #ffb54d;     /* one step lighter, for wide areas (treemap cells) */
-  --vzb-secondary-mid: #ff7a93;   /* pink-red for wide areas */
-  --vzb-tertiary-mid: #ffdc4d;   /* yellow for wide areas */
+  --vzb-primary: #255e90;   /* first data color (navy): lines, bars, the largest item */
+  --vzb-primary-tint: #edf4fb;   /* light navy background: the shade under a line, the radar area */
+  --vzb-primary-soft: #c9ddf1;   /* bar-list bars that carry the name */
+  --vzb-secondary: #e0576a;   /* second data color (coral): the one item to point out */
+  --vzb-tertiary: #e79d7b;   /* third data color (peach); not used for thin lines */
+  --vzb-primary-mid: #88b6e2;     /* one step lighter, for wide areas (treemap cells) */
+  --vzb-secondary-mid: #fca0a7;   /* coral for wide areas */
+  --vzb-tertiary-mid: #f6cfa8;   /* peach for wide areas */
   --vzb-other-mid: #e3e3e3;   /* the Other group on wide areas */
-  --vzb-line-3: #007aff;   /* third line color: yellow is hard to see as a thin line on white, so blue */
+  --vzb-line-3: #7d3b5d;   /* third line color (plum): peach is hard to see as a thin line on white, so plum */
   --vzb-base: #c4c4c4;   /* the baseline (last year's line, the radar baseline outline) */
   --vzb-track: #f1f1f1;   /* track behind the gauge and attainment bars */
   --vzb-other: #d9d9d9;   /* items folded into Other, items from the fourth on */
@@ -128,7 +129,7 @@
 .vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-value { font-size: 13px; font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { .vzb-tip { transition: none; } }
-/* 색 이름: t1 · t2 · t3 선(주황 · 분홍빨강 · 파랑), f1 · f2 · f3 막대와 면(주황 · 분홍빨강 · 노랑), fs 옅은 주황,
+/* 색 이름: t1 · t2 · t3 선(남색 · 산호 · 자두), f1 · f2 · f3 막대와 면(남색 · 산호 · 복숭아), fs 옅은 남색,
    t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
 .vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
 .vzb-t2, .vzb-f2 { --vzb-c: var(--vzb-secondary); }
@@ -158,6 +159,7 @@
    이름표는 이름(12px)과 값(13px 굵게, 단위는 작게) 두 줄이고, 가운데 단 이름표는 띠 위에 흰 테두리를 둘러 읽히게 합니다. */
 .vzb-card[data-vzb^="sankey-"] { min-height: calc(var(--vzb-unit) * 2); }
 .vzb-sk.vzb-foot { padding-top: 16px; }
+.vzb-bare .vzb-sk.vzb-foot { padding-top: 0; }
 .vzb-sk-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-sk-link { fill: var(--vzb-c); fill-opacity: 0.32; transition: fill-opacity 0.12s; }
 .vzb-sk-node, .vzb-sk-lab { transition: opacity 0.12s; }
@@ -337,6 +339,7 @@
   // 배지는 숫자 바로 뒤에 붙어 있고, 카드가 좁아 한 줄에 다 들어가지 않으면 비교 문구만 숫자 아래 줄로 내려갑니다.
   // 내려갔는지는 카드의 vzb-wrapped로 알려, 높이가 1단위인 KPI - Number가 아래 여백으로 그 줄을 받게 합니다.
   function head(card, d, f, value, cmp, cmpText) {
+    if (card.classList.contains('vzb-bare')) return;   // 모양만 보이기: 제목 · 부제 · 수치 없이 그림만
     const hd = el('div', 'vzb-hd');
     hd.append(el('div', 'vzb-title', d.title || ''));
     if (d.subtitle) hd.append(el('div', 'vzb-sub', d.subtitle));
@@ -367,6 +370,9 @@
         }
         card.setAttribute('role', 'group');
         if (d.title) card.setAttribute('aria-label', d.title);
+        // 모양만 보이기: 카드를 감싼 요소에 data-vzb-view="shape"가 있으면 제목과 이름표 없이 그림만 그립니다(갤러리 첫 화면).
+        // 붙여 넣은 카드에는 이 속성이 없으므로 모두 그립니다. 값은 마우스를 올리거나 화살표 키로 그대로 볼 수 있습니다.
+        if (card.closest('[data-vzb-view="shape"]')) card.classList.add('vzb-bare');
         try { draw(card, d, format(d)); } catch (e) {
           card.append(el('p', 'vzb-error', tx(d, '카드를 그리지 못했습니다: %s', e.message)));
         }
@@ -503,6 +509,7 @@
      나가는 흐름이 없는 노드는 마지막 단에 모읍니다. 노드 순서는 links에 처음 나온 순서이고, 노드 높이는 들어온 양과 나간 양 중 큰 쪽입니다.
      모든 단이 같은 비율(1px당 값)을 써서 띠 두께를 단끼리 견줄 수 있고, 단마다 세로 가운데에 모읍니다. 노드 사이는 높이의 12%(16–32px)만큼 띄웁니다.
      이름과 값은 첫 단은 노드 왼쪽, 나머지 단은 노드 오른쪽에 두 줄로 적고, 겹치면 위아래로 밀어 냅니다.
+     모양만 보이기(vzb-bare)에서는 이름표 없이 노드가 카드 폭을 다 씁니다.
      띠나 노드(이름 포함)에 마우스를 올리거나, 그래프에 포커스한 뒤 좌우 화살표를 누르면(노드 다음 흐름 순서) 나머지를 옅게 하고 툴팁을 띄웁니다.
      cfg: paint(nodes, links, cols) 노드와 띠의 tone(색 이름)을 정합니다. 띠는 정하지 않으면 출발 노드의 색입니다. */
   function sankeyCard(card, d, f, cfg) {
@@ -555,7 +562,7 @@
     sr.append(table);
     card.append(sr);
 
-    const fam = getComputedStyle(card).fontFamily;
+    const fam = getComputedStyle(card).fontFamily, bare = card.classList.contains('vzb-bare');
     const NW = 8, LH = 32;   // 노드 폭, 이름표(이름 · 값 두 줄) 높이
     const fx = (v) => v.toFixed(1);
     const pct = (a, b) => `${num(b ? (a / b) * 100 : 0, 1)}%`;
@@ -573,8 +580,8 @@
         n.num = t; n.unit = u;
         n.lw = Math.max(textW(n.name, 400, fam), textW(t, 700, fam, 13) + (u ? textW(u, 400, fam, 11) + 2 : 0));
       });
-      const leftW = Math.ceil(Math.max(...cols[0].map((n) => n.lw))) + 10;
-      const rightW = L ? Math.ceil(Math.max(...cols[L].map((n) => n.lw))) + 10 : 0;
+      const leftW = bare ? 0 : Math.ceil(Math.max(...cols[0].map((n) => n.lw))) + 10;
+      const rightW = bare || !L ? 0 : Math.ceil(Math.max(...cols[L].map((n) => n.lw))) + 10;
       const xa = leftW, xb = Math.max(xa, w - rightW - NW);
       const gap = Math.round(Math.max(16, Math.min(32, h * 0.12)));
       const ky = Math.min(...cols.map((c) => (h - (c.length - 1) * gap) / Math.max(1e-9, total(c))));
@@ -611,7 +618,7 @@
         c.forEach((n, i) => { n.ly = Math.max((n.y0 + n.y1) / 2, LH / 2, i ? c[i - 1].ly + LH : -Infinity); });
         for (let i = c.length - 1; i >= 0; i--) c[i].ly = Math.min(c[i].ly, h - LH / 2, i < c.length - 1 ? c[i + 1].ly - LH : Infinity);
       });
-      nodes.forEach((n) => {
+      if (!bare) nodes.forEach((n) => {
         const left = n.col === 0 && L > 0, x = left ? n.x - 8 : n.x + NW + 8, anchor = left ? 'end' : 'start';
         const g = svgEl('g', { class: `vzb-sk-lab${n.col > 0 && n.col < L ? ' is-over' : ''}`, 'data-k': n.k });
         const v = svgText(x, n.ly + 13, n.num, 'vzb-sk-val', anchor);
@@ -634,7 +641,7 @@
         if (it.node) { onN.add(it.node); it.node.ins.concat(it.node.outs).forEach((l) => { onL.add(l); onN.add(l.s); onN.add(l.t); }); }
         else { onL.add(it.link); onN.add(it.link.s); onN.add(it.link.t); }
         svg.classList.add('is-hover');
-        nodes.forEach((n) => { if (n.el) { n.el.classList.toggle('is-on', onN.has(n)); n.lab.classList.toggle('is-on', onN.has(n)); } });
+        nodes.forEach((n) => { if (n.el) n.el.classList.toggle('is-on', onN.has(n)); if (n.lab) n.lab.classList.toggle('is-on', onN.has(n)); });
         links.forEach((l) => { if (l.el) l.el.classList.toggle('is-on', onL.has(l)); });
         const r = plot.getBoundingClientRect();
         if (it.link) {
@@ -669,7 +676,7 @@
     sankeyCard(card, d, f, {
       paint(nodes, links, cols) {
         const end = cols[cols.length - 1], focus = d.focus == null ? null : String(d.focus);
-        nodes.forEach((n) => { n.tone = focus == null || !end.includes(n) ? 'f1' : n.id === focus ? 't3' : 'f0'; });
+        nodes.forEach((n) => { n.tone = focus == null || !end.includes(n) ? 'f1' : n.id === focus ? 'f2' : 'f0'; });
         links.forEach((l) => { l.tone = l.t.tone; });
       },
     });

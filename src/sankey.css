@@ -2,6 +2,7 @@
    이름표는 이름(12px)과 값(13px 굵게, 단위는 작게) 두 줄이고, 가운데 단 이름표는 띠 위에 흰 테두리를 둘러 읽히게 합니다. */
 .vzb-card[data-vzb^="sankey-"] { min-height: calc(var(--vzb-unit) * 2); }
 .vzb-sk.vzb-foot { padding-top: 16px; }
+.vzb-bare .vzb-sk.vzb-foot { padding-top: 0; }
 .vzb-sk-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-sk-link { fill: var(--vzb-c); fill-opacity: 0.32; transition: fill-opacity 0.12s; }
 .vzb-sk-node, .vzb-sk-lab { transition: opacity 0.12s; }

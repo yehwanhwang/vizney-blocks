@@ -311,6 +311,9 @@ const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 // Home (v0.45): the title area of a Vizney blog category page (title and description, sized from the blog), then a
 // gallery of the cards that take real work to build by hand. Each tile holds the live card, its name and chart type, and two
 // copy buttons, so a button always belongs to the chart above it.
+// Cards that draw a shape-only view (data-vzb-view="shape"): no title, subtitle or labels on the first screen; the chart pages
+// and the copied code show everything.
+const SHAPE = new Set(['sankey-levels', 'sankey-basic']);
 const GALLERY = ['sankey-levels', 'bump-basic', 'funnel-flow', 'treemap-basic', 'waterfall-subtotal', 'radar-basic', 'sankey-basic', 'scatter-connected', 'waterfall-basic'];
 const galleryHead = (L) => `<section class="wrap ghead" aria-labelledby="ghead-title">
 <h1 id="ghead-title">${L.t.gTitle}</h1>
@@ -321,7 +324,7 @@ const gallery = (m, L) => `<section class="wrap gal" id="cards" aria-label="${L.
 ${GALLERY.map((id) => {
     const v = L.byId[id];
     return `<li class="gt" aria-labelledby="gt-${id}">
-<div class="gt-pv" data-mount="${id}" style="min-height:${tierPx(v)}px"></div>
+<div class="gt-pv" data-mount="${id}"${SHAPE.has(id) ? ' data-vzb-view="shape"' : ''} style="min-height:${tierPx(v)}px"></div>
 <div class="gt-meta"><a class="gt-name" id="gt-${id}" href="${m.card(v)}">${h(v.name)}</a><span class="gt-kind">${h(L.catName[v.cat])}</span></div>
 <div class="gt-acts"><button type="button" class="btn" data-act="copy-prompt" data-id="${id}" aria-label="${h(v.name)} ${L.t.tPrompt}">${IC.prompt}<span>${L.t.tPrompt}</span></button><button type="button" class="btn" data-act="copy-code" data-id="${id}" aria-label="${h(v.name)} ${L.t.tCode}">${IC.copy}<span>${L.t.tCode}</span></button></div>
 </li>`;

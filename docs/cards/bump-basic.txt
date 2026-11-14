@@ -4,7 +4,8 @@
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
 <style>
 /* Vizney Blocks tokens: re-declare the same variables on your page's :root and they apply to every card.
-   The colors are the Vizney chart guide's orange, pink-red and yellow with a lighter step of each; the text is Vizney black (#1b1b1b).
+   The colors are navy, coral and peach (a sunset palette) with a lighter step of each; the text is Vizney black (#1b1b1b).
+   The three colors pass a red-green color vision simulation and a contrast check against the card.
    List: https://blocks.vizney.com/tokens.css */
 :where(:root) {
   --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* every word on the card */
@@ -14,16 +15,16 @@
   --vzb-ink-2: #4a4a4a;   /* body text, the no-change badge */
   --vzb-muted: #737373;   /* subtitle, units, axis ticks */
   --vzb-grid: #ebebeb;   /* grid lines and the line under the head: a solid gray one step off the background */
-  --vzb-primary: #ff9500;   /* first data color (orange): lines, bars, the largest item */
-  --vzb-primary-tint: #fff1de;   /* light orange background: the shade under a line, the radar area */
-  --vzb-primary-soft: #ffd9a6;   /* bar-list bars that carry the name */
-  --vzb-secondary: #ff2d55;   /* second data color (pink-red) */
-  --vzb-tertiary: #ffcc00;   /* third data color (yellow); not used for thin lines */
-  --vzb-primary-mid: #ffb54d;     /* one step lighter, for wide areas (treemap cells) */
-  --vzb-secondary-mid: #ff7a93;   /* pink-red for wide areas */
-  --vzb-tertiary-mid: #ffdc4d;   /* yellow for wide areas */
+  --vzb-primary: #255e90;   /* first data color (navy): lines, bars, the largest item */
+  --vzb-primary-tint: #edf4fb;   /* light navy background: the shade under a line, the radar area */
+  --vzb-primary-soft: #c9ddf1;   /* bar-list bars that carry the name */
+  --vzb-secondary: #e0576a;   /* second data color (coral): the one item to point out */
+  --vzb-tertiary: #e79d7b;   /* third data color (peach); not used for thin lines */
+  --vzb-primary-mid: #88b6e2;     /* one step lighter, for wide areas (treemap cells) */
+  --vzb-secondary-mid: #fca0a7;   /* coral for wide areas */
+  --vzb-tertiary-mid: #f6cfa8;   /* peach for wide areas */
   --vzb-other-mid: #e3e3e3;   /* the Other group on wide areas */
-  --vzb-line-3: #007aff;   /* third line color: yellow is hard to see as a thin line on white, so blue */
+  --vzb-line-3: #7d3b5d;   /* third line color (plum): peach is hard to see as a thin line on white, so plum */
   --vzb-base: #c4c4c4;   /* the baseline (last year's line, the radar baseline outline) */
   --vzb-track: #f1f1f1;   /* track behind the gauge and attainment bars */
   --vzb-other: #d9d9d9;   /* items folded into Other, items from the fourth on */
@@ -103,7 +104,7 @@
 .vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-value { font-size: 13px; font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { .vzb-tip { transition: none; } }
-/* 색 이름: t1 · t2 · t3 선(주황 · 분홍빨강 · 파랑), f1 · f2 · f3 막대와 면(주황 · 분홍빨강 · 노랑), fs 옅은 주황,
+/* 색 이름: t1 · t2 · t3 선(남색 · 산호 · 자두), f1 · f2 · f3 막대와 면(남색 · 산호 · 복숭아), fs 옅은 남색,
    t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
 .vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
 .vzb-t2, .vzb-f2 { --vzb-c: var(--vzb-secondary); }
@@ -347,6 +348,7 @@
   // 배지는 숫자 바로 뒤에 붙어 있고, 카드가 좁아 한 줄에 다 들어가지 않으면 비교 문구만 숫자 아래 줄로 내려갑니다.
   // 내려갔는지는 카드의 vzb-wrapped로 알려, 높이가 1단위인 KPI - Number가 아래 여백으로 그 줄을 받게 합니다.
   function head(card, d, f, value, cmp, cmpText) {
+    if (card.classList.contains('vzb-bare')) return;   // 모양만 보이기: 제목 · 부제 · 수치 없이 그림만
     const hd = el('div', 'vzb-hd');
     hd.append(el('div', 'vzb-title', d.title || ''));
     if (d.subtitle) hd.append(el('div', 'vzb-sub', d.subtitle));
@@ -377,6 +379,9 @@
         }
         card.setAttribute('role', 'group');
         if (d.title) card.setAttribute('aria-label', d.title);
+        // 모양만 보이기: 카드를 감싼 요소에 data-vzb-view="shape"가 있으면 제목과 이름표 없이 그림만 그립니다(갤러리 첫 화면).
+        // 붙여 넣은 카드에는 이 속성이 없으므로 모두 그립니다. 값은 마우스를 올리거나 화살표 키로 그대로 볼 수 있습니다.
+        if (card.closest('[data-vzb-view="shape"]')) card.classList.add('vzb-bare');
         try { draw(card, d, format(d)); } catch (e) {
           card.append(el('p', 'vzb-error', tx(d, '카드를 그리지 못했습니다: %s', e.message)));
         }

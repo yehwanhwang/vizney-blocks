@@ -141,6 +141,7 @@
   // 배지는 숫자 바로 뒤에 붙어 있고, 카드가 좁아 한 줄에 다 들어가지 않으면 비교 문구만 숫자 아래 줄로 내려갑니다.
   // 내려갔는지는 카드의 vzb-wrapped로 알려, 높이가 1단위인 KPI - Number가 아래 여백으로 그 줄을 받게 합니다.
   function head(card, d, f, value, cmp, cmpText) {
+    if (card.classList.contains('vzb-bare')) return;   // 모양만 보이기: 제목 · 부제 · 수치 없이 그림만
     const hd = el('div', 'vzb-hd');
     hd.append(el('div', 'vzb-title', d.title || ''));
     if (d.subtitle) hd.append(el('div', 'vzb-sub', d.subtitle));
@@ -171,6 +172,9 @@
         }
         card.setAttribute('role', 'group');
         if (d.title) card.setAttribute('aria-label', d.title);
+        // 모양만 보이기: 카드를 감싼 요소에 data-vzb-view="shape"가 있으면 제목과 이름표 없이 그림만 그립니다(갤러리 첫 화면).
+        // 붙여 넣은 카드에는 이 속성이 없으므로 모두 그립니다. 값은 마우스를 올리거나 화살표 키로 그대로 볼 수 있습니다.
+        if (card.closest('[data-vzb-view="shape"]')) card.classList.add('vzb-bare');
         try { draw(card, d, format(d)); } catch (e) {
           card.append(el('p', 'vzb-error', tx(d, '카드를 그리지 못했습니다: %s', e.message)));
         }

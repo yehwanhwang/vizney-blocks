@@ -25,7 +25,7 @@
 .vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-value { font-size: 13px; font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { .vzb-tip { transition: none; } }
-/* 색 이름: t1 · t2 · t3 선(주황 · 분홍빨강 · 파랑), f1 · f2 · f3 막대와 면(주황 · 분홍빨강 · 노랑), fs 옅은 주황,
+/* 색 이름: t1 · t2 · t3 선(남색 · 산호 · 자두), f1 · f2 · f3 막대와 면(남색 · 산호 · 복숭아), fs 옅은 남색,
    t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
 .vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
 .vzb-t2, .vzb-f2 { --vzb-c: var(--vzb-secondary); }

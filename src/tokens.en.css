@@ -1,5 +1,6 @@
 /* Vizney Blocks tokens: re-declare the same variables on your page's :root and they apply to every card.
-   The colors are the Vizney chart guide's orange, pink-red and yellow with a lighter step of each; the text is Vizney black (#1b1b1b).
+   The colors are navy, coral and peach (a sunset palette) with a lighter step of each; the text is Vizney black (#1b1b1b).
+   The three colors pass a red-green color vision simulation and a contrast check against the card.
    List: https://blocks.vizney.com/tokens.css */
 :where(:root) {
   --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* every word on the card */
@@ -9,16 +10,16 @@
   --vzb-ink-2: #4a4a4a;   /* body text, the no-change badge */
   --vzb-muted: #737373;   /* subtitle, units, axis ticks */
   --vzb-grid: #ebebeb;   /* grid lines and the line under the head: a solid gray one step off the background */
-  --vzb-primary: #ff9500;   /* first data color (orange): lines, bars, the largest item */
-  --vzb-primary-tint: #fff1de;   /* light orange background: the shade under a line, the radar area */
-  --vzb-primary-soft: #ffd9a6;   /* bar-list bars that carry the name */
-  --vzb-secondary: #ff2d55;   /* second data color (pink-red) */
-  --vzb-tertiary: #ffcc00;   /* third data color (yellow); not used for thin lines */
-  --vzb-primary-mid: #ffb54d;     /* one step lighter, for wide areas (treemap cells) */
-  --vzb-secondary-mid: #ff7a93;   /* pink-red for wide areas */
-  --vzb-tertiary-mid: #ffdc4d;   /* yellow for wide areas */
+  --vzb-primary: #255e90;   /* first data color (navy): lines, bars, the largest item */
+  --vzb-primary-tint: #edf4fb;   /* light navy background: the shade under a line, the radar area */
+  --vzb-primary-soft: #c9ddf1;   /* bar-list bars that carry the name */
+  --vzb-secondary: #e0576a;   /* second data color (coral): the one item to point out */
+  --vzb-tertiary: #e79d7b;   /* third data color (peach); not used for thin lines */
+  --vzb-primary-mid: #88b6e2;     /* one step lighter, for wide areas (treemap cells) */
+  --vzb-secondary-mid: #fca0a7;   /* coral for wide areas */
+  --vzb-tertiary-mid: #f6cfa8;   /* peach for wide areas */
   --vzb-other-mid: #e3e3e3;   /* the Other group on wide areas */
-  --vzb-line-3: #007aff;   /* third line color: yellow is hard to see as a thin line on white, so blue */
+  --vzb-line-3: #7d3b5d;   /* third line color (plum): peach is hard to see as a thin line on white, so plum */
   --vzb-base: #c4c4c4;   /* the baseline (last year's line, the radar baseline outline) */
   --vzb-track: #f1f1f1;   /* track behind the gauge and attainment bars */
   --vzb-other: #d9d9d9;   /* items folded into Other, items from the fourth on */

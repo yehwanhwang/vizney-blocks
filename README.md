@@ -6,6 +6,8 @@ Copy-paste HTML dashboard cards (37 cards in 14 chart types). No install, no fra
 
 **갤러리(English): https://blocks.vizney.com** · **한국어: https://blocks.vizney.com/ko/**
 
+갤러리 첫 화면에는 그리려면 배치 계산(흐름 띠, 순위 곡선, 누적 막대, 사각형 나누기, 극좌표)이 필요한 카드만 올립니다(`build.mjs`의 `GALLERY`). 막대·선·표·KPI처럼 직접 만들기 쉬운 카드는 첫 화면에 올리지 않지만, 차트 페이지와 카드 주소, llms.txt, 스킬에는 그대로 있습니다.
+
 ![Vizney Blocks 갤러리](docs/og-ko.png)
 
 ## 쓰는 법

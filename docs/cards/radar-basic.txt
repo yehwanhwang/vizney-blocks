@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.44 · Radar Chart · Radar - Basic (radar-basic)
+<!-- Vizney Blocks v0.45 · Radar Chart · Radar - Basic (radar-basic)
      https://blocks.vizney.com/cards/radar-basic.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">

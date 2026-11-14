@@ -12,7 +12,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.44';
+const VERSION = 'v0.45';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -128,20 +128,23 @@ const SKILL_CMD = 'npx skills add yehwanhwang/vizney-blocks';
 // and the Korean ones at /ko/ (v0.43; before it the Korean files were at / and the English under /en/). L.base is where a
 // locale's pages live, L.files where its cards, llms.txt and tokens.css live (the same path now). OFL.txt and the fonts are
 // shared; the old /en/ pages redirect to /, and the old /en/ files (cards .txt, llms.txt, tokens.css) stay as English copies.
+// The home page's description (v0.45), also its meta description.
+const GDESC = {
+  ko: '만들기 까다로운 차트를 붙여 넣기 한 번으로. 생키, 범프, 퍼널, 워터폴처럼 그리려면 배치 계산이 필요한 차트를 HTML 조각 하나에 담았습니다. 복사해 붙이고 JSON 값만 바꾸세요.',
+  en: 'Hard-to-build charts in a single paste. Sankey, bump, funnel and waterfall charts, the kind that need layout math to draw, each in one HTML snippet. Copy it, paste it and change only the JSON.',
+};
 const WORDS = {
   ko: {
     html: 'ko', og: 'ko_KR', other: { lang: 'en', label: 'English' },
     skip: '본문으로 건너뛰기', menu: '주 메뉴', more: '더 보기', cards: '카드', usage: '쓰는 법', guide: '차트 가이드', find: '카드 찾기', found: '찾은 카드',
     footFont: '글꼴 VZ Sans(Spoqa Han Sans Neo 부분 글꼴)', footNav: '바닥글', footBlog: '블로그', footContact: '문의',
-    copy: '복사', aiLink: 'AI용 링크', close: '닫기', code: '코드', viewCode: '코드 보기', copyCode: '카드 코드 복사', copyCodeNote: 'HTML에 붙여 넣습니다', copyPrompt: '프롬프트 복사', copyPromptNote: '규칙과 코드를 채팅 AI에 줍니다', copyLink: 'AI용 링크 복사', copyLinkNote: (id) => `${id}.txt 주소를 AI에 줍니다`,
-    eyebrow: `카드 ${N.cards}종 · 차트 ${N.cats}가지 · MIT 라이선스`, h1: '분석가의 판단을 담은<br>대시보드 카드', h1one: '분석가의 판단을 담은 대시보드 카드',
+    copy: '복사', aiLink: 'AI용 링크', close: '닫기', code: '코드', viewCode: '코드 보기', copyCode: '카드 코드 복사', copyCodeNote: 'HTML에 붙여 넣습니다', gTitle: 'Blocks', gDesc: GDESC.ko, gAria: '카드 갤러리', tPrompt: '프롬프트 복사', tCode: '코드 복사', copyPrompt: '프롬프트 복사', copyPromptNote: '규칙과 코드를 채팅 AI에 줍니다', copyLink: 'AI용 링크 복사', copyLinkNote: (id) => `${id}.txt 주소를 AI에 줍니다`,
+    eyebrow: `카드 ${N.cards}종 · 차트 ${N.cats}가지 · MIT 라이선스`, h1one: '분석가의 판단을 담은 대시보드 카드',
     lede: '카드를 복사해 HTML에 붙여 넣고 JSON만 바꾸세요. 증감, 비중, 달성률은 카드가 계산하고, 색과 강조는 Vizney 차트 가이드의 규칙을 따릅니다.',
-    browse: '카드 둘러보기', onGithub: 'GitHub에서 보기', hint: (llms) => `AI에게 맡길 때는 카드 링크나 <a href="${llms}">llms.txt</a>를 주고, 코딩 에이전트에는 <a href="#usage">스킬</a>을 설치하세요.`,
-    showAria: '카드로 만든 대시보드 예시', showTitle: '영업 현황', showSub: (n) => `카드 ${n}장을 격자에 붙여 넣어 만든 대시보드`, showCode: '이 예시의 코드 보기',
     purposeTitle: '목적으로 고르기', purposeSub: '보여줄 것부터 정하세요. 목적마다 기본 카드를 먼저 쓰고, 다른 카드는 조건이 맞을 때만 고릅니다.', base: '기본',
     tilesTitle: '차트로 고르기', tilesSub: `차트 ${N.cats}가지, 카드 ${N.cards}종을 Vizney 차트 가이드의 차트 이름으로 묶었습니다. 차트를 고르면 그 차트의 카드가 모두 나옵니다.`,
     usageTitle: '쓰는 법', usageSub: '설치할 것은 없습니다. 카드 하나가 스타일, 데이터, 스크립트를 모두 담은 HTML 조각입니다.',
-    step1: '복사해서 붙이기', step1p: '카드의 <b>복사</b>를 눌러 HTML의 &lt;body&gt; 안 원하는 자리에 붙여 넣습니다.',
+    step1: '복사해서 붙이기', step1p: '카드의 <b>코드 복사</b>를 눌러 HTML의 &lt;body&gt; 안 원하는 자리에 붙여 넣습니다.',
     step2: 'JSON만 바꾸기', step2p: '카드 안 JSON의 값만 바꿉니다. 증감, 비중, 달성률은 카드가 계산합니다.', step2code: '"title": "분기별 출고 금액",\n"format": "eok",\n"labels": ["1Q26", "2Q26", "3Q26"],\n"values": [2561, 2654, 2750]',
     step3: '변수로 맞추기', step3p: (tokens) => `색과 글꼴은 :root의 변수로 바꿉니다. 모든 카드에 한 번에 적용됩니다. 변수 목록은 <a href="${tokens}">tokens.css</a>에 있습니다.`,
     step4: 'AI에게 맡기기', step4p: '채팅 AI에는 카드의 <b>프롬프트 복사</b>로 규칙과 코드를 함께 붙여 넣거나, 주소를 열 수 있으면 <b>AI용 링크</b>를 줍니다. 코딩 에이전트에는 스킬을 설치합니다. 스킬은 카드 코드를 쓰기 전에 설계표(줄 · 질문 · 카드)를 보여 주고, 다 만든 뒤 체크리스트로 확인합니다. 새 판단은 <code>npx skills update</code>로 받습니다.', step4code: (base) => `blocks.vizney.com${base}/cards/\n  bar-basic.txt\n이 카드로 지점별 월 매출을\n그려줘\n\nnpx skills add\n  yehwanhwang/vizney-blocks`,
@@ -160,8 +163,8 @@ const WORDS = {
     layoutList: ['KPI 카드는 한 줄에 네 장까지 둡니다.', '바 리스트와 표는 여섯 줄까지 2단위에 들어갑니다. 더 길면 줄 수가 같은 카드끼리 한 줄에 둡니다.', '비중 카드의 기타가 셋째 조각보다 크면 Bar - Ranking을 씁니다.', '전체 폭은 폭이 정보량인 카드(여러 선의 13개월 라인, 열이 많은 표·히트맵, 항목이 많은 워터폴, 생키)에만 줍니다.', '카드 사이에 묶음 제목을 두지 않습니다. 화면 제목과 기준일·출처 한 줄이면 됩니다.'],
     aiList: 'AI용 목록 llms.txt', kinds: '차트 종류', crumb: '현재 위치', nCards: (n) => `카드 ${n}장`, height: (h) => `높이 ${h}`, nInGroup: (n) => `${n}장`, judgment: (n) => `들어 있는 판단 ${n}`,
     pagerAria: '이전과 다음 차트', prev: '이전', next: '다음', codeText: '코드(텍스트)',
-    homeTitle: 'Vizney Blocks · 복사해 쓰는 대시보드 카드', catTitle: (name) => `${name} · Vizney Blocks`, catDesc: (lede, n) => `${lede} 복사해 붙여 쓰는 HTML 카드 ${n}종.`,
-    homeDesc: `복사해 붙여 쓰는 HTML 대시보드 카드 ${N.cards}종. KPI, 막대, 라인, 그리드, 도넛, 스캐터, 생키, 레이더 등 차트 ${N.cats}가지를 Vizney 차트 가이드의 판단 규칙으로 만들었습니다. MIT License.`,
+    homeTitle: 'Vizney Blocks · 만들기 까다로운 차트를 붙여 넣기 한 번으로', catTitle: (name) => `${name} · Vizney Blocks`, catDesc: (lede, n) => `${lede} 복사해 붙여 쓰는 HTML 카드 ${n}종.`,
+    homeDesc: GDESC.ko,
     // site.js
     js: { copied: '복사됨', linkCopied: '링크 복사됨', promptCopied: '프롬프트 복사됨', sub: '<b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.', blocked: '복사가 막혀 있습니다. 코드를 선택해 두었으니 Ctrl+C(⌘+C)로 복사하세요.', none: '찾는 카드가 없습니다.', exampleTitle: '영업 현황 예시', exampleSub: (n) => `카드 ${n}장을 격자에 넣은 코드입니다. 각 카드의 <b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.`, exampleComment: (n) => `<!-- Vizney Blocks 예시 · 영업 현황(카드 ${n}장)\n     ${SITE}/ko/ · 각 카드의 JSON만 바꾸세요. -->` },
   },
@@ -169,15 +172,13 @@ const WORDS = {
     html: 'en', og: 'en_US', other: { lang: 'ko', label: '한국어' },
     skip: 'Skip to content', menu: 'Main menu', more: 'More', cards: 'Cards', usage: 'How to use', guide: 'Chart guide', find: 'Find a card', found: 'Cards found',
     footFont: 'Font VZ Sans (a subset of Spoqa Han Sans Neo)', footNav: 'Footer', footBlog: 'Blog', footContact: 'Contact',
-    copy: 'Copy', aiLink: 'AI link', close: 'Close', code: 'Code', viewCode: 'view code', copyCode: 'Copy card code', copyCodeNote: 'Paste it into your HTML', copyPrompt: 'Copy prompt', copyPromptNote: 'Rules and code for a chat AI', copyLink: 'Copy AI link', copyLinkNote: (id) => `Give an AI the ${id}.txt address`,
-    eyebrow: `${N.cards} cards · ${N.cats} chart types · MIT License`, h1: 'Dashboard cards<br>with an analyst’s judgment built in', h1one: 'Dashboard cards with an analyst’s judgment built in',
+    copy: 'Copy', aiLink: 'AI link', close: 'Close', code: 'Code', viewCode: 'view code', copyCode: 'Copy card code', copyCodeNote: 'Paste it into your HTML', gTitle: 'Blocks', gDesc: GDESC.en, gAria: 'Card gallery', tPrompt: 'Copy prompt', tCode: 'Copy code', copyPrompt: 'Copy prompt', copyPromptNote: 'Rules and code for a chat AI', copyLink: 'Copy AI link', copyLinkNote: (id) => `Give an AI the ${id}.txt address`,
+    eyebrow: `${N.cards} cards · ${N.cats} chart types · MIT License`, h1one: 'Dashboard cards with an analyst’s judgment built in',
     lede: 'Copy a card into your HTML and change only its JSON. The card computes changes, shares and attainment, and its colors and emphasis follow the rules of the Vizney chart guide.',
-    browse: 'Browse cards', onGithub: 'View on GitHub', hint: (llms) => `Working with an AI? Give it a card link or <a href="${llms}">llms.txt</a>, or install the <a href="#usage">skill</a> in a coding agent.`,
-    showAria: 'Example dashboard made of cards', showTitle: 'Sales Overview', showSub: (n) => `A dashboard made by pasting ${n} cards into a grid`, showCode: 'View the code of this example',
     purposeTitle: 'Pick by purpose', purposeSub: 'Decide what to show first. Each purpose has a base card; pick another card only when its condition fits.', base: 'Base',
     tilesTitle: 'Pick by chart', tilesSub: `${N.cards} cards in ${N.cats} chart types, grouped by the chart names of the Vizney chart guide. Pick a chart to see all of its cards.`,
     usageTitle: 'How to use', usageSub: 'Nothing to install. One card is an HTML snippet that carries its own styles, data and script.',
-    step1: 'Copy and paste', step1p: 'Press <b>Copy</b> on a card and paste it anywhere inside the &lt;body&gt; of your HTML.',
+    step1: 'Copy and paste', step1p: 'Press <b>Copy code</b> on a card and paste it anywhere inside the &lt;body&gt; of your HTML.',
     step2: 'Change only the JSON', step2p: 'Edit the values in the card’s JSON. The card computes changes, shares and attainment.', step2code: '"title": "Orders by Quarter",\n"format": "count",\n"labels": ["1Q26", "2Q26", "3Q26"],\n"values": [2561, 2654, 2750]',
     step3: 'Tune with variables', step3p: (tokens) => `Set colors and the font with :root variables; they apply to every card at once. The list is in <a href="${tokens}">tokens.css</a>.`,
     step4: 'Hand it to an AI', step4p: 'Paste a card’s <b>Copy prompt</b> (rules and code together) into a chat AI, or give it the <b>AI link</b> if it can open addresses; install the skill in a coding agent. The skill shows a design table (row · question · card) before writing card code and checks the result against a checklist. Get new judgment with <code>npx skills update</code>.', step4code: (base) => `blocks.vizney.com${base}/cards/\n  bar-basic.txt\nDraw our monthly sales by\nbranch with this card\n\nnpx skills add\n  yehwanhwang/vizney-blocks`,
@@ -196,8 +197,8 @@ const WORDS = {
     layoutList: ['Up to four KPI cards per row.', 'Bar lists and tables fit 2 units up to six rows. Longer ones go in a row with cards of the same row count.', 'When a share card’s Other is larger than its third slice, use Bar - Ranking.', 'Give the full width only to cards whose width carries information (a 13-month line with several series, a wide table or heatmap, a long waterfall, a sankey).', 'No group headings between card rows: one screen title and one line for the date and source.'],
     aiList: 'llms.txt for AI', kinds: 'Chart types', crumb: 'You are here', nCards: (n) => `${n} cards`, height: (h) => `Height ${h}`, nInGroup: (n) => `${n} cards`, judgment: (n) => `Judgment built in (${n})`,
     pagerAria: 'Previous and next chart', prev: 'Previous', next: 'Next', codeText: 'Code (text)',
-    homeTitle: 'Vizney Blocks · Copy-paste dashboard cards', catTitle: (name) => `${name} · Vizney Blocks`, catDesc: (lede, n) => `${lede} ${n} copy-paste HTML cards.`,
-    homeDesc: `${N.cards} copy-paste HTML dashboard cards. ${N.cats} chart types, from KPI, bar, line and grid to donut, scatter, Sankey and radar, built on the judgment rules of the Vizney chart guide. MIT License.`,
+    homeTitle: 'Vizney Blocks · Hard-to-build charts in a single paste', catTitle: (name) => `${name} · Vizney Blocks`, catDesc: (lede, n) => `${lede} ${n} copy-paste HTML cards.`,
+    homeDesc: GDESC.en,
     js: { copied: 'Copied', linkCopied: 'Link copied', promptCopied: 'Prompt copied', sub: 'Change only the data (JSON) on the <b>orange lines</b>. Leave the rest as it is.', blocked: 'Copying is blocked here. The code is selected; press Ctrl+C (⌘+C) to copy it.', none: 'No card found.', exampleTitle: 'Sales Overview example', exampleSub: (n) => `The code of ${n} cards in a grid. In each card, change only the data (JSON) on the <b>orange lines</b>. Leave the rest as it is.`, exampleComment: (n) => `<!-- Vizney Blocks example · Sales Overview (${n} cards)\n     ${SITE}/ · Change only each card's JSON. -->` },
   },
 };
@@ -279,9 +280,9 @@ ${N.items.map(([t, href, here]) => `<li><a href="${href}"${here ? ' aria-current
 </ul></nav>
 </div>
 </header>
-<nav class="tabs" aria-label="Vizney Blocks"><div class="tabs-in">
+${m.noTabs ? '' : `<nav class="tabs" aria-label="Vizney Blocks"><div class="tabs-in">
 <a class="tab is-name" href="${m.home}"${m.tab === 'home' ? ' aria-current="page"' : ''}>Vizney Blocks</a><a class="tab" href="${m.cards}"${m.tab === 'cards' ? ' aria-current="page"' : ''}>${L.t.cards}</a><a class="tab" href="${m.usage}">${L.t.usage}</a><a class="tab is-git" ${ext(REPO)}>GitHub${IC.out}</a>
-</div></nav>
+</div></nav>`}
 <dialog class="qdlg" id="q-dlg" aria-label="${L.t.find}">
 <div class="search">${IC.search}<label class="sr" for="q">${L.t.find}</label><input id="q" type="search" placeholder="${L.t.find}" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="q-pop"><kbd aria-hidden="true">⌘K</kbd></div>
 <ul class="search-pop" id="q-pop" role="listbox" aria-label="${L.t.found}" hidden></ul>
@@ -307,13 +308,25 @@ const dialog = (L) => `<dialog class="dlg" id="dlg" aria-labelledby="dlg-title" 
 
 const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 
-// Home
-const hero = (m, L) => `<section class="wrap hero" aria-labelledby="hero-title">
-<p class="eyebrow">${L.t.eyebrow}</p>
-<h1 id="hero-title">${L.t.h1}</h1>
-<p class="lede">${L.t.lede}</p>
-<div class="cta"><a class="btn is-primary is-lg" href="#cards">${L.t.browse}</a><a class="btn is-lg" ${ext(REPO)}>${L.t.onGithub}</a></div>
-<p class="hint">${L.t.hint(m.llms)}</p>
+// Home (v0.45): the title area of a Vizney blog category page (title and description, sized from the blog), then a
+// gallery of the cards that take real work to build by hand. Each tile holds the live card, its name and chart type, and two
+// copy buttons, so a button always belongs to the chart above it.
+const GALLERY = ['sankey-levels', 'bump-basic', 'funnel-flow', 'treemap-basic', 'waterfall-subtotal', 'radar-basic', 'sankey-basic', 'scatter-connected', 'waterfall-basic'];
+const galleryHead = (L) => `<section class="wrap ghead" aria-labelledby="ghead-title">
+<h1 id="ghead-title">${L.t.gTitle}</h1>
+<p>${L.t.gDesc}</p>
+</section>`;
+const gallery = (m, L) => `<section class="wrap gal" id="cards" aria-label="${L.t.gAria}">
+<ul class="gal-grid">
+${GALLERY.map((id) => {
+    const v = L.byId[id];
+    return `<li class="gt" aria-labelledby="gt-${id}">
+<div class="gt-pv" data-mount="${id}" style="min-height:${tierPx(v)}px"></div>
+<div class="gt-meta"><a class="gt-name" id="gt-${id}" href="${m.card(v)}">${h(v.name)}</a><span class="gt-kind">${h(L.catName[v.cat])}</span></div>
+<div class="gt-acts"><button type="button" class="btn" data-act="copy-prompt" data-id="${id}" aria-label="${h(v.name)} ${L.t.tPrompt}">${IC.prompt}<span>${L.t.tPrompt}</span></button><button type="button" class="btn" data-act="copy-code" data-id="${id}" aria-label="${h(v.name)} ${L.t.tCode}">${IC.copy}<span>${L.t.tCode}</span></button></div>
+</li>`;
+  }).join('\n')}
+</ul>
 </section>`;
 
 // Purpose index: a box per question with its base card first, then each other card after the condition that calls for it.
@@ -331,15 +344,7 @@ ${rest.length ? `<ul class="picks">\n${rest.map((k) => `<li><a href="${m.card(L.
 </ol>
 </section>`;
 
-const showcase = (L) => `<section class="wrap show-wrap" aria-label="${L.t.showAria}">
-<div class="show">
-<div class="show-hd"><div><p class="show-title">${L.t.showTitle}</p><p class="show-sub">${L.t.showSub(EXAMPLE.length)}</p></div><button type="button" class="btn" data-act="example">${IC.code}${L.t.showCode}</button></div>
-<div class="show-grid">
-${EXAMPLE.map((x) => `<div${x.wide ? ' class="is-wide"' : ''} data-mount="${x.id}" style="min-height:${tierPx(L.byId[x.id])}px"></div>`).join('\n')}
-</div>
-</div>
-</section>`;
-
+// Chart tiles ("Pick by chart"): off the home page since v0.45; kept until the chart pages are redone.
 const tiles = (m, L) => `<section class="wrap sec" id="cards" aria-labelledby="cards-title">
 <div class="sec-hd"><div><h2 id="cards-title">${L.t.tilesTitle}</h2><p>${L.t.tilesSub}</p></div></div>
 <div class="tiles">
@@ -570,12 +575,12 @@ ${alt ? `<link rel="alternate" hreflang="${L.lang}" href="${SITE}${path}">\n<lin
 ${extra}</head>`;
 // Asset versions are filled in once the font is built (the font depends on every character the pages use).
 const assets = '<link rel="preload" href="/assets/fonts/vz-sans-400.woff?v=__FONT_V__" as="font" type="font/woff" crossorigin>\n<link rel="stylesheet" href="/assets/site.css?v=__CSS_V__">\n';
-const sitePage = ({ title, desc, path, body, page, ids, tab, robots, L, alt }) => {
+const sitePage = ({ title, desc, path, body, page, ids, tab, noTabs, robots, L, alt }) => {
   const m = siteMode(L);
   return `${head({ title, desc, path, L, alt, extra: (robots ? `<meta name="robots" content="${robots}">\n` : '') + assets })}
 <body>
 ${skip(L)}
-${header({ ...m, tab }, L, alt)}
+${header({ ...m, tab, noTabs }, L, alt)}
 ${body}
 ${footer(m, L)}
 ${dialog(L)}
@@ -596,12 +601,11 @@ for (const L of LOCALES) {
     L, alt: `${other.base}/`,
     page: 'home',
     tab: 'home',
-    ids: EXAMPLE.map((x) => x.id),
+    noTabs: true,
+    ids: GALLERY,
     body: `<main id="main">
-${hero(m, L)}
-${showcase(L)}
-${purposeSec(m, L)}
-${tiles(m, L)}
+${galleryHead(L)}
+${gallery(m, L)}
 ${usage(m, L)}
 </main>`,
   });

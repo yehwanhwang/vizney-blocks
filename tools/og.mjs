@@ -14,12 +14,12 @@ const BASE = process.env.OG_BASE || 'http://localhost:8765';
 const WORDMARK = `data:image/png;base64,${readFileSync(join(root, 'page/vizney-wordmark.png')).toString('base64')}`;
 
 // The card code as published, without the CDN font link (the page loads VZ Sans from docs/assets instead).
-const card = (lang, id) => readFileSync(join(root, `docs${lang === 'en' ? '/en' : ''}/cards/${id}.txt`), 'utf8')
+const card = (lang, id) => readFileSync(join(root, `docs${lang === 'ko' ? '/ko' : ''}/cards/${id}.txt`), 'utf8')
   .replace(/<link rel="stylesheet"[^>]*>\n?/, '');
 
 const T = {
-  ko: { title: '분석가의 판단을 담은<br><em>대시보드 카드</em>', sub: '복사해 붙이고 JSON만 바꾸는<br>HTML 대시보드 카드 모음', facts: '카드 37종 · 차트 14가지 · MIT 라이선스' },
-  en: { title: 'Dashboard cards with<br><em>an analyst’s judgment</em>', sub: 'Copy-paste HTML dashboard cards:<br>keep the code, change only the JSON', facts: '37 cards · 14 chart types · MIT License' },
+  ko: { title: '만들기 까다로운 차트를<br><em>붙여 넣기 한 번으로</em>', sub: '생키 · 범프 · 퍼널 · 워터폴을<br>HTML 조각 하나로 복사해 씁니다', facts: '설치할 라이브러리 없음 · MIT 라이선스' },
+  en: { title: 'Hard-to-build charts<br><em>in a single paste</em>', sub: 'Sankey, bump, funnel and waterfall,<br>each in one HTML snippet', facts: 'Nothing to install · MIT License' },
 };
 
 const page = (lang) => `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><style>
@@ -40,7 +40,7 @@ p { margin: 26px 0 0; font-size: 22px; line-height: 1.6; color: rgba(255, 255, 2
 .cards .b { margin-top: 120px; }
 </style></head><body>
 <div class="copy"><span class="line">Vizney Blocks</span><h1>${T[lang].title}</h1><p>${T[lang].sub}</p><div class="facts">${T[lang].facts}</div></div>
-<div class="cards"><div>${card(lang, 'kpi-line')}</div><div class="b">${card(lang, 'bar-ranking')}</div></div>
+<div class="cards"><div>${card(lang, 'sankey-levels')}</div><div class="b">${card(lang, 'bump-basic')}</div></div>
 <div class="foot"><img src="${WORDMARK}" alt="Vizney"></div>
 </body></html>`;
 

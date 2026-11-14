@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.44 · Bar Chart · Bar - Stacked 100% (bar-stacked-100)
+<!-- Vizney Blocks v0.45 · Bar Chart · Bar - Stacked 100% (bar-stacked-100)
      https://blocks.vizney.com/cards/bar-stacked-100.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">

@@ -258,8 +258,9 @@
     if (act === 'code') openCode(id);
     else if (act === 'copy') openMenu(t);
     else if (act === 'copy-code' || act === 'copy-prompt' || act === 'copy-link') {
-      const btn = menu && menu.btn;
-      closeMenu(true);
+      const inMenu = Boolean(t.closest('.menu'));   // 갤러리 타일의 버튼은 메뉴 없이 바로 복사합니다
+      const btn = inMenu ? menu && menu.btn : t;
+      if (inMenu) closeMenu(true);
       const body = current[id] || code[id];
       const ok = await copyText(act === 'copy-code' ? body : act === 'copy-prompt' ? (V.prompt || {})[id] + body : linkOf(id));
       if (ok) done(btn, act === 'copy-code' ? T.copied : act === 'copy-prompt' ? T.promptCopied : T.linkCopied);

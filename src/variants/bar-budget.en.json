@@ -1,0 +1,16 @@
+{
+  "title": "Ad Spend by Channel",
+  "subtitle": "Nov 1–14 spend against the monthly budget",
+  "lang": "en",
+  "format": "usd",
+  "decimals": 0,
+  "limitLabel": "Budget",
+  "items": [
+    { "name": "Social", "value": 58000, "limit": 50000 },
+    { "name": "Search", "value": 42000, "limit": 60000 },
+    { "name": "Display", "value": 36000, "limit": 30000 },
+    { "name": "Video", "value": 29000, "limit": 40000 },
+    { "name": "Affiliate", "value": 12000, "limit": 20000 },
+    { "name": "Retargeting", "value": 9000, "limit": 15000 }
+  ]
+}

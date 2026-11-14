@@ -12,7 +12,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.48';
+const VERSION = 'v0.49';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -34,7 +34,7 @@ const core = r('src/core.js').trimEnd();
 // line and bar (marks drawn on the frame), tabs (equal-width metric tabs), table (sortable tables with total rows),
 // waterfall (floating bars on the bar frame), scatter (x/y frame), bump (rank lines), funnel (stepped flows),
 // sankey (node-and-ribbon flows) and radar (polygons on spokes).
-const parts = ['chart', 'curve', 'axis', 'line', 'bar', 'list', 'share', 'tabs', 'table', 'waterfall', 'scatter', 'bump', 'funnel', 'sankey', 'radar'];
+const parts = ['chart', 'curve', 'axis', 'line', 'bar', 'list', 'share', 'tabs', 'table', 'waterfall', 'scatter', 'bump', 'funnel', 'sankey', 'radar', 'slider'];
 const opt = (p) => (existsSync(join(root, p)) ? r(p) : '');
 const partCss = Object.fromEntries(parts.map((p) => [p, opt(`src/${p}.css`).trim()]));
 const partJs = Object.fromEntries(parts.map((p) => [p, opt(`src/${p}.js`).trimEnd()]));
@@ -96,7 +96,7 @@ const purposes = JSON.parse(r('src/variants/purposes.json'));
 const purposesEn = JSON.parse(r('src/variants/purposes.en.json'));
 // Guard (guard.mjs): self-containment, colors only from tokens, heights, scoping, accessibility hooks, example data,
 // meta ↔ files, public addresses, card words through tx() and the English files. `node build.mjs --check` runs only this and needs no font.
-const TIER = { 'kpi-number': 1, 'kpi-gauge': 1.5, 'kpi-paired-bar': 1.5, 'kpi-stacked-bar': 1.5 };
+const TIER = { 'kpi-number': 1, 'kpi-gauge': 1.5, 'kpi-paired-bar': 1.5, 'kpi-stacked-bar': 1.5, 'control-range': 1, 'control-date': 1 };
 const checked = guard({
   root, cats, parts, partCss, partJs, tokens, tier: TIER, fontLink: FONT_LINK, en: EN, purposes, purposesEn,
   snippets: Object.fromEntries(builtAll.flatMap((c) => c.variants.map((v) => [v.id, v.code]))),
@@ -130,15 +130,15 @@ const SKILL_CMD = 'npx skills add yehwanhwang/vizney-blocks';
 // shared; the old /en/ pages redirect to /, and the old /en/ files (cards .txt, llms.txt, tokens.css) stay as English copies.
 // The home page's description (v0.45), also its meta description.
 const GDESC = {
-  ko: '만들기 까다로운 차트를 붙여 넣기 한 번으로. 생키, 범프, 퍼널, 워터폴처럼 그리려면 배치 계산이 필요한 차트를 HTML 조각 하나에 담았습니다. 복사해 붙이고 JSON 값만 바꾸세요.',
-  en: 'Hard-to-build charts in a single paste. Sankey, bump, funnel and waterfall charts, the kind that need layout math to draw, each in one HTML snippet. Copy it, paste it and change only the JSON.',
+  ko: '움직임으로 읽는 차트와 대시보드 컨트롤을 HTML 조각 하나씩에 담았습니다. 한도를 넘긴 값은 깜빡여 알리고, 기간과 범위는 슬라이더로 고르며, 데이터가 바뀌면 차트가 그 자리에서 다시 그려집니다. 복사해 붙이고 JSON 값만 바꾸세요.',
+  en: 'Charts you read through their motion, and the dashboard controls that go with them, each in one HTML snippet. Values over a limit blink to warn you, periods and ranges are picked with sliders, and when the data changes the chart redraws in place. Copy it, paste it and change only the JSON.',
 };
 const WORDS = {
   ko: {
     html: 'ko', og: 'ko_KR', other: { lang: 'en', label: 'English' },
     skip: '본문으로 건너뛰기', menu: '주 메뉴', more: '더 보기', cards: '카드', usage: '쓰는 법', guide: '차트 가이드', find: '카드 찾기', found: '찾은 카드',
     footFont: '글꼴 VZ Sans(Spoqa Han Sans Neo 부분 글꼴)', footNav: '바닥글', footBlog: '블로그', footContact: '문의',
-    copy: '복사', aiLink: 'AI용 링크', close: '닫기', code: '코드', viewCode: '코드 보기', copyCode: '카드 코드 복사', copyCodeNote: 'HTML에 붙여 넣습니다', gTitle: 'Blocks', gDesc: GDESC.ko, gAria: '카드 갤러리', tPrompt: '프롬프트 복사', tCode: '코드 복사', copyPrompt: '프롬프트 복사', copyPromptNote: '규칙과 코드를 채팅 AI에 줍니다', copyLink: 'AI용 링크 복사', copyLinkNote: (id) => `${id}.txt 주소를 AI에 줍니다`,
+    copy: '복사', aiLink: 'AI용 링크', close: '닫기', code: '코드', viewCode: '코드 보기', copyCode: '카드 코드 복사', copyCodeNote: 'HTML에 붙여 넣습니다', gTitle: 'Blocks', gDesc: GDESC.ko, toLight: '밝은 바탕으로 보기', toDark: '어두운 바탕으로 보기', gAria: '카드 갤러리', tPrompt: '프롬프트 복사', tCode: '코드 복사', copyPrompt: '프롬프트 복사', copyPromptNote: '규칙과 코드를 채팅 AI에 줍니다', copyLink: 'AI용 링크 복사', copyLinkNote: (id) => `${id}.txt 주소를 AI에 줍니다`,
     eyebrow: `카드 ${N.cards}종 · 차트 ${N.cats}가지 · MIT 라이선스`, h1one: '분석가의 판단을 담은 대시보드 카드',
     lede: '카드를 복사해 HTML에 붙여 넣고 JSON만 바꾸세요. 증감, 비중, 달성률은 카드가 계산하고, 색과 강조는 Vizney 차트 가이드의 규칙을 따릅니다.',
     purposeTitle: '목적으로 고르기', purposeSub: '보여줄 것부터 정하세요. 목적마다 기본 카드를 먼저 쓰고, 다른 카드는 조건이 맞을 때만 고릅니다.', base: '기본',
@@ -163,16 +163,16 @@ const WORDS = {
     layoutList: ['KPI 카드는 한 줄에 네 장까지 둡니다.', '바 리스트와 표는 여섯 줄까지 2단위에 들어갑니다. 더 길면 줄 수가 같은 카드끼리 한 줄에 둡니다.', '비중 카드의 기타가 셋째 조각보다 크면 Bar - Ranking을 씁니다.', '전체 폭은 폭이 정보량인 카드(여러 선의 13개월 라인, 열이 많은 표·히트맵, 항목이 많은 워터폴, 생키)에만 줍니다.', '카드 사이에 묶음 제목을 두지 않습니다. 화면 제목과 기준일·출처 한 줄이면 됩니다.'],
     aiList: 'AI용 목록 llms.txt', kinds: '차트 종류', crumb: '현재 위치', nCards: (n) => `카드 ${n}장`, height: (h) => `높이 ${h}`, nInGroup: (n) => `${n}장`, judgment: (n) => `들어 있는 판단 ${n}`,
     pagerAria: '이전과 다음 차트', prev: '이전', next: '다음', codeText: '코드(텍스트)',
-    homeTitle: 'Vizney Blocks · 만들기 까다로운 차트를 붙여 넣기 한 번으로', catTitle: (name) => `${name} · Vizney Blocks`, catDesc: (lede, n) => `${lede} 복사해 붙여 쓰는 HTML 카드 ${n}종.`,
+    homeTitle: 'Vizney Blocks · 움직임으로 읽는 차트와 대시보드 컨트롤', catTitle: (name) => `${name} · Vizney Blocks`, catDesc: (lede, n) => `${lede} 복사해 붙여 쓰는 HTML 카드 ${n}종.`,
     homeDesc: GDESC.ko,
     // site.js
-    js: { copied: '복사됨', linkCopied: '링크 복사됨', promptCopied: '프롬프트 복사됨', sub: '<b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.', blocked: '복사가 막혀 있습니다. 코드를 선택해 두었으니 Ctrl+C(⌘+C)로 복사하세요.', none: '찾는 카드가 없습니다.', exampleTitle: '영업 현황 예시', exampleSub: (n) => `카드 ${n}장을 격자에 넣은 코드입니다. 각 카드의 <b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.`, exampleComment: (n) => `<!-- Vizney Blocks 예시 · 영업 현황(카드 ${n}장)\n     ${SITE}/ko/ · 각 카드의 JSON만 바꾸세요. -->` },
+    js: { copied: '복사됨', linkCopied: '링크 복사됨', promptCopied: '프롬프트 복사됨', toLight: '밝은 바탕으로 보기', toDark: '어두운 바탕으로 보기', sub: '<b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.', blocked: '복사가 막혀 있습니다. 코드를 선택해 두었으니 Ctrl+C(⌘+C)로 복사하세요.', none: '찾는 카드가 없습니다.', exampleTitle: '영업 현황 예시', exampleSub: (n) => `카드 ${n}장을 격자에 넣은 코드입니다. 각 카드의 <b>주황 줄</b>의 데이터(JSON)만 바꾸면 됩니다. 나머지는 그대로 둡니다.`, exampleComment: (n) => `<!-- Vizney Blocks 예시 · 영업 현황(카드 ${n}장)\n     ${SITE}/ko/ · 각 카드의 JSON만 바꾸세요. -->` },
   },
   en: {
     html: 'en', og: 'en_US', other: { lang: 'ko', label: '한국어' },
     skip: 'Skip to content', menu: 'Main menu', more: 'More', cards: 'Cards', usage: 'How to use', guide: 'Chart guide', find: 'Find a card', found: 'Cards found',
     footFont: 'Font VZ Sans (a subset of Spoqa Han Sans Neo)', footNav: 'Footer', footBlog: 'Blog', footContact: 'Contact',
-    copy: 'Copy', aiLink: 'AI link', close: 'Close', code: 'Code', viewCode: 'view code', copyCode: 'Copy card code', copyCodeNote: 'Paste it into your HTML', gTitle: 'Blocks', gDesc: GDESC.en, gAria: 'Card gallery', tPrompt: 'Copy prompt', tCode: 'Copy code', copyPrompt: 'Copy prompt', copyPromptNote: 'Rules and code for a chat AI', copyLink: 'Copy AI link', copyLinkNote: (id) => `Give an AI the ${id}.txt address`,
+    copy: 'Copy', aiLink: 'AI link', close: 'Close', code: 'Code', viewCode: 'view code', copyCode: 'Copy card code', copyCodeNote: 'Paste it into your HTML', gTitle: 'Blocks', gDesc: GDESC.en, toLight: 'Show on light', toDark: 'Show on dark', gAria: 'Card gallery', tPrompt: 'Copy prompt', tCode: 'Copy code', copyPrompt: 'Copy prompt', copyPromptNote: 'Rules and code for a chat AI', copyLink: 'Copy AI link', copyLinkNote: (id) => `Give an AI the ${id}.txt address`,
     eyebrow: `${N.cards} cards · ${N.cats} chart types · MIT License`, h1one: 'Dashboard cards with an analyst’s judgment built in',
     lede: 'Copy a card into your HTML and change only its JSON. The card computes changes, shares and attainment, and its colors and emphasis follow the rules of the Vizney chart guide.',
     purposeTitle: 'Pick by purpose', purposeSub: 'Decide what to show first. Each purpose has a base card; pick another card only when its condition fits.', base: 'Base',
@@ -197,9 +197,9 @@ const WORDS = {
     layoutList: ['Up to four KPI cards per row.', 'Bar lists and tables fit 2 units up to six rows. Longer ones go in a row with cards of the same row count.', 'When a share card’s Other is larger than its third slice, use Bar - Ranking.', 'Give the full width only to cards whose width carries information (a 13-month line with several series, a wide table or heatmap, a long waterfall, a sankey).', 'No group headings between card rows: one screen title and one line for the date and source.'],
     aiList: 'llms.txt for AI', kinds: 'Chart types', crumb: 'You are here', nCards: (n) => `${n} cards`, height: (h) => `Height ${h}`, nInGroup: (n) => `${n} cards`, judgment: (n) => `Judgment built in (${n})`,
     pagerAria: 'Previous and next chart', prev: 'Previous', next: 'Next', codeText: 'Code (text)',
-    homeTitle: 'Vizney Blocks · Hard-to-build charts in a single paste', catTitle: (name) => `${name} · Vizney Blocks`, catDesc: (lede, n) => `${lede} ${n} copy-paste HTML cards.`,
+    homeTitle: 'Vizney Blocks · Charts in motion and dashboard controls', catTitle: (name) => `${name} · Vizney Blocks`, catDesc: (lede, n) => `${lede} ${n} copy-paste HTML cards.`,
     homeDesc: GDESC.en,
-    js: { copied: 'Copied', linkCopied: 'Link copied', promptCopied: 'Prompt copied', sub: 'Change only the data (JSON) on the <b>orange lines</b>. Leave the rest as it is.', blocked: 'Copying is blocked here. The code is selected; press Ctrl+C (⌘+C) to copy it.', none: 'No card found.', exampleTitle: 'Sales Overview example', exampleSub: (n) => `The code of ${n} cards in a grid. In each card, change only the data (JSON) on the <b>orange lines</b>. Leave the rest as it is.`, exampleComment: (n) => `<!-- Vizney Blocks example · Sales Overview (${n} cards)\n     ${SITE}/ · Change only each card's JSON. -->` },
+    js: { copied: 'Copied', linkCopied: 'Link copied', promptCopied: 'Prompt copied', toLight: 'Show on light', toDark: 'Show on dark', sub: 'Change only the data (JSON) on the <b>orange lines</b>. Leave the rest as it is.', blocked: 'Copying is blocked here. The code is selected; press Ctrl+C (⌘+C) to copy it.', none: 'No card found.', exampleTitle: 'Sales Overview example', exampleSub: (n) => `The code of ${n} cards in a grid. In each card, change only the data (JSON) on the <b>orange lines</b>. Leave the rest as it is.`, exampleComment: (n) => `<!-- Vizney Blocks example · Sales Overview (${n} cards)\n     ${SITE}/ · Change only each card's JSON. -->` },
   },
 };
 const locale = (lang) => {
@@ -244,6 +244,8 @@ const ext = (href) => `href="${href}" target="_blank" rel="noopener"`;
 
 const IC = {
   search: '<svg class="ic" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>',
+  sun: '<svg class="ic ic-sun" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1.5v1.6M8 12.9v1.6M1.5 8h1.6M12.9 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1"/></svg>',
+  moon: '<svg class="ic ic-moon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 9.6A5.8 5.8 0 0 1 6.4 2.5a5.8 5.8 0 1 0 7.1 7.1z"/></svg>',
   out: '<svg class="ic" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2.5h5.5V8M9.5 2.5L3 9"/></svg>',
   code: '<svg class="ic" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M5 4L2 7l3 3M9 4l3 3-3 3"/></svg>',
   copy: '<svg class="ic" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><rect x="4.5" y="4.5" width="7.5" height="7.5" rx="1.5"/><path d="M9.5 4.5V3A1 1 0 0 0 8.5 2H3A1 1 0 0 0 2 3v5.5a1 1 0 0 0 1 1h1.5"/></svg>',
@@ -308,10 +310,15 @@ const dialog = (L) => `<dialog class="dlg" id="dlg" aria-labelledby="dlg-title" 
 
 const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 
-// Home (v0.45): the title area of a Vizney blog category page (title and description, sized from the blog), then a
-// gallery of the cards that take real work to build by hand. Each tile holds the live card, its name and chart type, and two
-// copy buttons, so a button always belongs to the chart above it.
-const GALLERY = ['sankey-levels', 'bump-basic', 'funnel-flow', 'treemap-basic', 'waterfall-subtotal', 'radar-basic', 'sankey-basic', 'scatter-connected', 'waterfall-basic'];
+// Home (v0.45, v0.49): the title area of a Vizney blog category page (title and description, sized from the blog), then a
+// gallery of blocks. Each tile holds the live card as it is copied (its head shows the title of the example data) with a
+// light/dark switch in its top right corner; under it come the block name and two copy buttons, so a button always belongs
+// to the block above it. A block lower than its row (a 1-unit control) sits in the middle of the tile.
+// v0.49: the gallery is being rebuilt one block at a time. Only the blocks of the new direction are listed; the earlier cards
+// and the chart pages are hidden (not linked from the home page, the search or the sitemap) but keep their addresses and code.
+// Blocks that move (data-vzb-loop) replay on the first screen instead of stopping at the end.
+const GALLERY = ['bar-budget', 'control-range', 'control-date'];
+const LOOP = new Set(GALLERY);
 const galleryHead = (L) => `<section class="wrap ghead" aria-labelledby="ghead-title">
 <h1 id="ghead-title">${L.t.gTitle}</h1>
 <p>${L.t.gDesc}</p>
@@ -320,9 +327,12 @@ const gallery = (m, L) => `<section class="wrap gal" id="cards" aria-label="${L.
 <ul class="gal-grid">
 ${GALLERY.map((id) => {
     const v = L.byId[id];
-    return `<li class="gt" aria-labelledby="gt-${id}">
-<div class="gt-pv" data-mount="${id}" style="min-height:${tierPx(v)}px"></div>
-<div class="gt-meta"><a class="gt-name" id="gt-${id}" href="${m.card(v)}">${h(v.name)}</a><span class="gt-kind">${h(L.catName[v.cat])}</span></div>
+    return `<li class="gt is-dark" id="${id}" data-gal="${id}" aria-labelledby="gt-${id}">
+<div class="gt-box"><div class="gt-in">
+<div class="gt-pv" data-mount="${id}"${LOOP.has(id) ? ' data-vzb-loop' : ''} style="min-height:${tierPx(v)}px"></div>
+<button type="button" class="gt-theme" data-act="theme" data-id="${id}" aria-label="${L.t.toLight}" title="${L.t.toLight}">${IC.sun}${IC.moon}</button>
+</div></div>
+<div class="gt-meta"><span class="gt-name" id="gt-${id}">${h(v.name)}</span></div>
 <div class="gt-acts"><button type="button" class="btn" data-act="copy-prompt" data-id="${id}" aria-label="${h(v.name)} ${L.t.tPrompt}">${IC.prompt}<span>${L.t.tPrompt}</span></button><button type="button" class="btn" data-act="copy-code" data-id="${id}" aria-label="${h(v.name)} ${L.t.tCode}">${IC.copy}<span>${L.t.tCode}</span></button></div>
 </li>`;
   }).join('\n')}
@@ -356,12 +366,12 @@ const usage = (m, L) => `<section class="${m.one ? '' : 'wrap '}sec" id="usage" 
 <div class="sec-hd"><div><h2 id="usage-title">${L.t.usageTitle}</h2><p>${L.t.usageSub}</p></div></div>
 <ol class="steps">
 <li class="step"><span class="num" aria-hidden="true">1</span><h3>${L.t.step1}</h3><p>${L.t.step1p}</p><pre class="snip">&lt;div class="vzb-card"
-     data-vzb="bar-basic"&gt;
+     data-vzb="bar-budget"&gt;
   …
 &lt;/div&gt;</pre></li>
 <li class="step"><span class="num" aria-hidden="true">2</span><h3>${L.t.step2}</h3><p>${L.t.step2p}</p><pre class="snip">${L.t.step2code}</pre></li>
 <li class="step"><span class="num" aria-hidden="true">3</span><h3>${L.t.step3}</h3><p>${L.t.step3p(m.tokens)}</p><pre class="snip">:root {
-  --vzb-primary: #0f766e;
+  --vzb-primary: #5856d6;
   --vzb-font: 'Pretendard';
 }</pre></li>
 <li class="step"><span class="num" aria-hidden="true">4</span><h3>${L.t.step4}</h3><p>${L.t.step4p}</p><pre class="snip">${L.t.step4code(L.files)}</pre></li>
@@ -476,13 +486,31 @@ const FIELD_NOTE = {
     labels: 'period names, the same length as the values; null for a period without a value', series: '[{ name, values }]', rows: 'table rows', lang: 'en: the words the card prints itself in English; empty is Korean',
   },
 };
+// Cards whose fields mean something other than the common note.
+const FIELD_OVERRIDE = {
+  'bar-budget': {
+    ko: { title: '무엇의 값인지(예: 채널별 광고비)', subtitle: '기간과 한도의 기준(예: 11월 1일–14일 집행액, 월 예산 대비)', limitLabel: '한도의 이름(예: 예산 · 정원). 눈금 위와 문구에 쓴다. 비우면 한도', items: '[{ name, value, limit }]. value는 지금까지 쓴 양, limit은 넘으면 안 되는 한도. 받은 순서대로 6개까지' },
+    en: { title: 'what the values are (e.g. Ad Spend by Channel)', subtitle: 'the period and what the limit is (e.g. Nov 1–14 spend against the monthly budget)', limitLabel: 'the name of the limit (e.g. Budget, Seats), written above the tick and in the summary; Limit when empty', items: '[{ name, value, limit }]: value is the amount used so far, limit the cap it should not cross; drawn in the order given, up to 6' },
+  },
+  'control-range': {
+    ko: { title: '무엇을 거르는지(예: 예산 규모)', subtitle: '기준(예: 채널 월 예산). 없어도 된다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '고를 수 있는 가장 작은 값', max: '고를 수 있는 가장 큰 값', step: '한 칸의 크기. 비우면 범위를 100칸쯤으로 나눈다', value: '[시작, 끝]. 비우면 전체 범위' },
+    en: { title: 'what it filters (e.g. Budget Size)', subtitle: 'the basis (e.g. monthly budget per channel); optional', name: 'detail.name of the vzb-change event sent when the value changes', min: 'the smallest value that can be picked', max: 'the largest value that can be picked', step: 'the size of one step; empty splits the range into about 100 steps', value: '[start, end]; empty is the whole range' },
+  },
+  'control-date': {
+    ko: { title: '무엇의 기간인지(예: 기간)', subtitle: '기준(예: 집행일 기준). 없어도 된다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '고를 수 있는 첫 달(YYYY-MM)이나 첫 날(YYYY-MM-DD). 적은 모양이 한 칸의 단위가 된다', max: '고를 수 있는 마지막 달이나 날. min과 같은 모양으로', value: '[시작, 끝]. min과 같은 모양으로 적고, 비우면 전체 기간' },
+    en: { title: 'what the period is of (e.g. Period)', subtitle: 'the basis (e.g. by spend date); optional', name: 'detail.name of the vzb-change event sent when the value changes', min: 'the first month (YYYY-MM) or day (YYYY-MM-DD) that can be picked; the form you write sets the step', max: 'the last month or day, in the same form as min', value: '[start, end] in the same form as min; empty is the whole period' },
+  },
+};
 const promptHead = (v, L) => {
   const en = L.lang === 'en';
   const keys = Object.keys(JSON.parse(r(vp(v.id, en ? 'en.json' : 'json'))));
   const N = FIELD_NOTE[L.lang];
-  const noted = keys.filter((k) => N[k]).map((k) => `- ${k}: ${N[k]}`);
+  const O = (FIELD_OVERRIDE[v.id] || {})[L.lang] || {};
+  const noted = keys.filter((k) => O[k] || N[k]).map((k) => `- ${k}: ${O[k] || N[k]}`);
+  Object.keys(O).filter((k) => !keys.includes(k)).forEach((k) => noted.push(`- ${k}: ${O[k]}`));   // fields the example leaves out
   // Fields the example leaves out but the common-fields rule names for this card.
   if (!keys.includes('value') && (v.id === 'kpi-line' || v.id === 'kpi-bar')) noted.push(en ? '- value: optional; the last value when it is left out' : '- value: 비우면 마지막 값');
+  noted.push(en ? '- theme: optional; dark draws the card on Vizney black with yellow as the first color, empty is white' : '- theme: dark면 Vizney 검정 바탕에 노랑을 첫째 색으로 그린다. 비우면 흰 바탕');
   if (v.uses.includes('curve')) noted.push(en ? '- curve: optional line shape: smooth (default) · linear · step' : '- curve: 선 모양. smooth(기본) · linear · step');
   const rules = v.rules.map((x) => `- ${plain(x)}`).join('\n');
   return en ? `Draw the following with the Vizney Blocks card below (${v.name}).
@@ -536,7 +564,8 @@ ${noted.join('\n')}
 `;
 };
 
-// Page data for site.js: the search index, the words site.js prints, and the code of the cards this page shows.
+// Page data for site.js: the search index (on the site, only the gallery blocks, each leading to its tile on the home page while the
+// chart pages are hidden), the words site.js prints, and the code of the cards this page shows.
 const data = (m, page, ids, L) => `<script>window.VZB = ${esc({
   mode: m.one ? 'one' : 'site',
   page,
@@ -545,7 +574,7 @@ const data = (m, page, ids, L) => `<script>window.VZB = ${esc({
   files: L.files,
   t: Object.fromEntries(Object.entries(L.t.js).map(([k, v]) => [k, typeof v === 'function' ? v(EXAMPLE.length) : v])),
   cats: L.cats.map((c) => ({ id: c.id, name: c.name })),
-  index: L.variants.map((v) => ({ id: v.id, name: v.name, cat: v.cat, catName: L.catName[v.cat], when: plain(v.when), tags: L.tagsOf(v.id), url: m.card(v) })),
+  index: (m.one ? L.variants : GALLERY.map((id) => L.byId[id])).map((v) => ({ id: v.id, name: v.name, cat: v.cat, catName: L.catName[v.cat], when: plain(v.when), tags: L.tagsOf(v.id), url: m.one ? m.card(v) : `${L.base}/#${v.id}` })),
   example: page === 'home' ? EXAMPLE : [],
   retired: Object.fromEntries(retired.map((v) => [v.id, m.card(L.byId[v.retired.use])])),
   code: Object.fromEntries(ids.map((id) => [id, L.byId[id].code])),
@@ -1222,11 +1251,11 @@ for (const f of ['favicon.png', 'favicon.ico', 'apple-touch-icon.png']) copyFile
 copyFileSync(join(root, 'tools/OFL.txt'), join(docs, 'OFL.txt'));
 // Share images: English (og.png, the main site) and Korean (og-ko.png).
 for (const f of ['og.png', 'og-ko.png']) if (existsSync(join(root, `tools/${f}`))) copyFileSync(join(root, `tools/${f}`), join(docs, f));
-// The sitemap lists both languages and links each page to its translation.
+// The sitemap lists the home page of both languages and links each to its translation (the chart pages are hidden for now).
 const alt = (p) => LOCALES.map((l) => `<xhtml:link rel="alternate" hreflang="${l.lang}" href="${SITE}${l.base}${p}"/>`).join('');
 writeFileSync(join(docs, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${LOCALES.flatMap((L) => ['/', ...L.cats.map((c) => `/${c.id}/`)].map((p) => `<url><loc>${SITE}${L.base}${p}</loc>${alt(p)}</url>`)).join('\n')}
+${LOCALES.flatMap((L) => ['/'].map((p) => `<url><loc>${SITE}${L.base}${p}</loc>${alt(p)}</url>`)).join('\n')}
 </urlset>
 `);
 writeFileSync(join(docs, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);

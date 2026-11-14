@@ -34,11 +34,16 @@
     '%s 목록, %s줄. 위아래 화살표로 항목의 자세한 값을 봅니다.': '%s list, %s rows. Use the up and down arrows to see each item.',
     '%s 순위 변화, %s–%s. 위아래 화살표로 항목을 옮깁니다. 모든 순위는 이어지는 표에 있습니다.': '%s rank changes, %s–%s. Use the up and down arrows to move between items. Every rank is in the table that follows.',
     '%s 퍼널, %s. 좌우 화살표로 단계를 옮깁니다.': '%s funnel, %s. Use the left and right arrows to move between steps.',
+    '처음부터 다시': 'Replay',
+    '한도': 'Limit', '차이': 'Difference', '%s 초과|한도': '%s over', '%1 초과 · %2의 %3%': '%1 over · %3% of %2', '%1 남음 · %2의 %3%': '%1 left · %3% of %2',
+    '%1개 중 %2개 %3 초과 · +%4': '%2 of %1 over %3 · +%4', '%1개 중 %2개 %3 초과': '%2 of %1 over %3', '모두 %s 이내': 'All within %s', '표시할 항목이 없습니다.': 'No items to show.',
+    '%1. 항목 %2개 가운데 %3개가 %4 초과입니다. 위아래 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %3 of %2 items are over %4. Use the up and down arrows to move between items. Every value is in the table that follows.',
+    'min과 max를 확인하세요.': 'Check min and max.', '%s 최소': 'Minimum %s', '%s 최대': 'Maximum %s', '%s 시작': 'Start of %s', '%s 끝': 'End of %s',
     '%s 레이더 차트, 항목 %s개와 대상 %s개. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s radar chart, %s axes and %s series. Use the left and right arrows to move between axes. Every value is in the table that follows.',
     '%s 생키 차트, 노드 %s개와 흐름 %s개. 좌우 화살표로 노드와 흐름을 차례로 짚습니다. 모든 흐름은 이어지는 표에 있습니다.': '%s Sankey chart, %s nodes and %s flows. Use the left and right arrows to step through nodes and flows. Every flow is in the table that follows.',
     '%s 산점도, 점 %s개. 좌우 화살표로 점을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s scatter plot, %s points. Use the left and right arrows to move between points. Every value is in the table that follows.',
     '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
-    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
+    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'items의 value와 limit을 확인하세요.': 'Check value and limit in items.', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
   };
   // tx(d 또는 f, 원문, 값…): d.lang(format()이 f에 옮겨 둡니다)이 en이면 영어 문구를, 아니면 원문을 돌려줍니다.
   function tx(x, s, ...a) {
@@ -158,12 +163,30 @@
     card.append(fig);
   }
   // 같은 종류의 카드를 모두 찾아 그립니다. 코드를 두 번 붙여 넣어도 카드는 한 번만 그립니다.
+  // 데이터가 바뀌면 다시 그립니다: 페이지의 스크립트가 카드 안 JSON(<script type="application/json">)의 글자를 바꾸면 그 카드만
+  // 새 요소로 갈아 끼워 새로 그립니다(필터 · 기간 컨트롤과 잇는 길). 갈아 끼운 카드에는 data-vzb-live가 붙어, 움직이는 카드는
+  // 처음부터 다시 재생하지 않고 마지막 장면을 바로 그립니다. 예전 요소가 페이지에서 빠지므로 그 카드의 움직임도 함께 끝납니다.
   function mount(type, draw) {
+    const watch = (card, src) => {
+      if (!src || !window.MutationObserver) return;
+      const mo = new MutationObserver(() => {
+        mo.disconnect();
+        if (!card.isConnected) return;
+        const next = card.cloneNode(false);
+        next.removeAttribute('data-vzb-ready');
+        next.setAttribute('data-vzb-live', '');
+        next.append(src);
+        card.replaceWith(next);
+        run();
+      });
+      mo.observe(src, { childList: true, characterData: true, subtree: true });
+    };
     const run = () => {
       document.querySelectorAll(`.vzb-card[data-vzb="${type}"]:not([data-vzb-ready])`).forEach((card) => {
         card.setAttribute('data-vzb-ready', '');
         const src = card.querySelector('script[type="application/json"]');
         const raw = src ? src.textContent : '';
+        watch(card, src);
         let d;
         try { d = JSON.parse(raw); } catch (e) {
           card.append(el('p', 'vzb-error', tx(/"lang"\s*:\s*"en"/.test(raw) ? { lang: 'en' } : null, '카드 데이터(JSON)를 읽지 못했습니다: %s', e.message)));
@@ -171,6 +194,8 @@
         }
         card.setAttribute('role', 'group');
         if (d.title) card.setAttribute('aria-label', d.title);
+        // 어두운 바탕: JSON에 "theme": "dark"를 적으면 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다(tokens.css의 .vzb-dark).
+        card.classList.toggle('vzb-dark', d.theme === 'dark');
         try { draw(card, d, format(d)); } catch (e) {
           card.append(el('p', 'vzb-error', tx(d, '카드를 그리지 못했습니다: %s', e.message)));
         }

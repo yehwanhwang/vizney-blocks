@@ -117,7 +117,7 @@
   }
   $$('[data-mount]').forEach((host) => {
     const id = host.dataset.mount;
-    if (!code[id]) return;
+    if (!code[id] || host.closest('.gt')) return;
     current[id] = current[id] || code[id];
     mount(host, current[id]);
   });
@@ -129,6 +129,8 @@
   function withField(src, field, value) {
     return src.replace(/(<script type="application\/json">\n)([\s\S]*?)(\n<\/script>)/, (m, a, body, b) => {
       const data = JSON.parse(body), out = {};
+      // 이미 있는 필드는 제자리에서 값만 바꾸고, 없는 필드는 format(없으면 subtitle) 뒤에 넣습니다.
+      if (field in data && value !== undefined) { data[field] = value; return a + pretty(data) + b; }
       const after = 'format' in data ? 'format' : 'subtitle';
       for (const k of Object.keys(data)) {
         if (k === field) continue;
@@ -139,6 +141,22 @@
       return a + pretty(out) + b;
     });
   }
+  // 갤러리 타일: 카드는 복사되는 그대로(예시 데이터의 제목과 부제) 그립니다. 바탕은 어둡게(Vizney 검정) 시작하고
+  // 카드 오른쪽 위 단추로 타일마다 밝게 바꿀 수 있습니다. 복사하는 코드는 예시 데이터 그대로에 보이는 바탕만 따라갑니다("theme": "dark").
+  // 블록 이름은 카드 아래에 있습니다. 상세 화면(차트 페이지)은 다시 만들 때까지 숨겨 두어 타일에서 링크하지 않습니다.
+  function setTheme(tile, dark) {
+    const id = tile.dataset.gal, host = $('[data-mount]', tile), btn = $('[data-act="theme"]', tile);
+    tile.classList.toggle('is-dark', dark);
+    current[id] = dark ? withField(code[id], 'theme', 'dark') : code[id];
+    mount(host, current[id]);
+    btn.setAttribute('aria-label', dark ? T.toLight : T.toDark);
+    btn.title = dark ? T.toLight : T.toDark;
+  }
+  $$('.gt[data-gal]').forEach((tile) => {
+    if (!code[tile.dataset.gal]) return;
+    setTheme(tile, tile.classList.contains('is-dark'));
+  });
+
   $$('[data-opt]').forEach((bar) => {
     const field = bar.dataset.opt, scope = bar.closest('.cat') || document;
     bar.addEventListener('click', (e) => {
@@ -256,6 +274,7 @@
     if (!t) return;
     const id = t.dataset.id, act = t.dataset.act;
     if (act === 'code') openCode(id);
+    else if (act === 'theme') { const tile = t.closest('.gt'); setTheme(tile, !tile.classList.contains('is-dark')); }
     else if (act === 'copy') openMenu(t);
     else if (act === 'copy-code' || act === 'copy-prompt' || act === 'copy-link') {
       const inMenu = Boolean(t.closest('.menu'));   // 갤러리 타일의 버튼은 메뉴 없이 바로 복사합니다

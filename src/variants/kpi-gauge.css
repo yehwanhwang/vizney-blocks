@@ -8,4 +8,4 @@
 .vzb-gg-center { position: absolute; left: 0; right: 0; bottom: 0; text-align: center; }
 .vzb-gg-center .vzb-num { font-size: 32px; line-height: 38px; }
 .vzb-gg-cap { margin-top: 2px; color: var(--vzb-muted); }
-.vzb-gg-cap.vzb-bad { color: var(--vzb-bad); }
+.vzb-gg-cap.vzb-bad { color: var(--vzb-bad-ink); }

@@ -3,7 +3,7 @@
      모든 단이 같은 비율(1px당 값)을 써서 띠 두께를 단끼리 견줄 수 있고, 단마다 세로 가운데에 모읍니다. 노드 사이는 높이의 12%(16–32px)만큼 띄웁니다.
      이름과 값은 첫 단은 노드 왼쪽, 나머지 단은 노드 오른쪽에 두 줄로 적고, 겹치면 위아래로 밀어 냅니다.
      띠나 노드(이름 포함)에 마우스를 올리거나, 그래프에 포커스한 뒤 좌우 화살표를 누르면(노드 다음 흐름 순서) 나머지를 옅게 하고 툴팁을 띄웁니다.
-     cfg: paint(nodes, links, cols) 노드와 띠의 tone(색 이름)을 정합니다. 띠는 정하지 않으면 출발 노드의 색입니다. */
+     cfg: paint(nodes, links, cols) 노드와 띠의 tone(색 이름)을 정합니다. 띠는 정하지 않으면 출발 노드의 색이고, strong을 주면 한 단계 진하게 칠합니다. */
   function sankeyCard(card, d, f, cfg) {
     const nodes = [], byId = new Map();
     const node = (id) => {
@@ -98,7 +98,7 @@
       const linkG = svgEl('g', {}), nodeG = svgEl('g', {}), labG = svgEl('g', {});
       // 굵은 띠를 먼저 그려 가는 띠가 위에 오게 합니다(가는 띠도 짚을 수 있게).
       links.slice().sort((a, b) => b.value - a.value).forEach((l) => {
-        l.el = svgEl('path', { d: ribbon(l), class: `vzb-sk-link vzb-${l.tone}`, 'data-k': l.k });
+        l.el = svgEl('path', { d: ribbon(l), class: `vzb-sk-link vzb-${l.tone}${l.strong ? ' is-strong' : ''}`, 'data-k': l.k });
         linkG.append(l.el);
       });
       nodes.forEach((n) => {

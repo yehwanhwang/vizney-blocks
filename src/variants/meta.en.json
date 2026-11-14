@@ -103,8 +103,8 @@
   },
   "control": {
    "name": "Controls",
-   "intro": "Controls set the period and the ranges of a screen. They use the same head as a card (title and subtitle) and are 1 unit high. When the value changes, the card sends a `vzb-change` event (`detail: { name, value }`), and the current value is also written on the card as `data-vzb-value`. Listen for the event and change the text of the JSON inside a chart card, and that card draws again with the new data. The selected span and the thumbs are drawn in the text color so they do not compete with the data colors of the charts.",
-   "lede": "Controls set the period and the ranges of a screen. They send a `vzb-change` event when the value changes, and a chart card draws again when the JSON inside it changes.",
+   "intro": "Controls set the period, the ranges and the items of a screen, and download its data. They use the same head as a card (title and subtitle) and are 1 unit high. When the value changes, the card sends a `vzb-change` event (`detail: { name, value }`), and the current value is also written on the card as `data-vzb-value`. Listen for the event and change the text of the JSON inside a chart card, and that card draws again with the new data. The selected span and the thumbs are drawn in the text color so they do not compete with the data colors of the charts.",
+   "lede": "Controls set the period, ranges and items of a screen and download its data. They send a `vzb-change` event when the value changes, and a chart card draws again when the JSON inside it changes.",
    "height": "1 unit"
   }
  },
@@ -435,6 +435,25 @@
     "The bubbles are written short, like Jun '26, and when they come close they merge into one \"Jun '26 – Nov '26\" bubble. The first and last steps that can be picked are written under the track.",
     "Each time the value changes, the card sends a `vzb-change` event. `detail.name` is `name` and `detail.value` is `[start, end]` as text in the same form as `min`; the end is part of the period. The current value is also on the card as `data-vzb-value`.",
     "Drag a thumb, press the track to bring the nearer thumb there, or focus a thumb and press the arrow keys to move one step (Page Up and Down about ten steps, Home and End to the end). The thumbs follow the value like a spring and the bubbles lean into the move. With reduced motion turned on, they move at once."
+   ]
+  },
+  "control-chips": {
+   "when": "A control that picks several items from a fixed list as chips. Use it to filter a screen by a few names, such as channels or regions. The All chip at the front shows how many are picked.",
+   "rules": [
+    "List the items in `options` and the first picks in `value` (empty picks all). Past two rows the chips go on one row that scrolls sideways, so about 8 items, all visible at a glance, fit best.",
+    "The All chip at the front (`all`; empty means \"All\", an empty string leaves it out) shows the number picked as a rolling number, and pressing it picks everything, or clears everything when all are picked. How many are on is always in view, so a filter is never left on by mistake.",
+    "Each time the value changes, the card sends a `vzb-change` event. `detail.name` is `name` and `detail.value` is the picked items in the order of `options`. The current value is also on the card as `data-vzb-value`.",
+    "A chip squashes a little when pressed and springs back, and when picked a check is drawn as the chip widens. Picked chips are filled with the text color so they do not compete with the data colors of the charts. Tab moves between chips and Space or Enter picks; with reduced motion turned on, they change at once."
+   ]
+  },
+  "control-download": {
+   "when": "A button that downloads the data of a chart card on the screen as a CSV file. Use it to export exactly what the controls show. Give it a shortcut and keycaps appear in the button, so the keyboard downloads too.",
+   "rules": [
+    "Write the kind of the card to download in `target` (its `data-vzb`, e.g. `bar-budget`). The card takes the first such card on the page and writes its `items` (or the first array of objects in its JSON) as rows, with their number and text fields as columns. It reads the JSON after the controls changed it, so you get what you see.",
+    "`filename` names the file, and a BOM goes at the start so Excel reads non-English text correctly. When there are no rows, the button shakes and briefly says \"No data\".",
+    "Before downloading, the card sends a `vzb-download` event (`detail: { name, target, filename, rows }`). If the page calls `preventDefault()` the card makes no file, so a screen that fetches the source data from a server can use the same button.",
+    "Give a `shortcut` (e.g. `shift+d`, `mod+shift+e`; `mod` is ⌘ on a Mac and Ctrl elsewhere) and keycaps appear in the button; pressing the keys sinks the caps and downloads. The caps teach the shortcut, and their sinking shows the keys took effect. Use a shortcut only once per page.",
+    "When the file is saved, the arrow drops into the tray and turns into a check, the label turns into `done` and the file name turns into the number of rows, coming back after 1.8 s. That way the fact and the size of the download show where the button is. With reduced motion turned on, only the words change."
    ]
   }
  }

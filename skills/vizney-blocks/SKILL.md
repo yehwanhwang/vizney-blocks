@@ -7,7 +7,7 @@ description: "Build dashboard screens with Vizney Blocks (blocks.vizney.com) HTM
 
 > 한국어로 일할 때(사용자가 한국어로 요청하거나 화면 문구가 한국어일 때)는 같은 폴더의 `SKILL.ko.md`를 읽고 그것을 따른다. Working in Korean? Read `SKILL.ko.md` in this folder and follow it instead; it has the same steps and rules with Korean card code.
 
-Vizney Blocks is a set of copy-paste HTML dashboard cards (v0.49, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. Changes, shares, attainment, totals, colors and emphasis are computed and drawn by the card, following the Vizney chart guide.
+Vizney Blocks is a set of copy-paste HTML dashboard cards (v0.50, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. Changes, shares, attainment, totals, colors and emphasis are computed and drawn by the card, following the Vizney chart guide.
 
 ## Steps
 
@@ -115,7 +115,7 @@ For each question the screen answers, use the base card first and another card o
 
 ## Design table
 
-Before writing any card code, lay the screen out as a "row · question · card (id) · height" table, write the assumptions under it, and show it to the user. Put cards of the same height in the same row (KPI - Number · Range Slider · Date Slider 1 unit, KPI - Gauge · KPI - Stacked Bar 1.5 units, the rest 2 units). Paste the cards in the table's row order.
+Before writing any card code, lay the screen out as a "row · question · card (id) · height" table, write the assumptions under it, and show it to the user. Put cards of the same height in the same row (KPI - Number · Range Slider · Date Slider · Filter Chips · Download Button 1 unit, KPI - Gauge · KPI - Stacked Bar 1.5 units, the rest 2 units). Paste the cards in the table's row order.
 
 | Row | Question | Card (id) | Height |
 |---|---|---|---|
@@ -127,7 +127,7 @@ Assumptions: return rate `"better": "down"`; amounts as raw values with `"format
 ## Rules
 
 - Paste the card code you downloaded as it is and change only the JSON values. Do not edit the styles or the script. To use the same card several times, paste the whole card code again and change each JSON.
-- A card fills the width of its slot, and its height is one of 1 · 1.5 · 2 units (1 unit = 168px, --vzb-unit): KPI - Number · Range Slider · Date Slider 1 unit, KPI - Gauge · KPI - Stacked Bar 1.5 units, the rest 2 units. Cards in a row stretch to the tallest one and their graphics sit on the bottom, so to leave no gaps, put cards of the same height in a row.
+- A card fills the width of its slot, and its height is one of 1 · 1.5 · 2 units (1 unit = 168px, --vzb-unit): KPI - Number · Range Slider · Date Slider · Filter Chips · Download Button 1 unit, KPI - Gauge · KPI - Stacked Bar 1.5 units, the rest 2 units. Cards in a row stretch to the tallest one and their graphics sit on the bottom, so to leave no gaps, put cards of the same height in a row.
 - For several cards, give the wrapper a grid: display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:16px. Below 340px, the text in tables, donuts, funnels and waterfalls clips or overlaps. A row of KPI cards alone can go down to 280px, so four fit across a 1280px page.
 - Change colors and the font with the --vzb-* variables on :root (--vzb-primary, --vzb-font, …). The variable list and what each one does are in https://blocks.vizney.com/tokens.css (the same content as the :where(:root) block in the card code). To match a whole page, re-declare that file's values on :root.
 - Common fields: title (metric name), subtitle (period), value (the headline figure of a KPI card; KPI - Line and KPI - Bar use the last value when it is empty), format (usd dollar amounts, shortened to $745.6K · $1.2M · count a count, with its unit in unit · pct a percentage (3.4 is 3.4%), changes in pp · days a number of days · eok and krw are Korean won notations; krw writes amounts under 100,000 won in full), decimals (decimal places of the numbers; empty lets the card decide, and pct changes follow it too), better (up · down · neutral: the change color), compare ({ label, value }), labels (period names, the same length as values; null for a period without a value), series ([{ name, values }]), rows (table rows), curve (line shape of the line cards: smooth · linear · step), lang (en: the words the card prints itself, like Total, Other and Met, in English).

@@ -1,0 +1,21 @@
+{
+  "title": "Channel",
+  "subtitle": "Channels to show",
+  "lang": "en",
+  "name": "channel",
+  "options": [
+    "Social",
+    "Search",
+    "Display",
+    "Video",
+    "Affiliate",
+    "Retargeting"
+  ],
+  "value": [
+    "Social",
+    "Search",
+    "Display",
+    "Video"
+  ],
+  "all": "All"
+}

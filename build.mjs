@@ -34,7 +34,7 @@ const core = r('src/core.js').trimEnd();
 // line and bar (marks drawn on the frame), tabs (equal-width metric tabs), table (sortable tables with total rows),
 // waterfall (floating bars on the bar frame), scatter (x/y frame), bump (rank lines), funnel (stepped flows),
 // sankey (node-and-ribbon flows) and radar (polygons on spokes).
-const parts = ['chart', 'curve', 'axis', 'line', 'bar', 'list', 'share', 'tabs', 'table', 'waterfall', 'scatter', 'bump', 'funnel', 'sankey', 'radar', 'slider'];
+const parts = ['chart', 'curve', 'axis', 'line', 'bar', 'list', 'share', 'tabs', 'table', 'waterfall', 'scatter', 'bump', 'funnel', 'sankey', 'radar', 'slider', 'roll'];
 const opt = (p) => (existsSync(join(root, p)) ? r(p) : '');
 const partCss = Object.fromEntries(parts.map((p) => [p, opt(`src/${p}.css`).trim()]));
 const partJs = Object.fromEntries(parts.map((p) => [p, opt(`src/${p}.js`).trimEnd()]));
@@ -96,7 +96,7 @@ const purposes = JSON.parse(r('src/variants/purposes.json'));
 const purposesEn = JSON.parse(r('src/variants/purposes.en.json'));
 // Guard (guard.mjs): self-containment, colors only from tokens, heights, scoping, accessibility hooks, example data,
 // meta ↔ files, public addresses, card words through tx() and the English files. `node build.mjs --check` runs only this and needs no font.
-const TIER = { 'kpi-number': 1, 'kpi-gauge': 1.5, 'kpi-paired-bar': 1.5, 'kpi-stacked-bar': 1.5, 'control-range': 1, 'control-date': 1 };
+const TIER = { 'kpi-number': 1, 'kpi-gauge': 1.5, 'kpi-paired-bar': 1.5, 'kpi-stacked-bar': 1.5, 'control-range': 1, 'control-date': 1, 'control-chips': 1, 'control-download': 1 };
 const checked = guard({
   root, cats, parts, partCss, partJs, tokens, tier: TIER, fontLink: FONT_LINK, en: EN, purposes, purposesEn,
   snippets: Object.fromEntries(builtAll.flatMap((c) => c.variants.map((v) => [v.id, v.code]))),
@@ -317,7 +317,7 @@ const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 // v0.49: the gallery is being rebuilt one block at a time. Only the blocks of the new direction are listed; the earlier cards
 // and the chart pages are hidden (not linked from the home page, the search or the sitemap) but keep their addresses and code.
 // Blocks that move (data-vzb-loop) replay on the first screen instead of stopping at the end.
-const GALLERY = ['bar-budget', 'control-range', 'control-date'];
+const GALLERY = ['bar-budget', 'control-range', 'control-date', 'control-chips', 'control-download'];
 const LOOP = new Set(GALLERY);
 const galleryHead = (L) => `<section class="wrap ghead" aria-labelledby="ghead-title">
 <h1 id="ghead-title">${L.t.gTitle}</h1>
@@ -495,6 +495,14 @@ const FIELD_OVERRIDE = {
   'control-range': {
     ko: { title: '무엇을 거르는지(예: 예산 규모)', subtitle: '기준(예: 채널 월 예산). 없어도 된다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '고를 수 있는 가장 작은 값', max: '고를 수 있는 가장 큰 값', step: '한 칸의 크기. 비우면 범위를 100칸쯤으로 나눈다', value: '[시작, 끝]. 비우면 전체 범위' },
     en: { title: 'what it filters (e.g. Budget Size)', subtitle: 'the basis (e.g. monthly budget per channel); optional', name: 'detail.name of the vzb-change event sent when the value changes', min: 'the smallest value that can be picked', max: 'the largest value that can be picked', step: 'the size of one step; empty splits the range into about 100 steps', value: '[start, end]; empty is the whole range' },
+  },
+  'control-chips': {
+    ko: { title: '무엇을 거르는지(예: 채널)', subtitle: '기준(예: 보여 줄 채널). 없어도 된다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', options: '고를 항목의 이름들. 8개 안팎', value: '처음 고른 항목들. 비우면 모두', all: '전체 칩의 이름. 비우면 전체, 빈 글자면 전체 칩을 두지 않는다' },
+    en: { title: 'what it filters (e.g. Channel)', subtitle: 'the basis (e.g. channels to show); optional', name: 'detail.name of the vzb-change event sent when the value changes', options: 'the names of the items to pick, about 8', value: 'the items picked at first; empty picks all', all: 'the name of the All chip; empty means All, an empty string leaves the chip out' },
+  },
+  'control-download': {
+    ko: { title: '무엇을 내보내는지(예: 내보내기)', subtitle: '받는 데이터(예: 보이는 광고비 데이터를 CSV로)', name: 'vzb-download 이벤트의 detail.name', label: '단추 이름(예: CSV 내려받기)', done: '받은 뒤 잠깐 보이는 이름(예: 받았습니다)', target: '내려받을 카드의 data-vzb(예: bar-budget). 페이지에서 처음 만나는 그 카드', filename: '파일 이름(예: ad-spend.csv)', shortcut: '단축키(예: shift+d). mod는 Mac의 ⌘, 그 밖의 Ctrl. 비우면 키캡을 그리지 않는다' },
+    en: { title: 'what it exports (e.g. Export)', subtitle: 'the data it downloads (e.g. the ad spend shown, as CSV)', name: 'detail.name of the vzb-download event', label: 'the button label (e.g. Download CSV)', done: 'the label shown briefly after the download (e.g. Downloaded)', target: 'the data-vzb of the card to download (e.g. bar-budget); the first such card on the page', filename: 'the file name (e.g. ad-spend.csv)', shortcut: 'the shortcut (e.g. shift+d); mod is ⌘ on a Mac and Ctrl elsewhere; empty draws no keycaps' },
   },
   'control-date': {
     ko: { title: '무엇의 기간인지(예: 기간)', subtitle: '기준(예: 집행일 기준). 없어도 된다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '고를 수 있는 첫 달(YYYY-MM)이나 첫 날(YYYY-MM-DD). 적은 모양이 한 칸의 단위가 된다', max: '고를 수 있는 마지막 달이나 날. min과 같은 모양으로', value: '[시작, 끝]. min과 같은 모양으로 적고, 비우면 전체 기간' },

@@ -1,0 +1,6 @@
+/* 굴러가는 숫자: 숫자 칸의 높이는 글자 높이(1.2em)이고, 칸 안의 0–9 띠가 위아래로 굴러 새 값에 섭니다. */
+.vzb-rl { display: inline-flex; vertical-align: bottom; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.vzb-rl-col { display: inline-block; height: 1.2em; overflow: hidden; }
+.vzb-rl-strip { display: flex; flex-direction: column; transition: transform 0.38s cubic-bezier(0.34, 1.32, 0.64, 1); }
+.vzb-rl-strip > span, .vzb-rl-ch { display: block; height: 1.2em; line-height: 1.2em; }
+@media (prefers-reduced-motion: reduce) { .vzb-rl-strip { transition: none; } }

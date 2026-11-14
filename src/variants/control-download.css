@@ -1,0 +1,46 @@
+/* Download Button: 높이 1단위. 단추는 높이 44px 알약 모양에 글자색(밝은 바탕 검정, 어두운 바탕 흰색)을 채우고, 아이콘 · 이름 · 키캡을 둡니다.
+   단추 옆에는 파일 이름을 적고, 받으면 그 자리에 받은 행 수가 굴러 올라옵니다. 이름 셋(처음 · 받음 · 없음)은 한 칸에 겹쳐 두어 단추 폭이 바뀌지 않습니다.
+   키캡은 단추보다 한 단계 밝은(어두운 바탕은 어두운) 면에 2px 받침을 두고, 눌리면 받침만큼 내려앉습니다. 터지는 점은 데이터 색 넷입니다. */
+.vzb-card[data-vzb="control-download"] { min-height: var(--vzb-unit); }
+.vzb-dl.vzb-foot { padding-top: 12px; }
+.vzb-dl-row { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.vzb-dl-btn { flex: none; display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 10px 0 14px; border: 0; border-radius: 22px; background: var(--vzb-ink); color: var(--vzb-card); font: 700 14px/1 var(--vzb-font); cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.vzb-dl-btn.no-keys { padding-right: 18px; }
+.vzb-dl-btn:active, .vzb-dl-btn.is-press { transform: scale(0.95); transition-duration: 0.08s; }
+.vzb-dl-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 3px; }
+.vzb-dl.is-none .vzb-dl-btn { animation: vzb-dl-shake 0.42s ease-in-out; }
+.vzb-dl-ic { position: relative; flex: none; width: 20px; height: 20px; }
+.vzb-dl-svg { display: block; width: 20px; height: 20px; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-dl-arrow { transition: transform 0.24s cubic-bezier(0.5, 0, 0.75, 0), opacity 0.16s 0.08s; }
+.vzb-dl.is-done .vzb-dl-arrow { transform: translateY(7px); opacity: 0; }
+.vzb-dl-check { stroke-dasharray: 14; stroke-dashoffset: 14; transition: stroke-dashoffset 0.22s ease-out; }
+.vzb-dl.is-done .vzb-dl-check { stroke-dashoffset: 0; transition-delay: 0.24s; }
+.vzb-dl-tray { transform-box: view-box; transform-origin: 10px 16.6px; }
+.vzb-dl.is-done .vzb-dl-tray { animation: vzb-dl-squash 0.5s 0.18s ease-out; }
+.vzb-dl-burst { position: absolute; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none; }
+.vzb-dl-burst i { position: absolute; left: -2.5px; top: -2.5px; width: 5px; height: 5px; border-radius: 50%; opacity: 0; }
+.vzb-dl.is-done .vzb-dl-burst i { animation: vzb-dl-burst 0.62s 0.22s cubic-bezier(0.2, 0.8, 0.3, 1); }
+.vzb-dl-c1 { background: var(--vzb-primary); }
+.vzb-dl-c2 { background: var(--vzb-secondary); }
+.vzb-dl-c3 { background: var(--vzb-tertiary); }
+.vzb-dl-c4 { background: var(--vzb-good); }
+.vzb-dl-words { display: grid; }
+.vzb-dl-w { grid-area: 1 / 1; white-space: nowrap; transition: opacity 0.2s, filter 0.2s; }
+.vzb-dl-w.is-done, .vzb-dl-w.is-none, .vzb-dl.is-done .vzb-dl-w.is-idle, .vzb-dl.is-none .vzb-dl-w.is-idle { opacity: 0; filter: blur(2px); }
+.vzb-dl.is-done .vzb-dl-w.is-done, .vzb-dl.is-none .vzb-dl-w.is-none { opacity: 1; filter: none; }
+.vzb-dl-keys { display: inline-flex; gap: 3px; padding-bottom: 2px; }
+.vzb-dl-key { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; padding: 0 5px; border-radius: 6px; background: color-mix(in srgb, var(--vzb-card) 22%, var(--vzb-ink)); color: var(--vzb-card); font: 500 11px/1 var(--vzb-font); box-shadow: 0 2px 0 0 color-mix(in srgb, var(--vzb-card) 6%, var(--vzb-ink)); transition: transform 0.15s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.15s; }
+.vzb-dark .vzb-dl-key { box-shadow: 0 2px 0 0 color-mix(in srgb, var(--vzb-card) 40%, var(--vzb-ink)); }
+.vzb-dl-btn:active .vzb-dl-key, .vzb-dl-key.is-down { transform: translateY(2px); box-shadow: none; transition-duration: 0.07s; }
+.vzb-dl-meta { display: grid; min-width: 0; font-size: 12px; color: var(--vzb-muted); }
+.vzb-dl-file, .vzb-dl-got { grid-area: 1 / 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: opacity 0.2s, filter 0.2s; }
+.vzb-dl-got { opacity: 0; filter: blur(2px); font-weight: 700; color: var(--vzb-ink); }
+.vzb-dl.is-done .vzb-dl-got { opacity: 1; filter: none; }
+.vzb-dl.is-done .vzb-dl-file { opacity: 0; filter: blur(2px); }
+@keyframes vzb-dl-squash { 0% { transform: scale(1, 1); } 30% { transform: scale(1.18, 0.7); } 65% { transform: scale(0.94, 1.08); } 100% { transform: scale(1, 1); } }
+@keyframes vzb-dl-shake { 0%, 100% { transform: translateX(0); } 18% { transform: translateX(-7px); } 36% { transform: translateX(6px); } 54% { transform: translateX(-4px); } 72% { transform: translateX(2px); } }
+@keyframes vzb-dl-burst { 0% { opacity: 1; transform: rotate(var(--vzb-a)) translateX(8px) scale(1); } 100% { opacity: 0; transform: rotate(var(--vzb-a)) translateX(var(--vzb-r)) scale(0.3); } }
+@media (prefers-reduced-motion: reduce) {
+  .vzb-dl-btn, .vzb-dl-arrow, .vzb-dl-check, .vzb-dl-w, .vzb-dl-key, .vzb-dl-file, .vzb-dl-got { transition: none; }
+  .vzb-dl.is-none .vzb-dl-btn, .vzb-dl.is-done .vzb-dl-tray, .vzb-dl.is-done .vzb-dl-burst i { animation: none; }
+}

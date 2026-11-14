@@ -1,0 +1,575 @@
+<!-- Vizney Blocks v0.49 · Controls · Download Button (control-download)
+     https://blocks.vizney.com/cards/control-download.html · © 2026 Vizney · MIT License
+     Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
+<link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
+<style>
+/* Vizney Blocks tokens: re-declare the same variables on your page's :root and they apply to every card.
+   The colors come from Vizney's Figma palette: blue (#007aff), pink-red (#ff2d55) and orange (#ff9500) for data, green (#34c759) and red (#ff3b30)
+   for good and bad, with lighter steps mixed from the same colors and the background. The text is Vizney black (#1b1b1b).
+   With "theme": "dark" in the JSON, the .vzb-dark values below draw the card on Vizney black with yellow as the first color and white as the second.
+   List: https://blocks.vizney.com/tokens.css */
+:where(:root) {
+  --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* every word on the card */
+  --vzb-card: #ffffff;   /* card background */
+  --vzb-edge: rgba(17, 24, 39, 0.05);   /* card border */
+  --vzb-ink: #1b1b1b;   /* title and headline figure */
+  --vzb-ink-2: #4a4a4a;   /* body text, the no-change badge */
+  --vzb-muted: #737373;   /* subtitle, units, axis ticks */
+  --vzb-grid: #ebebeb;   /* grid lines and the line under the head: a solid gray one step off the background */
+  --vzb-primary: #007aff;   /* first data color (blue): lines, bars, the largest item */
+  --vzb-primary-tint: #e6f2ff;   /* light blue background: the shade under a line, the radar area */
+  --vzb-primary-soft: #bfdeff;   /* bar-list bars that carry the name */
+  --vzb-secondary: #ff2d55;   /* second data color (pink-red) */
+  --vzb-tertiary: #ff9500;   /* third data color (orange) */
+  --vzb-primary-mid: #8cc3ff;     /* one step lighter, for wide areas (treemap cells) */
+  --vzb-secondary-mid: #ff7a93;   /* pink-red for wide areas */
+  --vzb-tertiary-mid: #ffb54d;   /* orange for wide areas */
+  --vzb-other-mid: #e3e3e3;   /* the Other group on wide areas */
+  --vzb-line-3: #ff9500;   /* third line color (orange) */
+  --vzb-base: #c4c4c4;   /* the baseline (last year's line, the radar baseline outline) */
+  --vzb-track: #f1f1f1;   /* track behind the gauge and attainment bars */
+  --vzb-other: #d9d9d9;   /* items folded into Other, items from the fourth on */
+  --vzb-good: #34c759;   /* fill of a good change (increases in a waterfall, met targets). Palette green; 2.2:1 on white, so never for text */
+  --vzb-good-tint: #ebf9ee;   /* background of a good-change badge (green 10%) */
+  --vzb-good-ink: #2a8040;   /* text of a good change (badges): green with 41% black, 4.9:1 on white */
+  --vzb-bad: #ff3b30;   /* fill of a bad change or of the part over a limit. Palette red, 3.6:1 on white */
+  --vzb-bad-tint: #ffebea;   /* background of a bad-change badge (red 10%) */
+  --vzb-bad-ink: #cb342b;   /* text of a bad change and of errors: red with 23% black, 5.2:1 on white */
+  --vzb-tip: #1b1b1b;   /* tooltip background */
+  --vzb-radius: 18px;   /* card corners */
+  --vzb-unit: 168px;   /* height unit 1 (KPI - Number); Line and Bar are 2, the other KPI cards 1.5, chart cards 2 */
+  --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* card shadow */
+}
+
+/* Dark ("theme": "dark"): the same variables, changed inside the card only. One yellow plus white and gray draws in Vizney black, white and yellow.
+   Yellow, white and gray pass a color vision simulation (closest pair ΔE 14.9) and a contrast check against the card.
+   Good and bad are the same green (#34c759) and red (#ff3b30) as on white, and on black they serve as text too (7.8:1 and 4.9:1). */
+.vzb-dark {
+  --vzb-card: #1b1b1b;   /* card background (Vizney black) */
+  --vzb-edge: rgba(255, 255, 255, 0.08);   /* card border */
+  --vzb-ink: #f5f5f5;   /* title and headline figure */
+  --vzb-ink-2: #cfcfcf;   /* body text */
+  --vzb-muted: #9b9b9b;   /* subtitle, units, axis ticks */
+  --vzb-grid: #2f2f2f;   /* grid lines and the rule under the head */
+  --vzb-primary: #ffcc00;   /* first data color (Vizney yellow) */
+  --vzb-primary-tint: #362f18;   /* dim yellow background */
+  --vzb-primary-soft: #5f5013;   /* bar-list bars that carry the name */
+  --vzb-secondary: #f5f5f5;   /* second data color (white) */
+  --vzb-tertiary: #9b9b9b;   /* third data color (gray) */
+  --vzb-primary-mid: #826b0f;   /* wide areas, one step darker so light text sits on them */
+  --vzb-secondary-mid: #5c5c5c;   /* white for wide areas, gray so white text reads on it */
+  --vzb-tertiary-mid: #424242;   /* gray for wide areas */
+  --vzb-other-mid: #3a3a3a;   /* the Other group for wide areas */
+  --vzb-line-3: #9b9b9b;   /* third line color (gray) */
+  --vzb-base: #6b6b6b;   /* comparison baseline */
+  --vzb-track: #2c2c2c;   /* gauge and attainment-bar track */
+  --vzb-other: #4d4d4d;   /* items folded into Other */
+  --vzb-good: #34c759;   /* good change (palette green) */
+  --vzb-good-tint: #1f3725;   /* good badge background (green 16%) */
+  --vzb-good-ink: #34c759;   /* text of a good change */
+  --vzb-bad: #ff3b30;   /* bad change, over the limit (palette red) */
+  --vzb-bad-tint: #2d1e1d;   /* bad badge background (red 8%, as much as keeps 4.5:1 for the text) */
+  --vzb-bad-ink: #ff3b30;   /* text of a bad change and of errors */
+  --vzb-tip: #3a3a3a;   /* tooltip background */
+  --vzb-shadow: none;   /* card shadow */
+}
+/* 카드: 놓인 자리의 폭을 채우고, 높이는 세 단계입니다(Number 1 · Line, Bar 2 · 나머지 1.5, 단위 --vzb-unit). */
+.vzb-card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: calc(var(--vzb-unit) * 1.5);
+  padding: 24px;
+  background: var(--vzb-card);
+  color: var(--vzb-ink);
+  border: 1px solid var(--vzb-edge);
+  border-radius: var(--vzb-radius);
+  box-shadow: var(--vzb-shadow);
+  font: 400 13px/18px var(--vzb-font);
+  text-align: left;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  -webkit-font-smoothing: antialiased;
+}
+.vzb-card *, .vzb-card *::before, .vzb-card *::after { box-sizing: border-box; }
+
+/* 머리: 제목과 기간 부제, 그 아래 대표 수치와 바로 뒤의 증감 배지.
+   배지와 비교 문구는 숫자와 같은 줄의 항목이라, 좁으면 비교 문구만 아래 줄로 내려가고 배지는 숫자 뒤에 남습니다. */
+.vzb-title { font-size: 17px; line-height: 24px; font-weight: 500; }
+.vzb-sub { margin-top: 2px; color: var(--vzb-muted); }
+.vzb-fig { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; margin-top: 20px; }   /* 숫자 줄은 기준선 아래에 16px이 남아 줄 사이를 따로 두지 않습니다 */
+.vzb-num { margin-right: 4px; font-size: 34px; line-height: 40px; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap; }   /* 숫자와 배지 사이 12px, 배지와 비교 문구 사이 8px */
+.vzb-unit { margin-left: 4px; font-size: 16px; letter-spacing: 0; color: var(--vzb-muted); }
+.vzb-delta { display: contents; color: var(--vzb-muted); white-space: nowrap; }
+.vzb-vs { min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.vzb-badge { display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px 3px 6px; border-radius: 7px; font-weight: 500; }
+.vzb-badge.vzb-good { color: var(--vzb-good-ink); background: var(--vzb-good-tint); }
+.vzb-badge.vzb-bad { color: var(--vzb-bad-ink); background: var(--vzb-bad-tint); }
+.vzb-badge.vzb-flat { color: var(--vzb-ink-2); background: var(--vzb-track); padding-left: 8px; }
+.vzb-arrow { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* 그래픽은 카드 아래쪽에 붙습니다. 같은 줄의 카드 높이가 맞춰져도 그래픽끼리 바닥이 맞습니다. */
+.vzb-foot { margin-top: auto; padding-top: 20px; }
+.vzb-error { margin: 8px 0 0; color: var(--vzb-bad-ink); }
+/* 굴러가는 숫자: 숫자 칸의 높이는 글자 높이(1.2em)이고, 칸 안의 0–9 띠가 위아래로 굴러 새 값에 섭니다. */
+.vzb-rl { display: inline-flex; vertical-align: bottom; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.vzb-rl-col { display: inline-block; height: 1.2em; overflow: hidden; }
+.vzb-rl-strip { display: flex; flex-direction: column; transition: transform 0.38s cubic-bezier(0.34, 1.32, 0.64, 1); }
+.vzb-rl-strip > span, .vzb-rl-ch { display: block; height: 1.2em; line-height: 1.2em; }
+@media (prefers-reduced-motion: reduce) { .vzb-rl-strip { transition: none; } }
+/* Download Button: 높이 1단위. 단추는 높이 44px 알약 모양에 글자색(밝은 바탕 검정, 어두운 바탕 흰색)을 채우고, 아이콘 · 이름 · 키캡을 둡니다.
+   단추 옆에는 파일 이름을 적고, 받으면 그 자리에 받은 행 수가 굴러 올라옵니다. 이름 셋(처음 · 받음 · 없음)은 한 칸에 겹쳐 두어 단추 폭이 바뀌지 않습니다.
+   키캡은 단추보다 한 단계 밝은(어두운 바탕은 어두운) 면에 2px 받침을 두고, 눌리면 받침만큼 내려앉습니다. 터지는 점은 데이터 색 넷입니다. */
+.vzb-card[data-vzb="control-download"] { min-height: var(--vzb-unit); }
+.vzb-dl.vzb-foot { padding-top: 12px; }
+.vzb-dl-row { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.vzb-dl-btn { flex: none; display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 10px 0 14px; border: 0; border-radius: 22px; background: var(--vzb-ink); color: var(--vzb-card); font: 700 14px/1 var(--vzb-font); cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.vzb-dl-btn.no-keys { padding-right: 18px; }
+.vzb-dl-btn:active, .vzb-dl-btn.is-press { transform: scale(0.95); transition-duration: 0.08s; }
+.vzb-dl-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 3px; }
+.vzb-dl.is-none .vzb-dl-btn { animation: vzb-dl-shake 0.42s ease-in-out; }
+.vzb-dl-ic { position: relative; flex: none; width: 20px; height: 20px; }
+.vzb-dl-svg { display: block; width: 20px; height: 20px; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-dl-arrow { transition: transform 0.24s cubic-bezier(0.5, 0, 0.75, 0), opacity 0.16s 0.08s; }
+.vzb-dl.is-done .vzb-dl-arrow { transform: translateY(7px); opacity: 0; }
+.vzb-dl-check { stroke-dasharray: 14; stroke-dashoffset: 14; transition: stroke-dashoffset 0.22s ease-out; }
+.vzb-dl.is-done .vzb-dl-check { stroke-dashoffset: 0; transition-delay: 0.24s; }
+.vzb-dl-tray { transform-box: view-box; transform-origin: 10px 16.6px; }
+.vzb-dl.is-done .vzb-dl-tray { animation: vzb-dl-squash 0.5s 0.18s ease-out; }
+.vzb-dl-burst { position: absolute; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none; }
+.vzb-dl-burst i { position: absolute; left: -2.5px; top: -2.5px; width: 5px; height: 5px; border-radius: 50%; opacity: 0; }
+.vzb-dl.is-done .vzb-dl-burst i { animation: vzb-dl-burst 0.62s 0.22s cubic-bezier(0.2, 0.8, 0.3, 1); }
+.vzb-dl-c1 { background: var(--vzb-primary); }
+.vzb-dl-c2 { background: var(--vzb-secondary); }
+.vzb-dl-c3 { background: var(--vzb-tertiary); }
+.vzb-dl-c4 { background: var(--vzb-good); }
+.vzb-dl-words { display: grid; }
+.vzb-dl-w { grid-area: 1 / 1; white-space: nowrap; transition: opacity 0.2s, filter 0.2s; }
+.vzb-dl-w.is-done, .vzb-dl-w.is-none, .vzb-dl.is-done .vzb-dl-w.is-idle, .vzb-dl.is-none .vzb-dl-w.is-idle { opacity: 0; filter: blur(2px); }
+.vzb-dl.is-done .vzb-dl-w.is-done, .vzb-dl.is-none .vzb-dl-w.is-none { opacity: 1; filter: none; }
+.vzb-dl-keys { display: inline-flex; gap: 3px; padding-bottom: 2px; }
+.vzb-dl-key { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; padding: 0 5px; border-radius: 6px; background: color-mix(in srgb, var(--vzb-card) 22%, var(--vzb-ink)); color: var(--vzb-card); font: 500 11px/1 var(--vzb-font); box-shadow: 0 2px 0 0 color-mix(in srgb, var(--vzb-card) 6%, var(--vzb-ink)); transition: transform 0.15s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.15s; }
+.vzb-dark .vzb-dl-key { box-shadow: 0 2px 0 0 color-mix(in srgb, var(--vzb-card) 40%, var(--vzb-ink)); }
+.vzb-dl-btn:active .vzb-dl-key, .vzb-dl-key.is-down { transform: translateY(2px); box-shadow: none; transition-duration: 0.07s; }
+.vzb-dl-meta { display: grid; min-width: 0; font-size: 12px; color: var(--vzb-muted); }
+.vzb-dl-file, .vzb-dl-got { grid-area: 1 / 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: opacity 0.2s, filter 0.2s; }
+.vzb-dl-got { opacity: 0; filter: blur(2px); font-weight: 700; color: var(--vzb-ink); }
+.vzb-dl.is-done .vzb-dl-got { opacity: 1; filter: none; }
+.vzb-dl.is-done .vzb-dl-file { opacity: 0; filter: blur(2px); }
+@keyframes vzb-dl-squash { 0% { transform: scale(1, 1); } 30% { transform: scale(1.18, 0.7); } 65% { transform: scale(0.94, 1.08); } 100% { transform: scale(1, 1); } }
+@keyframes vzb-dl-shake { 0%, 100% { transform: translateX(0); } 18% { transform: translateX(-7px); } 36% { transform: translateX(6px); } 54% { transform: translateX(-4px); } 72% { transform: translateX(2px); } }
+@keyframes vzb-dl-burst { 0% { opacity: 1; transform: rotate(var(--vzb-a)) translateX(8px) scale(1); } 100% { opacity: 0; transform: rotate(var(--vzb-a)) translateX(var(--vzb-r)) scale(0.3); } }
+@media (prefers-reduced-motion: reduce) {
+  .vzb-dl-btn, .vzb-dl-arrow, .vzb-dl-check, .vzb-dl-w, .vzb-dl-key, .vzb-dl-file, .vzb-dl-got { transition: none; }
+  .vzb-dl.is-none .vzb-dl-btn, .vzb-dl.is-done .vzb-dl-tray, .vzb-dl.is-done .vzb-dl-burst i { animation: none; }
+}
+</style>
+<div class="vzb-card" data-vzb="control-download">
+<script type="application/json">
+{
+  "title": "Export",
+  "subtitle": "The ad spend shown, as CSV",
+  "lang": "en",
+  "name": "export",
+  "label": "Download CSV",
+  "done": "Downloaded",
+  "target": "bar-budget",
+  "filename": "ad-spend.csv",
+  "shortcut": "shift+d"
+}
+</script>
+</div>
+<script>
+(() => {
+  'use strict';
+  /* 공통 도구: 카드 안 문구, 숫자 표기, 증감, 카드 머리, 그리기 시작 */
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  // 카드 안 문구(합계 · 기타 · 툴팁 · 낭독 문구): 한국어가 기본이고, JSON에 "lang": "en"을 적으면 영어로 바뀝니다.
+  // 왼쪽의 한국어 원문이 키입니다. %s에는 값이 차례로, %1 · %2에는 그 순서의 값이 들어가고, '|' 뒤는 같은 말을 구분하는 꼬리표라 화면에는 안 나옵니다.
+  // 원화 표기(조 · 억 · 만 · 원)는 영어에서도 그대로 둡니다. 숫자 표기는 두 언어가 같습니다.
+  const EN = {
+    '합계': 'Total', '합계 %s': 'Total %s', '합계 · 소계': 'Total · Subtotal', '기타': 'Other', '기타 %s개': 'Other (%s)', '그 밖의 %s개': '%s others',
+    '값': 'Value', '이름': 'Name', '기간': 'Period', '지표': 'Metrics', '항목': 'Item', '항목|축': 'Axis', '항목 평균': 'Average score',
+    '차트': 'chart', '막대 차트': 'bar chart', '선 차트': 'line chart', '워터폴 차트': 'waterfall chart',
+    '일': 'days', '%s%p': '%spp', '증가': 'up', '감소': 'down', '%s 대비': 'vs %s', '%s %s 대비': 'vs %s %s', '비교 기간': 'prior period',
+    '%s 대비 %s': '%2 vs %1', '%s 대비 %s|비율': '%2 of %1', '%1의 %2': '%2 of %1', '전체의 %s': '%s of total', '전체의 %1 · %2의 %3': '%1 of total · %3 of %2',
+    '이번 기간': 'This period', '지난 기간': 'Prior period', '지난 기간 %s': 'Prior period %s', '비교 기간|범례': 'Prior period', '올해': 'This year', '작년': 'Last year',
+    '이전': 'Before', '이후': 'After', '직전 시점': 'previous period', '두 기간 모두 %s': 'Both periods: %s', '%s 진행 중': '%s in progress',
+    '목표': 'Target', '목표|소문자': 'target', '실적': 'Actual', '달성률': 'Attainment', '상태': 'Status', '달성': 'Met', '미달': 'Missed', '이내': 'Within', '초과': 'Over',
+    '%s 초과': '%s exceeded', '%s 미달': '%s missed', '목표 달성': 'Target met', '목표 미달': 'Target missed', '목표 이내': 'Within target', '목표 초과': 'Over target', '목표(100%)': 'Target (100%)',
+    '%s %s · 달성률 %s%': '%s %s · Attainment %s%', '목표 %s · 달성률 %s%': 'Target %s · Attainment %s%', '목표의 %s%': '%s% of target',
+    '%1 %2의 %3%': '%3% of %1 %2', '%1 %2의 %3% 사용': '%3% of %1 %2 used',
+    '평균': 'Average', '기준': 'Reference', '비중': 'Share', '비중 %s%p': 'Share %spp', '이전 대비': 'vs prior', '처음 대비': 'vs first', '흐름': 'Trend', '최근': 'Latest',
+    '누계': 'Running total', '반영 후 누계 %s': 'Running total after: %s', '늘린 요인': 'Increase', '줄인 요인': 'Decrease', '빼는 항목': 'Deduction',
+    '왼쪽': 'Left', '오른쪽': 'Right', '출발': 'From', '도착': 'To', '가로값': 'X value', '세로값': 'Y value', '외 %s곳 %s': 'and %s more: %s',
+    '%s위': '#%s', '%s %s위': '%s #%s', '%s 순위': '%s ranks', '%1 %2위에서 %3': 'from #%2 in %1, %3', '%s계단 오름': 'up %s', '%s계단 내림': 'down %s', '그대로': 'unchanged',
+    '첫 단계': 'First step', '시작': 'Start', '전환 %s': 'Conversion %s', '전체 전환율': 'Overall conversion', '앞 단계 대비 %s': '%s of the previous step',
+    '앞 단계에서 %s 이탈': '%s dropped from the previous step', '앞 단계에서 %s 빠짐': '%s dropped from the previous step',
+    '행마다 작음': 'Low in each row', '큼': 'High', '한 칸 1% · 합계 %s': 'One square = 1% · Total %s', '%1 %2%에서 %3%': '%1 from %2% to %3%',
+    '. 열 제목을 누르면 정렬합니다.': '. Click a column heading to sort.', ' 표에 포커스한 뒤 화살표 키로 칸을 옮기면 그 칸의 값을 읽습니다.': ' Focus the table and move between cells with the arrow keys to hear each value.',
+    '표시할 데이터가 없습니다.': 'No data to show.',
+    '%s %s, %s–%s. 좌우 화살표로 기간을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s %s, %s–%s. Use the left and right arrows to move between periods. Every value is in the table that follows.',
+    '%s 추이: %s. 좌우 화살표로 시점을 옮깁니다.': '%s trend: %s. Use the left and right arrows to move between periods.',
+    '%s: %s%s. 좌우 화살표로 기간을 옮깁니다.': '%s: %s%s. Use the left and right arrows to move between periods.',
+    '%s. 좌우 화살표로 항목을 옮깁니다.': '%s. Use the left and right arrows to move between items.',
+    '%s: %s, 합계 %s. 좌우 화살표로 항목을 옮깁니다.': '%s: %s, total %s. Use the left and right arrows to move between items.',
+    '%s: %s. 좌우 화살표로 칸을 옮깁니다.': '%s: %s. Use the left and right arrows to move between cells.',
+    '%s: %s. 위아래 화살표로 항목을 옮깁니다.': '%s: %s. Use the up and down arrows to move between items.',
+    '%s 목록, %s줄. 위아래 화살표로 항목의 자세한 값을 봅니다.': '%s list, %s rows. Use the up and down arrows to see each item.',
+    '%s 순위 변화, %s–%s. 위아래 화살표로 항목을 옮깁니다. 모든 순위는 이어지는 표에 있습니다.': '%s rank changes, %s–%s. Use the up and down arrows to move between items. Every rank is in the table that follows.',
+    '%s 퍼널, %s. 좌우 화살표로 단계를 옮깁니다.': '%s funnel, %s. Use the left and right arrows to move between steps.',
+    '처음부터 다시': 'Replay',
+    '한도': 'Limit', '차이': 'Difference', '%s 초과|한도': '%s over', '%1 초과 · %2의 %3%': '%1 over · %3% of %2', '%1 남음 · %2의 %3%': '%1 left · %3% of %2',
+    '%1개 중 %2개 %3 초과 · +%4': '%2 of %1 over %3 · +%4', '%1개 중 %2개 %3 초과': '%2 of %1 over %3', '모두 %s 이내': 'All within %s', '표시할 항목이 없습니다.': 'No items to show.',
+    '%1. 항목 %2개 가운데 %3개가 %4 초과입니다. 위아래 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %3 of %2 items are over %4. Use the up and down arrows to move between items. Every value is in the table that follows.',
+    'options를 확인하세요.': 'Check options.', '필터': 'Filter', '전체': 'All', '%1, %2개 중 %3개 고름': '%1, %3 of %2 picked', '%1개 중 %2개 고름': '%2 of %1 picked',
+    'CSV 내려받기': 'Download CSV', '받았습니다': 'Downloaded', '데이터 없음': 'No data', '행': 'rows', '행|1': 'row', '받을 데이터가 없습니다.': 'No data to download.',
+    '%s로 1행을 받았습니다.': 'Downloaded 1 row as %s.', '%1로 %2행을 받았습니다.': 'Downloaded %2 rows as %1.',
+    'min과 max를 확인하세요.': 'Check min and max.', '%s 최소': 'Minimum %s', '%s 최대': 'Maximum %s', '%s 시작': 'Start of %s', '%s 끝': 'End of %s',
+    '%s 레이더 차트, 항목 %s개와 대상 %s개. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s radar chart, %s axes and %s series. Use the left and right arrows to move between axes. Every value is in the table that follows.',
+    '%s 생키 차트, 노드 %s개와 흐름 %s개. 좌우 화살표로 노드와 흐름을 차례로 짚습니다. 모든 흐름은 이어지는 표에 있습니다.': '%s Sankey chart, %s nodes and %s flows. Use the left and right arrows to step through nodes and flows. Every flow is in the table that follows.',
+    '%s 산점도, 점 %s개. 좌우 화살표로 점을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s scatter plot, %s points. Use the left and right arrows to move between points. Every value is in the table that follows.',
+    '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
+    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'items의 value와 limit을 확인하세요.': 'Check value and limit in items.', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
+  };
+  // tx(d 또는 f, 원문, 값…): d.lang(format()이 f에 옮겨 둡니다)이 en이면 영어 문구를, 아니면 원문을 돌려줍니다.
+  function tx(x, s, ...a) {
+    let i = 0;
+    const out = x && x.lang === 'en' && EN[s] !== undefined ? EN[s] : s.split('|')[0];
+    return out.replace(/%(\d|s)/g, (m, k) => String(a[k === 's' ? i++ : k - 1]));
+  }
+  // 숫자 뒤의 단위: 영어 단위(days · orders)는 한 칸 띄우고, 기호와 한 글자 단위(% · K · 억)는 붙입니다.
+  const withUnit = (n, u) => (/^[A-Za-z]{2}/.test(u) ? `${n} ${u}` : n + u);
+  function el(tag, cls, text) {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function svgEl(tag, attrs) {
+    const n = document.createElementNS(SVGNS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+  const nfs = {};
+  function num(v, d) {
+    nfs[d] = nfs[d] || new Intl.NumberFormat('ko-KR', { minimumFractionDigits: d, maximumFractionDigits: d });
+    return nfs[d].format(v);
+  }
+  // 원 금액: 조 · 억 · 만으로 줄여 적습니다. 10만 원보다 작으면 87,324원처럼 원 단위 그대로 적어 객단가 · CAC가 "9만"으로
+  // 뭉개지지 않게 합니다. decimals를 주면 줄인 숫자의 소수 자릿수를 그 값으로 맞춥니다(1억 8,600만 원은 2면 1.86억).
+  function krw(v, d) {
+    const a = Math.abs(v), k = (x) => (d != null ? d : x);
+    if (a >= 1e12) return [num(v / 1e12, k(1)), '조'];
+    if (a >= 1e8) return [num(v / 1e8, k(a >= 1e10 ? 0 : 1)), '억'];
+    if (a >= 1e5) return [num(v / 1e4, k(0)), '만'];
+    return [num(v, 0), '원'];
+  }
+  // 달러 금액: 원래 값을 받아 K · M · B로 줄이고 소수 한 자리로 맞춥니다($745.6K). 접미사는 단위처럼 작게 씁니다.
+  function usd(v, d) {
+    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    const [div, u] = a >= 1e9 ? [1e9, 'B'] : a >= 1e6 ? [1e6, 'M'] : a >= 1e3 ? [1e3, 'K'] : [1, ''];
+    return [`${s}$${num(a / div, d != null ? d : div > 1 ? 1 : 0)}`, u];
+  }
+  // format: eok(억 단위 값) · krw(원 단위 값) · usd(달러 값) · count(unit으로 단위) · pct(증감을 %p로) · days
+  // 축이나 탭처럼 카드 안의 다른 객체로 만들 때는 두 번째 인자로 카드 데이터를 주어 lang을 잇습니다.
+  function format(d, root) {
+    const dec = (v, fallback) => (d.decimals != null ? d.decimals : fallback);
+    const F = (o) => Object.assign(o, { lang: (root || d).lang });
+    switch (d.format) {
+      case 'eok': return F({ parts: (v) => [num(v, dec(v, Number.isInteger(v) || Math.abs(v) >= 100 ? 0 : 1)), '억'], rel: true });
+      case 'krw': return F({ parts: (v) => krw(v, d.decimals), rel: true });
+      case 'usd': return F({ parts: (v) => usd(v, d.decimals), rel: true, usd: true });
+      case 'pct': return F({ parts: (v) => [num(v, dec(v, 1)), '%'], rel: false, dp: d.decimals });
+      case 'days': return F({ parts: (v) => [num(v, dec(v, 1)), tx(root || d, '일')], rel: true });
+      default: return F({ parts: (v) => [num(v, dec(v, Number.isInteger(v) ? 0 : 1)), d.unit || ''], rel: true });
+    }
+  }
+  const show = (f, v) => withUnit(...f.parts(v));
+  // 그릴 수 있는 숫자인지(빈 값 · 빈 글자 · NaN 제외)
+  const fin = (v) => v != null && v !== '' && isFinite(v);
+  // 비율의 차이(%p) 숫자: 소수 자릿수는 decimals(비우면 한 자리)를 따릅니다. 0이 아닌 차이가 0.0으로 보일 만큼 작으면
+  // 자리를 늘려(최대 세 자리) 1.12%에서 1.16%로 오른 것을 0.0%p가 아니라 0.03%p로 적습니다.
+  function pp(f, diff) {
+    const a = Math.abs(diff);
+    let k = f.dp != null ? f.dp : 1;
+    while (k < 3 && a > 1e-9 && Math.round(a * 10 ** k) === 0) k++;
+    return num(a, k);
+  }
+  // 증감: 방향은 화살표로, 좋고 나쁨(tone)은 better(up · down · neutral)로 정합니다. 비율은 %p로 적습니다.
+  function delta(f, value, base, better) {
+    const diff = value - base;
+    const dir = Math.abs(diff) < 1e-9 ? 0 : Math.sign(diff);
+    const want = better === 'down' ? -1 : better === 'neutral' ? 0 : 1;
+    const tone = dir === 0 || want === 0 ? 'flat' : dir === want ? 'good' : 'bad';
+    let text;
+    if (!f.rel) text = tx(f, '%s%p', pp(f, diff));
+    else if (base) text = `${num(Math.abs(diff / base) * 100, 1)}%`;
+    else text = show(f, Math.abs(diff));
+    return { dir, tone, text };
+  }
+  function arrow(dir) {
+    const s = svgEl('svg', { class: 'vzb-arrow', viewBox: '0 0 12 12', 'aria-hidden': 'true' });
+    s.append(svgEl('path', { d: dir > 0 ? 'M3.5 8.5l5-5M4.5 3.5h4v4' : 'M3.5 3.5l5 5M8.5 4.5v4h-4' }));
+    return s;
+  }
+  // 대표 수치(단위는 작게)
+  function figure(f, value) {
+    const n = el('div', 'vzb-num');
+    const [text, unit] = f.parts(value);
+    n.append(text);
+    if (unit) n.append(el('span', 'vzb-unit', unit));
+    return n;
+  }
+  // 증감 배지: 화살표는 오르내림, 색은 좋고 나쁨(better)입니다.
+  function badge(f, value, base, better) {
+    const dl = delta(f, value, base, better);
+    const b = el('span', `vzb-badge vzb-${dl.tone}`);
+    if (dl.dir) b.append(arrow(dl.dir), el('span', 'vzb-sr', tx(f, dl.dir > 0 ? '증가' : '감소')));
+    b.append(dl.text);
+    return b;
+  }
+  // 머리: 제목 · 기간 부제(subtitle) · 대표 수치와 바로 뒤의 증감 배지. value가 null이면 제목만 둡니다.
+  // 배지는 숫자 바로 뒤에 붙어 있고, 카드가 좁아 한 줄에 다 들어가지 않으면 비교 문구만 숫자 아래 줄로 내려갑니다.
+  // 내려갔는지는 카드의 vzb-wrapped로 알려, 높이가 1단위인 KPI - Number가 아래 여백으로 그 줄을 받게 합니다.
+  function head(card, d, f, value, cmp, cmpText) {
+    const hd = el('div', 'vzb-hd');
+    hd.append(el('div', 'vzb-title', d.title || ''));
+    if (d.subtitle) hd.append(el('div', 'vzb-sub', d.subtitle));
+    card.append(hd);
+    if (value == null) return;
+    const fig = el('div', 'vzb-fig');
+    const n = figure(f, value);
+    fig.append(n);
+    if (cmp && cmp.value != null) {
+      const line = el('span', 'vzb-delta'), vs = el('span', 'vzb-vs', cmpText || tx(d, '%s 대비', cmp.label || tx(d, '비교 기간')));
+      line.append(badge(f, value, cmp.value, d.better), vs);
+      fig.append(line);
+      onSize(fig, () => card.classList.toggle('vzb-wrapped', vs.offsetTop >= n.offsetTop + n.offsetHeight - 1));   // 숫자 칸 아래에서 시작하면 내려간 것
+    }
+    card.append(fig);
+  }
+  // 같은 종류의 카드를 모두 찾아 그립니다. 코드를 두 번 붙여 넣어도 카드는 한 번만 그립니다.
+  // 데이터가 바뀌면 다시 그립니다: 페이지의 스크립트가 카드 안 JSON(<script type="application/json">)의 글자를 바꾸면 그 카드만
+  // 새 요소로 갈아 끼워 새로 그립니다(필터 · 기간 컨트롤과 잇는 길). 갈아 끼운 카드에는 data-vzb-live가 붙어, 움직이는 카드는
+  // 처음부터 다시 재생하지 않고 마지막 장면을 바로 그립니다. 예전 요소가 페이지에서 빠지므로 그 카드의 움직임도 함께 끝납니다.
+  function mount(type, draw) {
+    const watch = (card, src) => {
+      if (!src || !window.MutationObserver) return;
+      const mo = new MutationObserver(() => {
+        mo.disconnect();
+        if (!card.isConnected) return;
+        const next = card.cloneNode(false);
+        next.removeAttribute('data-vzb-ready');
+        next.setAttribute('data-vzb-live', '');
+        next.append(src);
+        card.replaceWith(next);
+        run();
+      });
+      mo.observe(src, { childList: true, characterData: true, subtree: true });
+    };
+    const run = () => {
+      document.querySelectorAll(`.vzb-card[data-vzb="${type}"]:not([data-vzb-ready])`).forEach((card) => {
+        card.setAttribute('data-vzb-ready', '');
+        const src = card.querySelector('script[type="application/json"]');
+        const raw = src ? src.textContent : '';
+        watch(card, src);
+        let d;
+        try { d = JSON.parse(raw); } catch (e) {
+          card.append(el('p', 'vzb-error', tx(/"lang"\s*:\s*"en"/.test(raw) ? { lang: 'en' } : null, '카드 데이터(JSON)를 읽지 못했습니다: %s', e.message)));
+          return;
+        }
+        card.setAttribute('role', 'group');
+        if (d.title) card.setAttribute('aria-label', d.title);
+        // 어두운 바탕: JSON에 "theme": "dark"를 적으면 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다(tokens.css의 .vzb-dark).
+        card.classList.toggle('vzb-dark', d.theme === 'dark');
+        try { draw(card, d, format(d)); } catch (e) {
+          card.append(el('p', 'vzb-error', tx(d, '카드를 그리지 못했습니다: %s', e.message)));
+        }
+      });
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+    else run();
+  }
+  // 크기가 바뀔 때마다 그래픽을 다시 그립니다. 차트는 카드에 남은 높이를 채웁니다.
+  function onSize(node, fn) {
+    let lw = 0, lh = 0;
+    new ResizeObserver((entries) => {
+      const w = Math.floor(entries[0].contentRect.width), h = Math.floor(entries[0].contentRect.height);
+      if (w > 0 && h > 0 && (w !== lw || h !== lh)) { lw = w; lh = h; fn(w, h); }
+    }).observe(node);
+  }
+
+  /* 굴러가는 숫자(컨트롤 공통): 숫자 한 자리마다 0–9를 세로로 쌓은 칸을 두고 새 값의 자리로 굴립니다(구독 수가 오르는 단추처럼).
+     roll(box, text): box 안의 글자를 text로 바꿉니다. 자리 수와 쉼표 자리가 그대로면 칸이 제자리에서 구르고, 바뀌면 칸을 새로 만들어
+     0에서 굴러 올라옵니다. 움직임은 roll.css의 transition이 그리고, box는 화면 낭독기에 읽히지 않으므로 값은 부르는 쪽이 따로 알립니다. */
+  function roll(box, text) {
+    const chars = [...String(text)], shape = chars.map((c) => (/\d/.test(c) ? '0' : c)).join('');
+    box.setAttribute('aria-hidden', 'true');
+    if (box.dataset.shape !== shape) {
+      box.dataset.shape = shape;
+      box.replaceChildren(...chars.map((c) => {
+        if (!/\d/.test(c)) return el('span', 'vzb-rl-ch', c);
+        const col = el('span', 'vzb-rl-col'), strip = el('span', 'vzb-rl-strip');
+        for (let k = 0; k < 10; k++) strip.append(el('span', null, String(k)));
+        col.append(strip);
+        return col;
+      }));
+      box.getBoundingClientRect();   // 새 칸은 0에 선 채로 그려진 뒤 굴러갑니다
+    }
+    [...box.children].forEach((node, i) => { if (node.classList.contains('vzb-rl-col')) node.firstChild.style.transform = `translateY(${-10 * +chars[i]}%)`; });
+  }
+
+  // Download Button: 화면에 있는 차트 카드(target)의 데이터를 CSV로 내려받는 단추입니다. 컨트롤로 거른 뒤의 JSON을 읽으므로 보이는 그대로 받습니다.
+  // target에는 카드의 종류(data-vzb, 예: bar-budget)를 적습니다. 페이지에서 처음 만나는 그 카드의 items(없으면 JSON에서 처음 나오는 객체 배열)를
+  // 행으로, 그 안의 숫자 · 글자 필드를 열로 씁니다. 엑셀에서 한글이 깨지지 않게 파일 앞에 BOM을 붙입니다.
+  // 받기 전에 카드에서 vzb-download 이벤트(bubbles, cancelable, detail: { name, target, filename, rows })를 보냅니다. 페이지가
+  // preventDefault()를 부르면 카드는 파일을 만들지 않습니다(서버에서 원본을 받는 화면 등).
+  // 움직임(control-download.css): 누르면 단추가 눌렸다 튀고, 화살표가 받침으로 떨어져 체크로 바뀌며 받침이 눌렸다 펴지고, 작은 점들이 터집니다.
+  // 이름은 done으로 흐려지며 바뀌고, 옆의 파일 이름 자리에는 받은 행 수가 굴러 올라왔다가 1.8초 뒤 돌아옵니다. 받을 행이 없으면 단추가 좌우로 떱니다.
+  // shortcut(예: shift+d, mod+shift+e. mod는 Mac의 ⌘, 그 밖의 Ctrl)을 적으면 단추 안에 키캡을 그리고, 그 키를 누르면 키캡이 눌리며 받습니다.
+  // 입력 칸에 쓰는 중에는 shift만 붙은 단축키를 듣지 않습니다. 동작 줄이기 설정에서는 움직임 없이 글자만 바뀝니다.
+  // 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 파일은 만들지 않고 받는 모습만 되풀이합니다.
+  mount('control-download', (card, d, f) => {
+    head(card, d, f, null);
+    const label = d.label || tx(d, 'CSV 내려받기'), done = d.done || tx(d, '받았습니다'), none = tx(d, '데이터 없음');
+    const filename = d.filename || 'data.csv';
+    const foot = el('div', 'vzb-foot vzb-dl'), row = el('div', 'vzb-dl-row'), btn = el('button', 'vzb-dl-btn'), say = el('p', 'vzb-sr');
+    btn.type = 'button';
+    btn.setAttribute('aria-label', label);
+    say.setAttribute('aria-live', 'polite');
+    // 아이콘: 화살표 · 체크 · 받침과, 받았을 때 터지는 점 여덟 개(데이터 색 넷을 두 번씩)
+    const ic = el('span', 'vzb-dl-ic'), burst = el('span', 'vzb-dl-burst');
+    for (let i = 0; i < 8; i++) {
+      const dot = el('i', `vzb-dl-c${(i % 4) + 1}`);
+      dot.style.setProperty('--vzb-a', `${i * 45 + 12}deg`);
+      dot.style.setProperty('--vzb-r', `${i % 2 ? 26 : 20}px`);
+      burst.append(dot);
+    }
+    const svg = svgEl('svg', { class: 'vzb-dl-svg', viewBox: '0 0 20 20', 'aria-hidden': 'true' }), arrow = svgEl('g', { class: 'vzb-dl-arrow' });
+    arrow.append(svgEl('path', { d: 'M10 3.2v8.6' }), svgEl('path', { d: 'M6.6 8.6l3.4 3.4 3.4-3.4' }));
+    svg.append(arrow, svgEl('path', { class: 'vzb-dl-check', d: 'M6.4 9.6l2.5 2.5 4.8-5.2' }), svgEl('path', { class: 'vzb-dl-tray', d: 'M3.6 13.4v1.6a1.6 1.6 0 0 0 1.6 1.6h9.6a1.6 1.6 0 0 0 1.6-1.6v-1.6' }));
+    ic.append(burst, svg);
+    const words = el('span', 'vzb-dl-words');
+    words.setAttribute('aria-hidden', 'true');
+    words.append(el('span', 'vzb-dl-w is-idle', label), el('span', 'vzb-dl-w is-done', done), el('span', 'vzb-dl-w is-none', none));
+    btn.append(ic, words);
+    // 단축키: mod · ctrl · alt · shift와 키 하나를 +로 잇습니다. 키캡은 Mac에서 기호(⌘ ⇧ 등), 그 밖에서 글자(Ctrl · Alt · Shift)로 적습니다.
+    const parts = String(d.shortcut || '').toLowerCase().split('+').map((s) => s.trim()).filter(Boolean);
+    const MODS = ['mod', 'ctrl', 'alt', 'shift'], mods = MODS.filter((m) => parts.includes(m)), key = parts.find((p) => !MODS.includes(p));
+    const mac = /mac|iphone|ipad|ipod/i.test((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '');
+    const caps = [];
+    if (key) {
+      // Control(\u2303)과 Option(\u2325) 기호는 카드 글꼴에 없어 시스템 글꼴로 그립니다.
+      const name = { mod: mac ? '⌘' : 'Ctrl', ctrl: mac ? '\u2303' : 'Ctrl', alt: mac ? '\u2325' : 'Alt', shift: mac ? '⇧' : 'Shift' };
+      const aria = { mod: mac ? 'Meta' : 'Control', ctrl: 'Control', alt: 'Alt', shift: 'Shift' };
+      const keys = el('span', 'vzb-dl-keys');
+      keys.setAttribute('aria-hidden', 'true');
+      [...mods, key].forEach((k) => { const cap = el('kbd', 'vzb-dl-key', name[k] || (k.length === 1 ? k.toUpperCase() : k)); cap.dataset.k = k; caps.push(cap); keys.append(cap); });
+      btn.append(keys);
+      btn.setAttribute('aria-keyshortcuts', [...mods.map((m) => aria[m]), key.length === 1 ? key.toUpperCase() : key].join('+'));
+    }
+    btn.classList.toggle('no-keys', !key);
+    const meta = el('span', 'vzb-dl-meta'), file = el('span', 'vzb-dl-file', filename), got = el('span', 'vzb-dl-got'), count = el('span', 'vzb-rl'), unit = el('span', 'vzb-dl-unit');
+    got.append(count, unit);
+    got.setAttribute('aria-hidden', 'true');
+    meta.append(file, got);
+    row.append(btn, meta);
+    foot.append(row, say);
+    card.append(foot);
+
+    // 받을 행: target 카드의 JSON에서 items, 없으면 처음 나오는 객체 배열
+    const isRows = (a) => Array.isArray(a) && a.length > 0 && a.every((r) => r && typeof r === 'object' && !Array.isArray(r));
+    function rowsOf() {
+      const t = d.target ? document.querySelector(`.vzb-card[data-vzb="${String(d.target).replace(/["\\]/g, '')}"]`) : null;
+      const src = t && t.querySelector('script[type="application/json"]');
+      if (!src) return null;
+      let data;
+      try { data = JSON.parse(src.textContent); } catch (e) { return null; }
+      if (isRows(data.items)) return data.items;
+      return Object.values(data).find(isRows) || null;
+    }
+    // CSV: 행마다 숫자 · 글자 필드를 처음 나온 순서대로 열로 둡니다. 쉼표 · 따옴표 · 줄바꿈이 든 칸은 따옴표로 감쌉니다.
+    function csv(rows) {
+      const cols = [];
+      rows.forEach((r) => Object.keys(r).forEach((k) => { if (!cols.includes(k) && (r[k] == null || typeof r[k] !== 'object')) cols.push(k); }));
+      const cell = (v) => { const s = v == null ? '' : String(v); return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+      return `\ufeff${[cols.map(cell).join(','), ...rows.map((r) => cols.map((k) => cell(r[k])).join(','))].join('\r\n')}\r\n`;
+    }
+    function save(text) {
+      const url = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' })), a = el('a');
+      a.href = url;
+      a.download = filename;
+      a.hidden = true;
+      document.body.append(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    }
+    // 상태: '' 처음, 'done' 받음, 'none' 받을 행 없음. 같은 상태를 다시 줘도 움직임이 처음부터 다시 돌도록 클래스를 지웠다 붙입니다.
+    let back = 0;
+    function mark(state, n) {
+      clearTimeout(back);
+      foot.classList.remove('is-done', 'is-none');
+      if (!state) return;
+      void foot.offsetWidth;
+      foot.classList.add(`is-${state}`);
+      if (state === 'done') {
+        unit.textContent = (d.lang === 'en' ? ' ' : '') + tx(d, n === 1 ? '행|1' : '행');
+        roll(count, '0');
+        requestAnimationFrame(() => roll(count, String(n)));
+      }
+      back = setTimeout(() => { if (card.isConnected) foot.classList.remove('is-done', 'is-none'); }, state === 'done' ? 1800 : 1200);
+    }
+    function run(demo) {
+      const rows = rowsOf();
+      if (demo) { mark('done', rows ? rows.length : 6); return; }
+      if (!rows) { mark('none'); say.textContent = tx(d, '받을 데이터가 없습니다.'); return; }
+      const ev = new CustomEvent('vzb-download', { bubbles: true, cancelable: true, detail: { name: d.name || '', target: d.target || '', filename, rows } });
+      if (card.dispatchEvent(ev)) save(csv(rows));
+      mark('done', rows.length);
+      say.textContent = rows.length === 1 ? tx(d, '%s로 1행을 받았습니다.', filename) : tx(d, '%1로 %2행을 받았습니다.', filename, rows.length);
+    }
+    let idle = 0;
+    btn.addEventListener('click', () => { idle = performance.now() + 8000; run(false); });
+
+    // 단축키: 페이지 어디서든 듣고, 키캡은 그 키가 눌린 동안 내려앉습니다. 카드가 페이지에서 빠지면 듣기를 풉니다.
+    if (key) {
+      const isKey = (e) => (e.key || '').toLowerCase() === key || e.code === `Key${key.toUpperCase()}` || e.code === `Digit${key}`;
+      const held = (e, k) => (k === 'mod' ? (mac ? e.metaKey : e.ctrlKey) : k === 'ctrl' ? e.ctrlKey : k === 'alt' ? e.altKey : k === 'shift' ? e.shiftKey : null);
+      const exact = (e) => isKey(e) && e.metaKey === (mods.includes('mod') && mac) && e.ctrlKey === (mods.includes('ctrl') || (mods.includes('mod') && !mac))
+        && e.altKey === mods.includes('alt') && e.shiftKey === mods.includes('shift');
+      const typing = (t) => t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
+      const sink = (e, down) => caps.forEach((c) => c.classList.toggle('is-down', c.dataset.k === key ? down && isKey(e) : !!held(e, c.dataset.k)));
+      const off = () => { document.removeEventListener('keydown', onDown); document.removeEventListener('keyup', onUp); window.removeEventListener('blur', onBlur); };
+      const onDown = (e) => {
+        if (!card.isConnected) { off(); return; }
+        if (!mods.some((m) => m !== 'shift') && typing(e.target)) return;
+        sink(e, true);
+        if (!e.repeat && exact(e)) { e.preventDefault(); idle = performance.now() + 8000; run(false); }
+      };
+      const onUp = (e) => { if (!card.isConnected) { off(); return; } sink(e, false); };
+      const onBlur = () => caps.forEach((c) => c.classList.remove('is-down'));
+      document.addEventListener('keydown', onDown);
+      document.addEventListener('keyup', onUp);
+      window.addEventListener('blur', onBlur);
+    }
+
+    // 갤러리(data-vzb-loop): 화면에 보이는 동안, 손을 대기 전과 손을 뗀 지 8초 뒤부터 키캡을 눌러 받는 모습을 되풀이합니다(파일은 만들지 않습니다).
+    const reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    if (!reduce && card.closest('[data-vzb-loop]')) {
+      let seen = true;
+      if ('IntersectionObserver' in window) new IntersectionObserver((es) => { seen = es[es.length - 1].isIntersecting; }).observe(card);
+      const timer = setInterval(() => {
+        if (!card.isConnected) { clearInterval(timer); return; }
+        if (!seen || performance.now() < idle) return;
+        caps.forEach((c) => c.classList.add('is-down'));
+        btn.classList.add('is-press');
+        setTimeout(() => { caps.forEach((c) => c.classList.remove('is-down')); btn.classList.remove('is-press'); run(true); }, 160);
+      }, 3600);
+    }
+  });
+})();
+</script>

@@ -1,0 +1,11 @@
+{
+  "title": "Export",
+  "subtitle": "The ad spend shown, as CSV",
+  "lang": "en",
+  "name": "export",
+  "label": "Download CSV",
+  "done": "Downloaded",
+  "target": "bar-budget",
+  "filename": "ad-spend.csv",
+  "shortcut": "shift+d"
+}

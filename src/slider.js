@@ -1,35 +1,36 @@
-  /* 범위 슬라이더(컨트롤 공통): 손잡이 둘로 범위를 고릅니다. 카드 머리 없이 조작부만 그립니다(control.css). 위 줄에 고른 범위를 적고, 분포(hist)를 주면 트랙 위에 막대로 그려
-     고른 범위 안의 막대만 글자색으로 채우고, 안에 든 개수를 굴러가는 숫자로 적습니다. 손잡이가 지나가며 막대가 범위에 들어오면
-     살짝 솟았다 내려앉고 나가면 살짝 꺼져, 끄는 동안 어느 구간의 데이터가 들어오고 나가는지 보입니다.
+  /* 범위 슬라이더(컨트롤 공통): 손잡이 둘로 범위를 고릅니다. 카드 머리 없이 조작부만 그립니다(control.css).
+     고른 값은 손잡이 바로 아래에 붙어 함께 움직이고, 두 값이 가까워 겹치면 '앞 – 뒤' 하나로 합칩니다.
+     분포(hist)를 주면 끄는 동안과 키보드로 옮기는 동안만 레일 위에 분포 창이 떠올라, 고른 범위 안의 막대를 글자색으로 채우고
+     범위 안 개수를 굴러가는 숫자로 적습니다(가만히 둘 때는 레일과 값만 보여 필터 줄에서 자리를 적게 차지합니다).
+     손잡이가 지나가며 막대가 범위에 들어오면 손잡이에서 가까운 차례로 살짝 솟았다 내려앉고, 나가면 살짝 꺼집니다.
      cfg: { n: 칸 수(자리는 0…n), text(i): 그 자리의 글자, value(i): 이벤트로 보내는 값, start: [앞, 뒤] 자리, aria: [앞 손잡이 이름, 뒤 손잡이 이름],
-            hist: { counts: min~max를 같은 폭으로 나눈 칸마다의 개수, min, max, noun: 개수 뒤에 붙는 말 } }(hist가 있으면 value(i)는 숫자)
+            hist: { counts: min~max를 같은 폭으로 나눈 칸마다의 개수, min, max, noun: 개수 뒤에 붙는 말(비우면 행) } }(hist가 있으면 value(i)는 숫자)
      값이 바뀌면 카드에서 vzb-change 이벤트(bubbles, detail: { name, value: [시작, 끝] })를 보내고, 카드의 data-vzb-value에 같은 값을 적습니다.
-     조작: 손잡이를 끌거나, 막대 · 트랙을 눌러 가까운 손잡이를 옮기거나, 손잡이에 포커스한 뒤 화살표(한 칸) · Page Up/Down(열 칸쯤) · Home/End로 옮깁니다.
+     조작: 손잡이를 끌거나, 레일을 눌러 가까운 손잡이를 옮기거나, 손잡이에 포커스한 뒤 화살표(한 칸) · Page Up/Down(열 칸쯤) · Home/End로 옮깁니다.
      두 손잡이는 같은 칸까지 만날 수 있고, 겹쳐 있을 때는 끄는 방향의 손잡이가 움직입니다. 손잡이는 용수철로 따라갑니다.
-     동작 줄이기 설정에서는 바로 옮기고 막대도 솟지 않습니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 손을 대기 전까지 몇 가지 범위를 차례로 보여 줍니다. */
+     동작 줄이기 설정에서는 바로 옮기고 분포 창과 막대도 움직이지 않습니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리)
+     손을 대기 전까지 몇 가지 범위를 차례로 보여 줍니다. */
   function slider(card, d, f, cfg) {
-    const n = cfg.n, R = 8, hist = cfg.hist && cfg.hist.counts.length ? cfg.hist : null;   // R: 손잡이 반지름. 트랙과 막대는 양 끝에서 그만큼 들어옵니다.
+    const n = cfg.n, R = 8, hist = cfg.hist && cfg.hist.counts.length ? cfg.hist : null;   // R: 손잡이 반지름. 레일과 막대는 양 끝에서 그만큼 들어옵니다.
     let lo = cfg.start[0], hi = cfg.start[1];
-    const foot = el('div', 'vzb-sl'), read = el('div', 'vzb-sl-read'), val = el('span', 'vzb-sl-val'), say = el('p', 'vzb-sr');
+    const root = el('div', 'vzb-sl'), area = el('div', 'vzb-sl-area'), say = el('p', 'vzb-sr'), sr = el('p', 'vzb-sr');
     say.setAttribute('aria-live', 'polite');
-    read.append(val);
-    let count = null, countSr = null;   // 굴러가는 숫자는 화면 낭독기에서 숨기고, 같은 개수를 글자로 따로 둡니다
-    if (hist) {
-      const c = el('span', 'vzb-sl-count'), noun = el('span', null, hist.noun ? (f.lang === 'en' ? ' ' : '') + hist.noun : '');
-      count = el('span', 'vzb-rl');
-      countSr = el('span', 'vzb-sr');
-      noun.setAttribute('aria-hidden', 'true');
-      c.append(countSr, count, noun);
-      read.append(c);
-    }
-    const area = el('div', 'vzb-sl-area');
     area.setAttribute('data-vzb-input', '');
-    let bars = [];
+    const gap = f.lang === 'en' ? ' ' : '';
+    const nounOf = (c) => gap + (hist.noun || tx(d, c === 1 ? '행|1' : '행'));
+    // 분포 창: 끄는 동안과 키보드로 옮기는 동안만 레일 위에 떠오릅니다. 막대는 레일의 칸과 같은 자리에 섭니다.
+    let pop = null, count = null, nounEl = null, bars = [];
     if (hist) {
+      pop = el('div', 'vzb-sl-pop');
+      pop.setAttribute('aria-hidden', 'true');
+      const top = el('div', 'vzb-sl-pophd');
+      count = el('span', 'vzb-rl');
+      nounEl = el('span', 'vzb-sl-noun');
+      top.append(count, nounEl);
       const box = el('div', 'vzb-sl-hist'), peak = Math.max(1, ...hist.counts);
-      box.setAttribute('aria-hidden', 'true');
       bars = hist.counts.map((c) => { const b = el('i', 'vzb-sl-bar'); b.style.height = `${Math.max(6, (Math.max(0, +c || 0) / peak) * 100)}%`; box.append(b); return b; });
-      area.append(box);
+      pop.append(top, box);
+      area.append(pop);
     }
     const knob = (name) => {
       const k = el('span', 'vzb-sl-thumb');
@@ -42,15 +43,13 @@
     };
     const rail = el('div', 'vzb-sl-rail'), fill = el('span', 'vzb-sl-fill'), A = knob(cfg.aria[0]), B = knob(cfg.aria[1]);
     rail.append(el('span', 'vzb-sl-track'), fill, A, B);
-    area.append(rail);
-    foot.append(read, area);
-    if (!hist) {
-      const ends = el('div', 'vzb-sl-ends');
-      ends.append(el('span', null, cfg.text(0)), el('span', null, cfg.text(n)));
-      foot.append(ends);
-    }
-    foot.append(say);
-    card.append(foot);
+    // 손잡이 아래의 값: 앞 · 뒤 하나씩, 겹치면 합친 하나
+    const labs = el('div', 'vzb-sl-labs'), la = el('span', 'vzb-sl-lab'), lb = el('span', 'vzb-sl-lab'), lm = el('span', 'vzb-sl-lab');
+    labs.setAttribute('aria-hidden', 'true');
+    labs.append(la, lb, lm);
+    area.append(rail, labs);
+    root.append(area, sr, say);
+    card.append(root);
 
     const reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     // 막대가 범위에 드는지와 범위 안의 개수: 칸이 범위에 걸친 만큼 나눠 셉니다(step을 칸 폭에 맞추면 정확히 셉니다).
@@ -73,22 +72,34 @@
         .forEach(([bar, on], k) => bar.animate(on ? [{ transform: 'scaleY(1)' }, { transform: 'scaleY(1.22)' }, { transform: 'scaleY(1)' }] : [{ transform: 'scaleY(1)' }, { transform: 'scaleY(0.82)' }, { transform: 'scaleY(1)' }],
           { duration: on ? 340 : 260, delay: Math.min(220, k * 24), easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)' }));
     }
-    let sayT = 0;
+    // 분포 창 보이기: 조작하는 동안 켜고, 손을 떼거나 키를 멈추면 조금 뒤 끕니다.
+    let popT = 0;
+    function reveal(on, after) {
+      if (!pop) return;
+      clearTimeout(popT);
+      if (on) root.classList.add('is-on');
+      if (after != null) popT = setTimeout(() => { if (!drag) root.classList.remove('is-on'); }, after);
+    }
+    let sayT = 0, wa = 0, wb = 0, wm = 0;
     function write(first) {
       const a = cfg.text(lo), b = cfg.text(hi), words = lo === hi ? a : `${a} – ${b}`;
-      val.textContent = words;
+      la.textContent = a;
+      lb.textContent = b;
+      lm.textContent = words;
+      wa = la.offsetWidth; wb = lb.offsetWidth; wm = lm.offsetWidth;
       A.setAttribute('aria-valuenow', lo);
       A.setAttribute('aria-valuetext', a);
       B.setAttribute('aria-valuenow', hi);
       B.setAttribute('aria-valuetext', b);
       let tail = '';
       if (hist) {
-        const c = num(Math.round(counted(cfg.value(lo), cfg.value(hi))), 0);
-        roll(count, c);
-        tail = `, ${c}${hist.noun ? (f.lang === 'en' ? ' ' : '') + hist.noun : ''}`;
-        countSr.textContent = tail.slice(2);
+        const c = Math.round(counted(cfg.value(lo), cfg.value(hi)));
+        roll(count, num(c, 0));
+        nounEl.textContent = nounOf(c);
+        tail = `, ${num(c, 0)}${nounOf(c)}`;
         paintBars(first);
       }
+      sr.textContent = words + tail;
       if (first) return;
       clearTimeout(sayT);
       sayT = setTimeout(() => { say.textContent = words + tail; }, 500);
@@ -117,6 +128,15 @@
       A.style.transform = `translateX(${sa.x.toFixed(2)}px)`;
       B.style.transform = `translateX(${sb.x.toFixed(2)}px)`;
       fill.style.transform = `translateX(${sa.x.toFixed(2)}px) scaleX(${Math.max(0, sb.x - sa.x).toFixed(2)})`;
+      // 값은 손잡이 가운데 아래에 두되 레일 밖으로 나가지 않게 하고, 두 값이 8px 안으로 붙으면 합친 하나를 가운데에 둡니다.
+      const at0 = (x, w) => Math.max(0, Math.min(Math.max(0, W - w), x - w / 2)), xa = at0(sa.x, wa), xb = at0(sb.x, wb);
+      const one = lo === hi || xa + wa + 8 > xb;
+      la.style.transform = `translateX(${xa.toFixed(1)}px)`;
+      lb.style.transform = `translateX(${xb.toFixed(1)}px)`;
+      lm.style.transform = `translateX(${at0((sa.x + sb.x) / 2, wm).toFixed(1)}px)`;
+      la.classList.toggle('is-off', one);
+      lb.classList.toggle('is-off', one);
+      lm.classList.toggle('is-off', !one);
     }
     function frame(now) {
       raf = 0;
@@ -141,6 +161,7 @@
       }
       const first = drag.who === A, s = first ? sa : sb;
       mover = drag.who;
+      drag.who.classList.add('is-held');
       if (!drag.held) { drag.held = true; held(s); }
       const px = Math.max(R, Math.min(W - R, x - drag.off));
       s.t = first ? Math.min(px, sb.t) : Math.max(px, sa.t);
@@ -153,6 +174,7 @@
       drag = { x, who: da < db ? A : db < da ? B : x > sb.t ? B : x < sa.t ? A : null };
       drag.off = Math.min(da, db) <= R + 2 ? x - (da <= db ? sa.t : sb.t) : 0;   // 손잡이를 잡았으면 잡은 자리를 지키고, 막대 · 트랙을 눌렀으면 손잡이가 그리로 옵니다
       idle = Infinity;
+      reveal(true);
       area.classList.add('is-drag');
       area.setPointerCapture(e.pointerId);
       move(x);
@@ -163,6 +185,9 @@
       drag = null;
       idle = performance.now() + 6000;
       area.classList.remove('is-drag');
+      A.classList.remove('is-held');
+      B.classList.remove('is-held');
+      reveal(false, 900);
       rest();
     };
     area.addEventListener('pointerup', drop);
@@ -175,6 +200,7 @@
       if (by) v += by; else if (e.key === 'Home') v = first ? 0 : lo; else if (e.key === 'End') v = first ? hi : n; else return;
       e.preventDefault();
       idle = performance.now() + 6000;
+      reveal(true, 1400);
       mover = first ? A : B;
       if (first) set(Math.max(0, Math.min(hi, v)), hi); else set(lo, Math.max(lo, Math.min(n, v)));
       rest();
@@ -184,7 +210,8 @@
 
     write(true);
     emit(true);
-    onSize(rail, (w) => { W = w; sa.t = pos(lo); sb.t = pos(hi); jump(); });
+    onSize(rail, (w) => { W = w; wa = la.offsetWidth; wb = lb.offsetWidth; wm = lm.offsetWidth; sa.t = pos(lo); sb.t = pos(hi); jump(); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (W) { wa = la.offsetWidth; wb = lb.offsetWidth; wm = lm.offsetWidth; draw(); } });
 
     // 갤러리(data-vzb-loop): 화면에 보이는 동안, 손을 대기 전과 손을 뗀 지 6초 뒤부터 몇 가지 범위를 차례로 보여 줍니다.
     if (!reduce && card.closest('[data-vzb-loop]')) {
@@ -196,6 +223,7 @@
         if (drag || !seen || !W || performance.now() < idle) return;
         const p = plan[k++ % plan.length], a = Math.round(p[0] * n), b = Math.max(a, Math.round(p[1] * n));
         mover = Math.abs(a - lo) >= Math.abs(b - hi) ? A : B;
+        reveal(true, 1150);
         set(a, b);
         rest();
       }, 1800);

@@ -75,8 +75,9 @@
       it.li.append(el('i', `vzb-wf-key vzb-wf-c${it.k}`), el('span', null, it.name), it.val);
       legend.append(it.li);
     });
-    ctl.append(btn, legend);
+    ctl.append(legend);
     foot.append(plot, ctl);
+    card.querySelector('.vzb-hd').append(btn);   // 다시 보기 단추는 머리의 오른쪽 위
     card.append(foot);
     // 화면 낭독기용 표: 항목 · 기간마다 비중(원래 값) · 차이
     const sr = el('div', 'vzb-sr'), table = el('table'), hr = el('tr');
@@ -108,10 +109,13 @@
     const order = new Map(flips.map((i, j) => [i, j]));
     const easeIn = (k) => k * k, back = (k) => 1 + 2.2 * (k - 1) ** 3 + 1.2 * (k - 1) ** 2;
     let pitch = 0, cell = 0, W = 0, t = 0, stage = null;
-    function layout(w) {
+    // 넓은 카드(520px 이상)에서는 범례를 칸 오른쪽에 세로로 두고 칸을 한 변 22px까지 키웁니다. 좁으면 범례는 칸 아래이고 한 변 18px까지입니다.
+    function layout(fw) {
+      const side = fw >= 520;
+      foot.classList.toggle('is-side', side);
+      pitch = Math.max(8, Math.min(side ? 22 : 18, (side ? fw - 200 : fw) / COLS));
+      const gap = pitch >= 14 ? 3 : 2, w = side ? pitch * COLS - gap : fw;
       W = w;
-      pitch = Math.max(8, Math.min(18, w / COLS));
-      const gap = pitch >= 14 ? 3 : 2;
       cell = pitch - gap;
       const h = pitch * ROWS - gap + 22;
       svg.setAttribute('width', w);
@@ -228,8 +232,8 @@
 
     btn.hidden = still || P < 2;
     if (still || live || P < 2) t = 1e9;   // 마지막 장면에서 시작합니다
-    onSize(plot, layout);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (W) layout(W); });
+    onSize(foot, layout);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (W) layout(foot.clientWidth); });
     // 화면에 처음 보일 때 움직입니다. 화면 밖에 있는 동안은 멈춰 둡니다.
     const start = () => { if (!seen) { seen = true; if (!still && !live && P > 1) play(); } };
     if ('IntersectionObserver' in window) {

@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.52 · 막대 차트 · Warning Bars (bar-budget)
+<!-- Vizney Blocks v0.53 · 막대 차트 · Warning Bars (bar-budget)
      https://blocks.vizney.com/ko/cards/bar-budget.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -184,7 +184,8 @@
 .vzb-bb-col { transition: opacity 0.12s; }
 .vzb-bb-svg.is-hover .vzb-bb-col:not(.is-on) { opacity: 0.3; }
 .vzb-bb-ctl { display: flex; align-items: center; gap: 10px; min-height: 28px; margin-top: 8px; }
-.vzb-bb-btn { flex: none; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
+.vzb-card[data-vzb="bar-budget"] .vzb-hd { position: relative; padding-right: 36px; }   /* 오른쪽 위 다시 보기 단추 자리 */
+.vzb-bb-btn { position: absolute; top: -2px; right: 0; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
 .vzb-bb-btn:hover { background: var(--vzb-other); }
 .vzb-bb-btn[hidden] { display: none; }
 .vzb-bb-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
@@ -600,8 +601,9 @@
     btn.append(ic);
     if (spill.length) sumEl.append(el('i', 'vzb-bb-key'));
     sumEl.append(summary);
-    ctl.append(btn, sumEl);
+    ctl.append(sumEl);
     foot.append(plot, ctl);
+    card.querySelector('.vzb-hd').append(btn);   // 다시 보기 단추는 머리의 오른쪽 위
     card.append(foot);
     // 화면 낭독기용 표: 기간 · 값 · 한도 · 차이
     const sr = el('div', 'vzb-sr'), table = el('table'), hr = el('tr');

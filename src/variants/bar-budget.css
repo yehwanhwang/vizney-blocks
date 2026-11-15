@@ -16,7 +16,8 @@
 .vzb-bb-col { transition: opacity 0.12s; }
 .vzb-bb-svg.is-hover .vzb-bb-col:not(.is-on) { opacity: 0.3; }
 .vzb-bb-ctl { display: flex; align-items: center; gap: 10px; min-height: 28px; margin-top: 8px; }
-.vzb-bb-btn { flex: none; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
+.vzb-card[data-vzb="bar-budget"] .vzb-hd { position: relative; padding-right: 36px; }   /* 오른쪽 위 다시 보기 단추 자리 */
+.vzb-bb-btn { position: absolute; top: -2px; right: 0; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
 .vzb-bb-btn:hover { background: var(--vzb-other); }
 .vzb-bb-btn[hidden] { display: none; }
 .vzb-bb-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }

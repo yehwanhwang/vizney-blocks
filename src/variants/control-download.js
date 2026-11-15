@@ -1,5 +1,6 @@
   // Download Button: 화면에 있는 차트 카드(target)의 데이터를 내려받는 단추입니다. 카드 머리 없이 단추만 그립니다. 처음에는 내려받기 아이콘만 있고, 마우스를 올리거나
   // 키보드로 들어오거나 아이콘을 누르면 단추가 옆으로 늘어나며 받을 형식(formats: csv · json · png, 비우면 셋 다)이 하나씩 나옵니다.
+  // 늘어난 단추는 옆 내용 위로 겹쳐 떠서 자리를 밀어내지 않고, 오른쪽에 펼칠 자리가 없으면 아이콘은 그대로 둔 채 왼쪽으로 펼칩니다(align: end면 왼쪽부터).
   // csv · json은 target 카드의 지금 JSON(컨트롤로 거른 뒤)에서 표를 만들어 받습니다: items(객체 배열), 없으면 labels와 values(한도
   // limit · 목표 target이 있으면 열로 더함), labels와 series, 그 밖에는 JSON에서 처음 나오는 객체 배열입니다. csv 앞에는 엑셀용 BOM을 붙입니다.
   // png는 target 카드를 보이는 그대로 그림으로 받습니다(글꼴은 기기에 설치된 것으로 그려질 수 있습니다).
@@ -53,15 +54,26 @@
     got.append(what, count, unit);
     got.setAttribute('aria-hidden', 'true');
     meta.append(got);
-    row.append(menu, meta);
+    const anchor = el('div', 'vzb-dl-anchor');   // 아이콘 자리(44px). 늘어난 단추는 이 자리에서 옆 내용 위로 겹쳐 뜹니다
+    anchor.append(menu);
+    row.append(anchor, meta);
+    const alignEnd = d.align === 'end';   // 화면 오른쪽 위처럼 오른쪽 끝에 둘 때: 아이콘을 오른쪽 끝에 붙이고 왼쪽으로 펼칩니다
+    foot.classList.toggle('is-end', alignEnd);
     foot.append(row, say);
     card.append(foot);
 
     // 열고 닫기: 마우스를 올리면 열고, 내리면 잠시 뒤 닫습니다. 키보드로 아이콘에 들어오거나 아이콘을 눌러도 엽니다.
     let open = false, shut = 0, since = 0, hush = false;   // hush: Esc로 닫고 아이콘에 포커스를 돌려줄 때는 다시 열지 않습니다
+    // 펼칠 방향: 아이콘 오른쪽(왼쪽 맞춤이면)이나 왼쪽(align end면)으로 화면 안에 다 들어가면 그쪽, 아니면 반대쪽입니다. 아이콘은 그 자리에 있습니다.
+    function side() {
+      const r = btn.getBoundingClientRect(), vw = document.documentElement.clientWidth || window.innerWidth, need = 44 + opts.scrollWidth;
+      const right = vw - 8 - r.left, left = r.right - 8;
+      return alignEnd ? left >= need || right < need : right < need && left > right;
+    }
     function setOpen(v) {
       clearTimeout(shut);
       if (open === v) return;
+      if (v) foot.classList.toggle('is-left', side());
       open = v;
       since = performance.now();
       foot.classList.toggle('is-open', v);

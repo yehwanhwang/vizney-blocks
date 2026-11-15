@@ -12,7 +12,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.52';
+const VERSION = 'v0.53';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -318,9 +318,9 @@ const dialog = (L) => `<dialog class="dlg" id="dlg" aria-labelledby="dlg-title" 
 const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 
 // Home (v0.45, v0.49): the title area of a Vizney blog category page (title and description, sized from the blog), then a
-// gallery of blocks. Each tile holds the live card as it is copied (its head shows the title of the example data) with a
-// light/dark switch in the top right corner of the tile; under it come the block name and two copy buttons, so a button always
-// belongs to the block above it. Every tile has the height of a 2-unit card, and a lower block sits in the middle of it.
+// gallery of blocks. Each tile holds the live card as it is copied (its head shows the title of the example data); under it
+// come the block name with the light/dark switch on its right (v0.53) and two copy buttons, so a button always belongs to the
+// block above it. Every tile has the height of a 2-unit card, and a lower block sits in the middle of it.
 // v0.52: the controls are drawn bare (no head, no frame) in the middle of the tile, like the units of a motion gallery.
 // v0.49: the gallery is being rebuilt one block at a time. Only the blocks of the new direction are listed; the earlier cards
 // and the chart pages are hidden (not linked from the home page, the search or the sitemap) but keep their addresses and code.
@@ -338,8 +338,8 @@ ${GALLERY.map((id) => {
     return `<li class="gt is-dark${tierOf(v) === 0 ? ' is-bare' : ''}" id="${id}" data-gal="${id}" aria-labelledby="gt-${id}">
 <div class="gt-box"><div class="gt-in">
 <div class="gt-pv" data-mount="${id}"${LOOP.has(id) ? ' data-vzb-loop' : ''} style="min-height:${tierPx(v)}px"></div>
-</div><button type="button" class="gt-theme" data-act="theme" data-id="${id}" aria-label="${L.t.toLight}" title="${L.t.toLight}">${IC.sun}${IC.moon}</button></div>
-<div class="gt-meta"><span class="gt-name" id="gt-${id}">${h(v.name)}</span></div>
+</div></div>
+<div class="gt-meta"><span class="gt-name" id="gt-${id}">${h(v.name)}</span><button type="button" class="gt-theme" data-act="theme" data-id="${id}" aria-label="${L.t.toLight}" title="${L.t.toLight}">${IC.sun}${IC.moon}</button></div>
 <div class="gt-acts"><button type="button" class="btn" data-act="copy-prompt" data-id="${id}" aria-label="${h(v.name)} ${L.t.tPrompt}">${IC.prompt}<span>${L.t.tPrompt}</span></button><button type="button" class="btn" data-act="copy-code" data-id="${id}" aria-label="${h(v.name)} ${L.t.tCode}">${IC.copy}<span>${L.t.tCode}</span></button></div>
 </li>`;
   }).join('\n')}
@@ -504,16 +504,16 @@ const FIELD_OVERRIDE = {
     en: { title: 'what the shares are of (e.g. Market Share)', subtitle: 'the basis and the two periods (e.g. by units sold, 2025 → 2026)', periods: 'the names of [the earlier period, the later period]; with one, the card draws that period only', focus: 'the name of the item to point at; the first item when empty', items: '2 to 4 items, each with name and values ([earlier value, later value], raw values, not shares)' },
   },
   'control-range': {
-    ko: { label: '화면 낭독기가 읽는 이름(예: 주문 금액). 화면에는 그리지 않는다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '고를 수 있는 가장 작은 값', max: '고를 수 있는 가장 큰 값', step: '한 칸의 크기. 비우면 범위를 100칸쯤으로 나눈다', value: '[시작, 끝]. 비우면 전체 범위', counts: 'min~max를 같은 폭으로 나눈 칸마다의 개수(분포 막대). 없어도 된다', noun: '개수 뒤에 붙는 말(예: 건)' },
-    en: { label: 'the name screen readers read (e.g. order value); not drawn on screen', name: 'detail.name of the vzb-change event sent when the value changes', min: 'the smallest value that can be picked', max: 'the largest value that can be picked', step: 'the size of one step; empty splits the range into about 100 steps', value: '[start, end]; empty is the whole range', counts: 'the number of records in each equal-width bin from min to max (the distribution bars); optional', noun: 'the word after the count (e.g. orders)' },
+    ko: { label: '화면 낭독기가 읽는 이름(예: 주문 금액). 화면에는 그리지 않는다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '고를 수 있는 가장 작은 값', max: '고를 수 있는 가장 큰 값', step: '한 칸의 크기. 비우면 범위를 100칸쯤으로 나눈다', value: '[시작, 끝]. 비우면 전체 범위', counts: 'min~max를 같은 폭으로 나눈 칸마다의 개수(분포 막대). 없어도 된다', noun: '개수 뒤에 붙는 말(예: 건). 비우면 행' },
+    en: { label: 'the name screen readers read (e.g. order value); not drawn on screen', name: 'detail.name of the vzb-change event sent when the value changes', min: 'the smallest value that can be picked', max: 'the largest value that can be picked', step: 'the size of one step; empty splits the range into about 100 steps', value: '[start, end]; empty is the whole range', counts: 'the number of records in each equal-width bin from min to max (the distribution bars); optional', noun: 'the word after the count (e.g. orders); rows when empty' },
   },
   'control-chips': {
     ko: { label: '화면 낭독기가 읽는 칩 묶음의 이름(예: 채널). 화면에는 그리지 않는다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', options: '고를 항목의 이름들. 8개 안팎', value: '처음 고른 항목들. 비우면 모두', all: '전체 칩의 이름. 비우면 전체, 빈 글자면 전체 칩을 두지 않는다' },
     en: { label: 'the name screen readers read for the chips (e.g. Channel); not drawn on screen', name: 'detail.name of the vzb-change event sent when the value changes', options: 'the names of the items to pick, about 8', value: 'the items picked at first; empty picks all', all: 'the name of the All chip; empty means All, an empty string leaves the chip out' },
   },
   'control-download': {
-    ko: { name: 'vzb-download 이벤트의 detail.name', target: '내려받을 카드의 data-vzb(예: bar-budget). 페이지에서 처음 만나는 그 카드', filename: '파일 이름. 확장자는 형식에 따라 붙는다(예: monthly-ad-spend)', formats: '받을 형식들: csv · json · png. 비우면 셋 다', label: '화면 낭독기가 읽는 단추 이름(예: 월별 광고비 내려받기). 비우면 내려받기' },
-    en: { name: 'detail.name of the vzb-download event', target: 'the data-vzb of the card to download (e.g. bar-budget); the first such card on the page', filename: 'the file name; the extension follows the format (e.g. monthly-ad-spend)', formats: 'the formats: csv, json, png; empty means all three', label: 'the name screen readers read for the button (e.g. Download monthly ad spend); Download when empty' },
+    ko: { name: 'vzb-download 이벤트의 detail.name', target: '내려받을 카드의 data-vzb(예: bar-budget). 페이지에서 처음 만나는 그 카드', filename: '파일 이름. 확장자는 형식에 따라 붙는다(예: monthly-ad-spend)', formats: '받을 형식들: csv · json · png. 비우면 셋 다', label: '화면 낭독기가 읽는 단추 이름(예: 월별 광고비 내려받기). 비우면 내려받기', align: 'start(비우면) · end. end면 아이콘을 놓인 자리의 오른쪽 끝에 두고 왼쪽으로 펼친다' },
+    en: { name: 'detail.name of the vzb-download event', target: 'the data-vzb of the card to download (e.g. bar-budget); the first such card on the page', filename: 'the file name; the extension follows the format (e.g. monthly-ad-spend)', formats: 'the formats: csv, json, png; empty means all three', label: 'the name screen readers read for the button (e.g. Download monthly ad spend); Download when empty', align: 'start (default) or end; end puts the icon at the right end of its slot and opens to the left' },
   },
   'control-date': {
     ko: { title: '무엇의 기간인지(예: 기간)', subtitle: '기준(예: 집행일 기준). 없어도 된다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '고를 수 있는 첫 달(YYYY-MM)이나 첫 날(YYYY-MM-DD). 적은 모양이 한 칸의 단위가 된다', max: '고를 수 있는 마지막 달이나 날. min과 같은 모양으로', value: '[시작, 끝]. min과 같은 모양으로 적고, 비우면 전체 기간' },

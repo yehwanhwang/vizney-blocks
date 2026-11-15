@@ -12,7 +12,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.50';
+const VERSION = 'v0.51';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -62,12 +62,17 @@ ${js(v)}
 </script>
 `;
 
-// Retired cards ("retired": { version, use, note } in meta.json) leave the gallery, llms.txt, the skill and the search,
+// Retired cards ("retired": { version, use, note, noteEn } in meta.json) leave the gallery, llms.txt, the skill and the search,
 // but keep their public addresses (/cards/<id>.html and .txt) with working code and a note naming the card to use instead.
+// A card retired after the English site existed (it has <id>.en.json) keeps its English addresses with the English code and an
+// English note (noteEn); a card retired before that has only the Korean code, which its old address /cards/<id> keeps.
 const allVariants = cats.flatMap((cat) => cat.variants.map((v) => ({ ...v, cat: cat.id })));
 const nameOf = Object.fromEntries(allVariants.map((v) => [v.id, v.name]));
 for (const v of allVariants) if (v.retired && (!nameOf[v.retired.use] || allVariants.find((x) => x.id === v.retired.use).retired)) throw new Error(`meta.json: ${v.id} points to a missing or retired card`);
-const retiredNote = (v) => `${v.retired.version}에 목록에서 내린 카드입니다. 대신 ${nameOf[v.retired.use]}(${SITE}/ko/cards/${v.retired.use}.txt)를 쓰세요. ${v.retired.note}`;
+const retiredNote = (v, lang = 'ko') => (lang === 'en'
+  ? `Retired from the list in ${v.retired.version}. Use ${nameOf[v.retired.use]} (${SITE}/cards/${v.retired.use}.txt) instead. ${v.retired.noteEn || ''}`.trim()
+  : `${v.retired.version}에 목록에서 내린 카드입니다. 대신 ${nameOf[v.retired.use]}(${SITE}/ko/cards/${v.retired.use}.txt)를 쓰세요. ${v.retired.note}`);
+const hasEn = (v) => existsSync(join(root, vp(v.id, 'en.json')));
 const PASTE = {
   ko: '<body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요.',
   en: 'Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card\'s own words in English).',
@@ -78,7 +83,7 @@ function snippet(v, cat, lang = 'ko') {
   const base = lang === 'en' ? SITE : `${SITE}/ko`;
   return `<!-- Vizney Blocks ${VERSION} · ${cat.name} · ${v.name} (${v.id})
      ${base}/cards/${v.id}.html · ${NOTICE}
-${v.retired ? `     ${retiredNote(v)}\n` : ''}     ${PASTE[lang]} -->
+${v.retired ? `     ${retiredNote(v, lang)}\n` : ''}     ${PASTE[lang]} -->
 ${FONT_LINK}
 <style>
 ${css(v, lang)}
@@ -89,9 +94,9 @@ ${tail(v)}`;
 
 const builtAll = cats.map((cat) => ({ ...cat, variants: cat.variants.map((v) => ({ ...v, cat: cat.id, code: snippet(v, cat) })) }));
 const retired = builtAll.flatMap((c) => c.variants.filter((v) => v.retired));
-// English wording and snippets for the cards that are not retired (the English site never had the retired ones).
+// English wording and snippets for every card with English data (retired ones too, for their kept addresses); builtEn drops the retired.
 const enCat = (c) => ({ ...c, ...(EN.cats[c.id] || {}), groups: c.groups && c.groups.map((g) => ({ ...g, ...((EN.cats[c.id] || {}).groups || {})[g.id] })), option: c.option && { ...c.option, ...(EN.cats[c.id] || {}).option, choices: c.option.choices.map((ch, i) => ({ ...ch, label: ((EN.cats[c.id] || {}).option || {}).choices?.[i] || ch.label })) } });
-const builtEnAll = cats.map((cat) => { const c = enCat(cat); return { ...c, variants: cat.variants.filter((v) => !v.retired && existsSync(join(root, vp(v.id, 'en.json')))).map((v) => ({ ...v, ...(EN.cards[v.id] || {}), cat: cat.id, code: snippet(v, c, 'en') })) }; });
+const builtEnAll = cats.map((cat) => { const c = enCat(cat); return { ...c, variants: cat.variants.filter((v) => hasEn(v)).map((v) => ({ ...v, ...(EN.cards[v.id] || {}), cat: cat.id, code: snippet(v, c, 'en') })) }; });
 const purposes = JSON.parse(r('src/variants/purposes.json'));
 const purposesEn = JSON.parse(r('src/variants/purposes.en.json'));
 // Guard (guard.mjs): self-containment, colors only from tokens, heights, scoping, accessibility hooks, example data,
@@ -107,7 +112,7 @@ const stripNotes = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' '
 if (stripNotes(tokensBy.ko) !== stripNotes(tokensBy.en)) throw new Error('src/tokens.en.css: the declarations must match src/tokens.css (only the notes differ)');
 if (process.argv.includes('--check')) process.exit(0);
 const built = builtAll.map((c) => ({ ...c, variants: c.variants.filter((v) => !v.retired) })).filter((c) => c.variants.length);
-const builtEn = builtEnAll.filter((c) => c.variants.length);
+const builtEn = builtEnAll.map((c) => ({ ...c, variants: c.variants.filter((v) => !v.retired) })).filter((c) => c.variants.length);
 const variants = built.flatMap((cat) => cat.variants);
 const byId = Object.fromEntries(variants.map((v) => [v.id, v]));
 const N = { cards: variants.length, cats: built.length };
@@ -317,7 +322,7 @@ const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 // v0.49: the gallery is being rebuilt one block at a time. Only the blocks of the new direction are listed; the earlier cards
 // and the chart pages are hidden (not linked from the home page, the search or the sitemap) but keep their addresses and code.
 // Blocks that move (data-vzb-loop) replay on the first screen instead of stopping at the end.
-const GALLERY = ['bar-budget', 'control-range', 'control-date', 'control-chips', 'control-download'];
+const GALLERY = ['bar-budget', 'control-range', 'control-chips', 'control-download'];
 const LOOP = new Set(GALLERY);
 const galleryHead = (L) => `<section class="wrap ghead" aria-labelledby="ghead-title">
 <h1 id="ghead-title">${L.t.gTitle}</h1>
@@ -489,20 +494,20 @@ const FIELD_NOTE = {
 // Cards whose fields mean something other than the common note.
 const FIELD_OVERRIDE = {
   'bar-budget': {
-    ko: { title: '무엇의 값인지(예: 채널별 광고비)', subtitle: '기간과 한도의 기준(예: 11월 1일–14일 집행액, 월 예산 대비)', limitLabel: '한도의 이름(예: 예산 · 정원). 눈금 위와 문구에 쓴다. 비우면 한도', items: '[{ name, value, limit }]. value는 지금까지 쓴 양, limit은 넘으면 안 되는 한도. 받은 순서대로 6개까지' },
-    en: { title: 'what the values are (e.g. Ad Spend by Channel)', subtitle: 'the period and what the limit is (e.g. Nov 1–14 spend against the monthly budget)', limitLabel: 'the name of the limit (e.g. Budget, Seats), written above the tick and in the summary; Limit when empty', items: '[{ name, value, limit }]: value is the amount used so far, limit the cap it should not cross; drawn in the order given, up to 6' },
+    ko: { title: '무엇의 값인지(예: 월별 광고비)', subtitle: '기간과 한도의 기준(예: 2025년 11월–2026년 11월, 월 예산 4,000만 원 대비)', limit: '모든 기간에 같은 한도(숫자 하나)', limitLabel: '한도선의 이름(예: 예산 · 처리 용량). 비우면 한도', labels: '기간 이름. 월별 추이는 13개월', values: '기간마다의 값(labels와 같은 개수)' },
+    en: { title: 'what the values are (e.g. Monthly Ad Spend)', subtitle: 'the period and the basis of the limit (e.g. Nov 2025 – Nov 2026, against a $40K monthly budget)', limit: 'one limit for every period (a single number)', limitLabel: 'the name of the line (e.g. Budget, Capacity); Limit when empty', labels: 'the period names; 13 months for a monthly trend', values: 'the value of each period (as many as labels)' },
   },
   'control-range': {
-    ko: { title: '무엇을 거르는지(예: 예산 규모)', subtitle: '기준(예: 채널 월 예산). 없어도 된다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '고를 수 있는 가장 작은 값', max: '고를 수 있는 가장 큰 값', step: '한 칸의 크기. 비우면 범위를 100칸쯤으로 나눈다', value: '[시작, 끝]. 비우면 전체 범위' },
-    en: { title: 'what it filters (e.g. Budget Size)', subtitle: 'the basis (e.g. monthly budget per channel); optional', name: 'detail.name of the vzb-change event sent when the value changes', min: 'the smallest value that can be picked', max: 'the largest value that can be picked', step: 'the size of one step; empty splits the range into about 100 steps', value: '[start, end]; empty is the whole range' },
+    ko: { title: '무엇을 거르는지(예: 주문 금액)', subtitle: '기준(예: 최근 30일, 금액대별 주문). 없어도 된다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '고를 수 있는 가장 작은 값', max: '고를 수 있는 가장 큰 값', step: '한 칸의 크기. 비우면 범위를 100칸쯤으로 나눈다', value: '[시작, 끝]. 비우면 전체 범위', counts: 'min~max를 같은 폭으로 나눈 칸마다의 개수(분포 막대). 없어도 된다', noun: '개수 뒤에 붙는 말(예: 건)' },
+    en: { title: 'what it filters (e.g. Order Value)', subtitle: 'the basis (e.g. orders by amount, last 30 days); optional', name: 'detail.name of the vzb-change event sent when the value changes', min: 'the smallest value that can be picked', max: 'the largest value that can be picked', step: 'the size of one step; empty splits the range into about 100 steps', value: '[start, end]; empty is the whole range', counts: 'the number of records in each equal-width bin from min to max (the distribution bars); optional', noun: 'the word after the count (e.g. orders)' },
   },
   'control-chips': {
     ko: { title: '무엇을 거르는지(예: 채널)', subtitle: '기준(예: 보여 줄 채널). 없어도 된다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', options: '고를 항목의 이름들. 8개 안팎', value: '처음 고른 항목들. 비우면 모두', all: '전체 칩의 이름. 비우면 전체, 빈 글자면 전체 칩을 두지 않는다' },
     en: { title: 'what it filters (e.g. Channel)', subtitle: 'the basis (e.g. channels to show); optional', name: 'detail.name of the vzb-change event sent when the value changes', options: 'the names of the items to pick, about 8', value: 'the items picked at first; empty picks all', all: 'the name of the All chip; empty means All, an empty string leaves the chip out' },
   },
   'control-download': {
-    ko: { title: '무엇을 내보내는지(예: 내보내기)', subtitle: '받는 데이터(예: 보이는 광고비 데이터를 CSV로)', name: 'vzb-download 이벤트의 detail.name', label: '단추 이름(예: CSV 내려받기)', done: '받은 뒤 잠깐 보이는 이름(예: 받았습니다)', target: '내려받을 카드의 data-vzb(예: bar-budget). 페이지에서 처음 만나는 그 카드', filename: '파일 이름(예: ad-spend.csv)', shortcut: '단축키(예: shift+d). mod는 Mac의 ⌘, 그 밖의 Ctrl. 비우면 키캡을 그리지 않는다' },
-    en: { title: 'what it exports (e.g. Export)', subtitle: 'the data it downloads (e.g. the ad spend shown, as CSV)', name: 'detail.name of the vzb-download event', label: 'the button label (e.g. Download CSV)', done: 'the label shown briefly after the download (e.g. Downloaded)', target: 'the data-vzb of the card to download (e.g. bar-budget); the first such card on the page', filename: 'the file name (e.g. ad-spend.csv)', shortcut: 'the shortcut (e.g. shift+d); mod is ⌘ on a Mac and Ctrl elsewhere; empty draws no keycaps' },
+    ko: { title: '무엇을 내보내는지(예: 내보내기)', subtitle: '받는 데이터(예: 월별 광고비를 파일로)', name: 'vzb-download 이벤트의 detail.name', target: '내려받을 카드의 data-vzb(예: bar-budget). 페이지에서 처음 만나는 그 카드', filename: '파일 이름. 확장자는 형식에 따라 붙는다(예: monthly-ad-spend)', formats: '받을 형식들: csv · json · png. 비우면 셋 다', label: '아이콘의 이름(화면 낭독기용). 비우면 내려받기' },
+    en: { title: 'what it exports (e.g. Export)', subtitle: 'the data it downloads (e.g. monthly ad spend as a file)', name: 'detail.name of the vzb-download event', target: 'the data-vzb of the card to download (e.g. bar-budget); the first such card on the page', filename: 'the file name; the extension follows the format (e.g. monthly-ad-spend)', formats: 'the formats: csv, json, png; empty means all three', label: 'the name of the icon for screen readers; Download when empty' },
   },
   'control-date': {
     ko: { title: '무엇의 기간인지(예: 기간)', subtitle: '기준(예: 집행일 기준). 없어도 된다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '고를 수 있는 첫 달(YYYY-MM)이나 첫 날(YYYY-MM-DD). 적은 모양이 한 칸의 단위가 된다', max: '고를 수 있는 마지막 달이나 날. min과 같은 모양으로', value: '[시작, 끝]. min과 같은 모양으로 적고, 비우면 전체 기간' },
@@ -781,7 +786,9 @@ for (const [L, all] of [[KO, builtAll], [ENL, builtEnAll]]) {
   for (const c of all) {
     for (const v of c.variants) {
       const w = c.id === 'kpi' ? 420 : 640;
-      const gone = v.retired && `<p>${h(v.retired.version)}에 목록에서 내린 카드입니다. 대신 <a href="${v.retired.use}.html">${h(nameOf[v.retired.use])}</a>를 쓰세요. ${h(v.retired.note)}</p>\n`;
+      const gone = v.retired && (L === ENL
+        ? `<p>Retired from the list in ${h(v.retired.version)}. Use <a href="${v.retired.use}.html">${h(nameOf[v.retired.use])}</a> instead. ${h(v.retired.noteEn || '')}</p>\n`
+        : `<p>${h(v.retired.version)}에 목록에서 내린 카드입니다. 대신 <a href="${v.retired.use}.html">${h(nameOf[v.retired.use])}</a>를 쓰세요. ${h(v.retired.note)}</p>\n`);
       const path = `${L.files}/cards/${v.id}.html`;
       writeFileSync(join(docs, `${L.files}/cards`, `${v.id}.txt`), v.code);
       if (L === ENL) { writeFileSync(join(docs, 'en/cards', `${v.id}.txt`), v.code); writeFileSync(join(docs, 'en/cards', `${v.id}.html`), moved(`/cards/${v.id}.html`)); }
@@ -795,7 +802,7 @@ ${gone || ''}<p><a href="${L.base}/${c.id}/${gone ? '' : `#${v.id}`}">Vizney Blo
 </html>
 `;
       writeFileSync(join(docs, path), page);
-      if (v.retired) { writeFileSync(join(docs, 'cards', `${v.id}.txt`), v.code); writeFileSync(join(docs, 'cards', `${v.id}.html`), page); }
+      if (v.retired && L === KO && !hasEn(v)) { writeFileSync(join(docs, 'cards', `${v.id}.txt`), v.code); writeFileSync(join(docs, 'cards', `${v.id}.html`), page); }
     }
   }
 }

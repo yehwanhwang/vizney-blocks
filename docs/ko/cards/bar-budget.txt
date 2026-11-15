@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.50 · 막대 차트 · Budget Bars (bar-budget)
+<!-- Vizney Blocks v0.51 · 막대 차트 · Warning Bars (bar-budget)
      https://blocks.vizney.com/ko/cards/bar-budget.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -166,24 +166,24 @@
 .vzb-tip-note + .vzb-tip-note { margin-top: 0; }
 .vzb-fs { --vzb-c: var(--vzb-primary-soft); }
 .vzb-key.is-tick { width: 2px; height: 12px; border-radius: 1px; }
-/* Budget Bars: 높이 2단위. 세로 눈금이 한도(예산), 회색 막대가 쓴 양, 한도를 넘긴 구간만 빨강(--vzb-bad)입니다.
-   막대는 굵기 16px까지, 끝만 4px 둥글게 그리고 한도에 닿으면 눈금 앞에서 각지게 끊습니다. 눈금은 막대보다 위아래로 4px씩 깁니다.
-   이름은 왼쪽 칸, 값은 오른쪽 끝에 적고, 그래프 아래 줄에는 다시 보기 단추와 카드가 계산한 한 줄(넘친 항목 수와 넘친 양)을 둡니다.
-   넘친 구간의 깜빡임은 스크립트가 불투명도로 그립니다(동작 줄이기 설정에서는 깜빡이지 않습니다). */
+/* Warning Bars: 높이 2단위. 세로 막대는 굵기 30px까지, 위쪽 끝만 4px 둥글게 그리고 한도선에 닿으면 선 아래에서 각지게 끊습니다.
+   선 아래는 회색(--vzb-base), 선 위로 넘친 구간만 빨강(--vzb-bad)입니다. 한도선은 글자색 1.5px 실선으로 막대 위에 긋고, 이름은 선 바로 위에 적습니다.
+   기간 이름은 바닥선 아래 11px, 넘친 양은 넘친 막대 위에 10.5px 굵은 빨간 글자(--vzb-bad-ink)로 적습니다.
+   그래프 아래 줄에는 다시 보기 단추와 카드가 계산한 한 줄(넘친 기간 수와 넘친 양)을 둡니다. 깜빡임은 스크립트가 불투명도로 그립니다. */
 .vzb-card[data-vzb="bar-budget"] { min-height: calc(var(--vzb-unit) * 2); }
-.vzb-bb.vzb-foot { padding-top: 10px; }
+.vzb-bb.vzb-foot { padding-top: 12px; }
 .vzb-bb-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
+.vzb-bb-base { stroke: var(--vzb-grid); stroke-width: 1; }
 .vzb-bb-fill { fill: var(--vzb-base); }
 .vzb-bb-over { fill: var(--vzb-bad); }
-.vzb-bb-tick { fill: var(--vzb-ink); }
-.vzb-bb-lim { font-size: 11px; fill: var(--vzb-muted); }
-.vzb-bb-name { font-size: 12px; fill: var(--vzb-ink-2); }
-.vzb-bb-val { font-size: 12px; font-weight: 500; fill: var(--vzb-ink-2); font-variant-numeric: tabular-nums; }
-.vzb-bb-unit { font-size: 11px; font-weight: 400; fill: var(--vzb-muted); }
-.vzb-bb-row.is-over .vzb-bb-name, .vzb-bb-row.is-over .vzb-bb-val { font-weight: 700; fill: var(--vzb-ink); }
-.vzb-bb-row { transition: opacity 0.12s; }
-.vzb-bb-svg.is-hover .vzb-bb-row:not(.is-on) { opacity: 0.3; }
-.vzb-bb-ctl { display: flex; align-items: center; gap: 10px; min-height: 28px; margin-top: 10px; }
+.vzb-bb-line { stroke: var(--vzb-ink); stroke-width: 1.5; }
+.vzb-bb-lim { font-size: 11px; font-weight: 500; fill: var(--vzb-ink); paint-order: stroke; stroke: var(--vzb-card); stroke-width: 3px; stroke-linejoin: round; }
+.vzb-bb-name { font-size: 11px; fill: var(--vzb-muted); }
+.vzb-bb-ex { font-size: 10.5px; font-weight: 700; fill: var(--vzb-bad-ink); font-variant-numeric: tabular-nums; }
+.vzb-bb-col.is-over .vzb-bb-name { font-weight: 700; fill: var(--vzb-ink); }
+.vzb-bb-col { transition: opacity 0.12s; }
+.vzb-bb-svg.is-hover .vzb-bb-col:not(.is-on) { opacity: 0.3; }
+.vzb-bb-ctl { display: flex; align-items: center; gap: 10px; min-height: 28px; margin-top: 8px; }
 .vzb-bb-btn { flex: none; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
 .vzb-bb-btn:hover { background: var(--vzb-other); }
 .vzb-bb-btn[hidden] { display: none; }
@@ -192,23 +192,18 @@
 .vzb-bb-sum { flex: 1 1 auto; min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }
 .vzb-bb-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
 .vzb-bb-key { display: inline-block; width: 8px; height: 8px; margin-right: 7px; border-radius: 2px; background: var(--vzb-bad); }
-@media (prefers-reduced-motion: reduce) { .vzb-bb-row { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .vzb-bb-col { transition: none; } }
 </style>
 <div class="vzb-card" data-vzb="bar-budget">
 <script type="application/json">
 {
-  "title": "채널별 광고비",
-  "subtitle": "11월 1일–14일 집행액, 월 예산 대비",
+  "title": "월별 광고비",
+  "subtitle": "2025년 11월–2026년 11월, 월 예산 4,000만 원 대비",
   "format": "krw",
+  "limit": 40000000,
   "limitLabel": "예산",
-  "items": [
-    { "name": "SNS", "value": 58000000, "limit": 50000000 },
-    { "name": "검색", "value": 42000000, "limit": 60000000 },
-    { "name": "디스플레이", "value": 36000000, "limit": 30000000 },
-    { "name": "동영상", "value": 29000000, "limit": 40000000 },
-    { "name": "제휴", "value": 12000000, "limit": 20000000 },
-    { "name": "리타게팅", "value": 9000000, "limit": 15000000 }
-  ]
+  "labels": ["25.11", "25.12", "26.01", "26.02", "26.03", "26.04", "26.05", "26.06", "26.07", "26.08", "26.09", "26.10", "26.11"],
+  "values": [34200000, 46100000, 31500000, 33000000, 43400000, 36200000, 35800000, 38400000, 32900000, 48700000, 37100000, 39200000, 45300000]
 }
 </script>
 </div>
@@ -254,16 +249,17 @@
     '처음부터 다시': 'Replay',
     '한도': 'Limit', '차이': 'Difference', '%s 초과|한도': '%s over', '%1 초과 · %2의 %3%': '%1 over · %3% of %2', '%1 남음 · %2의 %3%': '%1 left · %3% of %2',
     '%1개 중 %2개 %3 초과 · +%4': '%2 of %1 over %3 · +%4', '%1개 중 %2개 %3 초과': '%2 of %1 over %3', '모두 %s 이내': 'All within %s', '표시할 항목이 없습니다.': 'No items to show.',
-    '%1. 항목 %2개 가운데 %3개가 %4 초과입니다. 위아래 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %3 of %2 items are over %4. Use the up and down arrows to move between items. Every value is in the table that follows.',
+    '%1. 항목 %2개 가운데 %3개가 %4 초과입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %3 of %2 items are over %4. Use the left and right arrows to move between items. Every value is in the table that follows.',
+    'labels와 values를 확인하세요.': 'Check labels and values.', 'limit에 한도를 숫자로 적으세요.': 'Write the limit as a number in limit.',
     'options를 확인하세요.': 'Check options.', '필터': 'Filter', '전체': 'All', '%1, %2개 중 %3개 고름': '%1, %3 of %2 picked', '%1개 중 %2개 고름': '%2 of %1 picked',
-    'CSV 내려받기': 'Download CSV', '받았습니다': 'Downloaded', '데이터 없음': 'No data', '행': 'rows', '행|1': 'row', '받을 데이터가 없습니다.': 'No data to download.',
+    '내려받기': 'Download', '%s로 받기': 'Download as %s', '%s로 받았습니다.': 'Downloaded as %s.', '데이터 없음': 'No data', '행': 'rows', '행|1': 'row', '받을 데이터가 없습니다.': 'No data to download.',
     '%s로 1행을 받았습니다.': 'Downloaded 1 row as %s.', '%1로 %2행을 받았습니다.': 'Downloaded %2 rows as %1.',
     'min과 max를 확인하세요.': 'Check min and max.', '%s 최소': 'Minimum %s', '%s 최대': 'Maximum %s', '%s 시작': 'Start of %s', '%s 끝': 'End of %s',
     '%s 레이더 차트, 항목 %s개와 대상 %s개. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s radar chart, %s axes and %s series. Use the left and right arrows to move between axes. Every value is in the table that follows.',
     '%s 생키 차트, 노드 %s개와 흐름 %s개. 좌우 화살표로 노드와 흐름을 차례로 짚습니다. 모든 흐름은 이어지는 표에 있습니다.': '%s Sankey chart, %s nodes and %s flows. Use the left and right arrows to step through nodes and flows. Every flow is in the table that follows.',
     '%s 산점도, 점 %s개. 좌우 화살표로 점을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s scatter plot, %s points. Use the left and right arrows to move between points. Every value is in the table that follows.',
     '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
-    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'items의 value와 limit을 확인하세요.': 'Check value and limit in items.', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
+    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
   };
   // tx(d 또는 f, 원문, 값…): d.lang(format()이 f에 옮겨 둡니다)이 en이면 영어 문구를, 아니면 원문을 돌려줍니다.
   function tx(x, s, ...a) {
@@ -553,44 +549,44 @@
     return { show: go, at: () => idx, end };
   }
 
-  // Budget Bars: 항목마다 한도(limit, 예: 예산)를 세로 눈금으로 세워 두고, 지금까지 쓴 양(value)을 가로 막대로 채웁니다.
-  // 눈금은 막대보다 길게 그려 막대 안에 들어가도 보이고, 첫 줄의 눈금 위에 이름(limitLabel, 비우면 한도)을 한 번 적습니다.
-  // 한도 안은 회색, 한도를 넘긴 구간만 빨강(--vzb-bad)입니다. 값은 오른쪽 끝에 적고, 넘친 줄은 이름과 값을 굵게 적습니다.
-  // 아래 줄에는 넘친 항목 수와 넘친 양의 합을 카드가 계산해 적습니다.
-  // 움직임: 눈금이 먼저 서 있고, 막대가 위에서부터 하나씩 차오르며 값이 따라 올라갑니다. 마지막 막대가 다 차면 넘친 구간만
-  // 세 번 깜빡이고 멈춥니다. 막대가 차기 전에는 막대 자리를 미리 그리지 않습니다.
+  // Warning Bars: 기간별(보통 월별) 값을 세로 막대로 세우고, 모든 기간에 같은 한도(limit, 예: 월 예산)를 가로선 하나로 긋습니다.
+  // 선 아래는 회색, 선을 넘긴 구간만 빨강(--vzb-bad)입니다. 넘친 막대 위에는 넘친 양을 적고(칸이 모자라면 생략), 넘친 기간의 이름은 굵게 적습니다.
+  // 아래 줄에는 넘친 기간 수와 넘친 양의 합을 카드가 계산해 적습니다. 비율 지표(pct)는 합을 적지 않습니다.
+  // 움직임: 한도선이 먼저 그어져 있고, 막대가 왼쪽부터 하나씩 차오릅니다. 선을 넘는 순간부터 넘친 구간이 빨갛게 자라고,
+  // 마지막 막대가 다 차면 넘친 구간만 세 번 깜빡이고 멈춥니다. 막대가 차기 전에는 막대 자리를 미리 그리지 않습니다.
   // 카드가 화면에 보이면 한 번 움직이고, 다시 보기 단추로 되풀이합니다. 동작 줄이기 설정이거나 데이터가 바뀌어 다시 그릴 때
   // (data-vzb-live)는 마지막 장면을 바로 그립니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고 되풀이합니다.
-  // 항목은 받은 순서대로 max(비우면 6)개까지 그립니다. items가 빈 배열이면 '표시할 항목이 없습니다.'만 적습니다.
   mount('bar-budget', (card, d, f) => {
-    // 걸러서 남은 항목이 없을 때(items가 빈 배열)는 오류가 아니라 빈 화면입니다.
-    if (Array.isArray(d.items) && !d.items.length) {
+    // 걸러서 남은 기간이 없을 때(labels가 빈 배열)는 오류가 아니라 빈 화면입니다.
+    if (Array.isArray(d.labels) && !d.labels.length) {
       head(card, d, f, null);
       card.append(el('p', 'vzb-bb-none', tx(d, '표시할 항목이 없습니다.')));
       return;
     }
-    const all = (d.items || []).filter((it) => it && it.name != null && fin(it.value) && fin(it.limit));
-    if (!all.length) throw new Error(tx(d, 'items의 value와 limit을 확인하세요.'));
-    const N = Math.max(1, Math.min(all.length, fin(d.max) && +d.max >= 1 ? Math.round(+d.max) : 6));
-    const items = all.slice(0, N).map((it, i) => {
-      const v = Math.max(0, +it.value), lim = Math.max(0, +it.limit);
-      return { i, name: String(it.name), v, lim, over: Math.max(0, v - lim) };
-    });
+    // labels와 values는 같은 길이여야 합니다. 값이 null인 기간은 자리를 남기고 막대를 그리지 않습니다(기간을 빼면 시간 축이 어긋나기 때문입니다).
+    const labels = Array.isArray(d.labels) ? d.labels.map(String) : [], raw = Array.isArray(d.values) ? d.values : [];
+    const items = labels.map((name, k) => ({ k, name, v: fin(raw[k]) ? Math.max(0, +raw[k]) : null }));
+    const got = items.filter((it) => it.v != null);
+    if (!got.length || raw.length !== labels.length) throw new Error(tx(d, 'labels와 values를 확인하세요.'));
+    if (!fin(d.limit)) throw new Error(tx(d, 'limit에 한도를 숫자로 적으세요.'));
+    const lim = Math.max(0, +d.limit), N = items.length;
+    const limShow = show(f, lim).replace(/(\d)\.0(?=\D*$)/, '$1');   // 한도는 대개 딱 떨어지는 값이라 '$40.0K'를 '$40K'로 적습니다
+    items.forEach((it) => { it.over = it.v == null ? 0 : Math.max(0, it.v - lim); });
     const label = d.limitLabel || tx(d, '한도');
     const inText = f.lang === 'en' ? label.toLowerCase() : label;   // 문장 안의 영어 이름은 소문자로
     const spill = items.filter((it) => it.over > 0);
     const sum = spill.reduce((a, it) => a + it.over, 0);
-    const top = Math.max(...items.map((it) => Math.max(it.v, it.lim))) || 1;
+    const top = Math.max(lim, ...got.map((it) => it.v)) * 1.12 || 1;
     const summary = !spill.length ? tx(d, '모두 %s 이내', inText)
-      : f.rel ? tx(d, '%1개 중 %2개 %3 초과 · +%4', items.length, spill.length, inText, show(f, sum))
-        : tx(d, '%1개 중 %2개 %3 초과', items.length, spill.length, inText);
+      : f.rel ? tx(d, '%1개 중 %2개 %3 초과 · +%4', got.length, spill.length, inText, show(f, sum))
+        : tx(d, '%1개 중 %2개 %3 초과', got.length, spill.length, inText);
 
     head(card, d, f, null);
     const foot = el('div', 'vzb-foot vzb-fill vzb-bb');
     const plot = el('div', 'vzb-plot');
     plot.tabIndex = 0;
     plot.setAttribute('role', 'img');
-    plot.setAttribute('aria-label', tx(d, '%1. 항목 %2개 가운데 %3개가 %4 초과입니다. 위아래 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.', d.title || '', items.length, spill.length, inText));
+    plot.setAttribute('aria-label', tx(d, '%1. 항목 %2개 가운데 %3개가 %4 초과입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.', d.title || '', got.length, spill.length, inText));
     const svg = svgEl('svg', { class: 'vzb-bb-svg', 'aria-hidden': 'true' });
     plot.append(svg);
     const ctl = el('div', 'vzb-bb-ctl'), btn = el('button', 'vzb-bb-btn'), sumEl = el('p', 'vzb-bb-sum');
@@ -604,94 +600,104 @@
     ctl.append(btn, sumEl);
     foot.append(plot, ctl);
     card.append(foot);
-    // 화면 낭독기용 표: 이름 · 값 · 한도 · 차이
+    // 화면 낭독기용 표: 기간 · 값 · 한도 · 차이
     const sr = el('div', 'vzb-sr'), table = el('table'), hr = el('tr');
     hr.append(...[tx(d, '이름'), tx(d, '값'), label, tx(d, '차이')].map((k) => el('th', null, k)));
     table.append(el('caption', null, d.title || ''), hr);
-    items.forEach((it) => { const tr = el('tr'); tr.append(el('th', null, it.name), el('td', null, show(f, it.v)), el('td', null, show(f, it.lim)), el('td', null, signed(f, it.v - it.lim))); table.append(tr); });
+    items.forEach((it) => { const tr = el('tr'); tr.append(el('th', null, it.name), el('td', null, it.v == null ? tx(d, '데이터 없음') : show(f, it.v)), el('td', null, limShow), el('td', null, it.v == null ? '' : signed(f, it.v - lim))); table.append(tr); });
     sr.append(table);
     card.append(sr);
 
-    // 값 글자는 숫자와 단위로 나눠 두고, 차오르는 동안 숫자만 같은 단위로 올립니다(5,800만으로 가는 길에 원 단위로 바뀌지 않게).
+    // 그림: 바닥선 · 막대(회색 아래, 빨강 위) · 기간 이름 · 넘친 양 · 한도선과 그 이름. 한도선은 막대 위에 그어 넘친 막대에서도 보이게 합니다.
+    const base = svgEl('line', { class: 'vzb-bb-base' }), barsG = svgEl('g', {}), limG = svgEl('g', { class: 'vzb-bb-limit' });
+    const limLine = svgEl('line', { class: 'vzb-bb-line' }), limText = svgText(0, 0, `${label} ${limShow}`, 'vzb-bb-lim', 'end');
+    limG.append(limLine, limText);
     items.forEach((it) => {
-      const [text, unit] = f.parts(it.v), m = /^(\D*)([\d,]*\.?\d*)(.*)$/.exec(text);
-      const end = parseFloat(m[2].replace(/,/g, '')) || 0, dec = (m[2].split('.')[1] || '').length;
-      it.unitText = unit;
-      it.count = (k) => (k >= 1 ? text : m[1] + num(end * k, dec) + m[3]);
-    });
-    // 줄: 회색 막대(한도 안) · 빨간 막대(넘친 구간) · 눈금(한도) · 이름(왼쪽) · 값(오른쪽 끝)
-    const limText = svgText(0, 0, label, 'vzb-bb-lim', 'middle');
-    items.forEach((it) => {
-      it.g = svgEl('g', { class: 'vzb-bb-row' });
+      it.g = svgEl('g', { class: 'vzb-bb-col' });
       it.fill = svgEl('path', { class: 'vzb-bb-fill' });
       it.red = svgEl('path', { class: 'vzb-bb-over' });
-      it.tick = svgEl('rect', { class: 'vzb-bb-tick', width: 2, rx: 1 });
-      it.nm = svgText(0, 0, it.name, 'vzb-bb-name', 'end');
-      it.val = svgText(0, 0, '', 'vzb-bb-val', 'end');
-      it.num = document.createTextNode('');
-      it.val.append(it.num, Object.assign(svgEl('tspan', { class: 'vzb-bb-unit', dx: /^[A-Za-z]{2}/.test(it.unitText) ? 3 : 1 }), { textContent: it.unitText }));
-      it.g.append(it.fill, it.red, it.tick, it.nm, it.val);
-      svg.append(it.g);
+      it.nm = svgText(0, 0, it.name, 'vzb-bb-name', 'middle');
+      it.ex = svgText(0, 0, signed(f, it.over), 'vzb-bb-ex', 'middle');
+      it.g.append(it.fill, it.red, it.nm, it.ex);
+      barsG.append(it.g);
     });
-    svg.append(limText);
+    svg.append(base, barsG, limG);
     const fam = getComputedStyle(card).fontFamily, fx = (v) => v.toFixed(1), clamp = (v) => Math.max(0, Math.min(1, v));
-    // 가로 막대: round가 참이면 오른쪽 끝만 둥글게, 아니면 각지게(눈금에 닿는 끝)
-    const bar = (x, y, w, h, round) => {
-      if (w < 0.5) return '';
-      const r = round ? Math.min(4, w, h / 2) : 0;
-      return `M${fx(x)},${fx(y)}H${fx(x + w - r)}A${r},${r} 0 0 1 ${fx(x + w)},${fx(y + r)}V${fx(y + h - r)}A${r},${r} 0 0 1 ${fx(x + w - r)},${fx(y + h)}H${fx(x)}Z`;
+    // 세로 막대: round가 참이면 위쪽 끝만 둥글게, 아니면 각지게(한도선에 닿는 끝)
+    const col = (x, yTop, w, yBottom, round) => {
+      const h = yBottom - yTop;
+      if (h < 0.5) return '';
+      const r = round ? Math.min(4, w / 2, h) : 0;
+      return `M${fx(x)},${fx(yBottom)}V${fx(yTop + r)}A${r},${r} 0 0 1 ${fx(x + r)},${fx(yTop)}H${fx(x + w - r)}A${r},${r} 0 0 1 ${fx(x + w)},${fx(yTop + r)}V${fx(yBottom)}Z`;
     };
-    // 시간표(밀리초): 눈금만 보이는 처음 · 줄 사이 간격 · 한 줄이 차는 시간 · 다 찬 뒤 쉬는 시간 · 깜빡임 한 번 · 깜빡이는 횟수
-    const T0 = 320, STAG = 320, DUR = 520, WAIT = 260, BLINK = 440, TIMES = 3, GAP = 2, TOPPAD = 16;
+    // 시간표(밀리초): 한도선만 보이는 처음 · 막대 사이 간격 · 한 막대가 차는 시간 · 다 찬 뒤 쉬는 시간 · 깜빡임 한 번 · 깜빡이는 횟수
+    const T0 = 300, STAG = Math.max(60, Math.min(140, 1500 / N)), DUR = 460, WAIT = 260, BLINK = 440, TIMES = 3, GAP = 1.5, NAMEH = 22;
     const easeOut = (k) => 1 - (1 - k) ** 3;
-    let W = 0, H = 0, x0 = 0, s = 1, rowH = 0, bh = 0, t = 0, FULL = 0, TOTAL = 0;
+    let W = 0, H = 0, y0 = 0, s = 1, bw = 0, slot = 1, yl = 0, t = 0, FULL = 0, TOTAL = 0;
     function layout(w, h) {
       W = w; H = h;
       svg.setAttribute('width', w);
       svg.setAttribute('height', h);
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-      x0 = Math.ceil(Math.max(...items.map((it) => textW(it.name, 700, fam)))) + 10;
-      const vW = Math.ceil(Math.max(...items.map((it) => textW(show(f, it.v), 700, fam)))) + 4;
-      s = Math.max(1, w - x0 - vW - 12) / top;
-      rowH = Math.min(32, Math.max(14, (h - TOPPAD) / N));
-      bh = Math.max(6, Math.min(16, Math.round(rowH * 0.5)));
-      const th = Math.min(rowH - 2, bh + 8);   // 눈금은 막대보다 위아래로 4px씩 깁니다
+      y0 = h - NAMEH;
+      s = Math.max(1, y0 - 4) / top;
+      slot = w / N;
+      bw = Math.max(4, Math.min(30, slot * 0.62));
+      yl = y0 - lim * s;
+      base.setAttribute('x1', 0);
+      base.setAttribute('x2', w);
+      base.setAttribute('y1', y0 + 0.5);
+      base.setAttribute('y2', y0 + 0.5);
+      limLine.setAttribute('x1', 0);
+      limLine.setAttribute('x2', w);
+      limLine.setAttribute('y1', fx(yl));
+      limLine.setAttribute('y2', fx(yl));
+      // 기간 이름: 다 들어가면 모두, 모자라면 몇 칸마다 하나씩(마지막 칸은 늘 적습니다)
+      const nameW = Math.max(...items.map((it) => textW(it.name, 400, fam, 11))) + 6;
+      const every = Math.max(1, Math.ceil(nameW / slot));
+      // 넘친 양은 칸 안에 들어갈 때만 적습니다
+      const exFits = Math.max(0, ...spill.map((it) => textW(it.ex.textContent, 700, fam, 10.5))) + 4 <= slot;
       items.forEach((it) => {
-        it.y = TOPPAD + it.i * rowH + (rowH - bh) / 2;
-        it.yc = it.y + bh / 2;
-        it.xl = x0 + it.lim * s;
-        it.tick.setAttribute('x', fx(it.xl - 1));
-        it.tick.setAttribute('y', fx(it.yc - th / 2));
-        it.tick.setAttribute('height', fx(th));
-        it.nm.setAttribute('x', x0 - 8);
-        it.nm.setAttribute('y', fx(it.yc + 4));
-        it.val.setAttribute('x', w);
-        it.val.setAttribute('y', fx(it.yc + 4));
-        it.start = T0 + it.i * STAG;
+        it.cx = slot * (it.k + 0.5);
+        it.x = it.cx - bw / 2;
+        it.yv = y0 - (it.v || 0) * s;
+        it.nm.setAttribute('x', fx(it.cx));
+        it.nm.setAttribute('y', fx(y0 + 15));
+        it.nm.setAttribute('opacity', (N - 1 - it.k) % every === 0 ? 1 : 0);
+        it.ex.setAttribute('x', fx(it.cx));
+        it.ex.setAttribute('y', fx(it.yv - 5));
+        it.exOn = it.over > 0 && exFits;
+        it.start = T0 + it.k * STAG;
       });
-      // 눈금 이름은 첫 줄의 눈금 위에 한 번만 적습니다. 그래프 밖으로 나가지 않게 당깁니다.
-      const lw = textW(label, 400, fam, 11) / 2;
-      limText.setAttribute('x', fx(Math.max(lw, Math.min(w - lw, items[0].xl))));
-      limText.setAttribute('y', fx(items[0].yc - th / 2 - 5));
+      // 한도선의 이름은 선 바로 위, 한도를 넘는 막대(와 넘친 양)가 없는 자리에 적습니다. 오른쪽 끝부터 왼쪽으로 찾고,
+      // 그런 자리가 없으면(거의 모든 기간이 넘을 때) 오른쪽 끝의 선 바로 아래에 적습니다. 선 아래는 모두 회색이라 빨강과 겹치지 않습니다.
+      const lw = textW(limText.textContent, 500, fam, 11) + 6;
+      const blocked = items.filter((it) => it.over > 0).map((it) => [it.cx - slot / 2, it.cx + slot / 2]);
+      const fits = (x) => x - lw >= 0 && blocked.every(([a, b]) => b <= x - lw || a >= x);
+      const ends = [w, ...blocked.map(([a]) => a).sort((p, q) => q - p)];
+      const at = ends.find(fits);
+      limText.setAttribute('text-anchor', 'end');
+      limText.setAttribute('x', fx(at == null ? w : at));
+      limText.setAttribute('y', fx(at == null ? yl + 14 : yl - 5));
       FULL = T0 + (N - 1) * STAG + DUR;
       TOTAL = FULL + (spill.length ? WAIT + BLINK * TIMES : 240);
       render();
     }
     function render() {
       if (!W) return;
-      // 깜빡임: 다 찬 뒤 넘친 구간만 옅어졌다 돌아오기를 되풀이하고, 진한 상태로 끝납니다.
+      // 깜빡임: 다 찬 뒤 넘친 구간만 옅어졌다 돌아오기를 되풀이하고, 진한 상태로 끝납니다. 멈춰서 값을 읽는 동안은 진하게 둡니다.
       const b = (t - FULL - WAIT) / BLINK;
-      const glow = b <= 0 || b >= TIMES || holds.size ? 1 : 1 - 0.84 * (0.5 - 0.5 * Math.cos(2 * Math.PI * b));   // 멈춰서 값을 읽는 동안은 진하게
+      const glow = b <= 0 || b >= TIMES || holds.size ? 1 : 1 - 0.84 * (0.5 - 0.5 * Math.cos(2 * Math.PI * b));
       const alert = t >= FULL + WAIT;
       items.forEach((it) => {
-        const k = clamp((t - it.start) / DUR), e = easeOut(k), xv = x0 + it.v * s * e;
-        // 한도에 닿은 막대는 눈금 앞에서 각지게 끊고, 넘친 만큼은 눈금 뒤에서 빨강으로 잇습니다.
-        const hit = it.v >= it.lim && xv >= it.xl - GAP;
-        it.fill.setAttribute('d', bar(x0, it.y, (hit ? it.xl - GAP : xv) - x0, bh, !hit));
-        it.red.setAttribute('d', it.over > 0 ? bar(it.xl + GAP, it.y, xv - it.xl - GAP, bh, true) : '');
+        if (it.v == null) { it.fill.setAttribute('d', ''); it.red.setAttribute('d', ''); it.ex.setAttribute('opacity', 0); return; }
+        const k = clamp((t - it.start) / DUR), e = easeOut(k), yv = y0 - it.v * s * e;
+        // 한도에 닿은 막대는 한도선 아래에서 각지게 끊고, 넘친 만큼은 선 위에서 빨강으로 잇습니다.
+        const hit = it.v >= lim && yv <= yl + GAP;
+        it.fill.setAttribute('d', col(it.x, hit ? yl + GAP : yv, bw, y0, !hit));
+        it.red.setAttribute('d', it.over > 0 && yv < yl - GAP ? col(it.x, yv, bw, yl - GAP, true) : '');
         it.red.setAttribute('opacity', fx(glow));
-        it.num.nodeValue = it.count(e);
-        it.val.setAttribute('opacity', fx(clamp((t - it.start) / 140)));
+        it.ex.setAttribute('opacity', it.exOn ? fx(clamp((t - it.start - DUR) / 200)) : 0);
         it.g.classList.toggle('is-over', it.over > 0 && alert);
       });
       sumEl.style.opacity = fx(clamp((t - (spill.length ? FULL + WAIT : FULL)) / 240));
@@ -724,25 +730,24 @@
     plot.addEventListener('pointerleave', () => { holds.delete('hover'); kick(); });
     plot.addEventListener('focus', () => { if (plot.matches(':focus-visible')) { holds.add('focus'); render(); } });   // 키보드로 들어왔을 때만 멈춥니다
     plot.addEventListener('blur', () => { holds.delete('focus'); kick(); });
-    // 툴팁: 줄을 짚으면 쓴 양, 한도, 넘치거나 남은 양과 한도 대비 비율을 보여 주고 그 줄만 진하게 남깁니다.
-    interact(plot, items.length,
-      (cx, cy) => {
-        const i = Math.floor((cy - plot.getBoundingClientRect().top - TOPPAD) / rowH);
-        return i >= 0 && i < items.length ? i : -1;
-      },
+    // 툴팁: 막대를 짚으면 값, 한도, 넘치거나 남은 양과 한도 대비 비율을 보여 주고 그 막대만 진하게 남깁니다.
+    interact(plot, N,
+      (cx) => Math.max(0, Math.min(N - 1, Math.floor((cx - plot.getBoundingClientRect().left) / slot))),
       (k) => {
         const it = items[k], r = plot.getBoundingClientRect();
         svg.classList.add('is-hover');
         items.forEach((x) => x.g.classList.toggle('is-on', x === it));
-        const gap = show(f, Math.abs(it.v - it.lim)), share = it.lim > 0 ? num((it.v / it.lim) * 100, 0) : null;
-        const note = [`${label} ${show(f, it.lim)}`];
-        if (share == null) note.push(tx(d, '%s 초과|한도', gap));
-        else note.push(it.v > it.lim ? tx(d, '%1 초과 · %2의 %3%', gap, inText, share) : it.v < it.lim ? tx(d, '%1 남음 · %2의 %3%', gap, inText, share) : tx(d, '%1의 %2', inText, `${share}%`));
-        const tb = tipBody({ value: show(f, it.v), note }, it.name);
-        return { x: r.left + x0 + Math.max(it.v, it.lim) * s, y: r.top + it.y - 6, label: it.name, value: tb.node, text: tb.text, side: true };
+        const note = [`${label} ${limShow}`];
+        if (it.v != null) {
+          const gap = show(f, Math.abs(it.v - lim)), share = lim > 0 ? num((it.v / lim) * 100, 0) : null;
+          if (share == null) note.push(tx(d, '%s 초과|한도', gap));
+          else note.push(it.v > lim ? tx(d, '%1 초과 · %2의 %3%', gap, inText, share) : it.v < lim ? tx(d, '%1 남음 · %2의 %3%', gap, inText, share) : tx(d, '%1의 %2', inText, `${share}%`));
+        }
+        const tb = tipBody({ value: it.v == null ? tx(d, '데이터 없음') : show(f, it.v), note }, it.name);
+        return { x: r.left + it.cx, y: r.top + Math.min(it.yv, yl) - 6, label: it.name, value: tb.node, text: tb.text };
       },
       () => { svg.classList.remove('is-hover'); items.forEach((x) => x.g.classList.remove('is-on')); },
-      true, true);
+      false, true);
 
     btn.hidden = still;
     if (still || live) t = 1e9;   // 마지막 장면에서 시작합니다

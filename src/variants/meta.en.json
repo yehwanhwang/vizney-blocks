@@ -216,12 +216,12 @@
    "guide": { "name": "Butterfly chart", "url": "https://www.vizney.com/butterfly-chart-in-tableau/" }
   },
   "bar-budget": {
-   "when": "Each item gets a tick at its limit and a bar for the amount used so far, and only the part over the limit turns red. Use it for values with a limit they should not cross, such as budgets, headcount or capacity. For targets where more is better, use Bar - Target.",
+   "when": "Bars for each period stand against one horizontal line, the same limit for every period, and only the parts above the line blink red. Use it for a trend with the same limit each period, such as a monthly budget or a monthly capacity. For targets where more is better, use Bar - Target.",
    "rules": [
-    "Give each of the `items` a `value` (the amount used so far) and a `limit`. The limit is a vertical tick longer than the bar, named once above the first row by `limitLabel` (Limit when empty). Even when every item has a different limit, the end of the bar and the tick sit on the same row to compare.",
-    "The bar is gray within the limit and red only past it. Rows over the limit get a bold name and value, and the line below gives how many items went over and the total excess, computed by the card. Keeping color for the part over the limit makes where and by how much come first. For a rate (`pct`) the total is left out.",
-    "Use it only for limits that should not be crossed. On a target where more is better, the items that met it would blink red like a warning.",
-    "When the card comes into view the ticks stand first, the bars fill one at a time, then only the parts over the limit blink three times and stop. No bar outline is drawn before a bar fills. The still frame alone shows which items went over and by how much. Replay it with the button; with reduced motion turned on, the last frame is drawn right away. Items are drawn in the order given, up to 6 (`max`)."
+    "Write the periods in `labels`, their values in `values` (the same length) and one limit for every period in `limit`. Write `null` for a period with no value: its slot stays empty, since leaving the period out would shift the time axis. The line is named by `limitLabel` (Limit when empty), written above it with its value. One horizontal line means you only compare bar tops with the line to see which periods went over.",
+    "Below the line the bars are gray; only the part above it is red. The card writes the excess above each bar that went over (left out when the slot is too narrow), and on the line below how many periods went over and the total excess. Keeping color for the excess makes what needs attention come first. For a rate (`pct`) the total is left out.",
+    "Use it only for limits that should not be crossed. On a target where more is better, the periods that met it would blink red like a warning. If each period has a different limit, one line cannot compare them, so do not use this card.",
+    "When the card comes into view the line is already drawn, the bars rise one by one from the left, then only the parts above the line blink three times and stop. No bar is drawn before it rises. The still frame alone shows which periods went over and by how much. Replay it with the button; with reduced motion, or when the data changes and the card redraws, the last frame is drawn at once. A monthly trend shows 13 months."
    ]
   },
   "line-basic": {
@@ -420,12 +420,12 @@
    ]
   },
   "control-range": {
-   "when": "A control that picks a numeric range with two thumbs. Use it to filter a screen by a continuous value such as an amount or a quantity. The current values always sit in bubbles above the thumbs, and when the thumbs come close the bubbles merge into one range.",
+   "when": "A control that picks a numeric range with two thumbs. Use it to filter a screen by a continuous value such as order value or quantity. Give it the distribution of the values and bars over the track show how much data falls in the range as you drag.",
    "rules": [
-    "Pick between `min` and `max` in steps of `step` (empty splits the range into about 100 steps). Give the first range in `value` as `[start, end]`; empty is the whole range. Values are written by `format`.",
-    "The bubbles above the thumbs always show the current values. When the two bubbles come close enough to overlap, they merge into one \"start – end\" bubble, so the text never overlaps. The two ends that can be picked are written under the track.",
+    "Pick between `min` and `max` in steps of `step` (empty splits the range into about 100 steps). Give the first range in `value` as `[start, end]`; empty is the whole range. The picked range is written on the line above, by `format`.",
+    "Give `counts`, the number of records in each equal-width bin from `min` to `max`, and bars of that distribution sit over the track: only the bars inside the range take the text color, and the number inside the range rolls next to `noun` (e.g. orders). Picking by the range alone hides where the data piles up, which makes it easy to filter it away. Matching `step` to the bin width makes the count exact.",
     "Each time the value changes, the card sends a `vzb-change` event. `detail.name` is `name` and `detail.value` is `[start, end]` as numbers. The current value is also on the card as `data-vzb-value`.",
-    "Drag a thumb, press the track to bring the nearer thumb there, or focus a thumb and press the arrow keys to move one step (Page Up and Down about ten steps, Home and End to the end). The thumbs follow the value like a spring and the bubbles lean into the move. With reduced motion turned on, they move at once."
+    "Drag a thumb, press a bar or the track to bring the nearer thumb there, or focus a thumb and press the arrow keys to move one step (Page Up and Down about ten steps, Home and End to the end). The thumbs follow like a spring; bars rise a little as they enter the range, nearest to the moving thumb first, and dip as they leave. With reduced motion turned on, the thumbs move at once and the bars stay still."
    ]
   },
   "control-date": {
@@ -447,13 +447,13 @@
    ]
   },
   "control-download": {
-   "when": "A button that downloads the data of a chart card on the screen as a CSV file. Use it to export exactly what the controls show. Give it a shortcut and keycaps appear in the button, so the keyboard downloads too.",
+   "when": "A button that downloads the data of a chart card on the screen as a file. It starts as an icon alone; hover and the formats to pick from (CSV, JSON, PNG) come out. Use it to export exactly what the controls show.",
    "rules": [
-    "Write the kind of the card to download in `target` (its `data-vzb`, e.g. `bar-budget`). The card takes the first such card on the page and writes its `items` (or the first array of objects in its JSON) as rows, with their number and text fields as columns. It reads the JSON after the controls changed it, so you get what you see.",
-    "`filename` names the file, and a BOM goes at the start so Excel reads non-English text correctly. When there are no rows, the button shakes and briefly says \"No data\".",
-    "Before downloading, the card sends a `vzb-download` event (`detail: { name, target, filename, rows }`). If the page calls `preventDefault()` the card makes no file, so a screen that fetches the source data from a server can use the same button.",
-    "Give a `shortcut` (e.g. `shift+d`, `mod+shift+e`; `mod` is ⌘ on a Mac and Ctrl elsewhere) and keycaps appear in the button; pressing the keys sinks the caps and downloads. The caps teach the shortcut, and their sinking shows the keys took effect. Use a shortcut only once per page.",
-    "When the file is saved, the arrow drops into the tray and turns into a check, the label turns into `done` and the file name turns into the number of rows, coming back after 1.8 s. That way the fact and the size of the download show where the button is. With reduced motion turned on, only the words change."
+    "Write the kind of the card to download in `target` (its `data-vzb`, e.g. `bar-budget`). The table comes from the current JSON of the first such card on the page: `items`, else `labels` with `values` (adding `limit` and `target` as columns when present), `labels` with `series`, else the first array of objects. It reads the JSON after the controls changed it, so you get what you see.",
+    "List the formats in `formats` (`csv`, `json`, `png`; empty means all three). The CSV starts with a BOM so Excel reads non-English text correctly, and the PNG is the card as you see it at twice the size (its text may be drawn in a font installed on the device). The file name is `filename` plus the extension of the format.",
+    "An icon alone takes little room on the screen; hover it, reach it with the keyboard or press it and the button widens and the formats come out one by one. Pressing the icon again while open downloads the first format, Esc closes it, and the left and right arrows move between the formats.",
+    "Before downloading, the card sends a `vzb-download` event (`detail: { name, target, format, filename, rows }`). If the page calls `preventDefault()` the card makes no file, so a screen that fetches the source data from a server can use the same button.",
+    "When the file is saved, the arrow drops into the tray and turns into a check, and the format and the number of rows (for a PNG, its size) roll up next to the button and fade after 1.8 s. When there is nothing to download, the button shakes and says \"No data\". With reduced motion turned on, only the state changes."
    ]
   }
  }

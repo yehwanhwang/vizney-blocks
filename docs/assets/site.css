@@ -1,6 +1,6 @@
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/vz-sans-400.woff?v=59405ffd14) format('woff');}
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/vz-sans-500.woff?v=59405ffd14) format('woff');}
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/vz-sans-700.woff?v=59405ffd14) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/vz-sans-400.woff?v=72235051cf) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/vz-sans-500.woff?v=72235051cf) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/vz-sans-700.woff?v=72235051cf) format('woff');}
 /* Vizney Blocks site: the Vizney common header (the blog's header, kr.vizney.com · www.vizney.com: the blog is the
    reference and Blocks follows it), the line's tab row (not on the home page, which opens like a blog category page), then a white page. Text and frame are ink and grays; the one UI
    accent is the Vizney yellow #ffcc00 of the blog's post images (primary buttons, the current chart, focus, link underlines).
@@ -162,7 +162,7 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 .gal { padding-top: 49px; }
 .gal-grid { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
 .gt { display: flex; flex-direction: column; min-width: 0; padding: 12px; border-radius: 20px; background: var(--soft); }
-.gt-box { flex: 1 1 auto; display: grid; align-content: center; min-width: 0; }   /* 줄보다 낮은 블록(1단위 컨트롤)은 타일 가운데에 둡니다 */
+.gt-box { flex: 1 1 auto; display: grid; align-content: center; min-width: 0; min-height: 336px; }   /* 타일은 모두 2단위 높이(168px × 2)로 같고, 그보다 낮은 블록(1단위 컨트롤 등)은 가운데에 둡니다. 큰 블록과 작은 블록을 어떤 순서로 섞어도 줄이 맞습니다. */
 .gt-in { position: relative; min-width: 0; }
 .gt-pv { display: grid; }
 /* 카드 전체가 차트 페이지로 가는 자리: 제목은 링크(키보드와 화면 낭독기용), 나머지 빈 곳은 누르면 같은 곳으로 갑니다. */

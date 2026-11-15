@@ -48,13 +48,13 @@ body { position: relative; font-family: 'VZ Sans', sans-serif; color: #ffffff; -
 .cards > * { box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6); }
 </style></head><body>
 <div class="frame"><div class="tag"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="13" height="13" rx="3" fill="#1b1b1b"/><rect x="17" y="2" width="13" height="13" rx="3" fill="#ff9500"/><rect x="2" y="17" width="13" height="13" rx="3" fill="#ffcc00"/><rect x="17" y="17" width="13" height="13" rx="3" fill="#ff2d55"/></svg>Blocks</div><h1>${T[lang].title}</h1><p>${T[lang].sub}</p><img class="logo" src="${LOGO}" alt="Vizney"></div>
-<div class="cards"><div>${card(lang, 'control-date')}</div><div>${card(lang, 'bar-budget')}</div></div>
+<div class="cards"><div>${card(lang, 'control-chips')}</div><div>${card(lang, 'bar-budget')}</div></div>
 <span class="box a"></span><span class="box b"></span>
 </body></html>`;
 
 const browser = await chromium.launch(process.env.OG_CHROME ? { executablePath: process.env.OG_CHROME } : {});
 for (const lang of ['ko', 'en']) {
-  // Reduced motion: moving cards draw their last frame at once (Budget Bars with the parts over budget in red).
+  // Reduced motion: moving cards draw their last frame at once (Warning Bars with the months over budget in red).
   const p = await browser.newPage({ viewport: { width: 1200, height: 660 }, deviceScaleFactor: 1, reducedMotion: 'reduce' });
   await p.route('**/og-page', (route) => route.fulfill({ contentType: 'text/html', body: page(lang) }));
   await p.goto(`${BASE}/og-page`);

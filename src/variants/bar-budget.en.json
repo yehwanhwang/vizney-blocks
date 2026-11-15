@@ -1,16 +1,38 @@
 {
-  "title": "Ad Spend by Channel",
-  "subtitle": "Nov 1–14 spend against the monthly budget",
+  "title": "Monthly Ad Spend",
+  "subtitle": "Nov 2025 – Nov 2026, against a $40K monthly budget",
   "lang": "en",
   "format": "usd",
-  "decimals": 0,
+  "limit": 40000,
   "limitLabel": "Budget",
-  "items": [
-    { "name": "Social", "value": 58000, "limit": 50000 },
-    { "name": "Search", "value": 42000, "limit": 60000 },
-    { "name": "Display", "value": 36000, "limit": 30000 },
-    { "name": "Video", "value": 29000, "limit": 40000 },
-    { "name": "Affiliate", "value": 12000, "limit": 20000 },
-    { "name": "Retargeting", "value": 9000, "limit": 15000 }
+  "labels": [
+    "Nov '25",
+    "Dec '25",
+    "Jan '26",
+    "Feb '26",
+    "Mar '26",
+    "Apr '26",
+    "May '26",
+    "Jun '26",
+    "Jul '26",
+    "Aug '26",
+    "Sep '26",
+    "Oct '26",
+    "Nov '26"
+  ],
+  "values": [
+    34200,
+    46100,
+    31500,
+    33000,
+    43400,
+    36200,
+    35800,
+    38400,
+    32900,
+    48700,
+    37100,
+    39200,
+    45300
   ]
 }

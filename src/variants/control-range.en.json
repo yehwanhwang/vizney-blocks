@@ -1,15 +1,43 @@
 {
-  "title": "Budget Size",
-  "subtitle": "Monthly budget per channel",
+  "title": "Order Value",
+  "subtitle": "Orders by amount, last 30 days",
   "lang": "en",
-  "name": "budget",
+  "name": "amount",
   "format": "usd",
   "decimals": 0,
   "min": 0,
-  "max": 80000,
-  "step": 5000,
+  "max": 500,
+  "step": 20,
   "value": [
-    15000,
-    60000
-  ]
+    60,
+    260
+  ],
+  "counts": [
+    38,
+    112,
+    196,
+    248,
+    231,
+    198,
+    162,
+    131,
+    104,
+    86,
+    70,
+    57,
+    46,
+    38,
+    31,
+    25,
+    21,
+    17,
+    14,
+    12,
+    10,
+    8,
+    7,
+    6,
+    5
+  ],
+  "noun": "orders"
 }

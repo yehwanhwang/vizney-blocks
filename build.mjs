@@ -325,12 +325,12 @@ const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 // v0.49: the gallery is being rebuilt one block at a time. Only the blocks of the new direction are listed; the earlier cards
 // and the chart pages are hidden (not linked from the home page, the search or the sitemap) but keep their addresses and code.
 // Blocks that move (data-vzb-loop) replay on the first screen instead of stopping at the end.
-const GALLERY = ['bar-budget', 'waffle-share', 'control-range', 'control-chips', 'control-download'];
+const GALLERY = ['bar-budget', 'waffle-share', 'bump-race', 'control-range', 'control-chips', 'control-download'];
 const LOOP = new Set(GALLERY);
 // v0.53: tile widths follow the block. On the 3-column gallery a chart that reads along a long axis (13 months, a 5 × 20 waffle)
 // takes 2 columns; a chart that reads better compact (a donut, a single figure) and every control take 1. The tiles are laid out
 // so that rows alternate 2 + 1 and 1 + 2. A wide block left without a partner sits alone; narrow blocks left over go three to a row.
-const SPAN = { 'bar-budget': 2, 'waffle-share': 2 };
+const SPAN = { 'bar-budget': 2, 'waffle-share': 2, 'bump-race': 2 };
 const wideOf = (id) => SPAN[id] === 2;
 const ORDER = (() => {
   const wide = GALLERY.filter(wideOf), narrow = GALLERY.filter((id) => !wideOf(id)), out = [];
@@ -516,6 +516,10 @@ const FIELD_OVERRIDE = {
   'waffle-share': {
     ko: { title: '무엇의 비중인지(예: 시장 점유율)', subtitle: '기준과 두 기간(예: 판매 대수 기준, 2025년 → 2026년)', periods: '[앞 기간, 뒤 기간]의 이름. 하나만 적으면 그 기간의 칸만 그린다', focus: '짚을 항목의 이름. 비우면 첫 항목', items: '항목 2~4개. 항목마다 name과 values([앞 기간 값, 뒤 기간 값], 비중이 아니라 원래 값)' },
     en: { title: 'what the shares are of (e.g. Market Share)', subtitle: 'the basis and the two periods (e.g. by units sold, 2025 → 2026)', periods: 'the names of [the earlier period, the later period]; with one, the card draws that period only', focus: 'the name of the item to point at; the first item when empty', items: '2 to 4 items, each with name and values ([earlier value, later value], raw values, not shares)' },
+  },
+  'bump-race': {
+    ko: { title: '무엇의 순위인지(예: 판매 순위)', subtitle: '순위의 기준과 기간(예: 월별 판매 수량 순위, 2025년 11월 – 2026년 11월)', labels: '기간 이름. 월별 추이는 13개월', focus: '짚을 항목의 이름. 비우면 첫 항목', items: '항목 2~8개. 항목마다 name과 values(기간마다의 값, labels와 같은 개수. 값이 없는 기간은 null)', better: 'up(비우면, 큰 값이 1위) · down(작은 값이 1위)' },
+    en: { title: 'what is ranked (e.g. Top Sellers)', subtitle: 'the basis of the rank and the period (e.g. monthly rank by units sold, Nov 2025 – Nov 2026)', labels: 'the period names; 13 months for a monthly trend', focus: 'the name of the item to follow; the first item when empty', items: '2 to 8 items, each with name and values (one per period, as many as labels; null for a period without a value)', better: 'up (default: the largest value ranks 1) or down (the smallest value ranks 1)' },
   },
   'control-range': {
     ko: { label: '화면 낭독기가 읽는 이름(예: 주문 금액). 화면에는 그리지 않는다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '고를 수 있는 가장 작은 값', max: '고를 수 있는 가장 큰 값', step: '한 칸의 크기. 비우면 범위를 100칸쯤으로 나눈다', value: '[시작, 끝]. 비우면 전체 범위', counts: 'min~max를 같은 폭으로 나눈 칸마다의 개수(분포 막대). 없어도 된다', noun: '개수 뒤에 붙는 말(예: 건). 비우면 행' },

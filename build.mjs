@@ -327,15 +327,29 @@ const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 // Blocks that move (data-vzb-loop) replay on the first screen instead of stopping at the end.
 const GALLERY = ['bar-budget', 'waffle-share', 'control-range', 'control-chips', 'control-download'];
 const LOOP = new Set(GALLERY);
+// v0.53: tile widths follow the block. On the 3-column gallery a chart that reads along a long axis (13 months, a 5 × 20 waffle)
+// takes 2 columns; a chart that reads better compact (a donut, a single figure) and every control take 1. The tiles are laid out
+// so that rows alternate 2 + 1 and 1 + 2. A wide block left without a partner sits alone; narrow blocks left over go three to a row.
+const SPAN = { 'bar-budget': 2, 'waffle-share': 2 };
+const wideOf = (id) => SPAN[id] === 2;
+const ORDER = (() => {
+  const wide = GALLERY.filter(wideOf), narrow = GALLERY.filter((id) => !wideOf(id)), out = [];
+  for (let r = 0; wide.length || narrow.length; r++) {
+    if (wide.length && narrow.length) out.push(...(r % 2 ? [narrow.shift(), wide.shift()] : [wide.shift(), narrow.shift()]));
+    else if (wide.length) out.push(wide.shift());
+    else out.push(...narrow.splice(0, 3));
+  }
+  return out;
+})();
 const galleryHead = (L) => `<section class="wrap ghead" aria-labelledby="ghead-title">
 <h1 id="ghead-title">${L.t.gTitle}</h1>
 <p>${L.t.gDesc}</p>
 </section>`;
 const gallery = (m, L) => `<section class="wrap gal" id="cards" aria-label="${L.t.gAria}">
 <ul class="gal-grid">
-${GALLERY.map((id) => {
+${ORDER.map((id) => {
     const v = L.byId[id];
-    return `<li class="gt is-dark${tierOf(v) === 0 ? ' is-bare' : ''}" id="${id}" data-gal="${id}" aria-labelledby="gt-${id}">
+    return `<li class="gt is-dark${tierOf(v) === 0 ? ' is-bare' : ''}${wideOf(id) ? ' is-wide' : ''}" id="${id}" data-gal="${id}" aria-labelledby="gt-${id}">
 <div class="gt-box"><div class="gt-in">
 <div class="gt-pv" data-mount="${id}"${LOOP.has(id) ? ' data-vzb-loop' : ''} style="min-height:${tierPx(v)}px"></div>
 </div></div>

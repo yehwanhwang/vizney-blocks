@@ -109,11 +109,16 @@
     const order = new Map(flips.map((i, j) => [i, j]));
     const easeIn = (k) => k * k, back = (k) => 1 + 2.2 * (k - 1) ** 3 + 1.2 * (k - 1) ** 2;
     let pitch = 0, cell = 0, W = 0, t = 0, stage = null;
-    // 넓은 카드(520px 이상)에서는 범례를 칸 오른쪽에 세로로 두고 칸을 한 변 22px까지 키웁니다. 좁으면 범례는 칸 아래이고 한 변 18px까지입니다.
+    // 칸 크기: 카드 높이(2단위) 안에서 큰 숫자 아래 남은 높이와 폭에 맞춰 될 수 있는 만큼 키웁니다(한 변 30px까지).
+    // 넓은 카드(520px 이상)는 범례를 칸 오른쪽에 세로로 두고, 좁으면 범례는 칸 아래입니다.
     function layout(fw) {
       const side = fw >= 520;
       foot.classList.toggle('is-side', side);
-      pitch = Math.max(8, Math.min(side ? 22 : 18, (side ? fw - 200 : fw) / COLS));
+      const cs = getComputedStyle(card), H = parseFloat(cs.minHeight) || 336;
+      const top = fig.getBoundingClientRect().bottom - card.getBoundingClientRect().top;
+      const below = parseFloat(cs.paddingBottom) + parseFloat(cs.borderBottomWidth) + parseFloat(getComputedStyle(foot).paddingTop) + (side ? 0 : ctl.offsetHeight + 8) + 22;
+      const byH = (H - top - below + 3) / ROWS, byW = (fw - (side ? Math.max(...items.map((it) => it.li.offsetWidth)) + 28 : 0)) / COLS;
+      pitch = Math.max(8, Math.min(30, byW, byH));
       const gap = pitch >= 14 ? 3 : 2, w = side ? pitch * COLS - gap : fw;
       W = w;
       cell = pitch - gap;

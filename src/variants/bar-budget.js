@@ -46,8 +46,9 @@
     btn.append(ic);
     if (spill.length) sumEl.append(el('i', 'vzb-bb-key'));
     sumEl.append(summary);
-    ctl.append(btn, sumEl);
+    ctl.append(sumEl);
     foot.append(plot, ctl);
+    card.querySelector('.vzb-hd').append(btn);   // 다시 보기 단추는 머리의 오른쪽 위
     card.append(foot);
     // 화면 낭독기용 표: 기간 · 값 · 한도 · 차이
     const sr = el('div', 'vzb-sr'), table = el('table'), hr = el('tr');

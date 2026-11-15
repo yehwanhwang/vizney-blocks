@@ -75,8 +75,9 @@
       it.li.append(el('i', `vzb-wf-key vzb-wf-c${it.k}`), el('span', null, it.name), it.val);
       legend.append(it.li);
     });
-    ctl.append(btn, legend);
+    ctl.append(legend);
     foot.append(plot, ctl);
+    card.querySelector('.vzb-hd').append(btn);   // 다시 보기 단추는 머리의 오른쪽 위
     card.append(foot);
     // 화면 낭독기용 표: 항목 · 기간마다 비중(원래 값) · 차이
     const sr = el('div', 'vzb-sr'), table = el('table'), hr = el('tr');
@@ -108,10 +109,18 @@
     const order = new Map(flips.map((i, j) => [i, j]));
     const easeIn = (k) => k * k, back = (k) => 1 + 2.2 * (k - 1) ** 3 + 1.2 * (k - 1) ** 2;
     let pitch = 0, cell = 0, W = 0, t = 0, stage = null;
-    function layout(w) {
+    // 칸 크기: 카드 높이(2단위) 안에서 큰 숫자 아래 남은 높이와 폭에 맞춰 될 수 있는 만큼 키웁니다(한 변 30px까지).
+    // 넓은 카드(520px 이상)는 범례를 칸 오른쪽에 세로로 두고, 좁으면 범례는 칸 아래입니다.
+    function layout(fw) {
+      const side = fw >= 520;
+      foot.classList.toggle('is-side', side);
+      const cs = getComputedStyle(card), H = parseFloat(cs.minHeight) || 336;
+      const top = fig.getBoundingClientRect().bottom - card.getBoundingClientRect().top;
+      const below = parseFloat(cs.paddingBottom) + parseFloat(cs.borderBottomWidth) + parseFloat(getComputedStyle(foot).paddingTop) + (side ? 0 : ctl.offsetHeight + 8) + 22;
+      const byH = (H - top - below + 3) / ROWS, byW = (fw - (side ? Math.max(...items.map((it) => it.li.offsetWidth)) + 28 : 0)) / COLS;
+      pitch = Math.max(8, Math.min(30, byW, byH));
+      const gap = pitch >= 14 ? 3 : 2, w = side ? pitch * COLS - gap : fw;
       W = w;
-      pitch = Math.max(8, Math.min(18, w / COLS));
-      const gap = pitch >= 14 ? 3 : 2;
       cell = pitch - gap;
       const h = pitch * ROWS - gap + 22;
       svg.setAttribute('width', w);
@@ -228,8 +237,8 @@
 
     btn.hidden = still || P < 2;
     if (still || live || P < 2) t = 1e9;   // 마지막 장면에서 시작합니다
-    onSize(plot, layout);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (W) layout(W); });
+    onSize(foot, layout);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (W) layout(foot.clientWidth); });
     // 화면에 처음 보일 때 움직입니다. 화면 밖에 있는 동안은 멈춰 둡니다.
     const start = () => { if (!seen) { seen = true; if (!still && !live && P > 1) play(); } };
     if ('IntersectionObserver' in window) {

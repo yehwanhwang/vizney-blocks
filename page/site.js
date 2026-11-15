@@ -149,8 +149,22 @@
     tile.classList.toggle('is-dark', dark);
     current[id] = dark ? withField(code[id], 'theme', 'dark') : code[id];
     mount(host, current[id]);
+    fitTile(tile);
     btn.setAttribute('aria-label', dark ? T.toLight : T.toDark);
     btn.title = dark ? T.toLight : T.toDark;
+  }
+  // 갤러리 타일에서만 컨트롤을 보기 좋게 가운데에 둡니다(복사하는 코드와는 상관없습니다).
+  // Range Slider: 레일 위에 뜨는 분포 창까지 한 덩어리로 보고 가운데에 두도록, 창 높이만큼 위를 비웁니다.
+  // Download Button: 펼쳐진 단추 전체가 가운데에 오도록, 펼칠 때 아이콘을 늘어나는 폭의 절반만큼 반대쪽으로 옮깁니다(site.css).
+  function fitTile(tile) {
+    const host = $('[data-mount]', tile);
+    const fit = () => {
+      const pop = $('.vzb-sl-pop', host), menu = $('.vzb-dl-menu', host);
+      host.style.paddingTop = pop ? `${pop.offsetHeight + 6}px` : '';
+      if (menu) tile.style.setProperty('--gt-dl-shift', `${Math.max(0, menu.scrollWidth - menu.offsetHeight) / 2}px`);
+    };
+    requestAnimationFrame(fit);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
   }
   $$('.gt[data-gal]').forEach((tile) => {
     if (!code[tile.dataset.gal]) return;

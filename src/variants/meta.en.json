@@ -77,8 +77,8 @@
   "waffle": {
    "name": "Waffle Chart",
    "guide": { "name": "Waffle chart", "url": "https://www.vizney.com/waffle-chart-in-tableau/" },
-   "intro": "Waffle charts show shares as a count of squares out of 100. The color rule is the same as the donut chart's, and the square size is fitted to the room left on the card. Hover a square or a legend row and only that item stays bold. Height: 2 units.",
-   "lede": "Shares as a count of squares out of 100. The color rule is the same as the donut chart's.",
+   "intro": "Waffle charts show shares as a count of squares out of 100. Hover a square or a legend row and only that item stays bold. Height: 2 units.",
+   "lede": "Shares as a count of squares out of 100.",
    "height": "2 units"
   },
   "bump": {
@@ -103,9 +103,9 @@
   },
   "control": {
    "name": "Controls",
-   "intro": "Controls set the period, the ranges and the items of a screen, and download its data. They use the same head as a card (title and subtitle) and are 1 unit high. When the value changes, the card sends a `vzb-change` event (`detail: { name, value }`), and the current value is also written on the card as `data-vzb-value`. Listen for the event and change the text of the JSON inside a chart card, and that card draws again with the new data. The selected span and the thumbs are drawn in the text color so they do not compete with the data colors of the charts.",
-   "lede": "Controls set the period, ranges and items of a screen and download its data. They send a `vzb-change` event when the value changes, and a chart card draws again when the JSON inside it changes.",
-   "height": "1 unit"
+   "intro": "Controls set the ranges and the items of a screen, and download its data. They draw only the control, with no card head or frame, so you can put them anywhere, such as a filter bar above the charts or a page header. They fill the width of their slot and are as tall as the control itself. Their background is left empty, so pick `theme` to match the background they sit on (`dark` on a dark one), and write the name screen readers read in `label`. When the value changes, the card sends a `vzb-change` event (`detail: { name, value }`), and the current value is also written on the card as `data-vzb-value`. Listen for the event and change the text of the JSON inside a chart card, and that card draws again with the new data. The selected span and the thumbs are drawn in the text color so they do not compete with the data colors of the charts.",
+   "lede": "Controls set the ranges and items of a screen and download its data. They draw only the control, with no title or frame, to sit wherever you put them. They send a `vzb-change` event when the value changes, and a chart card draws again when the JSON inside it changes.",
+   "height": "the height of the control"
   }
  },
  "cards": {
@@ -454,6 +454,15 @@
     "An icon alone takes little room on the screen; hover it, reach it with the keyboard or press it and the button widens and the formats come out one by one. Pressing the icon again while open downloads the first format, Esc closes it, and the left and right arrows move between the formats.",
     "Before downloading, the card sends a `vzb-download` event (`detail: { name, target, format, filename, rows }`). If the page calls `preventDefault()` the card makes no file, so a screen that fetches the source data from a server can use the same button.",
     "When the file is saved, the arrow drops into the tray and turns into a check, and the format and the number of rows (for a PNG, its size) roll up next to the button and fade after 1.8 s. When there is nothing to download, the button shakes and says \"No data\". With reduced motion turned on, only the state changes."
+   ]
+  },
+  "waffle-share": {
+   "when": "A card that draws shares as a 100-cell waffle and flips, one by one, the cells that changed hands since the earlier period. Use it to show how much one item's share grew or shrank, such as a market share or a sales mix. It draws the change between two periods only.",
+   "rules": [
+    "List 2 to 4 items in `items`, each with the raw values (units sold, sales and so on) of the `periods` (the earlier one, then the later one) in `values`. The card computes the shares and the change in points. Each period's cells add up to 100 by giving the leftover cells to the largest remainders (one cell is 1%). With a single period in `periods`, the card draws that period's cells without flipping. When filtering leaves no item, give an empty `items` array for an empty card.",
+    "Name the item to point at in `focus` (empty means the first item). Only that item takes the first data color; the others are gray steps, from dark to light in the order listed. With color on one item only, the cells it gained or lost stand out first. There are three gray steps, so with five items or more, fold the small ones into Others.",
+    "Cells fill from the top left, column by column, starting with the focus item (a column of 5 cells is 5%). So when its share grows or shrinks, the cells flip at the end of its block, and a bracket under them gives the change in points. The big number is the focus item's share, and the badge color follows `better` (up · down).",
+    "When the card comes into view, the earlier period's cells sit still, then only the changed cells flip one after another while the big number counts one point per cell. When all have flipped, the bracket and the badge appear and the card stops. The still frame alone shows the current share and how far it moved. The replay button plays it again; with reduced motion turned on, or when the data changes and the card draws again, it draws the last frame at once. Hover a cell, or focus the chart and press the left and right arrows, to see an item's share (one decimal), raw value and change since the earlier period."
    ]
   }
  }

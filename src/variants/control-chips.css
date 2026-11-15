@@ -1,8 +1,6 @@
-/* Filter Chips: 높이 1단위. 칩은 높이 28px, 모서리 14px, 12px 글자이고 사이는 6px입니다. 고른 칩은 글자색(밝은 바탕 검정, 어두운 바탕 흰색)으로
+/* Filter Chips: 카드 틀 없이 칩만 그립니다(control.css). 칩은 높이 28px, 모서리 14px, 12px 글자이고 사이는 6px입니다. 고른 칩은 글자색(밝은 바탕 검정, 어두운 바탕 흰색)으로
    채우고 카드 바탕색으로 체크와 이름을 적습니다. 고르지 않은 칩은 트랙 회색입니다. 두 줄을 넘으면 한 줄로 두고 가로로 밉니다(is-scroll).
    누르면 0.92배로 눌렸다가 살짝 넘쳐 돌아오고(용수철 곡선), 체크는 칩이 13px 넓어지며 그려집니다. */
-.vzb-card[data-vzb="control-chips"] { min-height: var(--vzb-unit); }
-.vzb-ch.vzb-foot { padding-top: 12px; }
 .vzb-ch-list { display: flex; flex-wrap: wrap; gap: 6px; }
 .vzb-ch-list.is-scroll { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; -webkit-mask-image: linear-gradient(to right, #fff calc(100% - 32px), transparent); mask-image: linear-gradient(to right, #fff calc(100% - 32px), transparent); }
 .vzb-ch-list.is-scroll.is-end { -webkit-mask-image: none; mask-image: none; }

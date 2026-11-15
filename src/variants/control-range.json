@@ -1,6 +1,5 @@
 {
-  "title": "주문 금액",
-  "subtitle": "최근 30일, 금액대별 주문",
+  "label": "주문 금액",
   "name": "amount",
   "format": "count",
   "unit": "원",

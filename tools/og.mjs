@@ -29,6 +29,7 @@ const T = {
 // squares with a 2px ink border at 80, 551 and 48, 517.
 // Two things differ from a post image: the background is ink (#1b1b1b) with white words and the white logo, and the place of
 // the chart holds two real cards in their frames (a control above the chart it drives, as on a dashboard), without the white rectangles of the upper and lower right corners. The tag icon is the Blocks mark (2 × 2).
+// v0.52: controls are drawn bare (no head or frame), so the control sits in a frame of the card's own background, border and radius.
 const LOGO = `data:image/png;base64,${readFileSync(join(root, 'page/vizney-logo.png')).toString('base64')}`;
 const page = (lang) => `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><style>
 ${[400, 500, 700].map((w) => `@font-face{font-family:'VZ Sans';font-weight:${w};src:url(${BASE}/assets/fonts/vz-sans-${w}.woff) format('woff');}`).join('\n')}
@@ -46,9 +47,10 @@ body { position: relative; font-family: 'VZ Sans', sans-serif; color: #ffffff; -
 .box.b { left: 48px; top: 517px; width: 48px; height: 48px; }
 .cards { position: absolute; left: 652px; top: 87px; width: 400px; display: grid; gap: 18px; }
 .cards > * { box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6); }
+.bar { box-sizing: border-box; padding: 20px 24px; border: 1px solid var(--vzb-edge); border-radius: var(--vzb-radius); background: var(--vzb-card); }
 </style></head><body>
 <div class="frame"><div class="tag"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="13" height="13" rx="3" fill="#1b1b1b"/><rect x="17" y="2" width="13" height="13" rx="3" fill="#ff9500"/><rect x="2" y="17" width="13" height="13" rx="3" fill="#ffcc00"/><rect x="17" y="17" width="13" height="13" rx="3" fill="#ff2d55"/></svg>Blocks</div><h1>${T[lang].title}</h1><p>${T[lang].sub}</p><img class="logo" src="${LOGO}" alt="Vizney"></div>
-<div class="cards"><div>${card(lang, 'control-chips')}</div><div>${card(lang, 'bar-budget')}</div></div>
+<div class="cards"><div class="bar">${card(lang, 'control-chips')}</div><div>${card(lang, 'bar-budget')}</div></div>
 <span class="box a"></span><span class="box b"></span>
 </body></html>`;
 

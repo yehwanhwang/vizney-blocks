@@ -21,5 +21,5 @@
     };
     const seat = (s, or) => { const p = read(s); return p && !!p.d === byDay ? Math.max(0, Math.min(n, seatOf(p))) : or; };
     const v = Array.isArray(d.value) ? d.value : [], a = seat(v[0], 0), b = seat(v[1], n);
-    slider(card, d, f, { n, text, value: iso, start: [Math.min(a, b), Math.max(a, b)], aria: [tx(d, '%s 시작', d.title || ''), tx(d, '%s 끝', d.title || '')] });
+    slider(card, d, f, { n, text, value: iso, start: [Math.min(a, b), Math.max(a, b)], aria: [tx(d, '%s 시작', d.label || d.title || tx(d, '기간')), tx(d, '%s 끝', d.label || d.title || tx(d, '기간'))] });
   });

@@ -12,7 +12,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.51';
+const VERSION = 'v0.52';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -34,7 +34,7 @@ const core = r('src/core.js').trimEnd();
 // line and bar (marks drawn on the frame), tabs (equal-width metric tabs), table (sortable tables with total rows),
 // waterfall (floating bars on the bar frame), scatter (x/y frame), bump (rank lines), funnel (stepped flows),
 // sankey (node-and-ribbon flows) and radar (polygons on spokes).
-const parts = ['chart', 'curve', 'axis', 'line', 'bar', 'list', 'share', 'tabs', 'table', 'waterfall', 'scatter', 'bump', 'funnel', 'sankey', 'radar', 'slider', 'roll'];
+const parts = ['chart', 'curve', 'axis', 'line', 'bar', 'list', 'share', 'tabs', 'table', 'waterfall', 'scatter', 'bump', 'funnel', 'sankey', 'radar', 'slider', 'roll', 'control'];
 const opt = (p) => (existsSync(join(root, p)) ? r(p) : '');
 const partCss = Object.fromEntries(parts.map((p) => [p, opt(`src/${p}.css`).trim()]));
 const partJs = Object.fromEntries(parts.map((p) => [p, opt(`src/${p}.js`).trimEnd()]));
@@ -101,7 +101,7 @@ const purposes = JSON.parse(r('src/variants/purposes.json'));
 const purposesEn = JSON.parse(r('src/variants/purposes.en.json'));
 // Guard (guard.mjs): self-containment, colors only from tokens, heights, scoping, accessibility hooks, example data,
 // meta ↔ files, public addresses, card words through tx() and the English files. `node build.mjs --check` runs only this and needs no font.
-const TIER = { 'kpi-number': 1, 'kpi-gauge': 1.5, 'kpi-paired-bar': 1.5, 'kpi-stacked-bar': 1.5, 'control-range': 1, 'control-date': 1, 'control-chips': 1, 'control-download': 1 };
+const TIER = { 'kpi-number': 1, 'kpi-gauge': 1.5, 'kpi-paired-bar': 1.5, 'kpi-stacked-bar': 1.5, 'control-range': 0, 'control-date': 0, 'control-chips': 0, 'control-download': 0 };   // 0: 컨트롤은 카드 틀 없이 조작부 높이(v0.52)
 const checked = guard({
   root, cats, parts, partCss, partJs, tokens, tier: TIER, fontLink: FONT_LINK, en: EN, purposes, purposesEn,
   snippets: Object.fromEntries(builtAll.flatMap((c) => c.variants.map((v) => [v.id, v.code]))),
@@ -135,8 +135,8 @@ const SKILL_CMD = 'npx skills add yehwanhwang/vizney-blocks';
 // shared; the old /en/ pages redirect to /, and the old /en/ files (cards .txt, llms.txt, tokens.css) stay as English copies.
 // The home page's description (v0.45), also its meta description.
 const GDESC = {
-  ko: '움직임으로 읽는 차트와 대시보드 컨트롤을 HTML 조각 하나씩에 담았습니다. 한도를 넘긴 값은 깜빡여 알리고, 기간과 범위는 슬라이더로 고르며, 데이터가 바뀌면 차트가 그 자리에서 다시 그려집니다. 복사해 붙이고 JSON 값만 바꾸세요.',
-  en: 'Charts you read through their motion, and the dashboard controls that go with them, each in one HTML snippet. Values over a limit blink to warn you, periods and ranges are picked with sliders, and when the data changes the chart redraws in place. Copy it, paste it and change only the JSON.',
+  ko: '움직임으로 읽는 차트와 대시보드 컨트롤을 HTML 조각 하나씩에 담았습니다. 한도를 넘긴 값은 깜빡여 알리고, 점유율이 바뀐 만큼 칸이 뒤집히며, 범위와 항목을 고르면 차트가 그 자리에서 다시 그려집니다. 복사해 붙이고 JSON 값만 바꾸세요.',
+  en: 'Charts you read through their motion, and the dashboard controls that go with them, each in one HTML snippet. Values over a limit blink to warn you, cells flip as a share changes, and picking a range or items redraws the chart in place. Copy it, paste it and change only the JSON.',
 };
 const WORDS = {
   ko: {
@@ -237,8 +237,10 @@ const ONE_M = { one: true, logo: `data:image/png;base64,${LOGO.toString('base64'
 const NEW = ['sankey', 'radar'];
 const EXAMPLE = [{ id: 'kpi-line' }, { id: 'kpi-bar' }, { id: 'bar-ranking' }, { id: 'sankey-levels', wide: true }, { id: 'radar-basic' }];
 const ART = JSON.parse(r('page/tiles.json'));
-// Card heights in units of 168px (TIER above): KPI - Number 1, KPI - Line and Bar 2, the other KPI cards 1.5, every chart card 2.
-const tierPx = (v) => Math.round((TIER[v.id] || 2) * 168);
+// Card heights in units of 168px (TIER above): KPI - Number 1, KPI - Line and Bar 2, the other KPI cards 1.5, every chart card 2,
+// and 0 for the controls, which are drawn bare (no head or frame) at the height of the control itself.
+const tierOf = (v) => (v.id in TIER ? TIER[v.id] : 2);
+const tierPx = (v) => Math.round(tierOf(v) * 168);
 
 const h = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const plain = (s) => String(s).replace(/`/g, '');
@@ -317,12 +319,13 @@ const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 
 // Home (v0.45, v0.49): the title area of a Vizney blog category page (title and description, sized from the blog), then a
 // gallery of blocks. Each tile holds the live card as it is copied (its head shows the title of the example data) with a
-// light/dark switch in its top right corner; under it come the block name and two copy buttons, so a button always belongs
-// to the block above it. A block lower than its row (a 1-unit control) sits in the middle of the tile.
+// light/dark switch in the top right corner of the tile; under it come the block name and two copy buttons, so a button always
+// belongs to the block above it. Every tile has the height of a 2-unit card, and a lower block sits in the middle of it.
+// v0.52: the controls are drawn bare (no head, no frame) in the middle of the tile, like the units of a motion gallery.
 // v0.49: the gallery is being rebuilt one block at a time. Only the blocks of the new direction are listed; the earlier cards
 // and the chart pages are hidden (not linked from the home page, the search or the sitemap) but keep their addresses and code.
 // Blocks that move (data-vzb-loop) replay on the first screen instead of stopping at the end.
-const GALLERY = ['bar-budget', 'control-range', 'control-chips', 'control-download'];
+const GALLERY = ['bar-budget', 'waffle-share', 'control-range', 'control-chips', 'control-download'];
 const LOOP = new Set(GALLERY);
 const galleryHead = (L) => `<section class="wrap ghead" aria-labelledby="ghead-title">
 <h1 id="ghead-title">${L.t.gTitle}</h1>
@@ -332,11 +335,10 @@ const gallery = (m, L) => `<section class="wrap gal" id="cards" aria-label="${L.
 <ul class="gal-grid">
 ${GALLERY.map((id) => {
     const v = L.byId[id];
-    return `<li class="gt is-dark" id="${id}" data-gal="${id}" aria-labelledby="gt-${id}">
+    return `<li class="gt is-dark${tierOf(v) === 0 ? ' is-bare' : ''}" id="${id}" data-gal="${id}" aria-labelledby="gt-${id}">
 <div class="gt-box"><div class="gt-in">
 <div class="gt-pv" data-mount="${id}"${LOOP.has(id) ? ' data-vzb-loop' : ''} style="min-height:${tierPx(v)}px"></div>
-<button type="button" class="gt-theme" data-act="theme" data-id="${id}" aria-label="${L.t.toLight}" title="${L.t.toLight}">${IC.sun}${IC.moon}</button>
-</div></div>
+</div><button type="button" class="gt-theme" data-act="theme" data-id="${id}" aria-label="${L.t.toLight}" title="${L.t.toLight}">${IC.sun}${IC.moon}</button></div>
 <div class="gt-meta"><span class="gt-name" id="gt-${id}">${h(v.name)}</span></div>
 <div class="gt-acts"><button type="button" class="btn" data-act="copy-prompt" data-id="${id}" aria-label="${h(v.name)} ${L.t.tPrompt}">${IC.prompt}<span>${L.t.tPrompt}</span></button><button type="button" class="btn" data-act="copy-code" data-id="${id}" aria-label="${h(v.name)} ${L.t.tCode}">${IC.copy}<span>${L.t.tCode}</span></button></div>
 </li>`;
@@ -497,17 +499,21 @@ const FIELD_OVERRIDE = {
     ko: { title: '무엇의 값인지(예: 월별 광고비)', subtitle: '기간과 한도의 기준(예: 2025년 11월–2026년 11월, 월 예산 4,000만 원 대비)', limit: '모든 기간에 같은 한도(숫자 하나)', limitLabel: '한도선의 이름(예: 예산 · 처리 용량). 비우면 한도', labels: '기간 이름. 월별 추이는 13개월', values: '기간마다의 값(labels와 같은 개수)' },
     en: { title: 'what the values are (e.g. Monthly Ad Spend)', subtitle: 'the period and the basis of the limit (e.g. Nov 2025 – Nov 2026, against a $40K monthly budget)', limit: 'one limit for every period (a single number)', limitLabel: 'the name of the line (e.g. Budget, Capacity); Limit when empty', labels: 'the period names; 13 months for a monthly trend', values: 'the value of each period (as many as labels)' },
   },
+  'waffle-share': {
+    ko: { title: '무엇의 비중인지(예: 시장 점유율)', subtitle: '기준과 두 기간(예: 판매 대수 기준, 2025년 → 2026년)', periods: '[앞 기간, 뒤 기간]의 이름. 하나만 적으면 그 기간의 칸만 그린다', focus: '짚을 항목의 이름. 비우면 첫 항목', items: '항목 2~4개. 항목마다 name과 values([앞 기간 값, 뒤 기간 값], 비중이 아니라 원래 값)' },
+    en: { title: 'what the shares are of (e.g. Market Share)', subtitle: 'the basis and the two periods (e.g. by units sold, 2025 → 2026)', periods: 'the names of [the earlier period, the later period]; with one, the card draws that period only', focus: 'the name of the item to point at; the first item when empty', items: '2 to 4 items, each with name and values ([earlier value, later value], raw values, not shares)' },
+  },
   'control-range': {
-    ko: { title: '무엇을 거르는지(예: 주문 금액)', subtitle: '기준(예: 최근 30일, 금액대별 주문). 없어도 된다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '고를 수 있는 가장 작은 값', max: '고를 수 있는 가장 큰 값', step: '한 칸의 크기. 비우면 범위를 100칸쯤으로 나눈다', value: '[시작, 끝]. 비우면 전체 범위', counts: 'min~max를 같은 폭으로 나눈 칸마다의 개수(분포 막대). 없어도 된다', noun: '개수 뒤에 붙는 말(예: 건)' },
-    en: { title: 'what it filters (e.g. Order Value)', subtitle: 'the basis (e.g. orders by amount, last 30 days); optional', name: 'detail.name of the vzb-change event sent when the value changes', min: 'the smallest value that can be picked', max: 'the largest value that can be picked', step: 'the size of one step; empty splits the range into about 100 steps', value: '[start, end]; empty is the whole range', counts: 'the number of records in each equal-width bin from min to max (the distribution bars); optional', noun: 'the word after the count (e.g. orders)' },
+    ko: { label: '화면 낭독기가 읽는 이름(예: 주문 금액). 화면에는 그리지 않는다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '고를 수 있는 가장 작은 값', max: '고를 수 있는 가장 큰 값', step: '한 칸의 크기. 비우면 범위를 100칸쯤으로 나눈다', value: '[시작, 끝]. 비우면 전체 범위', counts: 'min~max를 같은 폭으로 나눈 칸마다의 개수(분포 막대). 없어도 된다', noun: '개수 뒤에 붙는 말(예: 건)' },
+    en: { label: 'the name screen readers read (e.g. order value); not drawn on screen', name: 'detail.name of the vzb-change event sent when the value changes', min: 'the smallest value that can be picked', max: 'the largest value that can be picked', step: 'the size of one step; empty splits the range into about 100 steps', value: '[start, end]; empty is the whole range', counts: 'the number of records in each equal-width bin from min to max (the distribution bars); optional', noun: 'the word after the count (e.g. orders)' },
   },
   'control-chips': {
-    ko: { title: '무엇을 거르는지(예: 채널)', subtitle: '기준(예: 보여 줄 채널). 없어도 된다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', options: '고를 항목의 이름들. 8개 안팎', value: '처음 고른 항목들. 비우면 모두', all: '전체 칩의 이름. 비우면 전체, 빈 글자면 전체 칩을 두지 않는다' },
-    en: { title: 'what it filters (e.g. Channel)', subtitle: 'the basis (e.g. channels to show); optional', name: 'detail.name of the vzb-change event sent when the value changes', options: 'the names of the items to pick, about 8', value: 'the items picked at first; empty picks all', all: 'the name of the All chip; empty means All, an empty string leaves the chip out' },
+    ko: { label: '화면 낭독기가 읽는 칩 묶음의 이름(예: 채널). 화면에는 그리지 않는다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', options: '고를 항목의 이름들. 8개 안팎', value: '처음 고른 항목들. 비우면 모두', all: '전체 칩의 이름. 비우면 전체, 빈 글자면 전체 칩을 두지 않는다' },
+    en: { label: 'the name screen readers read for the chips (e.g. Channel); not drawn on screen', name: 'detail.name of the vzb-change event sent when the value changes', options: 'the names of the items to pick, about 8', value: 'the items picked at first; empty picks all', all: 'the name of the All chip; empty means All, an empty string leaves the chip out' },
   },
   'control-download': {
-    ko: { title: '무엇을 내보내는지(예: 내보내기)', subtitle: '받는 데이터(예: 월별 광고비를 파일로)', name: 'vzb-download 이벤트의 detail.name', target: '내려받을 카드의 data-vzb(예: bar-budget). 페이지에서 처음 만나는 그 카드', filename: '파일 이름. 확장자는 형식에 따라 붙는다(예: monthly-ad-spend)', formats: '받을 형식들: csv · json · png. 비우면 셋 다', label: '아이콘의 이름(화면 낭독기용). 비우면 내려받기' },
-    en: { title: 'what it exports (e.g. Export)', subtitle: 'the data it downloads (e.g. monthly ad spend as a file)', name: 'detail.name of the vzb-download event', target: 'the data-vzb of the card to download (e.g. bar-budget); the first such card on the page', filename: 'the file name; the extension follows the format (e.g. monthly-ad-spend)', formats: 'the formats: csv, json, png; empty means all three', label: 'the name of the icon for screen readers; Download when empty' },
+    ko: { name: 'vzb-download 이벤트의 detail.name', target: '내려받을 카드의 data-vzb(예: bar-budget). 페이지에서 처음 만나는 그 카드', filename: '파일 이름. 확장자는 형식에 따라 붙는다(예: monthly-ad-spend)', formats: '받을 형식들: csv · json · png. 비우면 셋 다', label: '화면 낭독기가 읽는 단추 이름(예: 월별 광고비 내려받기). 비우면 내려받기' },
+    en: { name: 'detail.name of the vzb-download event', target: 'the data-vzb of the card to download (e.g. bar-budget); the first such card on the page', filename: 'the file name; the extension follows the format (e.g. monthly-ad-spend)', formats: 'the formats: csv, json, png; empty means all three', label: 'the name screen readers read for the button (e.g. Download monthly ad spend); Download when empty' },
   },
   'control-date': {
     ko: { title: '무엇의 기간인지(예: 기간)', subtitle: '기준(예: 집행일 기준). 없어도 된다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '고를 수 있는 첫 달(YYYY-MM)이나 첫 날(YYYY-MM-DD). 적은 모양이 한 칸의 단위가 된다', max: '고를 수 있는 마지막 달이나 날. min과 같은 모양으로', value: '[시작, 끝]. min과 같은 모양으로 적고, 비우면 전체 기간' },
@@ -850,16 +856,18 @@ const PICK_NOTE = {
 // Card heights by unit, from TIER: "KPI - Number 1단위, … 1.5단위, 나머지 2단위".
 const HEIGHTS = (lang) => {
   const by = {};
-  for (const v of variants) (by[TIER[v.id] || 2] = by[TIER[v.id] || 2] || []).push(v.name);
-  return lang === 'en' ? `${by[1].join(' · ')} 1 unit, ${by[1.5].join(' · ')} 1.5 units, the rest 2 units` : `${by[1].join(' · ')} 1단위, ${by[1.5].join(' · ')} 1.5단위, 나머지 2단위`;
+  for (const v of variants) (by[tierOf(v)] = by[tierOf(v)] || []).push(v.name);
+  return lang === 'en' ? `${by[1].join(' · ')} 1 unit, ${by[1.5].join(' · ')} 1.5 units, the other cards 2 units` : `${by[1].join(' · ')} 1단위, ${by[1.5].join(' · ')} 1.5단위, 나머지 카드 2단위`;
 };
+// The controls, drawn bare at their own height (TIER 0).
+const BARE = (lang) => variants.filter((v) => tierOf(v) === 0).map((v) => (lang === 'en' ? v.name : v.name)).join(' · ');
 // The grid for several cards. Below 340px the tables, donut, funnel and waterfall clip or overlap their labels
 // (measured on every card with the real font); KPI cards alone hold from 280px, where four fit a 1280px page (v0.35: the
 // comparison text drops below the number and each KPI card keeps its unit height).
 const GRID = 'display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:16px';
 const RULES = (from, lang = 'ko') => (lang === 'en' ? [
   `Paste the card code ${from} as it is and change only the JSON values. Do not edit the styles or the script. To use the same card several times, paste the whole card code again and change each JSON.`,
-  `A card fills the width of its slot, and its height is one of 1 · 1.5 · 2 units (1 unit = 168px, --vzb-unit): ${HEIGHTS('en')}. Cards in a row stretch to the tallest one and their graphics sit on the bottom, so to leave no gaps, put cards of the same height in a row.`,
+  `A card fills the width of its slot, and its height is one of 1 · 1.5 · 2 units (1 unit = 168px, --vzb-unit): ${HEIGHTS('en')}. Cards in a row stretch to the tallest one and their graphics sit on the bottom, so to leave no gaps, put cards of the same height in a row. The controls (${BARE('en')}) draw only the control, with no head or frame, and follow no unit: put them where they are used, such as a filter bar above the charts, pick their theme to match that background, and give the name screen readers read in label.`,
   `For several cards, give the wrapper a grid: ${GRID}. Below 340px, the text in tables, donuts, funnels and waterfalls clips or overlaps. A row of KPI cards alone can go down to 280px, so four fit across a 1280px page.`,
   `Change colors and the font with the --vzb-* variables on :root (--vzb-primary, --vzb-font, …). The variable list and what each one does are in ${SITE}/tokens.css (the same content as the :where(:root) block in the card code). To match a whole page, re-declare that file's values on :root.`,
   'Common fields: title (metric name), subtitle (period), value (the headline figure of a KPI card; KPI - Line and KPI - Bar use the last value when it is empty), format (usd dollar amounts, shortened to $745.6K · $1.2M · count a count, with its unit in unit · pct a percentage (3.4 is 3.4%), changes in pp · days a number of days · eok and krw are Korean won notations; krw writes amounts under 100,000 won in full), decimals (decimal places of the numbers; empty lets the card decide, and pct changes follow it too), better (up · down · neutral: the change color), compare ({ label, value }), labels (period names, the same length as values; null for a period without a value), series ([{ name, values }]), rows (table rows), curve (line shape of the line cards: smooth · linear · step), lang (en: the words the card prints itself, like Total, Other and Met, in English).',
@@ -867,7 +875,7 @@ const RULES = (from, lang = 'ko') => (lang === 'en' ? [
   'Give amounts as raw values, not rounded or divided into thousands or millions. The card shortens them to the format (usd) and computes totals and changes from the raw values, so totals agree across cards and decimals match. usd tables and scatter axes pick one of K · M · B per column or axis and write it in the column heading or axis name, like $K. Grid - Basic takes "format": "usd" on amount columns.',
 ] : [
   `${from} 카드 코드를 그대로 붙여 넣고 JSON 값만 바꾼다. 스타일과 스크립트는 고치지 않는다. 같은 카드를 여러 장 쓸 때는 카드 코드를 통째로 다시 붙여 넣고 각 JSON만 바꾼다.`,
-  `카드는 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위(1단위 168px, --vzb-unit) 중 하나다: ${HEIGHTS('ko')}. 같은 줄의 카드는 가장 높은 카드에 맞춰 늘어나고 그래픽은 바닥에 붙으므로, 빈 곳이 없게 하려면 높이가 같은 카드끼리 한 줄에 둔다.`,
+  `카드는 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위(1단위 168px, --vzb-unit) 중 하나다: ${HEIGHTS('ko')}. 같은 줄의 카드는 가장 높은 카드에 맞춰 늘어나고 그래픽은 바닥에 붙으므로, 빈 곳이 없게 하려면 높이가 같은 카드끼리 한 줄에 둔다. 컨트롤(${BARE('ko')})은 카드 머리와 틀 없이 조작부만 그리고 높이 단위를 따르지 않는다. 차트 위 필터 줄처럼 쓰는 자리에 두고, theme은 그 자리의 바탕에 맞추며, 화면 낭독기가 읽을 이름은 label에 적는다.`,
   `여러 장은 감싸는 요소에 격자를 준다: ${GRID}. 카드 폭이 340px보다 좁으면 표, 도넛, 퍼널, 워터폴의 글자가 잘리거나 겹친다. KPI 카드만 둔 줄은 280px까지 줄여도 되어, 폭 1280px 화면에 네 장이 한 줄에 들어간다.`,
   `색과 글꼴은 :root의 --vzb-* 변수(--vzb-primary, --vzb-font 등)로 바꾼다. 변수 목록과 쓰임은 ${SITE}/ko/tokens.css 에 있다(카드 코드의 :where(:root) 블록과 같은 내용). 페이지 전체를 맞출 때는 그 파일의 값을 :root에 다시 적는다.`,
   '공통 필드: title(지표명), subtitle(기간 부제), value(KPI 카드의 대표 수치. KPI - Line과 KPI - Bar는 비우면 마지막 값), format(eok 억 단위 숫자 · krw 원 단위 숫자를 만·억·조로 줄여 적음. 10만 원 미만은 87,324원처럼 원 단위 그대로 · usd 달러 금액을 $745.6K·$1.2M처럼 줄여 적음 · count 개수, 단위는 unit · pct 퍼센트 숫자(3.4는 3.4%), 증감은 %p · days 일수), decimals(숫자의 소수 자릿수. 비우면 카드가 정하고, pct의 증감도 이 자릿수를 따름), better(up · down · neutral, 증감 색), compare({ label, value }), labels(기간 이름. values와 같은 길이로 적고, 값이 없는 기간의 값은 null), series([{ name, values }]), rows(표의 줄), curve(라인 카드의 선 모양: smooth · linear · step), lang(en이면 합계 · 기타 · 달성처럼 카드가 직접 적는 문구가 영어. 비우면 한국어).',

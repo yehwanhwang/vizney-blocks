@@ -23,7 +23,7 @@
 </head>
 <body>
 <main style="--w:640px">
-<!-- Vizney Blocks v0.51 · 컨트롤 · Download Button (control-download)
+<!-- Vizney Blocks v0.52 · 컨트롤 · Download Button (control-download)
      https://blocks.vizney.com/ko/cards/control-download.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -138,17 +138,19 @@
 /* 그래픽은 카드 아래쪽에 붙습니다. 같은 줄의 카드 높이가 맞춰져도 그래픽끼리 바닥이 맞습니다. */
 .vzb-foot { margin-top: auto; padding-top: 20px; }
 .vzb-error { margin: 8px 0 0; color: var(--vzb-bad-ink); }
+/* 컨트롤: 카드 머리(제목 · 부제)와 카드 틀(바탕 · 테두리 · 그림자 · 안쪽 여백) 없이 조작부만 그립니다. 차트 위 필터 줄이나 머리글처럼
+   원하는 자리에 그대로 놓는 부품이기 때문입니다. 폭은 놓인 자리를 채우고, 높이는 조작부 자체의 높이입니다.
+   바탕을 비워 두므로 theme은 놓을 자리의 바탕에 맞춰 고릅니다(어두운 바탕이면 "dark"). */
+.vzb-card[data-vzb^="control-"] { min-height: 0; padding: 0; background: none; border: 0; border-radius: 0; box-shadow: none; }
 /* 굴러가는 숫자: 숫자 칸의 높이는 글자 높이(1.2em)이고, 칸 안의 0–9 띠가 위아래로 굴러 새 값에 섭니다. */
 .vzb-rl { display: inline-flex; vertical-align: bottom; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .vzb-rl-col { display: inline-block; height: 1.2em; overflow: hidden; }
 .vzb-rl-strip { display: flex; flex-direction: column; transition: transform 0.38s cubic-bezier(0.34, 1.32, 0.64, 1); }
 .vzb-rl-strip > span, .vzb-rl-ch { display: block; height: 1.2em; line-height: 1.2em; }
 @media (prefers-reduced-motion: reduce) { .vzb-rl-strip { transition: none; } }
-/* Download Button: 높이 1단위. 처음에는 지름 44px 원에 내려받기 아이콘만 있고(글자색으로 채움), 열리면 같은 알약이 오른쪽으로 늘어나며
+/* Download Button: 카드 틀 없이 단추만 그립니다(control.css). 처음에는 지름 44px 원에 내려받기 아이콘만 있고(글자색으로 채움), 열리면 같은 알약이 오른쪽으로 늘어나며
    형식 단추(CSV · JSON · PNG)가 0.05초 간격으로 나옵니다. 늘어날 때는 끝이 살짝 넘쳤다 자리를 잡습니다. 단추 옆에는 받은 형식과 행 수를 적습니다.
    받으면 화살표가 받침으로 떨어져 체크로 바뀌고 받침이 눌렸다 펴지며, 데이터 색 넷의 작은 점이 터집니다. 받을 데이터가 없으면 단추가 좌우로 떱니다. */
-.vzb-card[data-vzb="control-download"] { min-height: var(--vzb-unit); }
-.vzb-dl.vzb-foot { padding-top: 12px; }
 .vzb-dl-row { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .vzb-dl-menu { flex: none; display: inline-flex; align-items: center; max-width: 44px; height: 44px; border-radius: 22px; background: var(--vzb-ink); color: var(--vzb-card); overflow: hidden; transition: max-width 0.36s cubic-bezier(0.34, 1.3, 0.64, 1); }
 .vzb-dl.is-open .vzb-dl-menu { max-width: 260px; }
@@ -156,8 +158,8 @@
 .vzb-dl-btn { flex: none; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 22px; background: none; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
 .vzb-dl-btn:active { transform: scale(0.9); transition-duration: 0.08s; }
 .vzb-dl-btn:focus-visible, .vzb-dl-opt:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: -2px; }
-.vzb-dl-opts { display: inline-flex; align-items: center; gap: 2px; padding-right: 6px; }
-.vzb-dl-opt { height: 32px; padding: 0 10px; border: 0; border-radius: 16px; background: none; color: inherit; font: 700 12px/1 var(--vzb-font); letter-spacing: 0.02em; cursor: pointer; opacity: 0; transform: translateX(-8px); transition: opacity 0.14s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.14s; }
+.vzb-dl-opts { flex: none; display: inline-flex; align-items: center; gap: 2px; padding-right: 6px; }   /* 늘어나는 동안 줄어들지 않고 단추 밖으로 가려졌다 드러납니다 */
+.vzb-dl-opt { flex: none; height: 32px; padding: 0 10px; white-space: nowrap; border: 0; border-radius: 16px; background: none; color: inherit; font: 700 12px/1 var(--vzb-font); letter-spacing: 0.02em; cursor: pointer; opacity: 0; transform: translateX(-8px); transition: opacity 0.14s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.14s; }
 .vzb-dl.is-open .vzb-dl-opt { opacity: 1; transform: none; transition-delay: calc(var(--vzb-i) * 0.05s + 0.06s), calc(var(--vzb-i) * 0.05s + 0.06s), 0s; }
 .vzb-dl-opt:hover, .vzb-dl-opt.is-pick { background: color-mix(in srgb, var(--vzb-card) 20%, var(--vzb-ink)); }
 .vzb-dl-ic { position: relative; width: 20px; height: 20px; }
@@ -192,8 +194,7 @@
 <div class="vzb-card" data-vzb="control-download">
 <script type="application/json">
 {
-  "title": "내보내기",
-  "subtitle": "월별 광고비를 파일로",
+  "label": "월별 광고비 내려받기",
   "name": "export",
   "target": "bar-budget",
   "filename": "monthly-ad-spend",
@@ -248,7 +249,10 @@
     'options를 확인하세요.': 'Check options.', '필터': 'Filter', '전체': 'All', '%1, %2개 중 %3개 고름': '%1, %3 of %2 picked', '%1개 중 %2개 고름': '%2 of %1 picked',
     '내려받기': 'Download', '%s로 받기': 'Download as %s', '%s로 받았습니다.': 'Downloaded as %s.', '데이터 없음': 'No data', '행': 'rows', '행|1': 'row', '받을 데이터가 없습니다.': 'No data to download.',
     '%s로 1행을 받았습니다.': 'Downloaded 1 row as %s.', '%1로 %2행을 받았습니다.': 'Downloaded %2 rows as %1.',
-    'min과 max를 확인하세요.': 'Check min and max.', '%s 최소': 'Minimum %s', '%s 최대': 'Maximum %s', '%s 시작': 'Start of %s', '%s 끝': 'End of %s',
+    'min과 max를 확인하세요.': 'Check min and max.', '%s 최소': 'Minimum %s', '%s 최대': 'Maximum %s', '범위': 'range',
+    'items에 항목을 2~4개 적으세요.': 'List 2 to 4 items in items.', 'periods와 values를 확인하세요.': 'Check periods and values.',
+    '%1. %2의 비중은 %3로, %4 대비 %5입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 holds %3, %5 against %4. Use the left and right arrows to move between items. Every value is in the table that follows.',
+    '%1. %2의 비중은 %3입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 holds %3. Use the left and right arrows to move between items. Every value is in the table that follows.', '%s 시작': 'Start of %s', '%s 끝': 'End of %s',
     '%s 레이더 차트, 항목 %s개와 대상 %s개. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s radar chart, %s axes and %s series. Use the left and right arrows to move between axes. Every value is in the table that follows.',
     '%s 생키 차트, 노드 %s개와 흐름 %s개. 좌우 화살표로 노드와 흐름을 차례로 짚습니다. 모든 흐름은 이어지는 표에 있습니다.': '%s Sankey chart, %s nodes and %s flows. Use the left and right arrows to step through nodes and flows. Every flow is in the table that follows.',
     '%s 산점도, 점 %s개. 좌우 화살표로 점을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s scatter plot, %s points. Use the left and right arrows to move between points. Every value is in the table that follows.',
@@ -443,7 +447,7 @@
     [...box.children].forEach((node, i) => { if (node.classList.contains('vzb-rl-col')) node.firstChild.style.transform = `translateY(${-10 * +chars[i]}%)`; });
   }
 
-  // Download Button: 화면에 있는 차트 카드(target)의 데이터를 내려받는 단추입니다. 처음에는 내려받기 아이콘만 있고, 마우스를 올리거나
+  // Download Button: 화면에 있는 차트 카드(target)의 데이터를 내려받는 단추입니다. 카드 머리 없이 단추만 그립니다. 처음에는 내려받기 아이콘만 있고, 마우스를 올리거나
   // 키보드로 들어오거나 아이콘을 누르면 단추가 옆으로 늘어나며 받을 형식(formats: csv · json · png, 비우면 셋 다)이 하나씩 나옵니다.
   // csv · json은 target 카드의 지금 JSON(컨트롤로 거른 뒤)에서 표를 만들어 받습니다: items(객체 배열), 없으면 labels와 values(한도
   // limit · 목표 target이 있으면 열로 더함), labels와 series, 그 밖에는 JSON에서 처음 나오는 객체 배열입니다. csv 앞에는 엑셀용 BOM을 붙입니다.
@@ -455,13 +459,12 @@
   // 열린 상태에서 아이콘을 다시 누르면 첫 형식으로 받습니다. Esc는 닫고, 좌우 화살표는 형식 사이를 옮깁니다.
   // 동작 줄이기 설정에서는 움직임 없이 상태만 바뀝니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 파일은 만들지 않고 고르는 모습만 되풀이합니다.
   mount('control-download', (card, d, f) => {
-    head(card, d, f, null);
     const FORMATS = ['csv', 'json', 'png'];
     const formats = (Array.isArray(d.formats) ? d.formats.map((x) => String(x).toLowerCase()).filter((x) => FORMATS.includes(x)) : FORMATS);
     const list = formats.length ? formats : FORMATS;
     const base = String(d.filename || 'data').replace(/\.(csv|json|png)$/i, '');
     const label = d.label || tx(d, '내려받기');
-    const foot = el('div', 'vzb-foot vzb-dl'), row = el('div', 'vzb-dl-row'), menu = el('div', 'vzb-dl-menu'), say = el('p', 'vzb-sr');
+    const foot = el('div', 'vzb-dl'), row = el('div', 'vzb-dl-row'), menu = el('div', 'vzb-dl-menu'), say = el('p', 'vzb-sr');
     menu.setAttribute('role', 'group');
     menu.setAttribute('aria-label', label);
     menu.setAttribute('data-vzb-input', '');

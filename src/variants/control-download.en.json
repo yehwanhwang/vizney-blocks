@@ -1,7 +1,6 @@
 {
-  "title": "Export",
-  "subtitle": "Monthly ad spend as a file",
   "lang": "en",
+  "label": "Download monthly ad spend",
   "name": "export",
   "target": "bar-budget",
   "filename": "monthly-ad-spend",

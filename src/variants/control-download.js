@@ -1,4 +1,4 @@
-  // Download Button: 화면에 있는 차트 카드(target)의 데이터를 내려받는 단추입니다. 처음에는 내려받기 아이콘만 있고, 마우스를 올리거나
+  // Download Button: 화면에 있는 차트 카드(target)의 데이터를 내려받는 단추입니다. 카드 머리 없이 단추만 그립니다. 처음에는 내려받기 아이콘만 있고, 마우스를 올리거나
   // 키보드로 들어오거나 아이콘을 누르면 단추가 옆으로 늘어나며 받을 형식(formats: csv · json · png, 비우면 셋 다)이 하나씩 나옵니다.
   // csv · json은 target 카드의 지금 JSON(컨트롤로 거른 뒤)에서 표를 만들어 받습니다: items(객체 배열), 없으면 labels와 values(한도
   // limit · 목표 target이 있으면 열로 더함), labels와 series, 그 밖에는 JSON에서 처음 나오는 객체 배열입니다. csv 앞에는 엑셀용 BOM을 붙입니다.
@@ -10,13 +10,12 @@
   // 열린 상태에서 아이콘을 다시 누르면 첫 형식으로 받습니다. Esc는 닫고, 좌우 화살표는 형식 사이를 옮깁니다.
   // 동작 줄이기 설정에서는 움직임 없이 상태만 바뀝니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 파일은 만들지 않고 고르는 모습만 되풀이합니다.
   mount('control-download', (card, d, f) => {
-    head(card, d, f, null);
     const FORMATS = ['csv', 'json', 'png'];
     const formats = (Array.isArray(d.formats) ? d.formats.map((x) => String(x).toLowerCase()).filter((x) => FORMATS.includes(x)) : FORMATS);
     const list = formats.length ? formats : FORMATS;
     const base = String(d.filename || 'data').replace(/\.(csv|json|png)$/i, '');
     const label = d.label || tx(d, '내려받기');
-    const foot = el('div', 'vzb-foot vzb-dl'), row = el('div', 'vzb-dl-row'), menu = el('div', 'vzb-dl-menu'), say = el('p', 'vzb-sr');
+    const foot = el('div', 'vzb-dl'), row = el('div', 'vzb-dl-row'), menu = el('div', 'vzb-dl-menu'), say = el('p', 'vzb-sr');
     menu.setAttribute('role', 'group');
     menu.setAttribute('aria-label', label);
     menu.setAttribute('data-vzb-input', '');

@@ -14,6 +14,7 @@
     const at = (i) => (i >= n ? max : +(min + i * step).toPrecision(12));
     const seat = (v, or) => (fin(v) ? Math.max(0, Math.min(n, Math.round((+v - min) / step))) : or);
     const v = Array.isArray(d.value) ? d.value : [], a = seat(v[0], 0), b = seat(v[1], n);
+    const name = d.label || d.title || tx(d, '범위');   // 제목을 그리지 않으므로 화면 낭독기용 이름은 label에서 읽습니다
     const hist = Array.isArray(d.counts) && d.counts.length ? { counts: d.counts.map((c) => (fin(c) ? +c : 0)), min, max, noun: d.noun || '' } : null;
-    slider(card, d, f, { n, text: (i) => show(f, at(i)), value: at, start: [Math.min(a, b), Math.max(a, b)], aria: [tx(d, '%s 최소', d.title || ''), tx(d, '%s 최대', d.title || '')], hist });
+    slider(card, d, f, { n, text: (i) => show(f, at(i)), value: at, start: [Math.min(a, b), Math.max(a, b)], aria: [tx(d, '%s 최소', name), tx(d, '%s 최대', name)], hist });
   });

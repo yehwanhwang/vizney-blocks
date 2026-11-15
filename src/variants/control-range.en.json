@@ -1,7 +1,6 @@
 {
-  "title": "Order Value",
-  "subtitle": "Orders by amount, last 30 days",
   "lang": "en",
+  "label": "order value",
   "name": "amount",
   "format": "usd",
   "decimals": 0,

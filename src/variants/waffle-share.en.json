@@ -1,0 +1,42 @@
+{
+  "title": "Market Share",
+  "subtitle": "By units sold, 2025 → 2026",
+  "lang": "en",
+  "format": "count",
+  "unit": "units",
+  "periods": [
+    "2025",
+    "2026"
+  ],
+  "focus": "Our brand",
+  "items": [
+    {
+      "name": "Our brand",
+      "values": [
+        41400,
+        62400
+      ]
+    },
+    {
+      "name": "Brand A",
+      "values": [
+        80500,
+        80600
+      ]
+    },
+    {
+      "name": "Brand B",
+      "values": [
+        52900,
+        57200
+      ]
+    },
+    {
+      "name": "Others",
+      "values": [
+        55200,
+        59800
+      ]
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-  // Filter Chips: 정해 둔 항목(options) 가운데 여러 개를 칩으로 고르는 컨트롤입니다(채널 · 지역 · 상품군 필터).
+  // Filter Chips: 정해 둔 항목(options) 가운데 여러 개를 칩으로 고르는 컨트롤입니다(채널 · 지역 · 상품군 필터). 카드 머리 없이 칩만 그립니다.
   // 고른 칩은 글자색으로 채우고 체크가 그려집니다. 맨 앞의 전체 칩(all, 비우면 '전체', 빈 글자면 없음)은 고른 수를 굴러가는 숫자로 보여 주고,
   // 누르면 모두 고르거나 이미 모두 골랐으면 모두 풉니다. value는 처음 고른 항목이고 비우면 모두입니다.
   // 값이 바뀌면 카드에서 vzb-change 이벤트(bubbles, detail: { name, value: 고른 항목을 options 순서대로 })를 보내고, data-vzb-value에도 적습니다.
@@ -8,10 +8,9 @@
     const opts = [...new Set((Array.isArray(d.options) ? d.options : []).filter((o) => o != null && o !== '').map(String))];
     if (!opts.length) throw new Error(tx(d, 'options를 확인하세요.'));
     const sel = new Set(Array.isArray(d.value) ? d.value.map(String).filter((v) => opts.includes(v)) : opts);
-    head(card, d, f, null);
-    const foot = el('div', 'vzb-foot vzb-ch'), list = el('div', 'vzb-ch-list'), say = el('p', 'vzb-sr');
+    const foot = el('div', 'vzb-ch'), list = el('div', 'vzb-ch-list'), say = el('p', 'vzb-sr');
     list.setAttribute('role', 'group');
-    list.setAttribute('aria-label', d.title || tx(d, '필터'));
+    list.setAttribute('aria-label', d.label || d.title || tx(d, '필터'));   // 제목을 그리지 않으므로 화면 낭독기용 이름은 label에서 읽습니다
     list.setAttribute('data-vzb-input', '');
     say.setAttribute('aria-live', 'polite');
     const tick = () => {

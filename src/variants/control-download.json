@@ -1,6 +1,5 @@
 {
-  "title": "내보내기",
-  "subtitle": "월별 광고비를 파일로",
+  "label": "월별 광고비 내려받기",
   "name": "export",
   "target": "bar-budget",
   "filename": "monthly-ad-spend",

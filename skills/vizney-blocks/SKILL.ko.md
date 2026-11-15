@@ -4,7 +4,7 @@
 
 > 스킬의 한국어판이다. 영어판은 같은 폴더의 `SKILL.md`다. 단계, 목적 색인, 규칙, 체크리스트는 같은 원본에서 만들어져 내용이 같고, 카드 코드 주소(`/ko/cards/`)와 카드 문구가 한국어다.
 
-Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v0.51, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 증감, 비중, 달성률, 합계와 색·강조는 카드가 Vizney 차트 가이드의 규칙대로 계산하고 그린다.
+Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v0.52, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 증감, 비중, 달성률, 합계와 색·강조는 카드가 Vizney 차트 가이드의 규칙대로 계산하고 그린다.
 
 ## 순서
 
@@ -112,7 +112,7 @@ Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v
 
 ## 설계표
 
-카드 코드를 쓰기 전에 화면을 「줄 · 질문 · 카드(id) · 높이」 표로 정리하고, 그 아래에 가정 줄을 적어 사용자에게 보여 준다. 높이가 같은 카드끼리 같은 줄로 묶는다(KPI - Number · Range Slider · Filter Chips · Download Button 1단위, KPI - Gauge · KPI - Stacked Bar 1.5단위, 나머지 2단위). 카드는 이 표의 줄 순서대로 붙인다.
+카드 코드를 쓰기 전에 화면을 「줄 · 질문 · 카드(id) · 높이」 표로 정리하고, 그 아래에 가정 줄을 적어 사용자에게 보여 준다. 높이가 같은 카드끼리 같은 줄로 묶는다(KPI - Number 1단위, KPI - Gauge · KPI - Stacked Bar 1.5단위, 나머지 카드 2단위). 카드는 이 표의 줄 순서대로 붙인다.
 
 | 줄 | 질문 | 카드(id) | 높이 |
 |---|---|---|---|
@@ -124,7 +124,7 @@ Vizney Blocks는 복사해 붙여 쓰는 HTML 대시보드 카드 모음이다(v
 ## 규칙
 
 - 내려받은 카드 코드를 그대로 붙여 넣고 JSON 값만 바꾼다. 스타일과 스크립트는 고치지 않는다. 같은 카드를 여러 장 쓸 때는 카드 코드를 통째로 다시 붙여 넣고 각 JSON만 바꾼다.
-- 카드는 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위(1단위 168px, --vzb-unit) 중 하나다: KPI - Number · Range Slider · Filter Chips · Download Button 1단위, KPI - Gauge · KPI - Stacked Bar 1.5단위, 나머지 2단위. 같은 줄의 카드는 가장 높은 카드에 맞춰 늘어나고 그래픽은 바닥에 붙으므로, 빈 곳이 없게 하려면 높이가 같은 카드끼리 한 줄에 둔다.
+- 카드는 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위(1단위 168px, --vzb-unit) 중 하나다: KPI - Number 1단위, KPI - Gauge · KPI - Stacked Bar 1.5단위, 나머지 카드 2단위. 같은 줄의 카드는 가장 높은 카드에 맞춰 늘어나고 그래픽은 바닥에 붙으므로, 빈 곳이 없게 하려면 높이가 같은 카드끼리 한 줄에 둔다. 컨트롤(Range Slider · Filter Chips · Download Button)은 카드 머리와 틀 없이 조작부만 그리고 높이 단위를 따르지 않는다. 차트 위 필터 줄처럼 쓰는 자리에 두고, theme은 그 자리의 바탕에 맞추며, 화면 낭독기가 읽을 이름은 label에 적는다.
 - 여러 장은 감싸는 요소에 격자를 준다: display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:16px. 카드 폭이 340px보다 좁으면 표, 도넛, 퍼널, 워터폴의 글자가 잘리거나 겹친다. KPI 카드만 둔 줄은 280px까지 줄여도 되어, 폭 1280px 화면에 네 장이 한 줄에 들어간다.
 - 색과 글꼴은 :root의 --vzb-* 변수(--vzb-primary, --vzb-font 등)로 바꾼다. 변수 목록과 쓰임은 https://blocks.vizney.com/ko/tokens.css 에 있다(카드 코드의 :where(:root) 블록과 같은 내용). 페이지 전체를 맞출 때는 그 파일의 값을 :root에 다시 적는다.
 - 공통 필드: title(지표명), subtitle(기간 부제), value(KPI 카드의 대표 수치. KPI - Line과 KPI - Bar는 비우면 마지막 값), format(eok 억 단위 숫자 · krw 원 단위 숫자를 만·억·조로 줄여 적음. 10만 원 미만은 87,324원처럼 원 단위 그대로 · usd 달러 금액을 $745.6K·$1.2M처럼 줄여 적음 · count 개수, 단위는 unit · pct 퍼센트 숫자(3.4는 3.4%), 증감은 %p · days 일수), decimals(숫자의 소수 자릿수. 비우면 카드가 정하고, pct의 증감도 이 자릿수를 따름), better(up · down · neutral, 증감 색), compare({ label, value }), labels(기간 이름. values와 같은 길이로 적고, 값이 없는 기간의 값은 null), series([{ name, values }]), rows(표의 줄), curve(라인 카드의 선 모양: smooth · linear · step), lang(en이면 합계 · 기타 · 달성처럼 카드가 직접 적는 문구가 영어. 비우면 한국어).

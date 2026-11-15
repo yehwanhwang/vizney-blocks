@@ -1,4 +1,4 @@
-  /* 범위 슬라이더(컨트롤 공통): 손잡이 둘로 범위를 고릅니다. 위 줄에 고른 범위를 적고, 분포(hist)를 주면 트랙 위에 막대로 그려
+  /* 범위 슬라이더(컨트롤 공통): 손잡이 둘로 범위를 고릅니다. 카드 머리 없이 조작부만 그립니다(control.css). 위 줄에 고른 범위를 적고, 분포(hist)를 주면 트랙 위에 막대로 그려
      고른 범위 안의 막대만 글자색으로 채우고, 안에 든 개수를 굴러가는 숫자로 적습니다. 손잡이가 지나가며 막대가 범위에 들어오면
      살짝 솟았다 내려앉고 나가면 살짝 꺼져, 끄는 동안 어느 구간의 데이터가 들어오고 나가는지 보입니다.
      cfg: { n: 칸 수(자리는 0…n), text(i): 그 자리의 글자, value(i): 이벤트로 보내는 값, start: [앞, 뒤] 자리, aria: [앞 손잡이 이름, 뒤 손잡이 이름],
@@ -8,10 +8,9 @@
      두 손잡이는 같은 칸까지 만날 수 있고, 겹쳐 있을 때는 끄는 방향의 손잡이가 움직입니다. 손잡이는 용수철로 따라갑니다.
      동작 줄이기 설정에서는 바로 옮기고 막대도 솟지 않습니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 손을 대기 전까지 몇 가지 범위를 차례로 보여 줍니다. */
   function slider(card, d, f, cfg) {
-    head(card, d, f, null);
     const n = cfg.n, R = 8, hist = cfg.hist && cfg.hist.counts.length ? cfg.hist : null;   // R: 손잡이 반지름. 트랙과 막대는 양 끝에서 그만큼 들어옵니다.
     let lo = cfg.start[0], hi = cfg.start[1];
-    const foot = el('div', 'vzb-foot vzb-sl'), read = el('div', 'vzb-sl-read'), val = el('span', 'vzb-sl-val'), say = el('p', 'vzb-sr');
+    const foot = el('div', 'vzb-sl'), read = el('div', 'vzb-sl-read'), val = el('span', 'vzb-sl-val'), say = el('p', 'vzb-sr');
     say.setAttribute('aria-live', 'polite');
     read.append(val);
     let count = null, countSr = null;   // 굴러가는 숫자는 화면 낭독기에서 숨기고, 같은 개수를 글자로 따로 둡니다

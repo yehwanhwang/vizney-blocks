@@ -1,6 +1,6 @@
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/vz-sans-400.woff?v=72235051cf) format('woff');}
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/vz-sans-500.woff?v=72235051cf) format('woff');}
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/vz-sans-700.woff?v=72235051cf) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/vz-sans-400.woff?v=3159430b83) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/vz-sans-500.woff?v=3159430b83) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/vz-sans-700.woff?v=3159430b83) format('woff');}
 /* Vizney Blocks site: the Vizney common header (the blog's header, kr.vizney.com · www.vizney.com: the blog is the
    reference and Blocks follows it), the line's tab row (not on the home page, which opens like a blog category page), then a white page. Text and frame are ink and grays; the one UI
    accent is the Vizney yellow #ffcc00 of the blog's post images (primary buttons, the current chart, focus, link underlines).
@@ -162,15 +162,20 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 .gal { padding-top: 49px; }
 .gal-grid { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
 .gt { display: flex; flex-direction: column; min-width: 0; padding: 12px; border-radius: 20px; background: var(--soft); }
-.gt-box { flex: 1 1 auto; display: grid; align-content: center; min-width: 0; min-height: 336px; }   /* 타일은 모두 2단위 높이(168px × 2)로 같고, 그보다 낮은 블록(1단위 컨트롤 등)은 가운데에 둡니다. 큰 블록과 작은 블록을 어떤 순서로 섞어도 줄이 맞습니다. */
-.gt-in { position: relative; min-width: 0; }
+.gt-box { position: relative; flex: 1 1 auto; display: grid; align-content: center; min-width: 0; min-height: 336px; }   /* 타일은 모두 2단위 높이(168px × 2)로 같고, 그보다 낮은 블록(1단위 컨트롤 등)은 가운데에 둡니다. 큰 블록과 작은 블록을 어떤 순서로 섞어도 줄이 맞습니다. */
+.gt-in { min-width: 0; }
+.gt.is-bare .gt-in { padding: 0 24px; }   /* 컨트롤은 카드 틀 없이 조작부만 타일 가운데에 둡니다 */
+/* 갤러리에서만 칩 줄은 가운데로 모으고(한 줄로 밀어 보는 때는 왼쪽부터), 내려받기 아이콘은 타일 가운데에 둡니다. 형식은 아이콘 오른쪽으로 펼쳐져
+   아이콘이 마우스 아래에서 움직이지 않습니다. 복사한 코드는 놓인 자리의 왼쪽부터 그립니다. */
+.gt.is-bare .vzb-ch-list:not(.is-scroll) { justify-content: center; }
+.gt.is-bare .vzb-dl-row { padding-left: clamp(0px, calc(50% - 22px), calc(100% - 200px)); }   /* 펼친 단추(약 190px)가 타일 안에 들어가게 */
 .gt-pv { display: grid; }
 /* 카드 전체가 차트 페이지로 가는 자리: 제목은 링크(키보드와 화면 낭독기용), 나머지 빈 곳은 누르면 같은 곳으로 갑니다. */
 .gt .vzb-hd { padding-right: 36px; }   /* 오른쪽 위 바탕 전환 단추 자리 */
 .gt-meta { display: flex; align-items: baseline; gap: 8px; min-width: 0; padding: 14px 4px 0; }
 .gt-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 700; color: var(--ink); text-decoration: none; }
 .gt.is-dark .gt-name { color: #f5f5f5; }
-.gt-theme { position: absolute; top: 20px; right: 16px; z-index: 1; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 8px; background: none; color: var(--muted); cursor: pointer; }
+.gt-theme { position: absolute; top: 20px; right: 16px;   /* 타일의 오른쪽 위(2단위 카드는 카드의 오른쪽 위와 같은 자리) */ z-index: 1; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 8px; background: none; color: var(--muted); cursor: pointer; }
 .gt-theme:hover { color: var(--ink); background: #f1f1f1; }
 .gt-theme .ic { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .gt .ic-sun, .gt.is-dark .ic-moon { display: none; }

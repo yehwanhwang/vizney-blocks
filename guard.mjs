@@ -3,7 +3,8 @@
 //   1. 자립성: no external resource but the font link (no http(s) URL, <link>, @import, url(), import).
 //   2. 색: raw colors only in tokens.css. White and translucent black (tooltip ink, shadows) are the only exceptions.
 //   3. 토큰: every var(--vzb-*) is declared in tokens.css or set by the card itself; prefix --vzb- on every custom property.
-//   4. 높이: the min-height rule each card ends up with is the unit in TIER (1 · 1.5 · 2) — no card without a height.
+//   4. 높이: the min-height rule each card ends up with is the unit in TIER (1 · 1.5 · 2) — no card without a height,
+//      except the controls (TIER 0), which are drawn bare at the height of the control (min-height: 0).
 //   5. 충돌: every selector is scoped (contains "vzb"), no element ids, no globals (window.x =); the code is one IIFE.
 //   6. 접근성: a file that animates has a prefers-reduced-motion rule; a card that reacts to the pointer also takes the keyboard.
 //   7. 데이터: the example JSON parses, labels and values have the same length, and no field the card computes is written in.
@@ -198,6 +199,7 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
   // 4. height: the most specific min-height rule for the card must give TIER[id] (default 2) units.
   const allCss = files.filter(([f]) => f.endsWith('.css')).map(([f, t]) => [f, t.replace(/\/\*[\s\S]*?\*\//g, '')]);
   const unitOf = (decl) => {
+    if (/min-height\s*:\s*0\s*(;|$)/.test(decl)) return 0;
     const m = decl.match(/min-height\s*:\s*(?:calc\(\s*)?var\(--vzb-unit\)(?:\s*\*\s*([\d.]+))?/);
     return m ? Number(m[1] || 1) : null;
   };
@@ -213,8 +215,9 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
       }
     }
     const got = exact ?? prefix ?? 1.5;
-    const want = tier[v.id] || 2;
-    if (![1, 1.5, 2].includes(got)) fail(v.id, `높이 ${got}단위는 없다. 1 · 1.5 · 2 중 하나로 둔다`);
+    const want = v.id in tier ? tier[v.id] : 2;
+    if (got === 0 && !v.id.startsWith('control-')) fail(v.id, '조작부 높이(0)는 컨트롤만 쓴다. 카드는 1 · 1.5 · 2단위 중 하나로 둔다');
+    else if (![0, 1, 1.5, 2].includes(got)) fail(v.id, `높이 ${got}단위는 없다. 1 · 1.5 · 2 중 하나로 둔다`);
     else if (got !== want) fail(v.id, `CSS의 높이는 ${got}단위인데 build.mjs TIER는 ${want}단위다. 둘을 맞춘다`);
   }
 
@@ -231,7 +234,7 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
     if (!json) { fail(where, '데이터 JSON 블록이 없다'); continue; }
     let d;
     try { d = JSON.parse(json[1]); } catch (e) { fail(where, `예시 JSON을 읽지 못한다: ${e.message}`); continue; }
-    if (!d.title) fail(where, '예시 JSON에 title이 없다');
+    if (v.id.startsWith('control-') ? !d.label && !d.title : !d.title) fail(where, v.id.startsWith('control-') ? '예시 JSON에 label(화면 낭독기가 읽는 이름)이 없다' : '예시 JSON에 title이 없다');   // 컨트롤은 제목을 그리지 않고 label을 읽습니다
     const n = Array.isArray(d.labels) ? d.labels.length : null;
     if (n != null) {
       if (Array.isArray(d.values) && d.values.length !== n) fail(where, `labels ${n}개, values ${d.values.length}개. 길이를 맞추고 없는 기간은 null로 둔다`);

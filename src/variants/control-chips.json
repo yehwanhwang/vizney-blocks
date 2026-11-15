@@ -1,6 +1,5 @@
 {
-  "title": "채널",
-  "subtitle": "보여 줄 채널",
+  "label": "채널",
   "name": "channel",
   "options": [
     "SNS",

@@ -1,7 +1,6 @@
 {
-  "title": "Channel",
-  "subtitle": "Channels to show",
   "lang": "en",
+  "label": "Channel",
   "name": "channel",
   "options": [
     "Social",

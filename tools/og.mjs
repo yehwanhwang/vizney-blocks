@@ -15,6 +15,15 @@ const BASE = process.env.OG_BASE || 'http://localhost:8765';
 // The card code as published, without the CDN font link (the page loads VZ Sans from docs/assets instead).
 const card = (lang, id) => readFileSync(join(root, `docs${lang === 'ko' ? '/ko' : ''}/cards/${id}.txt`), 'utf8')
   .replace(/<link rel="stylesheet"[^>]*>\n?/, '');
+// Only JSON values change, as when a card is used. At the 400px of this image the English subtitle of Warning Bars would
+// leave one word on a second line (the head keeps room for the replay button), so the image gives it a shorter one.
+const SHORT = ['against a $40K monthly budget', '$40K monthly budget'];
+const chart = (lang) => {
+  const code = card(lang, 'warning-bars');
+  if (lang !== 'en') return code;
+  if (!code.includes(SHORT[0])) throw new Error('tools/og.mjs: the English subtitle of warning-bars changed; update SHORT');
+  return code.replace(SHORT[0], SHORT[1]);
+};
 
 // Words: a tag, a title of up to two lines and one line under it, as on a post image.
 const T = {
@@ -50,7 +59,7 @@ body { position: relative; font-family: 'VZ Sans', sans-serif; color: #ffffff; -
 .bar { box-sizing: border-box; padding: 20px 24px; border: 1px solid var(--vzb-edge); border-radius: var(--vzb-radius); background: var(--vzb-card); }
 </style></head><body>
 <div class="frame"><div class="tag"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="13" height="13" rx="3" fill="#1b1b1b"/><rect x="17" y="2" width="13" height="13" rx="3" fill="#ff9500"/><rect x="2" y="17" width="13" height="13" rx="3" fill="#ffcc00"/><rect x="17" y="17" width="13" height="13" rx="3" fill="#ff2d55"/></svg>Blocks</div><h1>${T[lang].title}</h1><p>${T[lang].sub}</p><img class="logo" src="${LOGO}" alt="Vizney"></div>
-<div class="cards"><div class="bar">${card(lang, 'control-chips')}</div><div>${card(lang, 'bar-budget')}</div></div>
+<div class="cards"><div class="bar">${card(lang, 'filter-chips')}</div><div>${chart(lang)}</div></div>
 <span class="box a"></span><span class="box b"></span>
 </body></html>`;
 

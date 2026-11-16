@@ -4,54 +4,22 @@
   // 왼쪽의 한국어 원문이 키입니다. %s에는 값이 차례로, %1 · %2에는 그 순서의 값이 들어가고, '|' 뒤는 같은 말을 구분하는 꼬리표라 화면에는 안 나옵니다.
   // 원화 표기(조 · 억 · 만 · 원)는 영어에서도 그대로 둡니다. 숫자 표기는 두 언어가 같습니다.
   const EN = {
-    '합계': 'Total', '합계 %s': 'Total %s', '합계 · 소계': 'Total · Subtotal', '기타': 'Other', '기타 %s개': 'Other (%s)', '그 밖의 %s개': '%s others',
-    '값': 'Value', '이름': 'Name', '기간': 'Period', '지표': 'Metrics', '항목': 'Item', '항목|축': 'Axis', '항목 평균': 'Average score',
-    '차트': 'chart', '막대 차트': 'bar chart', '선 차트': 'line chart', '워터폴 차트': 'waterfall chart',
-    '일': 'days', '%s%p': '%spp', '증가': 'up', '감소': 'down', '%s 대비': 'vs %s', '%s %s 대비': 'vs %s %s', '비교 기간': 'prior period',
-    '%s 대비 %s': '%2 vs %1', '%s 대비 %s|비율': '%2 of %1', '%1의 %2': '%2 of %1', '전체의 %s': '%s of total', '전체의 %1 · %2의 %3': '%1 of total · %3 of %2',
-    '이번 기간': 'This period', '지난 기간': 'Prior period', '지난 기간 %s': 'Prior period %s', '비교 기간|범례': 'Prior period', '올해': 'This year', '작년': 'Last year',
-    '이전': 'Before', '이후': 'After', '직전 시점': 'previous period', '두 기간 모두 %s': 'Both periods: %s', '%s 진행 중': '%s in progress',
-    '목표': 'Target', '목표|소문자': 'target', '실적': 'Actual', '달성률': 'Attainment', '상태': 'Status', '달성': 'Met', '미달': 'Missed', '이내': 'Within', '초과': 'Over',
-    '%s 초과': '%s exceeded', '%s 미달': '%s missed', '목표 달성': 'Target met', '목표 미달': 'Target missed', '목표 이내': 'Within target', '목표 초과': 'Over target', '목표(100%)': 'Target (100%)',
-    '%s %s · 달성률 %s%': '%s %s · Attainment %s%', '목표 %s · 달성률 %s%': 'Target %s · Attainment %s%', '목표의 %s%': '%s% of target',
-    '%1 %2의 %3%': '%3% of %1 %2', '%1 %2의 %3% 사용': '%3% of %1 %2 used',
-    '평균': 'Average', '기준': 'Reference', '비중': 'Share', '비중 %s%p': 'Share %spp', '이전 대비': 'vs prior', '처음 대비': 'vs first', '흐름': 'Trend', '최근': 'Latest',
-    '누계': 'Running total', '반영 후 누계 %s': 'Running total after: %s', '늘린 요인': 'Increase', '줄인 요인': 'Decrease', '빼는 항목': 'Deduction',
-    '왼쪽': 'Left', '오른쪽': 'Right', '출발': 'From', '도착': 'To', '가로값': 'X value', '세로값': 'Y value', '외 %s곳 %s': 'and %s more: %s',
-    '%s위': '#%s', '%s %s위': '%s #%s', '%s 순위': '%s ranks', '%1 %2위에서 %3': 'from #%2 in %1, %3', '%s계단 오름': 'up %s', '%s계단 내림': 'down %s', '그대로': 'unchanged',
-    '첫 단계': 'First step', '시작': 'Start', '전환 %s': 'Conversion %s', '전체 전환율': 'Overall conversion', '앞 단계 대비 %s': '%s of the previous step',
-    '앞 단계에서 %s 이탈': '%s dropped from the previous step', '앞 단계에서 %s 빠짐': '%s dropped from the previous step',
-    '행마다 작음': 'Low in each row', '큼': 'High', '한 칸 1% · 합계 %s': 'One square = 1% · Total %s', '%1 %2%에서 %3%': '%1 from %2% to %3%',
-    '. 열 제목을 누르면 정렬합니다.': '. Click a column heading to sort.', ' 표에 포커스한 뒤 화살표 키로 칸을 옮기면 그 칸의 값을 읽습니다.': ' Focus the table and move between cells with the arrow keys to hear each value.',
-    '표시할 데이터가 없습니다.': 'No data to show.',
-    '%s %s, %s–%s. 좌우 화살표로 기간을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s %s, %s–%s. Use the left and right arrows to move between periods. Every value is in the table that follows.',
-    '%s 추이: %s. 좌우 화살표로 시점을 옮깁니다.': '%s trend: %s. Use the left and right arrows to move between periods.',
-    '%s: %s%s. 좌우 화살표로 기간을 옮깁니다.': '%s: %s%s. Use the left and right arrows to move between periods.',
-    '%s. 좌우 화살표로 항목을 옮깁니다.': '%s. Use the left and right arrows to move between items.',
-    '%s: %s, 합계 %s. 좌우 화살표로 항목을 옮깁니다.': '%s: %s, total %s. Use the left and right arrows to move between items.',
-    '%s: %s. 좌우 화살표로 칸을 옮깁니다.': '%s: %s. Use the left and right arrows to move between cells.',
-    '%s: %s. 위아래 화살표로 항목을 옮깁니다.': '%s: %s. Use the up and down arrows to move between items.',
-    '%s 목록, %s줄. 위아래 화살표로 항목의 자세한 값을 봅니다.': '%s list, %s rows. Use the up and down arrows to see each item.',
-    '%s 순위 변화, %s–%s. 위아래 화살표로 항목을 옮깁니다. 모든 순위는 이어지는 표에 있습니다.': '%s rank changes, %s–%s. Use the up and down arrows to move between items. Every rank is in the table that follows.',
-    '%s 퍼널, %s. 좌우 화살표로 단계를 옮깁니다.': '%s funnel, %s. Use the left and right arrows to move between steps.',
-    '처음부터 다시': 'Replay',
-    '한도': 'Limit', '차이': 'Difference', '%s 초과|한도': '%s over', '%1 초과 · %2의 %3%': '%1 over · %3% of %2', '%1 남음 · %2의 %3%': '%1 left · %3% of %2',
-    '%1개 중 %2개 %3 초과 · +%4': '%2 of %1 over %3 · +%4', '%1개 중 %2개 %3 초과': '%2 of %1 over %3', '모두 %s 이내': 'All within %s', '표시할 항목이 없습니다.': 'No items to show.',
+    '값': 'Value', '이름': 'Name', '기간': 'Period', '항목': 'Item', '일': 'days', '%s%p': '%spp', '증가': 'up', '감소': 'down', '%s 대비': 'vs %s', '비교 기간': 'prior period', '%1의 %2': '%2 of %1',
+    '비중': 'Share', '%s위': '#%s', '%s 순위': '%s ranks', '%s계단 오름': 'up %s', '%s계단 내림': 'down %s', '그대로': 'unchanged', '처음부터 다시': 'Replay', '한도': 'Limit', '차이': 'Difference', '%s 초과|한도': '%s over',
+    '%1 초과 · %2의 %3%': '%1 over · %3% of %2', '%1 남음 · %2의 %3%': '%1 left · %3% of %2', '%1개 중 %2개 %3 초과 · +%4': '%2 of %1 over %3 · +%4', '%1개 중 %2개 %3 초과': '%2 of %1 over %3',
+    '모두 %s 이내': 'All within %s', '표시할 항목이 없습니다.': 'No items to show.',
     '%1. 항목 %2개 가운데 %3개가 %4 초과입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %3 of %2 items are over %4. Use the left and right arrows to move between items. Every value is in the table that follows.',
-    'labels와 values를 확인하세요.': 'Check labels and values.', 'limit에 한도를 숫자로 적으세요.': 'Write the limit as a number in limit.',
-    'options를 확인하세요.': 'Check options.', '필터': 'Filter', '전체': 'All', '%1, %2개 중 %3개 고름': '%1, %3 of %2 picked', '%1개 중 %2개 고름': '%2 of %1 picked',
-    '내려받기': 'Download', '%s로 받기': 'Download as %s', '%s로 받았습니다.': 'Downloaded as %s.', '데이터 없음': 'No data', '행': 'rows', '행|1': 'row', '받을 데이터가 없습니다.': 'No data to download.',
-    '%s로 1행을 받았습니다.': 'Downloaded 1 row as %s.', '%1로 %2행을 받았습니다.': 'Downloaded %2 rows as %1.',
-    'min과 max를 확인하세요.': 'Check min and max.', '%s 최소': 'Minimum %s', '%s 최대': 'Maximum %s', '범위': 'range',
-    'items에 항목을 2~4개 적으세요.': 'List 2 to 4 items in items.', 'items에 항목을 2~8개 적으세요.': 'List 2 to 8 items in items.', 'labels에 기간을 2개 이상 적으세요.': 'List at least 2 periods in labels.',
-    '재생': 'Play', '일시정지': 'Pause', '되감기': 'Rewind', '빨리 감기': 'Fast forward', '%s 강조': '%s highlighted', '%1 순위 변화, %2–%3. %4: %5 → %6. 위아래 화살표로 항목을 옮깁니다. 모든 순위는 이어지는 표에 있습니다.': '%1 rank changes, %2–%3. %4: %5 → %6. Use the up and down arrows to move between items. Every rank is in the table that follows.', 'periods와 values를 확인하세요.': 'Check periods and values.',
+    'labels와 values를 확인하세요.': 'Check labels and values.', 'limit에 한도를 숫자로 적으세요.': 'Write the limit as a number in limit.', 'options를 확인하세요.': 'Check options.', '필터': 'Filter', '전체': 'All',
+    '%1, %2개 중 %3개 고름': '%1, %3 of %2 picked', '%1개 중 %2개 고름': '%2 of %1 picked', '내려받기': 'Download', '%s로 받기': 'Download as %s', '%s로 받았습니다.': 'Downloaded as %s.', '데이터 없음': 'No data',
+    '행': 'rows', '행|1': 'row', '받을 데이터가 없습니다.': 'No data to download.', '%s로 1행을 받았습니다.': 'Downloaded 1 row as %s.', '%1로 %2행을 받았습니다.': 'Downloaded %2 rows as %1.',
+    'min과 max를 확인하세요.': 'Check min and max.', '%s 최소': 'Minimum %s', '%s 최대': 'Maximum %s', '범위': 'range', 'items에 항목을 2~4개 적으세요.': 'List 2 to 4 items in items.',
+    'items에 항목을 2~8개 적으세요.': 'List 2 to 8 items in items.', 'labels에 기간을 2개 이상 적으세요.': 'List at least 2 periods in labels.', '재생': 'Play', '일시정지': 'Pause', '되감기': 'Rewind',
+    '빨리 감기': 'Fast forward', '%s 강조': '%s highlighted',
+    '%1 순위 변화, %2–%3. %4: %5 → %6. 위아래 화살표로 항목을 옮깁니다. 모든 순위는 이어지는 표에 있습니다.': '%1 rank changes, %2–%3. %4: %5 → %6. Use the up and down arrows to move between items. Every rank is in the table that follows.',
+    'periods와 values를 확인하세요.': 'Check periods and values.',
     '%1. %2의 비중은 %3로, %4 대비 %5입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 holds %3, %5 against %4. Use the left and right arrows to move between items. Every value is in the table that follows.',
-    '%1. %2의 비중은 %3입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 holds %3. Use the left and right arrows to move between items. Every value is in the table that follows.', '%s 시작': 'Start of %s', '%s 끝': 'End of %s',
-    '%s 레이더 차트, 항목 %s개와 대상 %s개. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s radar chart, %s axes and %s series. Use the left and right arrows to move between axes. Every value is in the table that follows.',
-    '%s 생키 차트, 노드 %s개와 흐름 %s개. 좌우 화살표로 노드와 흐름을 차례로 짚습니다. 모든 흐름은 이어지는 표에 있습니다.': '%s Sankey chart, %s nodes and %s flows. Use the left and right arrows to step through nodes and flows. Every flow is in the table that follows.',
-    '%s 산점도, 점 %s개. 좌우 화살표로 점을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%s scatter plot, %s points. Use the left and right arrows to move between points. Every value is in the table that follows.',
+    '%1. %2의 비중은 %3입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 holds %3. Use the left and right arrows to move between items. Every value is in the table that follows.',
     '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
-    'labels와 values(또는 series)를 확인하세요.': 'Check labels and values (or series).', 'tabs를 확인하세요.': 'Check tabs.', 'reference.value에 숫자나 "avg"를 적으세요.': 'Set reference.value to a number or "avg".',
   };
   // tx(d 또는 f, 원문, 값…): d.lang(format()이 f에 옮겨 둡니다)이 en이면 영어 문구를, 아니면 원문을 돌려줍니다.
   function tx(x, s, ...a) {
@@ -152,7 +120,7 @@
   }
   // 머리: 제목 · 기간 부제(subtitle) · 대표 수치와 바로 뒤의 증감 배지. value가 null이면 제목만 둡니다.
   // 배지는 숫자 바로 뒤에 붙어 있고, 카드가 좁아 한 줄에 다 들어가지 않으면 비교 문구만 숫자 아래 줄로 내려갑니다.
-  // 내려갔는지는 카드의 vzb-wrapped로 알려, 높이가 1단위인 KPI - Number가 아래 여백으로 그 줄을 받게 합니다.
+  // 내려갔는지는 카드의 vzb-wrapped로 알려, 높이가 1단위인 카드가 아래 여백으로 그 줄을 받을 수 있게 합니다.
   function head(card, d, f, value, cmp, cmpText) {
     const hd = el('div', 'vzb-hd');
     hd.append(el('div', 'vzb-title', d.title || ''));

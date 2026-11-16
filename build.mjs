@@ -14,7 +14,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.56';
+const VERSION = 'v0.57';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -130,7 +130,7 @@ const WORDS = {
     html: 'ko', og: 'ko_KR', other: { lang: 'en', label: 'English' },
     skip: '본문으로 건너뛰기', menu: '주 메뉴', more: '더 보기', find: '카드 찾기', found: '찾은 카드',
     footFont: '글꼴 VZ Sans(Spoqa Han Sans Neo 부분 글꼴)', footNav: '바닥글', footBlog: '블로그', footContact: '문의',
-    copy: '복사', aiLink: 'AI용 링크', close: '닫기', gTitle: 'Blocks', gDesc: GDESC.ko, toLight: '밝은 바탕으로 보기', gAria: '카드 갤러리', tPrompt: '프롬프트 복사', tCode: '코드 복사', codeText: '코드(텍스트)',
+    copy: '복사', aiLink: 'AI용 링크', close: '닫기', gTitle: 'Blocks', gDesc: GDESC.ko, sponsor: '후원', aiCopy: 'AI용 링크 복사', toLight: '밝은 바탕으로 보기', gAria: '카드 갤러리', tPrompt: '프롬프트 복사', tCode: '코드 복사', codeText: '코드(텍스트)',
     usageTitle: '쓰는 법', usageSub: '설치할 것은 없습니다. 카드 하나가 스타일, 데이터, 스크립트를 모두 담은 HTML 조각입니다.',
     step1: '복사해서 붙이기', step1p: '카드의 <b>코드 복사</b>를 눌러 HTML의 &lt;body&gt; 안 원하는 자리에 붙여 넣습니다.',
     step2: 'JSON만 바꾸기', step2p: '카드 안 JSON의 값만 바꿉니다. 넘친 양, 비중, 순위는 카드가 계산합니다.', step2code: '"limit": 40000000,\n"labels": ["25.11", …],\n"values": [34200000, …]',
@@ -161,7 +161,7 @@ const WORDS = {
     html: 'en', og: 'en_US', other: { lang: 'ko', label: '한국어' },
     skip: 'Skip to content', menu: 'Main menu', more: 'More', find: 'Find a card', found: 'Cards found',
     footFont: 'Font VZ Sans (a subset of Spoqa Han Sans Neo)', footNav: 'Footer', footBlog: 'Blog', footContact: 'Contact',
-    copy: 'Copy', aiLink: 'AI link', close: 'Close', gTitle: 'Blocks', gDesc: GDESC.en, toLight: 'Show on light', gAria: 'Card gallery', tPrompt: 'Copy prompt', tCode: 'Copy code', codeText: 'Code (text)',
+    copy: 'Copy', aiLink: 'AI link', close: 'Close', gTitle: 'Blocks', gDesc: GDESC.en, sponsor: 'Sponsor', aiCopy: 'Copy AI link', toLight: 'Show on light', gAria: 'Card gallery', tPrompt: 'Copy prompt', tCode: 'Copy code', codeText: 'Code (text)',
     usageTitle: 'How to use', usageSub: 'Nothing to install. One card is an HTML snippet that carries its own styles, data and script.',
     step1: 'Copy and paste', step1p: 'Press <b>Copy code</b> on a card and paste it anywhere inside the &lt;body&gt; of your HTML.',
     step2: 'Change only the JSON', step2p: 'Edit the values in the card’s JSON. The card computes the amount over the limit, the shares and the ranks.', step2code: '"limit": 40000,\n"labels": ["Nov \'25", …],\n"values": [34200, …]',
@@ -302,9 +302,19 @@ const ORDER = (() => {
   }
   return out;
 })();
+// The title area: the title and the description at the left, two buttons at the right (laid out as on Vizney Styles).
+// Sponsor is the yellow one and opens GitHub Sponsors; Copy AI link copies the address of llms.txt (without scripts it is a plain
+// link to that file). SPONSOR stays empty until the Sponsors profile is live: while it is empty the button is not drawn.
+const SPONSOR = '';
+const HEART = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 20.5 3.6 12.3a5 5 0 0 1 7.1-7.1L12 6.5l1.3-1.3a5 5 0 0 1 7.1 7.1z"/></svg>';
 const galleryHead = (L) => `<section class="wrap ghead" aria-labelledby="ghead-title">
+<div class="ghead-copy">
 <h1 id="ghead-title">${L.t.gTitle}</h1>
 <p>${L.t.gDesc}</p>
+</div>
+<div class="ghead-acts">
+${SPONSOR ? `<a class="btn is-primary is-lg" href="${SPONSOR}" target="_blank" rel="noopener">${L.t.sponsor}${HEART}</a>\n` : ''}<a class="btn is-lg" href="${L.base}/llms.txt" data-act="copy-llms">${L.t.aiCopy}</a>
+</div>
 </section>`;
 const gallery = (m, L) => `<section class="wrap gal" id="cards" aria-label="${L.t.gAria}">
 <ul class="gal-grid">

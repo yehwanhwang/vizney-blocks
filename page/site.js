@@ -209,6 +209,12 @@
     const t = e.target.closest('[data-act]');
     if (!t) return;
     const id = t.dataset.id, act = t.dataset.act;
+    if (act === 'copy-llms') {   // 제목 옆 단추: llms.txt 주소를 복사한다. 복사가 막히면 링크대로 그 파일을 연다.
+      e.preventDefault();
+      t.style.minWidth = `${t.offsetWidth}px`;
+      if (await copyText(`${SITE}${BASE}/llms.txt`)) done(t, T.linkCopied); else location.href = t.href;
+      return;
+    }
     if (act === 'theme') { const tile = t.closest('.gt'); setTheme(tile, !tile.classList.contains('is-dark')); }
     else if (act === 'copy-code' || act === 'copy-prompt') {
       const body = current[id] || code[id];

@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.54 · Bump Chart · Rank Lines (bump-race)
+<!-- Vizney Blocks v0.55 · Bump Chart · Rank Lines (bump-race)
      https://blocks.vizney.com/cards/bump-race.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -193,7 +193,7 @@
 .vzb-br-svg.is-hover .vzb-br-item:not(.is-on), .vzb-br-svg.is-hover .vzb-br-head:not(.is-on), .vzb-br-svg.is-hover .vzb-br-lab:not(.is-on) { opacity: 0.2; }
 .vzb-br-svg.is-hover .vzb-br-item.is-on:not(.is-focus) { --vzb-c: var(--vzb-ink-2); }   /* 짚은 회색 항목은 진한 회색으로 */
 .vzb-br-plot { cursor: pointer; }
-.vzb-br-bar { display: flex; align-items: flex-start; gap: 8px; margin-top: 8px; }
+.vzb-br-bar { display: flex; align-items: flex-start; gap: 8px; margin-top: 20px; }   /* 맨 아래 이름표와 재생 단추가 붙어 보이지 않게 띄웁니다 */
 .vzb-br-ctl { flex: none; display: flex; align-items: center; gap: 2px; margin-top: -4px; }
 .vzb-br-btn { display: grid; place-items: center; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--vzb-ink-2); cursor: pointer; touch-action: manipulation; }
 .vzb-br-btn:hover { background: var(--vzb-track); color: var(--vzb-ink); }

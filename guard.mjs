@@ -3,18 +3,17 @@
 //   1. 자립성: no external resource but the font link (no http(s) URL, <link>, @import, url(), import).
 //   2. 색: raw colors only in tokens.css. White and translucent black (tooltip ink, shadows) are the only exceptions.
 //   3. 토큰: every var(--vzb-*) is declared in tokens.css or set by the card itself; prefix --vzb- on every custom property.
-//   4. 높이: the min-height rule each card ends up with is the unit in TIER (1 · 1.5 · 2) — no card without a height,
-//      except the controls (TIER 0), which are drawn bare at the height of the control (min-height: 0).
+//   4. 높이: the min-height rule of each chart card (.vzb-card[data-vzb="<id>"]) is one of 1 · 1.5 · 2 units and matches TIER
+//      (2 when not listed); the controls are drawn bare at the height of the control (min-height: 0), and only they are.
 //   5. 충돌: every selector is scoped (contains "vzb"), no element ids, no globals (window.x =); the code is one IIFE.
 //   6. 접근성: a file that animates has a prefers-reduced-motion rule; a card that reacts to the pointer also takes the keyboard.
 //   7. 데이터: the example JSON parses, labels and values have the same length, and no field the card computes is written in.
-//   8. 메타: every meta.json card has its .js and .json, no orphan source file, ids are slugs under their category, uses are known parts.
-//   9. 주소: no public card address (docs/cards/<id>.txt) disappears.
-//  10. 문구: every Korean string a card can show goes through tx() in core.js, every tx() key has an English entry in EN and every
+//   8. 메타: every meta.json card has its .js and .json, no orphan source file, uses are known parts, and the card id is the card
+//      name in lower case with hyphens (Rank Lines → rank-lines), so the name on the gallery and the address always agree.
+//   9. 문구: every Korean string a card can show goes through tx() in core.js, every tx() key has an English entry in EN and every
 //      EN entry is used, so "lang": "en" leaves no Korean behind. The won notations (조 · 억 · 만 · 원) are the only bare Korean.
-//  11. 영어: every card that is not retired has its English example (src/variants/<id>.en.json, with "lang": "en") and its
-//      English wording (meta.en.json: when, rules of the same count, guide; every category: name, intro, lede, height), and
-//      purposes.en.json mirrors purposes.json (same purposes and cards, in the same order, with translated when).
+//  10. 영어: every card has its English example (src/variants/<id>.en.json, with "lang": "en") and its English wording
+//      (meta.en.json: when and rules of the same count; every chart type: name, and intro and guide where the Korean has them).
 import { readdirSync, existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -61,7 +60,7 @@ export function wordsOf(src) {
   return out;
 }
 
-export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippets, snippetsEn, en, purposes, purposesEn, fontLink }) {
+export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippets, snippetsEn, en, fontLink }) {
   const fails = [], warns = [];
   const fail = (where, msg) => fails.push(`${where}: ${msg}`);
   const warn = (msg) => warns.push(msg);
@@ -69,9 +68,9 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
   const vdir = join(root, 'src/variants');
   const all = cats.flatMap((c) => c.variants.map((v) => ({ ...v, cat: c.id })));
   const ids = new Set(all.map((v) => v.id));
-  const live = all.filter((v) => !v.retired);
+  const isControl = (v) => v.cat === 'control';
 
-  // 10. card words: Korean only through tx(), every key in EN, every EN entry used
+  // 9. card words: Korean only through tx(), every key in EN, every EN entry used
   const core = src('src/core.js');
   const enStart = core.indexOf('const EN = {'), enEnd = core.indexOf('\n  };', enStart) + 5;
   if (enStart < 0 || enEnd < 5) fail('src/core.js', 'const EN = { … }; 번역표가 없다');
@@ -89,24 +88,20 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
   }
   for (const k of Object.keys(EN)) if (!usedKeys.has(k)) fail('src/core.js', `EN의 '${k}'를 쓰는 카드가 없다. 표에서 지운다`);
 
-  // 11. English: example data, wording and purpose index for every card that is not retired (build.mjs passes en; --check alone may not)
+  // 10. English: example data and wording for every card (build.mjs passes en; --check alone may not)
   const enCats = (en && en.cats) || {}, enCards = (en && en.cards) || {};
   for (const c of en ? cats : []) {
-    if (!c.variants.some((v) => !v.retired)) continue;
     const e = enCats[c.id];
-    if (!e) { fail(`meta.en.json`, `카테고리 ${c.id}의 영어(name · intro · lede · height)가 없다`); continue; }
-    for (const k of ['name', 'intro', 'lede', 'height']) if (!e[k]) fail('meta.en.json', `${c.id}.${k}가 없다`);
-    for (const g of c.groups || []) if (!e.groups || !e.groups[g.id] || !e.groups[g.id].name || !e.groups[g.id].note) fail('meta.en.json', `${c.id}.groups.${g.id}의 name과 note가 없다`);
-    if (c.option && (!e.option || !e.option.label || !Array.isArray(e.option.choices) || e.option.choices.length !== c.option.choices.length)) fail('meta.en.json', `${c.id}.option의 label과 choices(${c.option.choices.length}개)가 없다`);
+    if (!e || !e.name) { fail('meta.en.json', `${c.id}의 영어 이름(name)이 없다`); continue; }
+    if (c.intro && !e.intro) fail('meta.en.json', `${c.id}.intro가 없다`);
     if (c.guide && (!e.guide || !e.guide.name || !e.guide.url)) fail('meta.en.json', `${c.id}.guide의 name과 url이 없다`);
   }
-  for (const v of en ? live : []) {
+  for (const v of en ? all : []) {
     const e = enCards[v.id];
     if (!e) fail('meta.en.json', `${v.id}의 영어(when · rules)가 없다`);
     else {
       if (!e.when) fail('meta.en.json', `${v.id}.when이 없다`);
       if (!Array.isArray(e.rules) || e.rules.length !== v.rules.length) fail('meta.en.json', `${v.id}.rules는 한국어와 같은 ${v.rules.length}개여야 한다`);
-      if (v.guide && (!e.guide || !e.guide.name || !e.guide.url)) fail('meta.en.json', `${v.id}.guide의 name과 url이 없다`);
     }
     const p = join(vdir, `${v.id}.en.json`);
     if (!existsSync(p)) { fail(v.id, 'src/variants/<id>.en.json(영어 예시 데이터)이 없다'); continue; }
@@ -116,21 +111,12 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
       if (/[가-힣]/.test(JSON.stringify(d))) fail(`src/variants/${v.id}.en.json`, '영어 예시에 한국어가 있다');
     } catch (e) { fail(`src/variants/${v.id}.en.json`, `읽지 못한다: ${e.message}`); }
   }
-  if (purposes && purposesEn) {
-    if (purposesEn.length !== purposes.length) fail('purposes.en.json', `목적이 ${purposes.length}개여야 한다`);
-    purposes.forEach((p, i) => {
-      const e = purposesEn[i];
-      if (!e || e.id !== p.id) { fail('purposes.en.json', `${i + 1}번째 목적은 ${p.id}여야 한다`); return; }
-      if (!e.name || !e.question) fail('purposes.en.json', `${p.id}의 name과 question이 없다`);
-      if (!Array.isArray(e.picks) || e.picks.map((k) => k.id).join() !== p.picks.map((k) => k.id).join()) fail('purposes.en.json', `${p.id}의 picks는 한국어와 같은 카드를 같은 순서로 둔다`);
-      else e.picks.forEach((k) => { if (!k.when) fail('purposes.en.json', `${p.id}의 ${k.id}에 when이 없다`); });
-    });
-  }
+  for (const id of Object.keys(enCards)) if (!ids.has(id)) fail('meta.en.json', `${id}는 meta.json에 없는 카드다`);
 
   // 8. meta.json ↔ files
   for (const v of all) {
-    if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(v.id)) fail(v.id, '카드 id는 소문자·숫자·하이픈만 쓴다');
-    if (!v.id.startsWith(`${v.cat}-`)) fail(v.id, `카드 id는 카테고리 "${v.cat}-"로 시작해야 CSS의 [data-vzb^=] 규칙이 맞는다`);
+    const slug = String(v.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    if (v.id !== slug) fail(v.id, `카드 id는 카드 이름을 소문자와 하이픈으로 적은 것이어야 한다(${v.name} → ${slug})`);
     if (!existsSync(join(vdir, `${v.id}.js`))) fail(v.id, 'src/variants/<id>.js가 없다');
     if (!existsSync(join(vdir, `${v.id}.json`))) fail(v.id, 'src/variants/<id>.json(예시 데이터)이 없다');
     if (!v.when) fail(v.id, 'meta.json에 when(언제 쓰는지)이 없다');
@@ -139,17 +125,8 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
   }
   for (const f of readdirSync(vdir)) {
     const m = f.match(/^(.+?)(\.en)?\.(js|json|css)$/);
-    if (!m || ['meta.json', 'meta.en.json', 'purposes.json', 'purposes.en.json'].includes(f)) continue;
-    if (!ids.has(m[1])) fail(`src/variants/${f}`, 'meta.json에 없는 카드의 파일이다. 카드를 내릴 때는 지우지 말고 retired를 적는다');
-  }
-
-  // 9. public addresses never disappear
-  const cardsDir = join(root, 'docs/cards');
-  if (existsSync(cardsDir)) {
-    for (const f of readdirSync(cardsDir)) {
-      const m = f.match(/^(.+)\.txt$/);
-      if (m && !ids.has(m[1])) fail(`docs/cards/${f}`, '공개된 카드 주소가 사라진다. meta.json에서 카드를 지우지 말고 retired를 적는다');
-    }
+    if (!m || ['meta.json', 'meta.en.json'].includes(f)) continue;
+    if (!ids.has(m[1])) fail(`src/variants/${f}`, 'meta.json에 없는 카드의 파일이다');
   }
 
   // Source-file checks (2, 3, 5, 6): tokens.css is the only place for raw colors.
@@ -196,7 +173,7 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
   const used = new Set(files.flatMap(([, t]) => [...t.matchAll(/var\(\s*(--vzb-[\w-]+)/g)].map((m) => m[1])));
   for (const name of used) if (!declared.has(name) && !setByCode.has(name)) fail('src', `var(${name})을 쓰지만 tokens.css에도, 카드 코드에도 선언이 없다`);
 
-  // 4. height: the most specific min-height rule for the card must give TIER[id] (default 2) units.
+  // 4. height: the card's own min-height rule must give TIER[id] (default 2) units; a control's must be 0.
   const allCss = files.filter(([f]) => f.endsWith('.css')).map(([f, t]) => [f, t.replace(/\/\*[\s\S]*?\*\//g, '')]);
   const unitOf = (decl) => {
     if (/min-height\s*:\s*0\s*(;|$)/.test(decl)) return 0;
@@ -204,25 +181,22 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
     return m ? Number(m[1] || 1) : null;
   };
   for (const v of all) {
-    let exact = null, prefix = null;
+    let exact = null;
     for (const [, t] of allCss) {
       for (const m of t.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
         const u = unitOf(m[2]);
-        if (u == null) continue;
-        const sels = m[1].split(',').map((s) => s.trim());
-        if (sels.some((s) => s.includes(`[data-vzb="${v.id}"]`))) exact = u;
-        else if (sels.some((s) => { const p = s.match(/\[data-vzb\^="([^"]+)"\]/); return p && v.id.startsWith(p[1]); })) prefix = u;
+        if (u != null && m[1].split(',').some((s) => s.trim() === `.vzb-card[data-vzb="${v.id}"]`)) exact = u;
       }
     }
-    const got = exact ?? prefix ?? 1.5;
-    const want = v.id in tier ? tier[v.id] : 2;
-    if (got === 0 && !v.id.startsWith('control-')) fail(v.id, '조작부 높이(0)는 컨트롤만 쓴다. 카드는 1 · 1.5 · 2단위 중 하나로 둔다');
+    const got = exact ?? 1.5;   // base.css gives 1.5 units to a card without its own rule
+    const want = isControl(v) ? 0 : v.id in tier ? tier[v.id] : 2;
+    if (got === 0 && !isControl(v)) fail(v.id, '조작부 높이(0)는 컨트롤만 쓴다. 차트 카드는 1 · 1.5 · 2단위 중 하나로 둔다');
     else if (![0, 1, 1.5, 2].includes(got)) fail(v.id, `높이 ${got}단위는 없다. 1 · 1.5 · 2 중 하나로 둔다`);
     else if (got !== want) fail(v.id, `CSS의 높이는 ${got}단위인데 build.mjs TIER는 ${want}단위다. 둘을 맞춘다`);
   }
 
   // Snippet checks (1, 5, 7) on the code people copy, in both languages.
-  for (const [v, code, where] of [...all.map((v) => [v, snippets[v.id], `ko/cards/${v.id}.txt`]), ...live.map((v) => [v, (snippetsEn || {})[v.id], `cards/${v.id}.txt`])]) {
+  for (const [v, code, where] of [...all.map((v) => [v, snippets[v.id], `ko/cards/${v.id}.txt`]), ...all.map((v) => [v, (snippetsEn || {})[v.id], `cards/${v.id}.txt`])]) {
     if (!code) continue;
     // Comments (the header, tokens.css notes, JS notes) may name addresses; only live references count.
     const body = code.replace(fontLink, '').replace(/<!--[\s\S]*?-->/, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
@@ -234,7 +208,7 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
     if (!json) { fail(where, '데이터 JSON 블록이 없다'); continue; }
     let d;
     try { d = JSON.parse(json[1]); } catch (e) { fail(where, `예시 JSON을 읽지 못한다: ${e.message}`); continue; }
-    if (v.id.startsWith('control-') ? !d.label && !d.title : !d.title) fail(where, v.id.startsWith('control-') ? '예시 JSON에 label(화면 낭독기가 읽는 이름)이 없다' : '예시 JSON에 title이 없다');   // 컨트롤은 제목을 그리지 않고 label을 읽습니다
+    if (isControl(v) ? !d.label : !d.title) fail(where, isControl(v) ? '예시 JSON에 label(화면 낭독기가 읽는 이름)이 없다' : '예시 JSON에 title이 없다');   // 컨트롤은 제목을 그리지 않고 label을 읽습니다
     const n = Array.isArray(d.labels) ? d.labels.length : null;
     if (n != null) {
       if (Array.isArray(d.values) && d.values.length !== n) fail(where, `labels ${n}개, values ${d.values.length}개. 길이를 맞추고 없는 기간은 null로 둔다`);

@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Filter Chips · Vizney Blocks</title>
+<meta name="description" content="컨트롤 · Filter Chips. 정해 둔 항목 가운데 여러 개를 칩으로 고르는 컨트롤입니다. 채널이나 지역처럼 몇 개 안 되는 이름으로 화면을 거를 때 씁니다. 맨 앞의 전체 칩이 지금 몇 개를 골랐는지 보여 줍니다.">
+<link rel="canonical" href="https://blocks.vizney.com/ko/cards/filter-chips.html">
+<link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/ko/cards/filter-chips.html">
+<link rel="alternate" hreflang="en" href="https://blocks.vizney.com/cards/filter-chips.html">
+<link rel="alternate" hreflang="x-default" href="https://blocks.vizney.com/cards/filter-chips.html">
+<link rel="icon" href="/favicon.png?v=15ae76869d" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=15ae76869d">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vizney Blocks">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="Filter Chips · Vizney Blocks">
+<meta property="og:description" content="컨트롤 · Filter Chips. 정해 둔 항목 가운데 여러 개를 칩으로 고르는 컨트롤입니다. 채널이나 지역처럼 몇 개 안 되는 이름으로 화면을 거를 때 씁니다. 맨 앞의 전체 칩이 지금 몇 개를 골랐는지 보여 줍니다.">
+<meta property="og:url" content="https://blocks.vizney.com/ko/cards/filter-chips.html">
+<meta property="og:image" content="https://blocks.vizney.com/og-ko.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>body{margin:0;background:#eef0f4;font:14px/1.6 'Spoqa Han Sans Neo','Noto Sans KR',sans-serif;color:#4a4a4a}main{box-sizing:border-box;max-width:var(--w,640px);margin:0 auto;padding:40px 16px 24px}p{margin:16px 2px 0;font-size:13px}a{color:#1b1b1b}</style>
+</head>
+<body>
+<main style="--w:640px">
+<!-- Vizney Blocks v0.56 · 컨트롤 · Filter Chips (filter-chips)
+     https://blocks.vizney.com/ko/cards/filter-chips.html · © 2026 Vizney · MIT License
+     <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
+<link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
+<style>
+/* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
+   색은 Vizney의 Figma 팔레트에서 고릅니다. 데이터는 파랑(#007aff) · 분홍빨강(#ff2d55) · 주황(#ff9500), 좋고 나쁨은 초록(#34c759) · 빨강(#ff3b30)이고,
+   옅은 단계는 같은 색을 바탕에 섞어 만듭니다. 글자는 Vizney 검정(#1b1b1b)입니다.
+   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색, 흰색을 둘째 색으로 그립니다.
+   목록: https://blocks.vizney.com/ko/tokens.css */
+:where(:root) {
+  --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* 카드의 모든 글자 */
+  --vzb-card: #ffffff;   /* 카드 바탕 */
+  --vzb-edge: rgba(17, 24, 39, 0.05);   /* 카드 테두리 */
+  --vzb-ink: #1b1b1b;   /* 제목과 대표 수치 */
+  --vzb-ink-2: #4a4a4a;   /* 본문 글자, 변화 없음 배지 */
+  --vzb-muted: #737373;   /* 부제, 단위, 축 눈금 */
+  --vzb-grid: #ebebeb;   /* 격자와 머리 아래 선. 바탕에서 한 단계 떨어진 회색 실선 */
+  --vzb-primary: #007aff;   /* 첫째 데이터 색(파랑). 선, 막대, 가장 큰 항목 */
+  --vzb-primary-tint: #e6f2ff;   /* 파랑의 옅은 바탕. 선 아래 음영, 레이더 면 */
+  --vzb-primary-soft: #bfdeff;   /* 이름을 얹는 바 리스트 막대 */
+  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
+  --vzb-tertiary: #ff9500;   /* 셋째 데이터 색(주황) */
+  --vzb-primary-mid: #8cc3ff;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
+  --vzb-secondary-mid: #ff7a93;   /* 분홍빨강의 넓은 면 */
+  --vzb-tertiary-mid: #ffb54d;   /* 주황의 넓은 면 */
+  --vzb-other-mid: #e3e3e3;   /* 기타 묶음의 넓은 면 */
+  --vzb-line-3: #ff9500;   /* 선의 셋째 색(주황) */
+  --vzb-base: #c4c4c4;   /* 비교 기준(작년 선, 레이더의 기준 면 테두리) */
+  --vzb-track: #f1f1f1;   /* 게이지 · 달성률 막대의 바탕 */
+  --vzb-other: #d9d9d9;   /* 기타로 묶은 항목, 넷째부터의 항목 */
+  --vzb-good: #34c759;   /* 좋은 증감의 면(워터폴의 늘린 요인, 달성 막대). 팔레트 초록. 흰 바탕 대비 2.2:1로 옅어 글자에는 쓰지 않습니다 */
+  --vzb-good-tint: #ebf9ee;   /* 좋은 증감 배지의 바탕(초록 10%) */
+  --vzb-good-ink: #2a8040;   /* 좋은 증감의 글자(배지). 초록에 검정 41%를 섞어 흰 바탕 대비 4.9:1 */
+  --vzb-bad: #ff3b30;   /* 나쁜 증감, 한도 초과의 면. 팔레트 빨강. 흰 바탕 대비 3.6:1 */
+  --vzb-bad-tint: #ffebea;   /* 나쁜 증감 배지의 바탕(빨강 10%) */
+  --vzb-bad-ink: #cb342b;   /* 나쁜 증감과 오류 문구의 글자. 빨강에 검정 23%를 섞어 흰 바탕 대비 5.2:1 */
+  --vzb-tip: #1b1b1b;   /* 툴팁 바탕 */
+  --vzb-radius: 18px;   /* 카드 모서리 */
+  --vzb-unit: 168px;   /* 높이 1단위. 차트 카드의 높이는 1 · 1.5 · 2단위 가운데 하나입니다 */
+  --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* 카드 그림자 */
+}
+
+/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 하나에 흰색과 회색을 더해 Vizney 검정 · 흰색 · 노랑으로 그립니다.
+   노랑 · 흰색 · 회색은 색각 시뮬레이션(가장 가까운 쌍 ΔE 14.9)과 바탕 대비 검사를 통과합니다.
+   좋고 나쁨은 밝은 바탕과 같은 초록(#34c759) · 빨강(#ff3b30)이고, 검정 바탕에서는 글자에도 그대로 씁니다(대비 7.8:1 · 4.9:1). */
+.vzb-dark {
+  --vzb-card: #1b1b1b;   /* 카드 바탕(Vizney 검정) */
+  --vzb-edge: rgba(255, 255, 255, 0.08);   /* 카드 테두리 */
+  --vzb-ink: #f5f5f5;   /* 제목과 대표 수치 */
+  --vzb-ink-2: #cfcfcf;   /* 본문 글자 */
+  --vzb-muted: #9b9b9b;   /* 부제, 단위, 축 눈금 */
+  --vzb-grid: #2f2f2f;   /* 격자와 머리 아래 선 */
+  --vzb-primary: #ffcc00;   /* 첫째 데이터 색(Vizney 노랑) */
+  --vzb-primary-tint: #362f18;   /* 노랑의 옅은 바탕 */
+  --vzb-primary-soft: #5f5013;   /* 이름을 얹는 바 리스트 막대 */
+  --vzb-secondary: #f5f5f5;   /* 둘째 데이터 색(흰색) */
+  --vzb-tertiary: #9b9b9b;   /* 셋째 데이터 색(회색) */
+  --vzb-primary-mid: #826b0f;   /* 넓은 면. 밝은 글자가 올라가도록 한 단계 어둡게 */
+  --vzb-secondary-mid: #5c5c5c;   /* 흰색의 넓은 면. 흰 글자가 올라가도록 회색으로 */
+  --vzb-tertiary-mid: #424242;   /* 회색의 넓은 면 */
+  --vzb-other-mid: #3a3a3a;   /* 기타 묶음의 넓은 면 */
+  --vzb-line-3: #9b9b9b;   /* 선의 셋째 색(회색) */
+  --vzb-base: #6b6b6b;   /* 비교 기준 */
+  --vzb-track: #2c2c2c;   /* 게이지 · 달성률 막대의 바탕 */
+  --vzb-other: #4d4d4d;   /* 기타로 묶은 항목 */
+  --vzb-good: #34c759;   /* 좋은 증감(팔레트 초록) */
+  --vzb-good-tint: #1f3725;   /* 좋은 증감 배지의 바탕(초록 16%) */
+  --vzb-good-ink: #34c759;   /* 좋은 증감의 글자 */
+  --vzb-bad: #ff3b30;   /* 나쁜 증감, 한도 초과(팔레트 빨강) */
+  --vzb-bad-tint: #2d1e1d;   /* 나쁜 증감 배지의 바탕(빨강 8%, 글자 대비 4.5:1을 지키는 만큼) */
+  --vzb-bad-ink: #ff3b30;   /* 나쁜 증감과 오류 문구의 글자 */
+  --vzb-tip: #3a3a3a;   /* 툴팁 바탕 */
+  --vzb-shadow: none;   /* 카드 그림자 */
+}
+/* 카드: 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위 가운데 하나입니다(단위 --vzb-unit, 카드마다 자기 CSS에서 정합니다). */
+.vzb-card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: calc(var(--vzb-unit) * 1.5);
+  padding: 24px;
+  background: var(--vzb-card);
+  color: var(--vzb-ink);
+  border: 1px solid var(--vzb-edge);
+  border-radius: var(--vzb-radius);
+  box-shadow: var(--vzb-shadow);
+  font: 400 13px/18px var(--vzb-font);
+  text-align: left;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  -webkit-font-smoothing: antialiased;
+}
+.vzb-card *, .vzb-card *::before, .vzb-card *::after { box-sizing: border-box; }
+
+/* 머리: 제목과 기간 부제, 그 아래 대표 수치와 바로 뒤의 증감 배지.
+   배지와 비교 문구는 숫자와 같은 줄의 항목이라, 좁으면 비교 문구만 아래 줄로 내려가고 배지는 숫자 뒤에 남습니다. */
+.vzb-title { font-size: 17px; line-height: 24px; font-weight: 500; }
+.vzb-sub { margin-top: 2px; color: var(--vzb-muted); }
+.vzb-fig { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; margin-top: 20px; }   /* 숫자 줄은 기준선 아래에 16px이 남아 줄 사이를 따로 두지 않습니다 */
+.vzb-num { margin-right: 4px; font-size: 34px; line-height: 40px; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap; }   /* 숫자와 배지 사이 12px, 배지와 비교 문구 사이 8px */
+.vzb-unit { margin-left: 4px; font-size: 16px; letter-spacing: 0; color: var(--vzb-muted); }
+.vzb-delta { display: contents; color: var(--vzb-muted); white-space: nowrap; }
+.vzb-vs { min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.vzb-badge { display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px 3px 6px; border-radius: 7px; font-weight: 500; }
+.vzb-badge.vzb-good { color: var(--vzb-good-ink); background: var(--vzb-good-tint); }
+.vzb-badge.vzb-bad { color: var(--vzb-bad-ink); background: var(--vzb-bad-tint); }
+.vzb-badge.vzb-flat { color: var(--vzb-ink-2); background: var(--vzb-track); padding-left: 8px; }
+.vzb-arrow { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* 그래픽은 카드 아래쪽에 붙습니다. 같은 줄의 카드 높이가 맞춰져도 그래픽끼리 바닥이 맞습니다. */
+.vzb-foot { margin-top: auto; padding-top: 20px; }
+.vzb-error { margin: 8px 0 0; color: var(--vzb-bad-ink); }
+/* 굴러가는 숫자: 숫자 칸의 높이는 글자 높이(1.2em)이고, 칸 안의 0–9 띠가 위아래로 굴러 새 값에 섭니다. */
+.vzb-rl { display: inline-flex; vertical-align: bottom; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.vzb-rl-col { display: inline-block; height: 1.2em; overflow: hidden; }
+.vzb-rl-strip { display: flex; flex-direction: column; transition: transform 0.38s cubic-bezier(0.34, 1.32, 0.64, 1); }
+.vzb-rl-strip > span, .vzb-rl-ch { display: block; height: 1.2em; line-height: 1.2em; }
+@media (prefers-reduced-motion: reduce) { .vzb-rl-strip { transition: none; } }
+/* Filter Chips: 카드 틀 없이 칩만 그립니다. 칩은 높이 28px, 모서리 14px, 12px 글자이고 사이는 6px입니다. 고른 칩은 글자색(밝은 바탕 검정, 어두운 바탕 흰색)으로
+   채우고 카드 바탕색으로 체크와 이름을 적습니다. 고르지 않은 칩은 트랙 회색입니다. 두 줄을 넘으면 한 줄로 두고 가로로 밉니다(is-scroll).
+   누르면 0.92배로 눌렸다가 살짝 넘쳐 돌아오고(용수철 곡선), 체크는 칩이 13px 넓어지며 그려집니다. */
+/* 컨트롤은 카드 머리(제목 · 부제)와 카드 틀(바탕 · 테두리 · 그림자 · 안쪽 여백) 없이 조작부만 그립니다. 차트 위 필터 줄이나 머리글처럼
+   원하는 자리에 그대로 놓는 부품이기 때문입니다. 폭은 놓인 자리를 채우고, 높이는 조작부 자체의 높이입니다.
+   바탕을 비워 두므로 theme은 놓을 자리의 바탕에 맞춰 고릅니다(어두운 바탕이면 "dark"). */
+.vzb-card[data-vzb="filter-chips"] { min-height: 0; padding: 0; background: none; border: 0; border-radius: 0; box-shadow: none; }
+.vzb-ch-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.vzb-ch-list.is-scroll { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; -webkit-mask-image: linear-gradient(to right, #fff calc(100% - 32px), transparent); mask-image: linear-gradient(to right, #fff calc(100% - 32px), transparent); }
+.vzb-ch-list.is-scroll.is-end { -webkit-mask-image: none; mask-image: none; }
+.vzb-ch-list.is-scroll::-webkit-scrollbar { display: none; }
+.vzb-ch-chip { flex: none; display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border: 0; border-radius: 14px; background: var(--vzb-track); color: var(--vzb-ink-2); font: 500 12px/1 var(--vzb-font); white-space: nowrap; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color 0.2s, color 0.2s, transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.vzb-ch-chip:hover { background: var(--vzb-other); }
+.vzb-ch-chip[aria-pressed="true"] { background: var(--vzb-ink); color: var(--vzb-card); }
+.vzb-ch-chip:active, .vzb-ch-chip.is-press { transform: scale(0.92); transition-duration: 0.2s, 0.2s, 0.08s; }
+.vzb-ch-chip:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
+.vzb-ch-ck { flex: none; width: 0; height: 9px; margin-right: 0; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: width 0.3s cubic-bezier(0.34, 1.4, 0.64, 1), margin 0.3s cubic-bezier(0.34, 1.4, 0.64, 1); }
+.vzb-ch-ck path { stroke-dasharray: 13; stroke-dashoffset: 13; transition: stroke-dashoffset 0.2s ease-out; }
+.vzb-ch-chip[aria-pressed="true"] .vzb-ch-ck, .vzb-ch-list.is-measure .vzb-ch-ck { width: 9px; margin-right: 4px; }
+.vzb-ch-list.is-measure .vzb-ch-ck { transition: none; }
+.vzb-ch-chip[aria-pressed="true"] .vzb-ch-ck path { stroke-dashoffset: 0; transition-delay: 0.12s; }
+.vzb-ch-count { margin-left: 5px; padding: 2px 5px; border-radius: 8px; background: color-mix(in srgb, var(--vzb-ink) 10%, transparent); font-size: 11px; font-weight: 700; line-height: 1.2em; }
+.vzb-ch-chip[aria-pressed="true"] .vzb-ch-count { background: color-mix(in srgb, var(--vzb-card) 22%, transparent); }
+@media (prefers-reduced-motion: reduce) { .vzb-ch-chip, .vzb-ch-ck, .vzb-ch-ck path { transition: none; } }
+</style>
+<div class="vzb-card" data-vzb="filter-chips">
+<script type="application/json">
+{
+  "label": "채널",
+  "name": "channel",
+  "options": ["SNS", "검색", "디스플레이", "동영상", "제휴", "리타게팅"],
+  "value": ["SNS", "검색", "디스플레이", "동영상"],
+  "all": "전체"
+}
+</script>
+</div>
+<script>
+(() => {
+  'use strict';
+  /* 공통 도구: 카드 안 문구, 숫자 표기, 증감, 카드 머리, 그리기 시작 */
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  // 카드 안 문구(합계 · 기타 · 툴팁 · 낭독 문구): 한국어가 기본이고, JSON에 "lang": "en"을 적으면 영어로 바뀝니다.
+  // 왼쪽의 한국어 원문이 키입니다. %s에는 값이 차례로, %1 · %2에는 그 순서의 값이 들어가고, '|' 뒤는 같은 말을 구분하는 꼬리표라 화면에는 안 나옵니다.
+  // 원화 표기(조 · 억 · 만 · 원)는 영어에서도 그대로 둡니다. 숫자 표기는 두 언어가 같습니다.
+  const EN = {
+    '값': 'Value', '이름': 'Name', '기간': 'Period', '항목': 'Item', '일': 'days', '%s%p': '%spp', '증가': 'up', '감소': 'down', '%s 대비': 'vs %s', '비교 기간': 'prior period', '%1의 %2': '%2 of %1',
+    '비중': 'Share', '%s위': '#%s', '%s 순위': '%s ranks', '%s계단 오름': 'up %s', '%s계단 내림': 'down %s', '그대로': 'unchanged', '처음부터 다시': 'Replay', '한도': 'Limit', '차이': 'Difference', '%s 초과|한도': '%s over',
+    '%1 초과 · %2의 %3%': '%1 over · %3% of %2', '%1 남음 · %2의 %3%': '%1 left · %3% of %2', '%1개 중 %2개 %3 초과 · +%4': '%2 of %1 over %3 · +%4', '%1개 중 %2개 %3 초과': '%2 of %1 over %3',
+    '모두 %s 이내': 'All within %s', '표시할 항목이 없습니다.': 'No items to show.',
+    '%1. 항목 %2개 가운데 %3개가 %4 초과입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %3 of %2 items are over %4. Use the left and right arrows to move between items. Every value is in the table that follows.',
+    'labels와 values를 확인하세요.': 'Check labels and values.', 'limit에 한도를 숫자로 적으세요.': 'Write the limit as a number in limit.', 'options를 확인하세요.': 'Check options.', '필터': 'Filter', '전체': 'All',
+    '%1, %2개 중 %3개 고름': '%1, %3 of %2 picked', '%1개 중 %2개 고름': '%2 of %1 picked', '내려받기': 'Download', '%s로 받기': 'Download as %s', '%s로 받았습니다.': 'Downloaded as %s.', '데이터 없음': 'No data',
+    '행': 'rows', '행|1': 'row', '받을 데이터가 없습니다.': 'No data to download.', '%s로 1행을 받았습니다.': 'Downloaded 1 row as %s.', '%1로 %2행을 받았습니다.': 'Downloaded %2 rows as %1.',
+    'min과 max를 확인하세요.': 'Check min and max.', '%s 최소': 'Minimum %s', '%s 최대': 'Maximum %s', '범위': 'range', 'items에 항목을 2~4개 적으세요.': 'List 2 to 4 items in items.',
+    'items에 항목을 2~8개 적으세요.': 'List 2 to 8 items in items.', 'labels에 기간을 2개 이상 적으세요.': 'List at least 2 periods in labels.', '재생': 'Play', '일시정지': 'Pause', '되감기': 'Rewind',
+    '빨리 감기': 'Fast forward', '%s 강조': '%s highlighted',
+    '%1 순위 변화, %2–%3. %4: %5 → %6. 위아래 화살표로 항목을 옮깁니다. 모든 순위는 이어지는 표에 있습니다.': '%1 rank changes, %2–%3. %4: %5 → %6. Use the up and down arrows to move between items. Every rank is in the table that follows.',
+    'periods와 values를 확인하세요.': 'Check periods and values.',
+    '%1. %2의 비중은 %3로, %4 대비 %5입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 holds %3, %5 against %4. Use the left and right arrows to move between items. Every value is in the table that follows.',
+    '%1. %2의 비중은 %3입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 holds %3. Use the left and right arrows to move between items. Every value is in the table that follows.',
+    '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
+  };
+  // tx(d 또는 f, 원문, 값…): d.lang(format()이 f에 옮겨 둡니다)이 en이면 영어 문구를, 아니면 원문을 돌려줍니다.
+  function tx(x, s, ...a) {
+    let i = 0;
+    const out = x && x.lang === 'en' && EN[s] !== undefined ? EN[s] : s.split('|')[0];
+    return out.replace(/%(\d|s)/g, (m, k) => String(a[k === 's' ? i++ : k - 1]));
+  }
+  // 숫자 뒤의 단위: 영어 단위(days · orders)는 한 칸 띄우고, 기호와 한 글자 단위(% · K · 억)는 붙입니다.
+  const withUnit = (n, u) => (/^[A-Za-z]{2}/.test(u) ? `${n} ${u}` : n + u);
+  function el(tag, cls, text) {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function svgEl(tag, attrs) {
+    const n = document.createElementNS(SVGNS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+  const nfs = {};
+  function num(v, d) {
+    nfs[d] = nfs[d] || new Intl.NumberFormat('ko-KR', { minimumFractionDigits: d, maximumFractionDigits: d });
+    return nfs[d].format(v);
+  }
+  // 원 금액: 조 · 억 · 만으로 줄여 적습니다. 10만 원보다 작으면 87,324원처럼 원 단위 그대로 적어 객단가 · CAC가 "9만"으로
+  // 뭉개지지 않게 합니다. decimals를 주면 줄인 숫자의 소수 자릿수를 그 값으로 맞춥니다(1억 8,600만 원은 2면 1.86억).
+  function krw(v, d) {
+    const a = Math.abs(v), k = (x) => (d != null ? d : x);
+    if (a >= 1e12) return [num(v / 1e12, k(1)), '조'];
+    if (a >= 1e8) return [num(v / 1e8, k(a >= 1e10 ? 0 : 1)), '억'];
+    if (a >= 1e5) return [num(v / 1e4, k(0)), '만'];
+    return [num(v, 0), '원'];
+  }
+  // 달러 금액: 원래 값을 받아 K · M · B로 줄이고 소수 한 자리로 맞춥니다($745.6K). 접미사는 단위처럼 작게 씁니다.
+  function usd(v, d) {
+    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    const [div, u] = a >= 1e9 ? [1e9, 'B'] : a >= 1e6 ? [1e6, 'M'] : a >= 1e3 ? [1e3, 'K'] : [1, ''];
+    return [`${s}$${num(a / div, d != null ? d : div > 1 ? 1 : 0)}`, u];
+  }
+  // format: eok(억 단위 값) · krw(원 단위 값) · usd(달러 값) · count(unit으로 단위) · pct(증감을 %p로) · days
+  // 축이나 탭처럼 카드 안의 다른 객체로 만들 때는 두 번째 인자로 카드 데이터를 주어 lang을 잇습니다.
+  function format(d, root) {
+    const dec = (v, fallback) => (d.decimals != null ? d.decimals : fallback);
+    const F = (o) => Object.assign(o, { lang: (root || d).lang });
+    switch (d.format) {
+      case 'eok': return F({ parts: (v) => [num(v, dec(v, Number.isInteger(v) || Math.abs(v) >= 100 ? 0 : 1)), '억'], rel: true });
+      case 'krw': return F({ parts: (v) => krw(v, d.decimals), rel: true });
+      case 'usd': return F({ parts: (v) => usd(v, d.decimals), rel: true, usd: true });
+      case 'pct': return F({ parts: (v) => [num(v, dec(v, 1)), '%'], rel: false, dp: d.decimals });
+      case 'days': return F({ parts: (v) => [num(v, dec(v, 1)), tx(root || d, '일')], rel: true });
+      default: return F({ parts: (v) => [num(v, dec(v, Number.isInteger(v) ? 0 : 1)), d.unit || ''], rel: true });
+    }
+  }
+  const show = (f, v) => withUnit(...f.parts(v));
+  // 그릴 수 있는 숫자인지(빈 값 · 빈 글자 · NaN 제외)
+  const fin = (v) => v != null && v !== '' && isFinite(v);
+  // 비율의 차이(%p) 숫자: 소수 자릿수는 decimals(비우면 한 자리)를 따릅니다. 0이 아닌 차이가 0.0으로 보일 만큼 작으면
+  // 자리를 늘려(최대 세 자리) 1.12%에서 1.16%로 오른 것을 0.0%p가 아니라 0.03%p로 적습니다.
+  function pp(f, diff) {
+    const a = Math.abs(diff);
+    let k = f.dp != null ? f.dp : 1;
+    while (k < 3 && a > 1e-9 && Math.round(a * 10 ** k) === 0) k++;
+    return num(a, k);
+  }
+  // 증감: 방향은 화살표로, 좋고 나쁨(tone)은 better(up · down · neutral)로 정합니다. 비율은 %p로 적습니다.
+  function delta(f, value, base, better) {
+    const diff = value - base;
+    const dir = Math.abs(diff) < 1e-9 ? 0 : Math.sign(diff);
+    const want = better === 'down' ? -1 : better === 'neutral' ? 0 : 1;
+    const tone = dir === 0 || want === 0 ? 'flat' : dir === want ? 'good' : 'bad';
+    let text;
+    if (!f.rel) text = tx(f, '%s%p', pp(f, diff));
+    else if (base) text = `${num(Math.abs(diff / base) * 100, 1)}%`;
+    else text = show(f, Math.abs(diff));
+    return { dir, tone, text };
+  }
+  function arrow(dir) {
+    const s = svgEl('svg', { class: 'vzb-arrow', viewBox: '0 0 12 12', 'aria-hidden': 'true' });
+    s.append(svgEl('path', { d: dir > 0 ? 'M3.5 8.5l5-5M4.5 3.5h4v4' : 'M3.5 3.5l5 5M8.5 4.5v4h-4' }));
+    return s;
+  }
+  // 대표 수치(단위는 작게)
+  function figure(f, value) {
+    const n = el('div', 'vzb-num');
+    const [text, unit] = f.parts(value);
+    n.append(text);
+    if (unit) n.append(el('span', 'vzb-unit', unit));
+    return n;
+  }
+  // 증감 배지: 화살표는 오르내림, 색은 좋고 나쁨(better)입니다.
+  function badge(f, value, base, better) {
+    const dl = delta(f, value, base, better);
+    const b = el('span', `vzb-badge vzb-${dl.tone}`);
+    if (dl.dir) b.append(arrow(dl.dir), el('span', 'vzb-sr', tx(f, dl.dir > 0 ? '증가' : '감소')));
+    b.append(dl.text);
+    return b;
+  }
+  // 머리: 제목 · 기간 부제(subtitle) · 대표 수치와 바로 뒤의 증감 배지. value가 null이면 제목만 둡니다.
+  // 배지는 숫자 바로 뒤에 붙어 있고, 카드가 좁아 한 줄에 다 들어가지 않으면 비교 문구만 숫자 아래 줄로 내려갑니다.
+  // 내려갔는지는 카드의 vzb-wrapped로 알려, 높이가 1단위인 카드가 아래 여백으로 그 줄을 받을 수 있게 합니다.
+  function head(card, d, f, value, cmp, cmpText) {
+    const hd = el('div', 'vzb-hd');
+    hd.append(el('div', 'vzb-title', d.title || ''));
+    if (d.subtitle) hd.append(el('div', 'vzb-sub', d.subtitle));
+    card.append(hd);
+    if (value == null) return;
+    const fig = el('div', 'vzb-fig');
+    const n = figure(f, value);
+    fig.append(n);
+    if (cmp && cmp.value != null) {
+      const line = el('span', 'vzb-delta'), vs = el('span', 'vzb-vs', cmpText || tx(d, '%s 대비', cmp.label || tx(d, '비교 기간')));
+      line.append(badge(f, value, cmp.value, d.better), vs);
+      fig.append(line);
+      onSize(fig, () => card.classList.toggle('vzb-wrapped', vs.offsetTop >= n.offsetTop + n.offsetHeight - 1));   // 숫자 칸 아래에서 시작하면 내려간 것
+    }
+    card.append(fig);
+  }
+  // 같은 종류의 카드를 모두 찾아 그립니다. 코드를 두 번 붙여 넣어도 카드는 한 번만 그립니다.
+  // 데이터가 바뀌면 다시 그립니다: 페이지의 스크립트가 카드 안 JSON(<script type="application/json">)의 글자를 바꾸면 그 카드만
+  // 새 요소로 갈아 끼워 새로 그립니다(필터 · 기간 컨트롤과 잇는 길). 갈아 끼운 카드에는 data-vzb-live가 붙어, 움직이는 카드는
+  // 처음부터 다시 재생하지 않고 마지막 장면을 바로 그립니다. 예전 요소가 페이지에서 빠지므로 그 카드의 움직임도 함께 끝납니다.
+  function mount(type, draw) {
+    const watch = (card, src) => {
+      if (!src || !window.MutationObserver) return;
+      const mo = new MutationObserver(() => {
+        mo.disconnect();
+        if (!card.isConnected) return;
+        const next = card.cloneNode(false);
+        next.removeAttribute('data-vzb-ready');
+        next.setAttribute('data-vzb-live', '');
+        next.append(src);
+        card.replaceWith(next);
+        run();
+      });
+      mo.observe(src, { childList: true, characterData: true, subtree: true });
+    };
+    const run = () => {
+      document.querySelectorAll(`.vzb-card[data-vzb="${type}"]:not([data-vzb-ready])`).forEach((card) => {
+        card.setAttribute('data-vzb-ready', '');
+        const src = card.querySelector('script[type="application/json"]');
+        const raw = src ? src.textContent : '';
+        watch(card, src);
+        let d;
+        try { d = JSON.parse(raw); } catch (e) {
+          card.append(el('p', 'vzb-error', tx(/"lang"\s*:\s*"en"/.test(raw) ? { lang: 'en' } : null, '카드 데이터(JSON)를 읽지 못했습니다: %s', e.message)));
+          return;
+        }
+        card.setAttribute('role', 'group');
+        if (d.title) card.setAttribute('aria-label', d.title);
+        // 어두운 바탕: JSON에 "theme": "dark"를 적으면 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다(tokens.css의 .vzb-dark).
+        card.classList.toggle('vzb-dark', d.theme === 'dark');
+        try { draw(card, d, format(d)); } catch (e) {
+          card.append(el('p', 'vzb-error', tx(d, '카드를 그리지 못했습니다: %s', e.message)));
+        }
+      });
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+    else run();
+  }
+  // 크기가 바뀔 때마다 그래픽을 다시 그립니다. 차트는 카드에 남은 높이를 채웁니다.
+  function onSize(node, fn) {
+    let lw = 0, lh = 0;
+    new ResizeObserver((entries) => {
+      const w = Math.floor(entries[0].contentRect.width), h = Math.floor(entries[0].contentRect.height);
+      if (w > 0 && h > 0 && (w !== lw || h !== lh)) { lw = w; lh = h; fn(w, h); }
+    }).observe(node);
+  }
+
+  /* 굴러가는 숫자(컨트롤 공통): 숫자 한 자리마다 0–9를 세로로 쌓은 칸을 두고 새 값의 자리로 굴립니다(구독 수가 오르는 단추처럼).
+     roll(box, text): box 안의 글자를 text로 바꿉니다. 자리 수와 쉼표 자리가 그대로면 칸이 제자리에서 구르고, 바뀌면 칸을 새로 만들어
+     0에서 굴러 올라옵니다. 움직임은 roll.css의 transition이 그리고, box는 화면 낭독기에 읽히지 않으므로 값은 부르는 쪽이 따로 알립니다. */
+  function roll(box, text) {
+    const chars = [...String(text)], shape = chars.map((c) => (/\d/.test(c) ? '0' : c)).join('');
+    box.setAttribute('aria-hidden', 'true');
+    if (box.dataset.shape !== shape) {
+      box.dataset.shape = shape;
+      box.replaceChildren(...chars.map((c) => {
+        if (!/\d/.test(c)) return el('span', 'vzb-rl-ch', c);
+        const col = el('span', 'vzb-rl-col'), strip = el('span', 'vzb-rl-strip');
+        for (let k = 0; k < 10; k++) strip.append(el('span', null, String(k)));
+        col.append(strip);
+        return col;
+      }));
+      box.getBoundingClientRect();   // 새 칸은 0에 선 채로 그려진 뒤 굴러갑니다
+    }
+    [...box.children].forEach((node, i) => { if (node.classList.contains('vzb-rl-col')) node.firstChild.style.transform = `translateY(${-10 * +chars[i]}%)`; });
+  }
+
+  // Filter Chips: 정해 둔 항목(options) 가운데 여러 개를 칩으로 고르는 컨트롤입니다(채널 · 지역 · 상품군 필터). 카드 머리 없이 칩만 그립니다.
+  // 고른 칩은 글자색으로 채우고 체크가 그려집니다. 맨 앞의 전체 칩(all, 비우면 '전체', 빈 글자면 없음)은 고른 수를 굴러가는 숫자로 보여 주고,
+  // 누르면 모두 고르거나 이미 모두 골랐으면 모두 풉니다. value는 처음 고른 항목이고 비우면 모두입니다.
+  // 값이 바뀌면 카드에서 vzb-change 이벤트(bubbles, detail: { name, value: 고른 항목을 options 순서대로 })를 보내고, data-vzb-value에도 적습니다.
+  // 칩은 누르면 살짝 눌렸다 튀어 오르고, 고르면 체크가 그려지며 칩이 넓어집니다(filter-chips.css). 동작 줄이기 설정에서는 바로 바뀝니다.
+  // 칩이 두 줄을 넘으면 한 줄로 두고 가로로 밀어 봅니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 손을 대기 전까지 고르기를 차례로 보여 줍니다.
+  mount('filter-chips', (card, d, f) => {
+    const opts = [...new Set((Array.isArray(d.options) ? d.options : []).filter((o) => o != null && o !== '').map(String))];
+    if (!opts.length) throw new Error(tx(d, 'options를 확인하세요.'));
+    const sel = new Set(Array.isArray(d.value) ? d.value.map(String).filter((v) => opts.includes(v)) : opts);
+    const foot = el('div', 'vzb-ch'), list = el('div', 'vzb-ch-list'), say = el('p', 'vzb-sr');
+    list.setAttribute('role', 'group');
+    list.setAttribute('aria-label', d.label || d.title || tx(d, '필터'));   // 제목을 그리지 않으므로 화면 낭독기용 이름은 label에서 읽습니다
+    list.setAttribute('data-vzb-input', '');
+    say.setAttribute('aria-live', 'polite');
+    const tick = () => {
+      const s = svgEl('svg', { class: 'vzb-ch-ck', viewBox: '0 0 12 12', 'aria-hidden': 'true' });
+      s.append(svgEl('path', { d: 'M2.2 6.4l2.5 2.5 5.1-5.6' }));
+      return s;
+    };
+    const chip = (label) => {
+      const b = el('button', 'vzb-ch-chip');
+      b.type = 'button';
+      b.append(tick(), el('span', 'vzb-ch-tx', label));
+      return b;
+    };
+    const allLabel = d.all == null ? tx(d, '전체') : String(d.all);
+    let all = null, count = null;
+    if (allLabel) {
+      all = chip(allLabel);
+      all.classList.add('is-all');
+      count = el('span', 'vzb-rl vzb-ch-count');
+      all.append(count);
+      list.append(all);
+    }
+    const chips = opts.map((o) => { const b = chip(o); list.append(b); return b; });
+    foot.append(list, say);
+    card.append(foot);
+
+    const reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    function paint() {
+      chips.forEach((b, i) => b.setAttribute('aria-pressed', String(sel.has(opts[i]))));
+      if (all) {
+        all.setAttribute('aria-pressed', String(sel.size === opts.length));
+        all.setAttribute('aria-label', tx(d, '%1, %2개 중 %3개 고름', allLabel, opts.length, sel.size));
+        roll(count, String(sel.size));
+      }
+    }
+    function emit(quiet) {
+      const value = opts.filter((o) => sel.has(o));
+      card.setAttribute('data-vzb-value', JSON.stringify(value));
+      if (quiet) return;
+      say.textContent = tx(d, '%1개 중 %2개 고름', opts.length, sel.size);
+      card.dispatchEvent(new CustomEvent('vzb-change', { bubbles: true, detail: { name: d.name || '', value } }));
+    }
+    // 두 줄을 넘으면 한 줄로 두고 가로로 밉니다. 모든 칩에 체크가 그려졌을 때(가장 넓을 때)로 재므로, 고를 때마다 줄 모양이 바뀌지 않습니다.
+    // 가로로 밀 때는 오른쪽 끝을 흐리게 해 칩이 더 있음을 알리고, 끝까지 밀면 흐림을 거둡니다.
+    const fit = () => {
+      list.classList.remove('is-scroll');
+      list.classList.add('is-measure');
+      const first = list.firstElementChild, over = !!first && list.scrollHeight > first.offsetHeight * 2 + 12;
+      list.classList.remove('is-measure');
+      list.classList.toggle('is-scroll', over);
+      ends();
+    };
+    const ends = () => list.classList.toggle('is-end', list.scrollLeft + list.clientWidth >= list.scrollWidth - 2);
+    list.addEventListener('scroll', ends, { passive: true });
+    function toggle(i) {   // i: 항목 번호, -1은 전체 칩
+      if (i < 0) { if (sel.size === opts.length) sel.clear(); else opts.forEach((o) => sel.add(o)); }
+      else if (sel.has(opts[i])) sel.delete(opts[i]);
+      else sel.add(opts[i]);
+      paint();
+      emit();
+    }
+    let idle = 0;
+    list.addEventListener('click', (e) => {
+      const b = e.target.closest('.vzb-ch-chip');
+      if (!b) return;
+      idle = performance.now() + 6000;
+      toggle(b === all ? -1 : chips.indexOf(b));
+    });
+    paint();
+    emit(true);
+    onSize(list, fit);
+
+    // 갤러리(data-vzb-loop): 화면에 보이는 동안, 손을 대기 전과 손을 뗀 지 6초 뒤부터 칩을 차례로 눌러 보입니다.
+    if (!reduce && card.closest('[data-vzb-loop]')) {
+      const plan = [3, 4, -1, 5, 4];   // 한 바퀴 돌면 처음 고른 넷으로 돌아옵니다
+      let k = 0, seen = true;
+      if ('IntersectionObserver' in window) new IntersectionObserver((es) => { seen = es[es.length - 1].isIntersecting; }).observe(card);
+      const timer = setInterval(() => {
+        if (!card.isConnected) { clearInterval(timer); return; }
+        if (!seen || performance.now() < idle) return;
+        const i = plan[k++ % plan.length], b = i < 0 ? all : chips[i % chips.length];
+        if (!b) return;
+        b.classList.add('is-press');
+        setTimeout(() => b.classList.remove('is-press'), 120);
+        toggle(i < 0 ? -1 : i % chips.length);
+      }, 1300);
+    }
+  });
+})();
+</script>
+
+<p><a href="/ko/#filter-chips">Vizney Blocks</a> · <a href="filter-chips.txt">코드(텍스트)</a> · © 2026 Vizney · MIT License</p>
+</main>
+</body>
+</html>

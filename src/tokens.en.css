@@ -32,7 +32,7 @@
   --vzb-bad-ink: #cb342b;   /* text of a bad change and of errors: red with 23% black, 5.2:1 on white */
   --vzb-tip: #1b1b1b;   /* tooltip background */
   --vzb-radius: 18px;   /* card corners */
-  --vzb-unit: 168px;   /* height unit 1 (KPI - Number); Line and Bar are 2, the other KPI cards 1.5, chart cards 2 */
+  --vzb-unit: 168px;   /* 1 height unit; a chart card is 1, 1.5 or 2 units tall */
   --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* card shadow */
 }
 

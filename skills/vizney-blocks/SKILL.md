@@ -1,162 +1,112 @@
 ---
 name: vizney-blocks
-description: "Build dashboard screens with Vizney Blocks (blocks.vizney.com) HTML dashboard cards. Use it when making or editing a single-file HTML dashboard, KPI cards, or a report screen with charts or tables, or when the user mentions Vizney Blocks. For each question the screen answers, pick a card from the purpose index, keep the card code and change only its JSON data. 한국어 요청이나 한국어 화면에도 쓴다(한국어판 SKILL.ko.md)."
+description: "Add charts read through their motion and dashboard controls to an HTML page with Vizney Blocks (blocks.vizney.com) cards. Use it to draw one of the charts (Warning Bars · Share Waffle · Rank Lines) or add one of the controls (Range Slider · Filter Chips · Download Button), or when the user mentions Vizney Blocks. Keep the card code, change only its JSON data, and connect controls to charts with a short page script. 한국어 요청이나 한국어 화면에도 쓴다(한국어판 SKILL.ko.md)."
 ---
 
-# Building dashboards with Vizney Blocks
+# Building screens with Vizney Blocks cards
 
-> 한국어로 일할 때(사용자가 한국어로 요청하거나 화면 문구가 한국어일 때)는 같은 폴더의 `SKILL.ko.md`를 읽고 그것을 따른다. Working in Korean? Read `SKILL.ko.md` in this folder and follow it instead; it has the same steps and rules with Korean card code.
+> 한국어로 일할 때(사용자가 한국어로 요청하거나 화면 문구가 한국어일 때)는 같은 폴더의 `SKILL.ko.md`를 읽고 그것을 따른다. Working in Korean? Read `SKILL.ko.md` in this folder and follow it instead; it has the same steps and rules with the Korean card addresses.
 
-Vizney Blocks is a set of copy-paste HTML dashboard cards (v0.55, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. Changes, shares, attainment, totals, colors and emphasis are computed and drawn by the card, following the Vizney chart guide.
+Vizney Blocks is a set of copy-paste HTML cards: charts you read through their motion, and dashboard controls (v0.56, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. The card does the arithmetic (the amount over a limit, shares, ranks) and the colors, emphasis and motion, by the rules of the Vizney chart guide. So keep the card code and change only the JSON values. A card decides how to draw its chart correctly; what goes on the screen is up to whoever builds it.
+
+## Cards
+
+The cards are these 3 charts and 3 controls, and no others. When no card fits a request, do not bend one to it: build that part yourself and tell the user it is not a card.
+
+### Charts
+
+- Warning Bars (`warning-bars`) · Bar Chart — Bars for each period stand against one horizontal line, the same limit for every period, and only the parts above the line blink red. Use it for a trend with the same limit each period, such as a monthly budget or a monthly capacity. Do not use it for a target, where more is better.
+- Share Waffle (`share-waffle`) · Waffle Chart — A card that draws shares as a 100-cell waffle and flips, one by one, the cells that changed hands since the earlier period. Use it to show how much one item's share grew or shrank, such as a market share or a sales mix. It draws the change between two periods only.
+- Rank Lines (`rank-lines`) · Bump Chart — A card that ranks the items in every period, joins the ranks with S-curves, and plays through the periods one at a time so the moments the order changes are visible. Use it to show how products, channels or branches moved up and down over a year, above all how far one item climbed. Ranks hide the size of the differences, so when the gaps matter, use a line chart.
+
+### Controls
+
+- Range Slider (`range-slider`) — A control that picks a numeric range with two thumbs. Use it to filter a screen by a continuous value such as order value or quantity. Give it the distribution of the values and, while you drag, bars rise over the rail to show how much data falls in the range.
+- Filter Chips (`filter-chips`) — A control that picks several items from a fixed list as chips. Use it to filter a screen by a few names, such as channels or regions. The All chip at the front shows how many are picked.
+- Download Button (`download-button`) — A button that downloads the data of a chart card on the screen as a file. It starts as an icon alone; hover and the formats to pick from (CSV, JSON, PNG) come out. Use it to export exactly what the controls show.
+
+Each card's rules and fields are in its line of https://blocks.vizney.com/llms.txt. Read that line before using a card.
 
 ## Steps
 
-1. Write down the questions the screen answers. One card answers one question.
-2. For each metric, check the period, `format` and `better`. Gather only what the request and the data do not tell you and ask it in one go (not one by one). If no answer can come, assume the most likely value, write the assumption on one line and go on. A wrong guess of `better` flips the change colors, so when the metric name does not settle it, always put it in the assumptions.
-3. For each question, pick a card in "Pick by purpose" below. Use the base card first, and another card only when its condition fits exactly. When unsure, use the base card. Card names describe the shape, not the metric, so put the metric name in the JSON `title`.
-4. Before writing any card code, make the "Design table" below and show it to the user with the assumptions. If the user asks for changes, make them and go on; if you cannot wait for an answer, go on as it is.
-5. Download the card code. `https://blocks.vizney.com/cards/<card id>.txt` is the card code as published (card text in English). Use it as received; do not rewrite or shorten it. If you cannot download it, ask the user to paste the content of that address.
+1. Write down what the screen shows and pick the cards whose use fits in "Cards" above. Card names describe the shape, not the metric, so put what the values are in the JSON `title`.
+2. For each card, check the period, `format`, `better` and the values that card needs (the limit, the two periods, the item to follow). Gather only what the request and the data do not tell you and ask it in one go (not one by one). If no answer can come, assume the most likely value, write the assumption on one line and go on.
+3. Download the card code. `https://blocks.vizney.com/cards/<card id>.txt` is the card code as published (card text in English). Use it as received; do not rewrite or shorten it. If you cannot download it, ask the user to paste the content of that address.
 
    ```bash
-   curl -fsSL https://blocks.vizney.com/cards/kpi-line.txt -o kpi-line.html
+   curl -fsSL https://blocks.vizney.com/cards/warning-bars.txt -o warning-bars.html
    ```
 
-6. Change only the JSON values between `<script type="application/json">` and `</script>` in the card. The example JSON in the card code is the reference for fields. Add a field the example lacks only when it is a common field in the rules below or is named in that card's line in https://blocks.vizney.com/llms.txt (for example `sort`, `max`, `focus`). That line also carries the rules the card draws by.
-7. Give each row of the design table its own grid element, paste the cards in row order, and make one HTML document. A row of KPI cards alone has a 280px minimum; other rows 340px.
+4. Change only the JSON values between `<script type="application/json">` and `</script>` in the card. The example JSON in the card code is the reference for fields. Add a field the example lacks only when it is a common field in the rules below or is named in that card's line in llms.txt.
+5. Paste the cards into one HTML document: the controls in a filter bar above the charts, the charts in a grid.
 
    ```html
    <!doctype html>
    <html lang="en">
-   <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sales overview</title></head>
+   <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ad spend</title></head>
    <body style="margin:0; padding:24px; background:#f4f5f7;">
-   <h1 style="margin:0; font:700 22px/1.4 var(--vzb-font); color:var(--vzb-ink);">Sales overview</h1>
-   <p style="margin:2px 0 16px; font:400 13px/1.5 var(--vzb-font); color:var(--vzb-muted);">FY2024 · Data source</p>
-   <!-- Design table row 1: KPI cards -->
-   <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap:16px;">
-   <!-- paste the card code here, one after another -->
+   <h1 style="margin:0; font:700 22px/1.4 var(--vzb-font); color:var(--vzb-ink);">Ad spend</h1>
+   <p style="margin:2px 0 16px; font:400 13px/1.5 var(--vzb-font); color:var(--vzb-muted);">As of November 2026 · Data source</p>
+   <!-- Filter bar: a control draws no title, so the page names it. Give each control a slot with a width. -->
+   <div style="display:grid; grid-template-columns:minmax(0, 1fr) auto; align-items:end; gap:16px 24px; margin-bottom:16px; padding:16px 20px; border-radius:16px; background:#ffffff;">
+   <div><div style="margin-bottom:8px; font:500 12px/16px var(--vzb-font); color:var(--vzb-muted);">Channel</div><!-- the Filter Chips card code --></div>
+   <div><!-- the Download Button card code, with "align": "end" --></div>
    </div>
-   <!-- Design table row 2 -->
-   <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:16px; margin-top:16px;">
-   <!-- paste the card code here, one after another -->
+   <!-- Charts: paste the chart card code, one card per grid cell. Wrap a card the script must find in an element with an id. -->
+   <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:16px;">
+   <div id="spend"><!-- the Warning Bars card code --></div>
    </div>
    </body>
    </html>
    ```
 
-8. Open it in a browser and go through the "Checklist" below. When you hand over the file, repeat the assumptions.
-
-## Pick by purpose
-
-For each question the screen answers, use the base card first and another card only when its condition fits exactly. When unsure, use the base card. A card not listed here is for cases these conditions do not cover.
-
-### Status · What is the number now?
-
-- Base: KPI - Number (`kpi-number`) — Just the number and its baseline
-- KPI - Line (`kpi-line`) — With the last 13 months as a trend
-- KPI - Bar (`kpi-bar`) — To compare the month in progress with past months
-- KPI - Stacked Bar (`kpi-stacked-bar`) — A total and its breakdown on one card
-- Line - Tabs (`line-tabs`) — 2–3 metrics with different units on one card
-
-### Trend · How has it changed?
-
-- Base: Line - Basic (`line-basic`) — The course of one metric
-- Bar - Basic (`bar-basic`) — Size per period rather than the course
-- Line - Compare (`line-compare`) — Against the same month last year
-- Line - Multiple (`line-multiple`) — The course of 2–3 items together
-- Bump - Basic (`bump-basic`) — How rankings changed rather than values
-
-### Target · How far to the target?
-
-- Base: KPI - Gauge (`kpi-gauge`) — One metric against its target or limit
-- Grid - Target (`grid-target`) — Attainment per item, with the amounts
-- Bar - Target (`bar-target`) — A different target in each period
-- Line - Cumulative (`line-cumulative`) — This month's cumulative pace
-- Line - Reference (`line-reference`) — Whether a baseline or average was crossed
-
-### Compare · Which is bigger or smaller?
-
-- Base: Bar - Ranking (`bar-ranking`) — Size and rank per item
-- Bar - Compare (`bar-compare`) — Against last year or last month
-- Bar - Butterfly (`bar-butterfly`) — Two groups on the same items
-- Radar - Basic (`radar-basic`) — Strengths and weaknesses across several scores
-
-### Composition · What is it made of?
-
-- Base: Donut - Basic (`donut-basic`) — Shares at one point in time
-- Bar - Stacked 100% (`bar-stacked-100`) — How the mix changed over periods
-- Bar - Stacked (`bar-stacked`) — Total and mix over time, together
-- Treemap - Basic (`treemap-basic`) — Many items, or items inside groups
-- Waffle - Basic (`waffle-basic`) — Shares you can count, in squares
-
-### Table · Exactly how much, per item?
-
-- Base: Grid - Basic (`grid-basic`) — Several metrics and a total per item
-- Grid - Spark (`grid-spark`) — A 13-month trend per item at a glance
-- Grid - Pivot (`grid-pivot`) — Amounts split two ways, as a crosstab
-- Heatmap - Basic (`heatmap-basic`) — Finding high and low cells by color
-
-### Change · Why did it go up or down?
-
-- Base: Waterfall - Basic (`waterfall-basic`) — The change between two points, by factor
-- Waterfall - Subtotal (`waterfall-subtotal`) — A profit and loss structure
-- Bar - Diverging (`bar-diverging`) — Change or variance from target, per period
-
-### Flow · Where does it drop off, and where does it go?
-
-- Base: Funnel - Flow (`funnel-flow`) — How much drops out at each step
-- Sankey - Basic (`sankey-basic`) — Flows between two breakdowns
-- Sankey - Levels (`sankey-levels`) — Flows across three or more levels
-
-### Relation · How do two values relate?
-
-- Base: Scatter - Basic (`scatter-basic`) — Whether two measures move together
-- Scatter - Quadrant (`scatter-quadrant`) — Sorting items into four groups by two criteria
-- Scatter - Connected (`scatter-connected`) — How two metrics moved over time
-
-## Design table
-
-Before writing any card code, lay the screen out as a "row · question · card (id) · height" table, write the assumptions under it, and show it to the user. Put cards of the same height in the same row (KPI - Number 1 unit, KPI - Gauge · KPI - Stacked Bar 1.5 units, the other cards 2 units). Paste the cards in the table's row order.
-
-| Row | Question | Card (id) | Height |
-|---|---|---|---|
-| 1 | How much are sales, orders and the return rate now? | `kpi-number` ×3 (sales · orders · return rate) | 1 unit |
-| 2 | How have sales moved? · Which branches are largest? | `line-basic` + `bar-ranking` | 2 units |
-
-Assumptions: return rate `"better": "down"`; amounts as raw values with `"format": "usd"`.
+6. If the screen has controls, write the page script as in "Connecting controls and charts" below.
+7. Open it in a browser and go through the "Checklist" below. When you hand over the file, repeat the assumptions.
 
 ## Rules
 
 - Paste the card code you downloaded as it is and change only the JSON values. Do not edit the styles or the script. To use the same card several times, paste the whole card code again and change each JSON.
-- A card fills the width of its slot, and its height is one of 1 · 1.5 · 2 units (1 unit = 168px, --vzb-unit): KPI - Number 1 unit, KPI - Gauge · KPI - Stacked Bar 1.5 units, the other cards 2 units. Cards in a row stretch to the tallest one and their graphics sit on the bottom, so to leave no gaps, put cards of the same height in a row. The controls (Range Slider · Filter Chips · Download Button) draw only the control, with no head or frame, and follow no unit: put them where they are used, such as a filter bar above the charts, pick their theme to match that background, and give the name screen readers read in label.
-- For several cards, give the wrapper a grid: display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:16px. Below 340px, the text in tables, donuts, funnels and waterfalls clips or overlaps. A row of KPI cards alone can go down to 280px, so four fit across a 1280px page.
-- Change colors and the font with the --vzb-* variables on :root (--vzb-primary, --vzb-font, …). The variable list and what each one does are in https://blocks.vizney.com/tokens.css (the same content as the :where(:root) block in the card code). To match a whole page, re-declare that file's values on :root.
-- Common fields: title (metric name), subtitle (period), value (the headline figure of a KPI card; KPI - Line and KPI - Bar use the last value when it is empty), format (usd dollar amounts, shortened to $745.6K · $1.2M · count a count, with its unit in unit · pct a percentage (3.4 is 3.4%), changes in pp · days a number of days · eok and krw are Korean won notations; krw writes amounts under 100,000 won in full), decimals (decimal places of the numbers; empty lets the card decide, and pct changes follow it too), better (up · down · neutral: the change color), compare ({ label, value }), labels (period names, the same length as values; null for a period without a value), series ([{ name, values }]), rows (table rows), curve (line shape of the line cards: smooth · linear · step), lang (en: the words the card prints itself, like Total, Other and Met, in English).
-- Changes, shares, attainment and totals are computed by the card, so do not write them in the JSON. Ranking and share cards also sort by size and fold the rest into Other, so do not sort or fold the data beforehand.
-- Give amounts as raw values, not rounded or divided into thousands or millions. The card shortens them to the format (usd) and computes totals and changes from the raw values, so totals agree across cards and decimals match. usd tables and scatter axes pick one of K · M · B per column or axis and write it in the column heading or axis name, like $K. Grid - Basic takes "format": "usd" on amount columns.
-- A metric where lower is better (return rate, cost, defect rate) gets `"better": "down"`. An increase becomes a red badge.
-- A ratio metric gets `"format": "pct"`. Its change is written in pp.
+- A card fills the width of its slot. A chart card is 1, 1.5 or 2 units tall (1 unit = 168px, --vzb-unit), and every chart card is now 2 units (336px). The controls (Range Slider · Filter Chips · Download Button) draw only the control, with no card head or frame, at the height of the control itself. Their background is left empty, so set "theme" to match where they sit ("dark" on a dark background).
+- For several cards, give the wrapper a grid: display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:16px. Keep a chart card at least 340px wide. A chart that reads along a long axis (13 months of bars, the 20 cells across a waffle, rank lines) reads better with two columns or the full width. Put the controls as they are in a filter bar above the charts or in the page header.
+- Change colors and the font with the --vzb-* variables on :root (--vzb-primary, --vzb-font, …). The variable list and what each one does are in https://blocks.vizney.com/tokens.css (the same content as the :where(:root) block in the card code). The background is picked per card with "theme" in its JSON: empty is white with blue as the first data color, "dark" is Vizney black with yellow as the first data color.
+- Common fields: title (what the values are), subtitle (the period and the basis), format (usd dollar amounts, shortened to $745.6K · $1.2M · count a count, with its unit in unit · pct a percentage (3.4 is 3.4%), changes in pp · days a number of days · eok and krw are Korean won notations), decimals (decimal places; empty lets the card decide), better (up · down · neutral), labels (period names, the same length as the values; null for a period without a value), lang (en: the words the card prints itself in English), theme. Controls: label (the name screen readers read; not drawn on screen) and name (detail.name of the control's events). Each card's own fields are in the example JSON of its code and in that card's line in llms.txt.
+- The amount over a limit, shares, ranks, changes and totals are computed by the card, so do not write them in the JSON. Give amounts as raw values, not rounded or divided into thousands or millions.
+- A chart card plays once when it comes into view and stops on its last frame. The still frame reads correctly by itself, and with reduced motion turned on the card draws it without playing. A wrapper with data-vzb-loop makes the card repeat; a card that keeps moving makes its neighbours hard to read, so use that only on a showcase such as a gallery.
+- A card is a snippet pasted into the HTML document as it is. Inserted with innerHTML or React's dangerouslySetInnerHTML, the card's <script> does not run.
+- A metric where lower is better gets `"better": "down"`. Share Waffle then shows a decrease as the green badge, and Rank Lines ranks the smallest value first.
 - A monthly trend gets 13 months when the data has them. The first and last are the same month, so the year-over-year comparison is visible.
-- A period still in progress, like this month, is compared with the same days of the previous period (month to date), and that basis goes in `compare.label` and `subtitle`.
-- Keep period names short, like `Sep '25` or `3Q26`. Long ones clip or run together on axes and under bars.
-- When the same metric appears on several cards, check that their periods and totals agree. If they do not, do not fix the values; ask the user.
-- Keep item names (regions, categories) in one language across the screen. Translate all of them or keep all of them as they are.
-- A card is a snippet pasted into the HTML document as it is. Inserted with innerHTML or React's dangerouslySetInnerHTML, the card's `<script>` does not run.
+- Keep period names short, like `Sep '25` or `3Q26`. Long ones clip or run together under the bars and under the scrubber.
+- Keep item names (channels, products) in one language across the screen. Translate all of them or keep all of them as they are.
 
-### Picking and layout
+## Connecting controls and charts
 
-Where AI agents actually went wrong building dashboards with these cards (3 briefs × 2 models). The numbers are measured on the cards drawn with the real font.
+Controls and charts do not know each other. A short page script takes a control's event and rewrites the chart card's JSON.
 
-- Share cards (Donut - Basic, Waffle - Basic, KPI - Stacked Bar) color only the three largest items and fold the rest into "Other". When Other is larger than the third slice, the screen cannot say what is second largest, so use Bar - Ranking. The same holds when a pie was asked for; tell the user why it changed.
-- KPI - Number is the default in a KPI row. When the metric has its own trend card, do not use KPI - Line or KPI - Bar. A metric drawn in two places leaves the reader unsure which to read and leaves room for periods and totals to disagree.
-- Up to four KPI cards per row. With five or more metrics, drop the least important or put two or three with different units into one Line - Tabs. Do not lower the grid minimum below 280px to fit five, and do not split them into rows of different widths such as 3 + 2.
-- For daily or weekly data, where the last value is not the headline, put the period total in `value` on Line - Tabs tabs and KPI - Line, and name that basis in the subtitle. Left empty, the last day's value becomes the headline and clashes with the weekly KPI on the same screen. For a ratio, where a total means nothing, leave it empty and write "as of the last day" in the subtitle.
-- Bar lists and tables (Bar - Ranking, Bar - Compare, Grid - Basic, Grid - Target) fit 2 units up to six rows; from the seventh row each row adds 32px and stretches the other cards in that row. Use the default five rows plus "Other". If every item must show, put cards with the same number of rows in one row. With no card to pair, give that row's grid `auto-fill` instead of `auto-fit` so the card keeps one column's width instead of stretching across.
-- Give the full width, or a two-column slot, only to cards whose width carries information: a 13-month line with several series, a table or heatmap with seven or more columns, a waterfall with seven or more items, a sankey. Do not put those at half width. A bar list or a short table gains nothing from the width; the eye only travels farther.
-- A waterfall with seven or more items has its value labels touch at 390px. If it must read on a phone, fold small items (non-operating items and tax into "Non-operating & tax") to about six.
-- On a 390px screen (cards 342px wide) a table fits a name column and three number columns. With four or more number columns it scrolls sideways inside the card, so split the table or move the change to another card.
-- A table that shows only the top N gets no total row (Grid - Basic: `"total": false`). A total row reads as the grand total. To give the whole, write it in the subtitle, such as "of 875.6B total".
-- Keep one screen title and one line for the as-of date and source; put no group headings ("Key metrics", "Channels") between rows of cards. The card titles are already the questions, so group headings repeat them and change the row spacing, which breaks the grid.
-- When the chosen card cannot draw the data well (overlapping or clipped text), do not switch to a card of another shape. Fold items or shorten names, and tell the user what is left, with the card's name.
+- A control sends a `vzb-change` event from its card whenever its value changes (it bubbles, so listen on `document`). `detail` is `{ name, value }`, where `name` is the `name` in that control's JSON. Range Slider's `value` is `[from, to]` as numbers; Filter Chips' `value` is the picked items in the order of `options`. The current value is also on the card, as JSON in its `data-vzb-value` attribute.
+- A control sends nothing when it first draws. Write the control's `value` and the chart's JSON for the same starting condition.
+- A chart card redraws by itself when the text of its `<script type="application/json">` changes. The page keeps the full data; on an event it filters the data, builds the chart's JSON from the result and writes it back. The redrawn card does not play from the start: it draws its last frame at once and keeps the period and the item the viewer picked.
+- When the filter leaves nothing, give an empty array. Warning Bars draws an empty state for `"labels": []`, and Share Waffle and Rank Lines for `"items": []`, instead of an error.
+- With two cards of the same kind on a page, wrap each in an element with an id and address it through that id (`#spend` in the example).
+- Download Button downloads the current JSON of the first card on the page whose `data-vzb` is its `target`, so the file holds what the controls left on screen. Before that it sends a `vzb-download` event (`detail: { name, target, format, filename, rows }`); if the page calls `preventDefault()`, the card makes no file, so a screen that gets the source data from a server can use the same button.
+
+```html
+<div><!-- the Filter Chips card code, with "name": "channel" --></div>
+<div id="spend"><!-- the Warning Bars card code --></div>
+<script>
+// The full data the page holds: the period names and the monthly values of each channel.
+const LABELS = ["Nov '25", "Dec '25", "Jan '26"];
+const SPEND = { Social: [8600, 16200, 9700], Search: [9500, 10300, 10100] };
+document.addEventListener('vzb-change', (e) => {
+  if (e.detail.name !== 'channel') return;
+  const picked = e.detail.value;   // the channels picked
+  const src = document.querySelector('#spend .vzb-card script[type="application/json"]');
+  const d = JSON.parse(src.textContent);
+  d.labels = picked.length ? LABELS : [];   // nothing picked: an empty array, and the card draws its empty state
+  d.values = d.labels.map((_, t) => picked.reduce((sum, c) => sum + SPEND[c][t], 0));
+  src.textContent = JSON.stringify(d);   // the card redraws when this text changes
+});
+</script>
+```
 
 ## Checklist
 
@@ -166,42 +116,35 @@ Go through it before handing over the file. If anything is off, fix it and check
 
 - [ ] The card code is as downloaded; only the JSON values changed.
 - [ ] Fields are only those in the example JSON, the common fields in the rules, or that card's line in llms.txt.
-- [ ] No changes, shares, attainment or totals in the JSON, and no data sorted or folded into "Other" in advance.
-- [ ] Amounts are raw values, not rounded or divided into thousands or millions.
+- [ ] No amount over a limit, share, rank, change or total in the JSON, and amounts are raw values, not rounded or divided.
+- [ ] No card was inserted with innerHTML or dangerouslySetInnerHTML.
 
 ### Data
 
-- [ ] Lower-is-better metrics have `"better": "down"`; ratio metrics have `"format": "pct"`.
-- [ ] Monthly trends have 13 months when the data has them.
-- [ ] A period in progress names its comparison basis in `compare.label` and `subtitle`.
+- [ ] `labels` and `values` have the same length, and a period without a value has `null`.
+- [ ] Lower-is-better metrics have `"better": "down"`.
+- [ ] The `limit` of Warning Bars is a limit not to cross. It is not used for a target, where more is better.
 - [ ] Period names are short, and item names are in one language across the screen.
-- [ ] Periods and totals of the same metric agree across cards. Where they do not, the values were left as they are and the user was asked.
-- [ ] A share card's "Other" is smaller than its third slice. If not, it was changed to Bar - Ranking.
-- [ ] The headline figures of daily or weekly tabs and KPIs are the values of the intended period.
-- [ ] A table that shows only the top N has no total row.
 
-### Layout
+### Controls
 
-- [ ] Cards in a row have the same height, and no stretched card has a large gap.
-- [ ] The grid minimum is 340px (280px for a row of KPI cards alone).
-- [ ] At most four KPI cards per row, and each metric is drawn only once on the screen.
-- [ ] Bar lists and tables have six rows or fewer, or the stretched cards share a row.
-- [ ] Wide slots go only to cards whose width carries information, and no table scrolls sideways at 390px.
-- [ ] No group headings between card rows besides the screen title and one line for the date and source.
-- [ ] No card was inserted with innerHTML or dangerouslySetInnerHTML.
+- [ ] Every control has a `label` (the name screen readers read) and a `name` (the event name).
+- [ ] Each control's `theme` matches the background it sits on.
+- [ ] The first `value` of each control and the first JSON of the chart are for the same condition.
+- [ ] Changing a value redraws the chart, and clearing everything and picking again brings it back.
+- [ ] The `target` of Download Button is the `data-vzb` of the card to download.
 
 ### Screen
 
 - [ ] No errors in the browser console, and no error message (`.vzb-error`) inside a card.
-- [ ] Screenshots at 1280px and 390px show no clipped or overlapping text. Cards cut overflowing text with an ellipsis (…) without an error, so look. If you cannot take screenshots, check that no element inside a card has a `scrollWidth` larger than its `clientWidth`.
+- [ ] Screenshots at 1280px and 390px show no clipped or overlapping text.
+- [ ] Chart cards play once and stop. None is left repeating.
 - [ ] The assumptions were shared with the user.
 
 ## Examples
 
-Worked examples that follow one request through questions, checks, the design table, what was done differently from the request, the key JSON and the checks. They are written in Korean, but the judgments apply as they are.
+A worked example that follows one request through the cards picked, the key JSON, the connecting script and the checks. It is written in Korean, but the judgments apply as they are.
 
-- [예시 1 · 영업 월간 보고](examples/sales-monthly.md)
-- [예시 2 · 분기 손익 임원 보고](examples/pnl-quarterly.md)
-- [예시 3 · 마케팅 주간 리포트](examples/growth-weekly.md)
+- [예시 · 채널을 고르면 다시 그려지는 광고비 화면](examples/ad-spend-filter.md)
 
 Gallery: https://blocks.vizney.com/ (Korean https://blocks.vizney.com/ko/) · Source: https://github.com/yehwanhwang/vizney-blocks

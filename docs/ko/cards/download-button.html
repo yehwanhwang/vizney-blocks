@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Download Button · Vizney Blocks</title>
+<meta name="description" content="컨트롤 · Download Button. 화면에 있는 차트 카드의 데이터를 파일로 내려받는 단추입니다. 처음에는 아이콘만 있고, 마우스를 올리면 CSV · JSON · PNG 가운데 받을 형식이 나옵니다. 컨트롤로 거른 지금 데이터를 그대로 받을 때 씁니다.">
+<link rel="canonical" href="https://blocks.vizney.com/ko/cards/download-button.html">
+<link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/ko/cards/download-button.html">
+<link rel="alternate" hreflang="en" href="https://blocks.vizney.com/cards/download-button.html">
+<link rel="alternate" hreflang="x-default" href="https://blocks.vizney.com/cards/download-button.html">
+<link rel="icon" href="/favicon.png?v=15ae76869d" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=15ae76869d">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vizney Blocks">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="Download Button · Vizney Blocks">
+<meta property="og:description" content="컨트롤 · Download Button. 화면에 있는 차트 카드의 데이터를 파일로 내려받는 단추입니다. 처음에는 아이콘만 있고, 마우스를 올리면 CSV · JSON · PNG 가운데 받을 형식이 나옵니다. 컨트롤로 거른 지금 데이터를 그대로 받을 때 씁니다.">
+<meta property="og:url" content="https://blocks.vizney.com/ko/cards/download-button.html">
+<meta property="og:image" content="https://blocks.vizney.com/og-ko.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>body{margin:0;background:#eef0f4;font:14px/1.6 'Spoqa Han Sans Neo','Noto Sans KR',sans-serif;color:#4a4a4a}main{box-sizing:border-box;max-width:var(--w,640px);margin:0 auto;padding:40px 16px 24px}p{margin:16px 2px 0;font-size:13px}a{color:#1b1b1b}</style>
+</head>
+<body>
+<main style="--w:640px">
+<!-- Vizney Blocks v0.56 · 컨트롤 · Download Button (download-button)
+     https://blocks.vizney.com/ko/cards/download-button.html · © 2026 Vizney · MIT License
+     <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
+<link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
+<style>
+/* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
+   색은 Vizney의 Figma 팔레트에서 고릅니다. 데이터는 파랑(#007aff) · 분홍빨강(#ff2d55) · 주황(#ff9500), 좋고 나쁨은 초록(#34c759) · 빨강(#ff3b30)이고,
+   옅은 단계는 같은 색을 바탕에 섞어 만듭니다. 글자는 Vizney 검정(#1b1b1b)입니다.
+   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색, 흰색을 둘째 색으로 그립니다.
+   목록: https://blocks.vizney.com/ko/tokens.css */
+:where(:root) {
+  --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* 카드의 모든 글자 */
+  --vzb-card: #ffffff;   /* 카드 바탕 */
+  --vzb-edge: rgba(17, 24, 39, 0.05);   /* 카드 테두리 */
+  --vzb-ink: #1b1b1b;   /* 제목과 대표 수치 */
+  --vzb-ink-2: #4a4a4a;   /* 본문 글자, 변화 없음 배지 */
+  --vzb-muted: #737373;   /* 부제, 단위, 축 눈금 */
+  --vzb-grid: #ebebeb;   /* 격자와 머리 아래 선. 바탕에서 한 단계 떨어진 회색 실선 */
+  --vzb-primary: #007aff;   /* 첫째 데이터 색(파랑). 선, 막대, 가장 큰 항목 */
+  --vzb-primary-tint: #e6f2ff;   /* 파랑의 옅은 바탕. 선 아래 음영, 레이더 면 */
+  --vzb-primary-soft: #bfdeff;   /* 이름을 얹는 바 리스트 막대 */
+  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
+  --vzb-tertiary: #ff9500;   /* 셋째 데이터 색(주황) */
+  --vzb-primary-mid: #8cc3ff;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
+  --vzb-secondary-mid: #ff7a93;   /* 분홍빨강의 넓은 면 */
+  --vzb-tertiary-mid: #ffb54d;   /* 주황의 넓은 면 */
+  --vzb-other-mid: #e3e3e3;   /* 기타 묶음의 넓은 면 */
+  --vzb-line-3: #ff9500;   /* 선의 셋째 색(주황) */
+  --vzb-base: #c4c4c4;   /* 비교 기준(작년 선, 레이더의 기준 면 테두리) */
+  --vzb-track: #f1f1f1;   /* 게이지 · 달성률 막대의 바탕 */
+  --vzb-other: #d9d9d9;   /* 기타로 묶은 항목, 넷째부터의 항목 */
+  --vzb-good: #34c759;   /* 좋은 증감의 면(워터폴의 늘린 요인, 달성 막대). 팔레트 초록. 흰 바탕 대비 2.2:1로 옅어 글자에는 쓰지 않습니다 */
+  --vzb-good-tint: #ebf9ee;   /* 좋은 증감 배지의 바탕(초록 10%) */
+  --vzb-good-ink: #2a8040;   /* 좋은 증감의 글자(배지). 초록에 검정 41%를 섞어 흰 바탕 대비 4.9:1 */
+  --vzb-bad: #ff3b30;   /* 나쁜 증감, 한도 초과의 면. 팔레트 빨강. 흰 바탕 대비 3.6:1 */
+  --vzb-bad-tint: #ffebea;   /* 나쁜 증감 배지의 바탕(빨강 10%) */
+  --vzb-bad-ink: #cb342b;   /* 나쁜 증감과 오류 문구의 글자. 빨강에 검정 23%를 섞어 흰 바탕 대비 5.2:1 */
+  --vzb-tip: #1b1b1b;   /* 툴팁 바탕 */
+  --vzb-radius: 18px;   /* 카드 모서리 */
+  --vzb-unit: 168px;   /* 높이 1단위. 차트 카드의 높이는 1 · 1.5 · 2단위 가운데 하나입니다 */
+  --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* 카드 그림자 */
+}
+
+/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 하나에 흰색과 회색을 더해 Vizney 검정 · 흰색 · 노랑으로 그립니다.
+   노랑 · 흰색 · 회색은 색각 시뮬레이션(가장 가까운 쌍 ΔE 14.9)과 바탕 대비 검사를 통과합니다.
+   좋고 나쁨은 밝은 바탕과 같은 초록(#34c759) · 빨강(#ff3b30)이고, 검정 바탕에서는 글자에도 그대로 씁니다(대비 7.8:1 · 4.9:1). */
+.vzb-dark {
+  --vzb-card: #1b1b1b;   /* 카드 바탕(Vizney 검정) */
+  --vzb-edge: rgba(255, 255, 255, 0.08);   /* 카드 테두리 */
+  --vzb-ink: #f5f5f5;   /* 제목과 대표 수치 */
+  --vzb-ink-2: #cfcfcf;   /* 본문 글자 */
+  --vzb-muted: #9b9b9b;   /* 부제, 단위, 축 눈금 */
+  --vzb-grid: #2f2f2f;   /* 격자와 머리 아래 선 */
+  --vzb-primary: #ffcc00;   /* 첫째 데이터 색(Vizney 노랑) */
+  --vzb-primary-tint: #362f18;   /* 노랑의 옅은 바탕 */
+  --vzb-primary-soft: #5f5013;   /* 이름을 얹는 바 리스트 막대 */
+  --vzb-secondary: #f5f5f5;   /* 둘째 데이터 색(흰색) */
+  --vzb-tertiary: #9b9b9b;   /* 셋째 데이터 색(회색) */
+  --vzb-primary-mid: #826b0f;   /* 넓은 면. 밝은 글자가 올라가도록 한 단계 어둡게 */
+  --vzb-secondary-mid: #5c5c5c;   /* 흰색의 넓은 면. 흰 글자가 올라가도록 회색으로 */
+  --vzb-tertiary-mid: #424242;   /* 회색의 넓은 면 */
+  --vzb-other-mid: #3a3a3a;   /* 기타 묶음의 넓은 면 */
+  --vzb-line-3: #9b9b9b;   /* 선의 셋째 색(회색) */
+  --vzb-base: #6b6b6b;   /* 비교 기준 */
+  --vzb-track: #2c2c2c;   /* 게이지 · 달성률 막대의 바탕 */
+  --vzb-other: #4d4d4d;   /* 기타로 묶은 항목 */
+  --vzb-good: #34c759;   /* 좋은 증감(팔레트 초록) */
+  --vzb-good-tint: #1f3725;   /* 좋은 증감 배지의 바탕(초록 16%) */
+  --vzb-good-ink: #34c759;   /* 좋은 증감의 글자 */
+  --vzb-bad: #ff3b30;   /* 나쁜 증감, 한도 초과(팔레트 빨강) */
+  --vzb-bad-tint: #2d1e1d;   /* 나쁜 증감 배지의 바탕(빨강 8%, 글자 대비 4.5:1을 지키는 만큼) */
+  --vzb-bad-ink: #ff3b30;   /* 나쁜 증감과 오류 문구의 글자 */
+  --vzb-tip: #3a3a3a;   /* 툴팁 바탕 */
+  --vzb-shadow: none;   /* 카드 그림자 */
+}
+/* 카드: 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위 가운데 하나입니다(단위 --vzb-unit, 카드마다 자기 CSS에서 정합니다). */
+.vzb-card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: calc(var(--vzb-unit) * 1.5);
+  padding: 24px;
+  background: var(--vzb-card);
+  color: var(--vzb-ink);
+  border: 1px solid var(--vzb-edge);
+  border-radius: var(--vzb-radius);
+  box-shadow: var(--vzb-shadow);
+  font: 400 13px/18px var(--vzb-font);
+  text-align: left;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  -webkit-font-smoothing: antialiased;
+}
+.vzb-card *, .vzb-card *::before, .vzb-card *::after { box-sizing: border-box; }
+
+/* 머리: 제목과 기간 부제, 그 아래 대표 수치와 바로 뒤의 증감 배지.
+   배지와 비교 문구는 숫자와 같은 줄의 항목이라, 좁으면 비교 문구만 아래 줄로 내려가고 배지는 숫자 뒤에 남습니다. */
+.vzb-title { font-size: 17px; line-height: 24px; font-weight: 500; }
+.vzb-sub { margin-top: 2px; color: var(--vzb-muted); }
+.vzb-fig { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; margin-top: 20px; }   /* 숫자 줄은 기준선 아래에 16px이 남아 줄 사이를 따로 두지 않습니다 */
+.vzb-num { margin-right: 4px; font-size: 34px; line-height: 40px; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap; }   /* 숫자와 배지 사이 12px, 배지와 비교 문구 사이 8px */
+.vzb-unit { margin-left: 4px; font-size: 16px; letter-spacing: 0; color: var(--vzb-muted); }
+.vzb-delta { display: contents; color: var(--vzb-muted); white-space: nowrap; }
+.vzb-vs { min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.vzb-badge { display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px 3px 6px; border-radius: 7px; font-weight: 500; }
+.vzb-badge.vzb-good { color: var(--vzb-good-ink); background: var(--vzb-good-tint); }
+.vzb-badge.vzb-bad { color: var(--vzb-bad-ink); background: var(--vzb-bad-tint); }
+.vzb-badge.vzb-flat { color: var(--vzb-ink-2); background: var(--vzb-track); padding-left: 8px; }
+.vzb-arrow { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* 그래픽은 카드 아래쪽에 붙습니다. 같은 줄의 카드 높이가 맞춰져도 그래픽끼리 바닥이 맞습니다. */
+.vzb-foot { margin-top: auto; padding-top: 20px; }
+.vzb-error { margin: 8px 0 0; color: var(--vzb-bad-ink); }
+/* 굴러가는 숫자: 숫자 칸의 높이는 글자 높이(1.2em)이고, 칸 안의 0–9 띠가 위아래로 굴러 새 값에 섭니다. */
+.vzb-rl { display: inline-flex; vertical-align: bottom; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.vzb-rl-col { display: inline-block; height: 1.2em; overflow: hidden; }
+.vzb-rl-strip { display: flex; flex-direction: column; transition: transform 0.38s cubic-bezier(0.34, 1.32, 0.64, 1); }
+.vzb-rl-strip > span, .vzb-rl-ch { display: block; height: 1.2em; line-height: 1.2em; }
+@media (prefers-reduced-motion: reduce) { .vzb-rl-strip { transition: none; } }
+/* Download Button: 카드 틀 없이 단추만 그립니다. 처음에는 지름 44px 원에 내려받기 아이콘만 있고(글자색으로 채움), 열리면 같은 알약이 오른쪽으로 늘어나며
+   형식 단추(CSV · JSON · PNG)가 0.05초 간격으로 나옵니다. 늘어날 때는 끝이 살짝 넘쳤다 자리를 잡습니다. 단추 옆에는 받은 형식과 행 수를 적습니다.
+   받으면 화살표가 받침으로 떨어져 체크로 바뀌고 받침이 눌렸다 펴지며, 데이터 색 넷의 작은 점이 터집니다. 받을 데이터가 없으면 단추가 좌우로 떱니다. */
+/* 컨트롤은 카드 머리(제목 · 부제)와 카드 틀(바탕 · 테두리 · 그림자 · 안쪽 여백) 없이 조작부만 그립니다. 차트 위 필터 줄이나 머리글처럼
+   원하는 자리에 그대로 놓는 부품이기 때문입니다. 폭은 놓인 자리를 채우고, 높이는 조작부 자체의 높이입니다.
+   바탕을 비워 두므로 theme은 놓을 자리의 바탕에 맞춰 고릅니다(어두운 바탕이면 "dark"). */
+.vzb-card[data-vzb="download-button"] { min-height: 0; padding: 0; background: none; border: 0; border-radius: 0; box-shadow: none; }
+.vzb-dl-row { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.vzb-dl.is-end .vzb-dl-row { flex-direction: row-reverse; }   /* align: end — 아이콘을 오른쪽 끝에, 받은 결과는 그 왼쪽에 */
+.vzb-dl.is-end .vzb-dl-meta { text-align: right; }
+.vzb-dl-anchor { position: relative; flex: none; width: 44px; height: 44px; }
+.vzb-dl-menu { position: absolute; top: 0; left: 0; z-index: 3; display: inline-flex; align-items: center; max-width: 44px; height: 44px; border-radius: 22px; background: var(--vzb-ink); color: var(--vzb-card); overflow: hidden; transition: max-width 0.36s cubic-bezier(0.34, 1.3, 0.64, 1), box-shadow 0.2s; }
+.vzb-dl.is-open .vzb-dl-menu { max-width: 260px; box-shadow: 0 8px 22px rgba(27, 27, 27, 0.18); }
+.vzb-dl.is-left .vzb-dl-menu { left: auto; right: 0; flex-direction: row-reverse; }   /* 왼쪽으로 펼칠 때: 아이콘은 오른쪽에 두고 형식이 그 왼쪽으로 나옵니다 */
+.vzb-dl.is-none .vzb-dl-menu { animation: vzb-dl-shake 0.42s ease-in-out; }
+.vzb-dl-btn { flex: none; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 22px; background: none; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.vzb-dl-btn:active { transform: scale(0.9); transition-duration: 0.08s; }
+.vzb-dl-btn:focus-visible, .vzb-dl-opt:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: -2px; }
+.vzb-dl-opts { flex: none; display: inline-flex; align-items: center; gap: 2px; padding-right: 6px; }   /* 늘어나는 동안 줄어들지 않고 단추 밖으로 가려졌다 드러납니다 */
+.vzb-dl.is-left .vzb-dl-opts { padding: 0 0 0 6px; }
+.vzb-dl-opt { flex: none; height: 32px; padding: 0 10px; white-space: nowrap; border: 0; border-radius: 16px; background: none; color: inherit; font: 700 12px/1 var(--vzb-font); letter-spacing: 0.02em; cursor: pointer; opacity: 0; transform: translateX(-8px); transition: opacity 0.14s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.14s; }
+.vzb-dl.is-left .vzb-dl-opt { transform: translateX(8px); }
+.vzb-dl.is-open .vzb-dl-opt { opacity: 1; transform: none; transition-delay: calc(var(--vzb-i) * 0.05s + 0.06s), calc(var(--vzb-i) * 0.05s + 0.06s), 0s; }
+.vzb-dl-opt:hover, .vzb-dl-opt.is-pick { background: color-mix(in srgb, var(--vzb-card) 20%, var(--vzb-ink)); }
+.vzb-dl-ic { position: relative; width: 20px; height: 20px; }
+.vzb-dl-svg { display: block; width: 20px; height: 20px; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-dl-arrow { transition: transform 0.24s cubic-bezier(0.5, 0, 0.75, 0), opacity 0.16s 0.08s; }
+.vzb-dl.is-done .vzb-dl-arrow { transform: translateY(7px); opacity: 0; }
+.vzb-dl-check { stroke-dasharray: 14; stroke-dashoffset: 14; transition: stroke-dashoffset 0.22s ease-out; }
+.vzb-dl.is-done .vzb-dl-check { stroke-dashoffset: 0; transition-delay: 0.24s; }
+.vzb-dl-tray { transform-box: view-box; transform-origin: 10px 16.6px; }
+.vzb-dl.is-done .vzb-dl-tray { animation: vzb-dl-squash 0.5s 0.18s ease-out; }
+.vzb-dl-burst { position: absolute; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none; }
+.vzb-dl-burst i { position: absolute; left: -2.5px; top: -2.5px; width: 5px; height: 5px; border-radius: 50%; opacity: 0; }
+.vzb-dl.is-done .vzb-dl-burst i { animation: vzb-dl-burst 0.62s 0.22s cubic-bezier(0.2, 0.8, 0.3, 1); }
+.vzb-dl-c1 { background: var(--vzb-primary); }
+.vzb-dl-c2 { background: var(--vzb-secondary); }
+.vzb-dl-c3 { background: var(--vzb-tertiary); }
+.vzb-dl-c4 { background: var(--vzb-good); }
+.vzb-dl-meta { min-width: 0; overflow: hidden; font-size: 12px; color: var(--vzb-muted); }
+.vzb-dl-got { display: inline-flex; align-items: baseline; white-space: pre; opacity: 0; filter: blur(2px); transform: translateY(4px); font-weight: 700; color: var(--vzb-ink); transition: opacity 0.2s, filter 0.2s, transform 0.2s; }
+.vzb-dl.is-done .vzb-dl-got, .vzb-dl.is-none .vzb-dl-got { opacity: 1; filter: none; transform: none; }
+.vzb-dl.is-none .vzb-dl-got { color: var(--vzb-bad-ink); }
+.vzb-dl-unit { font-weight: 400; color: var(--vzb-muted); }
+@keyframes vzb-dl-squash { 0% { transform: scale(1, 1); } 30% { transform: scale(1.18, 0.7); } 65% { transform: scale(0.94, 1.08); } 100% { transform: scale(1, 1); } }
+@keyframes vzb-dl-shake { 0%, 100% { transform: translateX(0); } 18% { transform: translateX(-7px); } 36% { transform: translateX(6px); } 54% { transform: translateX(-4px); } 72% { transform: translateX(2px); } }
+@keyframes vzb-dl-burst { 0% { opacity: 1; transform: rotate(var(--vzb-a)) translateX(8px) scale(1); } 100% { opacity: 0; transform: rotate(var(--vzb-a)) translateX(var(--vzb-r)) scale(0.3); } }
+@media (prefers-reduced-motion: reduce) {
+  .vzb-dl-menu, .vzb-dl-btn, .vzb-dl-opt, .vzb-dl-arrow, .vzb-dl-check, .vzb-dl-got { transition: none; }
+  .vzb-dl.is-open .vzb-dl-opt { transition-delay: 0s; }
+  .vzb-dl.is-none .vzb-dl-menu, .vzb-dl.is-done .vzb-dl-tray, .vzb-dl.is-done .vzb-dl-burst i { animation: none; }
+}
+</style>
+<div class="vzb-card" data-vzb="download-button">
+<script type="application/json">
+{
+  "label": "월별 광고비 내려받기",
+  "name": "export",
+  "target": "warning-bars",
+  "filename": "monthly-ad-spend",
+  "formats": ["csv", "json", "png"]
+}
+</script>
+</div>
+<script>
+(() => {
+  'use strict';
+  /* 공통 도구: 카드 안 문구, 숫자 표기, 증감, 카드 머리, 그리기 시작 */
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  // 카드 안 문구(합계 · 기타 · 툴팁 · 낭독 문구): 한국어가 기본이고, JSON에 "lang": "en"을 적으면 영어로 바뀝니다.
+  // 왼쪽의 한국어 원문이 키입니다. %s에는 값이 차례로, %1 · %2에는 그 순서의 값이 들어가고, '|' 뒤는 같은 말을 구분하는 꼬리표라 화면에는 안 나옵니다.
+  // 원화 표기(조 · 억 · 만 · 원)는 영어에서도 그대로 둡니다. 숫자 표기는 두 언어가 같습니다.
+  const EN = {
+    '값': 'Value', '이름': 'Name', '기간': 'Period', '항목': 'Item', '일': 'days', '%s%p': '%spp', '증가': 'up', '감소': 'down', '%s 대비': 'vs %s', '비교 기간': 'prior period', '%1의 %2': '%2 of %1',
+    '비중': 'Share', '%s위': '#%s', '%s 순위': '%s ranks', '%s계단 오름': 'up %s', '%s계단 내림': 'down %s', '그대로': 'unchanged', '처음부터 다시': 'Replay', '한도': 'Limit', '차이': 'Difference', '%s 초과|한도': '%s over',
+    '%1 초과 · %2의 %3%': '%1 over · %3% of %2', '%1 남음 · %2의 %3%': '%1 left · %3% of %2', '%1개 중 %2개 %3 초과 · +%4': '%2 of %1 over %3 · +%4', '%1개 중 %2개 %3 초과': '%2 of %1 over %3',
+    '모두 %s 이내': 'All within %s', '표시할 항목이 없습니다.': 'No items to show.',
+    '%1. 항목 %2개 가운데 %3개가 %4 초과입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %3 of %2 items are over %4. Use the left and right arrows to move between items. Every value is in the table that follows.',
+    'labels와 values를 확인하세요.': 'Check labels and values.', 'limit에 한도를 숫자로 적으세요.': 'Write the limit as a number in limit.', 'options를 확인하세요.': 'Check options.', '필터': 'Filter', '전체': 'All',
+    '%1, %2개 중 %3개 고름': '%1, %3 of %2 picked', '%1개 중 %2개 고름': '%2 of %1 picked', '내려받기': 'Download', '%s로 받기': 'Download as %s', '%s로 받았습니다.': 'Downloaded as %s.', '데이터 없음': 'No data',
+    '행': 'rows', '행|1': 'row', '받을 데이터가 없습니다.': 'No data to download.', '%s로 1행을 받았습니다.': 'Downloaded 1 row as %s.', '%1로 %2행을 받았습니다.': 'Downloaded %2 rows as %1.',
+    'min과 max를 확인하세요.': 'Check min and max.', '%s 최소': 'Minimum %s', '%s 최대': 'Maximum %s', '범위': 'range', 'items에 항목을 2~4개 적으세요.': 'List 2 to 4 items in items.',
+    'items에 항목을 2~8개 적으세요.': 'List 2 to 8 items in items.', 'labels에 기간을 2개 이상 적으세요.': 'List at least 2 periods in labels.', '재생': 'Play', '일시정지': 'Pause', '되감기': 'Rewind',
+    '빨리 감기': 'Fast forward', '%s 강조': '%s highlighted',
+    '%1 순위 변화, %2–%3. %4: %5 → %6. 위아래 화살표로 항목을 옮깁니다. 모든 순위는 이어지는 표에 있습니다.': '%1 rank changes, %2–%3. %4: %5 → %6. Use the up and down arrows to move between items. Every rank is in the table that follows.',
+    'periods와 values를 확인하세요.': 'Check periods and values.',
+    '%1. %2의 비중은 %3로, %4 대비 %5입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 holds %3, %5 against %4. Use the left and right arrows to move between items. Every value is in the table that follows.',
+    '%1. %2의 비중은 %3입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 holds %3. Use the left and right arrows to move between items. Every value is in the table that follows.',
+    '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
+  };
+  // tx(d 또는 f, 원문, 값…): d.lang(format()이 f에 옮겨 둡니다)이 en이면 영어 문구를, 아니면 원문을 돌려줍니다.
+  function tx(x, s, ...a) {
+    let i = 0;
+    const out = x && x.lang === 'en' && EN[s] !== undefined ? EN[s] : s.split('|')[0];
+    return out.replace(/%(\d|s)/g, (m, k) => String(a[k === 's' ? i++ : k - 1]));
+  }
+  // 숫자 뒤의 단위: 영어 단위(days · orders)는 한 칸 띄우고, 기호와 한 글자 단위(% · K · 억)는 붙입니다.
+  const withUnit = (n, u) => (/^[A-Za-z]{2}/.test(u) ? `${n} ${u}` : n + u);
+  function el(tag, cls, text) {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function svgEl(tag, attrs) {
+    const n = document.createElementNS(SVGNS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+  const nfs = {};
+  function num(v, d) {
+    nfs[d] = nfs[d] || new Intl.NumberFormat('ko-KR', { minimumFractionDigits: d, maximumFractionDigits: d });
+    return nfs[d].format(v);
+  }
+  // 원 금액: 조 · 억 · 만으로 줄여 적습니다. 10만 원보다 작으면 87,324원처럼 원 단위 그대로 적어 객단가 · CAC가 "9만"으로
+  // 뭉개지지 않게 합니다. decimals를 주면 줄인 숫자의 소수 자릿수를 그 값으로 맞춥니다(1억 8,600만 원은 2면 1.86억).
+  function krw(v, d) {
+    const a = Math.abs(v), k = (x) => (d != null ? d : x);
+    if (a >= 1e12) return [num(v / 1e12, k(1)), '조'];
+    if (a >= 1e8) return [num(v / 1e8, k(a >= 1e10 ? 0 : 1)), '억'];
+    if (a >= 1e5) return [num(v / 1e4, k(0)), '만'];
+    return [num(v, 0), '원'];
+  }
+  // 달러 금액: 원래 값을 받아 K · M · B로 줄이고 소수 한 자리로 맞춥니다($745.6K). 접미사는 단위처럼 작게 씁니다.
+  function usd(v, d) {
+    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    const [div, u] = a >= 1e9 ? [1e9, 'B'] : a >= 1e6 ? [1e6, 'M'] : a >= 1e3 ? [1e3, 'K'] : [1, ''];
+    return [`${s}$${num(a / div, d != null ? d : div > 1 ? 1 : 0)}`, u];
+  }
+  // format: eok(억 단위 값) · krw(원 단위 값) · usd(달러 값) · count(unit으로 단위) · pct(증감을 %p로) · days
+  // 축이나 탭처럼 카드 안의 다른 객체로 만들 때는 두 번째 인자로 카드 데이터를 주어 lang을 잇습니다.
+  function format(d, root) {
+    const dec = (v, fallback) => (d.decimals != null ? d.decimals : fallback);
+    const F = (o) => Object.assign(o, { lang: (root || d).lang });
+    switch (d.format) {
+      case 'eok': return F({ parts: (v) => [num(v, dec(v, Number.isInteger(v) || Math.abs(v) >= 100 ? 0 : 1)), '억'], rel: true });
+      case 'krw': return F({ parts: (v) => krw(v, d.decimals), rel: true });
+      case 'usd': return F({ parts: (v) => usd(v, d.decimals), rel: true, usd: true });
+      case 'pct': return F({ parts: (v) => [num(v, dec(v, 1)), '%'], rel: false, dp: d.decimals });
+      case 'days': return F({ parts: (v) => [num(v, dec(v, 1)), tx(root || d, '일')], rel: true });
+      default: return F({ parts: (v) => [num(v, dec(v, Number.isInteger(v) ? 0 : 1)), d.unit || ''], rel: true });
+    }
+  }
+  const show = (f, v) => withUnit(...f.parts(v));
+  // 그릴 수 있는 숫자인지(빈 값 · 빈 글자 · NaN 제외)
+  const fin = (v) => v != null && v !== '' && isFinite(v);
+  // 비율의 차이(%p) 숫자: 소수 자릿수는 decimals(비우면 한 자리)를 따릅니다. 0이 아닌 차이가 0.0으로 보일 만큼 작으면
+  // 자리를 늘려(최대 세 자리) 1.12%에서 1.16%로 오른 것을 0.0%p가 아니라 0.03%p로 적습니다.
+  function pp(f, diff) {
+    const a = Math.abs(diff);
+    let k = f.dp != null ? f.dp : 1;
+    while (k < 3 && a > 1e-9 && Math.round(a * 10 ** k) === 0) k++;
+    return num(a, k);
+  }
+  // 증감: 방향은 화살표로, 좋고 나쁨(tone)은 better(up · down · neutral)로 정합니다. 비율은 %p로 적습니다.
+  function delta(f, value, base, better) {
+    const diff = value - base;
+    const dir = Math.abs(diff) < 1e-9 ? 0 : Math.sign(diff);
+    const want = better === 'down' ? -1 : better === 'neutral' ? 0 : 1;
+    const tone = dir === 0 || want === 0 ? 'flat' : dir === want ? 'good' : 'bad';
+    let text;
+    if (!f.rel) text = tx(f, '%s%p', pp(f, diff));
+    else if (base) text = `${num(Math.abs(diff / base) * 100, 1)}%`;
+    else text = show(f, Math.abs(diff));
+    return { dir, tone, text };
+  }
+  function arrow(dir) {
+    const s = svgEl('svg', { class: 'vzb-arrow', viewBox: '0 0 12 12', 'aria-hidden': 'true' });
+    s.append(svgEl('path', { d: dir > 0 ? 'M3.5 8.5l5-5M4.5 3.5h4v4' : 'M3.5 3.5l5 5M8.5 4.5v4h-4' }));
+    return s;
+  }
+  // 대표 수치(단위는 작게)
+  function figure(f, value) {
+    const n = el('div', 'vzb-num');
+    const [text, unit] = f.parts(value);
+    n.append(text);
+    if (unit) n.append(el('span', 'vzb-unit', unit));
+    return n;
+  }
+  // 증감 배지: 화살표는 오르내림, 색은 좋고 나쁨(better)입니다.
+  function badge(f, value, base, better) {
+    const dl = delta(f, value, base, better);
+    const b = el('span', `vzb-badge vzb-${dl.tone}`);
+    if (dl.dir) b.append(arrow(dl.dir), el('span', 'vzb-sr', tx(f, dl.dir > 0 ? '증가' : '감소')));
+    b.append(dl.text);
+    return b;
+  }
+  // 머리: 제목 · 기간 부제(subtitle) · 대표 수치와 바로 뒤의 증감 배지. value가 null이면 제목만 둡니다.
+  // 배지는 숫자 바로 뒤에 붙어 있고, 카드가 좁아 한 줄에 다 들어가지 않으면 비교 문구만 숫자 아래 줄로 내려갑니다.
+  // 내려갔는지는 카드의 vzb-wrapped로 알려, 높이가 1단위인 카드가 아래 여백으로 그 줄을 받을 수 있게 합니다.
+  function head(card, d, f, value, cmp, cmpText) {
+    const hd = el('div', 'vzb-hd');
+    hd.append(el('div', 'vzb-title', d.title || ''));
+    if (d.subtitle) hd.append(el('div', 'vzb-sub', d.subtitle));
+    card.append(hd);
+    if (value == null) return;
+    const fig = el('div', 'vzb-fig');
+    const n = figure(f, value);
+    fig.append(n);
+    if (cmp && cmp.value != null) {
+      const line = el('span', 'vzb-delta'), vs = el('span', 'vzb-vs', cmpText || tx(d, '%s 대비', cmp.label || tx(d, '비교 기간')));
+      line.append(badge(f, value, cmp.value, d.better), vs);
+      fig.append(line);
+      onSize(fig, () => card.classList.toggle('vzb-wrapped', vs.offsetTop >= n.offsetTop + n.offsetHeight - 1));   // 숫자 칸 아래에서 시작하면 내려간 것
+    }
+    card.append(fig);
+  }
+  // 같은 종류의 카드를 모두 찾아 그립니다. 코드를 두 번 붙여 넣어도 카드는 한 번만 그립니다.
+  // 데이터가 바뀌면 다시 그립니다: 페이지의 스크립트가 카드 안 JSON(<script type="application/json">)의 글자를 바꾸면 그 카드만
+  // 새 요소로 갈아 끼워 새로 그립니다(필터 · 기간 컨트롤과 잇는 길). 갈아 끼운 카드에는 data-vzb-live가 붙어, 움직이는 카드는
+  // 처음부터 다시 재생하지 않고 마지막 장면을 바로 그립니다. 예전 요소가 페이지에서 빠지므로 그 카드의 움직임도 함께 끝납니다.
+  function mount(type, draw) {
+    const watch = (card, src) => {
+      if (!src || !window.MutationObserver) return;
+      const mo = new MutationObserver(() => {
+        mo.disconnect();
+        if (!card.isConnected) return;
+        const next = card.cloneNode(false);
+        next.removeAttribute('data-vzb-ready');
+        next.setAttribute('data-vzb-live', '');
+        next.append(src);
+        card.replaceWith(next);
+        run();
+      });
+      mo.observe(src, { childList: true, characterData: true, subtree: true });
+    };
+    const run = () => {
+      document.querySelectorAll(`.vzb-card[data-vzb="${type}"]:not([data-vzb-ready])`).forEach((card) => {
+        card.setAttribute('data-vzb-ready', '');
+        const src = card.querySelector('script[type="application/json"]');
+        const raw = src ? src.textContent : '';
+        watch(card, src);
+        let d;
+        try { d = JSON.parse(raw); } catch (e) {
+          card.append(el('p', 'vzb-error', tx(/"lang"\s*:\s*"en"/.test(raw) ? { lang: 'en' } : null, '카드 데이터(JSON)를 읽지 못했습니다: %s', e.message)));
+          return;
+        }
+        card.setAttribute('role', 'group');
+        if (d.title) card.setAttribute('aria-label', d.title);
+        // 어두운 바탕: JSON에 "theme": "dark"를 적으면 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다(tokens.css의 .vzb-dark).
+        card.classList.toggle('vzb-dark', d.theme === 'dark');
+        try { draw(card, d, format(d)); } catch (e) {
+          card.append(el('p', 'vzb-error', tx(d, '카드를 그리지 못했습니다: %s', e.message)));
+        }
+      });
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+    else run();
+  }
+  // 크기가 바뀔 때마다 그래픽을 다시 그립니다. 차트는 카드에 남은 높이를 채웁니다.
+  function onSize(node, fn) {
+    let lw = 0, lh = 0;
+    new ResizeObserver((entries) => {
+      const w = Math.floor(entries[0].contentRect.width), h = Math.floor(entries[0].contentRect.height);
+      if (w > 0 && h > 0 && (w !== lw || h !== lh)) { lw = w; lh = h; fn(w, h); }
+    }).observe(node);
+  }
+
+  /* 굴러가는 숫자(컨트롤 공통): 숫자 한 자리마다 0–9를 세로로 쌓은 칸을 두고 새 값의 자리로 굴립니다(구독 수가 오르는 단추처럼).
+     roll(box, text): box 안의 글자를 text로 바꿉니다. 자리 수와 쉼표 자리가 그대로면 칸이 제자리에서 구르고, 바뀌면 칸을 새로 만들어
+     0에서 굴러 올라옵니다. 움직임은 roll.css의 transition이 그리고, box는 화면 낭독기에 읽히지 않으므로 값은 부르는 쪽이 따로 알립니다. */
+  function roll(box, text) {
+    const chars = [...String(text)], shape = chars.map((c) => (/\d/.test(c) ? '0' : c)).join('');
+    box.setAttribute('aria-hidden', 'true');
+    if (box.dataset.shape !== shape) {
+      box.dataset.shape = shape;
+      box.replaceChildren(...chars.map((c) => {
+        if (!/\d/.test(c)) return el('span', 'vzb-rl-ch', c);
+        const col = el('span', 'vzb-rl-col'), strip = el('span', 'vzb-rl-strip');
+        for (let k = 0; k < 10; k++) strip.append(el('span', null, String(k)));
+        col.append(strip);
+        return col;
+      }));
+      box.getBoundingClientRect();   // 새 칸은 0에 선 채로 그려진 뒤 굴러갑니다
+    }
+    [...box.children].forEach((node, i) => { if (node.classList.contains('vzb-rl-col')) node.firstChild.style.transform = `translateY(${-10 * +chars[i]}%)`; });
+  }
+
+  // Download Button: 화면에 있는 차트 카드(target)의 데이터를 내려받는 단추입니다. 카드 머리 없이 단추만 그립니다. 처음에는 내려받기 아이콘만 있고, 마우스를 올리거나
+  // 키보드로 들어오거나 아이콘을 누르면 단추가 옆으로 늘어나며 받을 형식(formats: csv · json · png, 비우면 셋 다)이 하나씩 나옵니다.
+  // 늘어난 단추는 옆 내용 위로 겹쳐 떠서 자리를 밀어내지 않고, 오른쪽에 펼칠 자리가 없으면 아이콘은 그대로 둔 채 왼쪽으로 펼칩니다(align: end면 왼쪽부터).
+  // csv · json은 target 카드의 지금 JSON(컨트롤로 거른 뒤)에서 표를 만들어 받습니다: items(객체 배열), 없으면 labels와 values(한도
+  // limit · 목표 target이 있으면 열로 더함), labels와 series, 그 밖에는 JSON에서 처음 나오는 객체 배열입니다. csv 앞에는 엑셀용 BOM을 붙입니다.
+  // png는 target 카드를 보이는 그대로 그림으로 받습니다(글꼴은 기기에 설치된 것으로 그려질 수 있습니다).
+  // 받기 전에 카드에서 vzb-download 이벤트(bubbles, cancelable, detail: { name, target, format, filename, rows })를 보냅니다. 페이지가
+  // preventDefault()를 부르면 카드는 파일을 만들지 않습니다(서버에서 원본을 받는 화면 등).
+  // 움직임(download-button.css): 형식은 늘어나는 단추 안에서 차례로 나오고, 받으면 단추가 접히며 화살표가 받침으로 떨어져 체크로 바뀌고
+  // 작은 점들이 터집니다. 옆에는 받은 형식과 행 수가 굴러 올라왔다가 1.8초 뒤 사라집니다. 받을 데이터가 없으면 단추가 좌우로 떱니다.
+  // 열린 상태에서 아이콘을 다시 누르면 첫 형식으로 받습니다. Esc는 닫고, 좌우 화살표는 형식 사이를 옮깁니다.
+  // 동작 줄이기 설정에서는 움직임 없이 상태만 바뀝니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 파일은 만들지 않고 고르는 모습만 되풀이합니다.
+  mount('download-button', (card, d, f) => {
+    const FORMATS = ['csv', 'json', 'png'];
+    const formats = (Array.isArray(d.formats) ? d.formats.map((x) => String(x).toLowerCase()).filter((x) => FORMATS.includes(x)) : FORMATS);
+    const list = formats.length ? formats : FORMATS;
+    const base = String(d.filename || 'data').replace(/\.(csv|json|png)$/i, '');
+    const label = d.label || tx(d, '내려받기');
+    const foot = el('div', 'vzb-dl'), row = el('div', 'vzb-dl-row'), menu = el('div', 'vzb-dl-menu'), say = el('p', 'vzb-sr');
+    menu.setAttribute('role', 'group');
+    menu.setAttribute('aria-label', label);
+    menu.setAttribute('data-vzb-input', '');
+    say.setAttribute('aria-live', 'polite');
+    const btn = el('button', 'vzb-dl-btn');
+    btn.type = 'button';
+    btn.setAttribute('aria-label', label);
+    btn.setAttribute('aria-expanded', 'false');
+    // 아이콘: 화살표 · 체크 · 받침과, 받았을 때 터지는 점 여덟 개(데이터 색 넷을 두 번씩)
+    const ic = el('span', 'vzb-dl-ic'), burst = el('span', 'vzb-dl-burst');
+    for (let i = 0; i < 8; i++) {
+      const dot = el('i', `vzb-dl-c${(i % 4) + 1}`);
+      dot.style.setProperty('--vzb-a', `${i * 45 + 12}deg`);
+      dot.style.setProperty('--vzb-r', `${i % 2 ? 26 : 20}px`);
+      burst.append(dot);
+    }
+    const svg = svgEl('svg', { class: 'vzb-dl-svg', viewBox: '0 0 20 20', 'aria-hidden': 'true' }), arrow = svgEl('g', { class: 'vzb-dl-arrow' });
+    arrow.append(svgEl('path', { d: 'M10 3.2v8.6' }), svgEl('path', { d: 'M6.6 8.6l3.4 3.4 3.4-3.4' }));
+    svg.append(arrow, svgEl('path', { class: 'vzb-dl-check', d: 'M6.4 9.6l2.5 2.5 4.8-5.2' }), svgEl('path', { class: 'vzb-dl-tray', d: 'M3.6 13.4v1.6a1.6 1.6 0 0 0 1.6 1.6h9.6a1.6 1.6 0 0 0 1.6-1.6v-1.6' }));
+    ic.append(burst, svg);
+    btn.append(ic);
+    const opts = el('span', 'vzb-dl-opts');
+    const items = list.map((fmt, i) => {
+      const o = el('button', 'vzb-dl-opt', fmt.toUpperCase());
+      o.type = 'button';
+      o.tabIndex = -1;
+      o.dataset.fmt = fmt;
+      o.style.setProperty('--vzb-i', i);
+      o.setAttribute('aria-label', tx(d, '%s로 받기', fmt.toUpperCase()));
+      opts.append(o);
+      return o;
+    });
+    menu.append(btn, opts);
+    const meta = el('span', 'vzb-dl-meta'), got = el('span', 'vzb-dl-got'), what = el('span', 'vzb-dl-what'), count = el('span', 'vzb-rl'), unit = el('span', 'vzb-dl-unit');
+    got.append(what, count, unit);
+    got.setAttribute('aria-hidden', 'true');
+    meta.append(got);
+    const anchor = el('div', 'vzb-dl-anchor');   // 아이콘 자리(44px). 늘어난 단추는 이 자리에서 옆 내용 위로 겹쳐 뜹니다
+    anchor.append(menu);
+    row.append(anchor, meta);
+    const alignEnd = d.align === 'end';   // 화면 오른쪽 위처럼 오른쪽 끝에 둘 때: 아이콘을 오른쪽 끝에 붙이고 왼쪽으로 펼칩니다
+    foot.classList.toggle('is-end', alignEnd);
+    foot.append(row, say);
+    card.append(foot);
+
+    // 열고 닫기: 마우스를 올리면 열고, 내리면 잠시 뒤 닫습니다. 키보드로 아이콘에 들어오거나 아이콘을 눌러도 엽니다.
+    let open = false, shut = 0, since = 0, hush = false;   // hush: Esc로 닫고 아이콘에 포커스를 돌려줄 때는 다시 열지 않습니다
+    // 펼칠 방향: 아이콘 오른쪽(왼쪽 맞춤이면)이나 왼쪽(align end면)으로 화면 안에 다 들어가면 그쪽, 아니면 반대쪽입니다. 아이콘은 그 자리에 있습니다.
+    function side() {
+      const r = btn.getBoundingClientRect(), vw = document.documentElement.clientWidth || window.innerWidth, need = 44 + opts.scrollWidth;
+      const right = vw - 8 - r.left, left = r.right - 8;
+      return alignEnd ? left >= need || right < need : right < need && left > right;
+    }
+    function setOpen(v) {
+      clearTimeout(shut);
+      if (open === v) return;
+      if (v) foot.classList.toggle('is-left', side());
+      open = v;
+      since = performance.now();
+      foot.classList.toggle('is-open', v);
+      btn.setAttribute('aria-expanded', String(v));
+      items.forEach((o) => { o.tabIndex = v ? 0 : -1; });
+    }
+    menu.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { idle = performance.now() + 8000; setOpen(true); } });
+    menu.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse' && !menu.contains(document.activeElement)) shut = setTimeout(() => setOpen(false), 280); });
+    btn.addEventListener('focus', () => { if (hush) hush = false; else if (btn.matches(':focus-visible')) setOpen(true); });
+    menu.addEventListener('focusout', (e) => { if (!menu.contains(e.relatedTarget)) shut = setTimeout(() => setOpen(false), 120); });
+    menu.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { setOpen(false); if (document.activeElement !== btn) { hush = true; btn.focus(); } return; }
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      const all = [btn, ...items], i = all.indexOf(document.activeElement);
+      if (i < 0) return;
+      e.preventDefault();
+      setOpen(true);
+      all[Math.max(0, Math.min(all.length - 1, i + (e.key === 'ArrowRight' ? 1 : -1)))].focus();
+    });
+    document.addEventListener('pointerdown', function away(e) {
+      if (!card.isConnected) { document.removeEventListener('pointerdown', away, true); return; }
+      if (open && !menu.contains(e.target)) setOpen(false);
+    }, true);
+
+    // 받을 표: target 카드의 지금 JSON에서 만듭니다.
+    const target = () => (d.target ? document.querySelector(`.vzb-card[data-vzb="${String(d.target).replace(/["\\]/g, '')}"]`) : null);
+    const isRows = (a) => Array.isArray(a) && a.length > 0 && a.every((r) => r && typeof r === 'object' && !Array.isArray(r));
+    function rowsOf(t) {
+      const src = t && t.querySelector('script[type="application/json"]');
+      if (!src) return null;
+      let data;
+      try { data = JSON.parse(src.textContent); } catch (e) { return null; }
+      if (isRows(data.items)) return data.items;
+      if (Array.isArray(data.labels) && data.labels.length && Array.isArray(data.values)) {
+        return data.labels.map((l, i) => {
+          const r = { label: l, value: data.values[i] };
+          ['limit', 'target'].forEach((k) => { if (fin(data[k])) r[k] = +data[k]; });
+          return r;
+        });
+      }
+      if (Array.isArray(data.labels) && data.labels.length && isRows(data.series)) {
+        return data.labels.map((l, i) => Object.assign({ label: l }, ...data.series.map((s) => ({ [s.name]: Array.isArray(s.values) ? s.values[i] : null }))));
+      }
+      return Object.values(data).find(isRows) || null;
+    }
+    // CSV: 행마다 숫자 · 글자 필드를 처음 나온 순서대로 열로 둡니다. 쉼표 · 따옴표 · 줄바꿈이 든 칸은 따옴표로 감쌉니다.
+    function csv(rows) {
+      const cols = [];
+      rows.forEach((r) => Object.keys(r).forEach((k) => { if (!cols.includes(k) && (r[k] == null || typeof r[k] !== 'object')) cols.push(k); }));
+      const cell = (v) => { const s = v == null ? '' : String(v); return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+      return `\ufeff${[cols.map(cell).join(','), ...rows.map((r) => cols.map((k) => cell(r[k])).join(','))].join('\r\n')}\r\n`;
+    }
+    // PNG: 카드를 보이는 그대로 복제해 계산된 스타일을 글자로 옮기고, SVG 그림 안에 넣어 캔버스에 그립니다(외부 라이브러리 없이).
+    function png(t) {
+      const r = t.getBoundingClientRect(), w = Math.ceil(r.width), h = Math.ceil(r.height), clone = t.cloneNode(true);
+      const from = [t, ...t.querySelectorAll('*')], to = [clone, ...clone.querySelectorAll('*')];
+      from.forEach((node, i) => {
+        const out = to[i];
+        if (!out || !out.setAttribute) return;
+        if (node.tagName === 'SCRIPT' || node.closest('button')) { out.setAttribute('style', 'visibility:hidden'); return; }   // 단추(다시 보기 등)는 자리만 남기고 그리지 않습니다
+        const cs = getComputedStyle(node);
+        let css = '';
+        for (let k = 0; k < cs.length; k++) css += `${cs[k]}:${cs.getPropertyValue(cs[k])};`;
+        out.setAttribute('style', css);
+      });
+      clone.querySelectorAll('script').forEach((s) => s.remove());
+      clone.style.margin = '0';
+      const xml = new XMLSerializer().serializeToString(clone);
+      const src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><foreignObject width="100%" height="100%">${xml}</foreignObject></svg>`)}`;
+      return new Promise((done, fail) => {
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const k = 2, c = document.createElement('canvas');
+            c.width = w * k;
+            c.height = h * k;
+            const g = c.getContext('2d');
+            g.scale(k, k);
+            g.drawImage(img, 0, 0);
+            c.toBlob((b) => (b ? done({ blob: b, w: w * k, h: h * k }) : fail(new Error('png'))), 'image/png');
+          } catch (e) { fail(e); }
+        };
+        img.onerror = fail;
+        img.src = src;
+      });
+    }
+    function save(blob, name) {
+      const url = URL.createObjectURL(blob), a = el('a');
+      a.href = url;
+      a.download = name;
+      a.hidden = true;
+      document.body.append(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    }
+    // 상태: '' 처음, 'done' 받음, 'none' 받을 데이터 없음. 같은 상태를 다시 줘도 움직임이 처음부터 다시 돌도록 클래스를 지웠다 붙입니다.
+    let back = 0;
+    function mark(state, fmt, n, px) {
+      clearTimeout(back);
+      foot.classList.remove('is-done', 'is-none');
+      if (!state) return;
+      void foot.offsetWidth;
+      foot.classList.add(`is-${state}`);
+      if (state === 'done') {
+        what.textContent = `${fmt.toUpperCase()} · `;
+        if (px) { roll(count, '0'); requestAnimationFrame(() => roll(count, String(px[0]))); unit.textContent = `×${px[1]}px`; }
+        else { unit.textContent = (d.lang === 'en' ? ' ' : '') + tx(d, n === 1 ? '행|1' : '행'); roll(count, '0'); requestAnimationFrame(() => roll(count, num(n, 0))); }
+      } else {
+        what.textContent = tx(d, '데이터 없음');
+        count.replaceChildren();
+        unit.textContent = '';
+      }
+      back = setTimeout(() => { if (card.isConnected) foot.classList.remove('is-done', 'is-none'); }, state === 'done' ? 1800 : 1400);
+    }
+    async function run(fmt, demo) {
+      setOpen(false);
+      const t = target(), rows = rowsOf(t);
+      if (demo) { mark('done', fmt, rows ? rows.length : 13, fmt === 'png' && t ? [Math.ceil(t.offsetWidth * 2), Math.ceil(t.offsetHeight * 2)] : null); return; }
+      if (!t || (fmt !== 'png' && !rows)) { mark('none'); say.textContent = tx(d, '받을 데이터가 없습니다.'); return; }
+      const name = `${base}.${fmt}`;
+      const ev = new CustomEvent('vzb-download', { bubbles: true, cancelable: true, detail: { name: d.name || '', target: d.target || '', format: fmt, filename: name, rows: rows || [] } });
+      const go = card.dispatchEvent(ev);
+      if (fmt === 'png') {
+        try {
+          const p = await png(t);
+          if (go) save(p.blob, name);
+          mark('done', fmt, 0, [p.w, p.h]);
+          say.textContent = tx(d, '%s로 받았습니다.', name);
+        } catch (e) { mark('none'); say.textContent = tx(d, '받을 데이터가 없습니다.'); }
+        return;
+      }
+      if (go) save(new Blob([fmt === 'csv' ? csv(rows) : JSON.stringify(rows, null, 2)], { type: fmt === 'csv' ? 'text/csv;charset=utf-8' : 'application/json' }), name);
+      mark('done', fmt, rows.length);
+      say.textContent = rows.length === 1 ? tx(d, '%s로 1행을 받았습니다.', name) : tx(d, '%1로 %2행을 받았습니다.', name, rows.length);
+    }
+    let idle = 0;
+    btn.addEventListener('click', () => {
+      idle = performance.now() + 8000;
+      if (!open) setOpen(true);
+      else if (performance.now() - since > 250) run(list[0]);   // 열린 상태에서 아이콘을 다시 누르면 첫 형식으로 받습니다
+    });
+    items.forEach((o) => o.addEventListener('click', () => { idle = performance.now() + 8000; run(o.dataset.fmt); }));
+
+    // 갤러리(data-vzb-loop): 화면에 보이는 동안, 손을 대기 전과 손을 뗀 지 8초 뒤부터 열어서 형식을 고르는 모습을 되풀이합니다(파일은 만들지 않습니다).
+    const reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    if (!reduce && card.closest('[data-vzb-loop]')) {
+      let seen = true, k = 0;
+      if ('IntersectionObserver' in window) new IntersectionObserver((es) => { seen = es[es.length - 1].isIntersecting; }).observe(card);
+      const timer = setInterval(() => {
+        if (!card.isConnected) { clearInterval(timer); return; }
+        if (!seen || performance.now() < idle || open) return;
+        const o = items[k++ % items.length];
+        setOpen(true);
+        setTimeout(() => { if (performance.now() >= idle) o.classList.add('is-pick'); }, 700);
+        setTimeout(() => { o.classList.remove('is-pick'); if (performance.now() >= idle) run(o.dataset.fmt, true); }, 1150);
+      }, 4200);
+    }
+  });
+})();
+</script>
+
+<p><a href="/ko/#download-button">Vizney Blocks</a> · <a href="download-button.txt">코드(텍스트)</a> · © 2026 Vizney · MIT License</p>
+</main>
+</body>
+</html>

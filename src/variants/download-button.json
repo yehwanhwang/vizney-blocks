@@ -1,0 +1,11 @@
+{
+  "label": "월별 광고비 내려받기",
+  "name": "export",
+  "target": "warning-bars",
+  "filename": "monthly-ad-spend",
+  "formats": [
+    "csv",
+    "json",
+    "png"
+  ]
+}

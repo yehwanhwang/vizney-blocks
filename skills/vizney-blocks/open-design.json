@@ -3,10 +3,10 @@
   "specVersion": "1.0.0",
   "name": "vizney-blocks",
   "title": "Vizney Blocks",
-  "version": "0.55.0",
-  "description": "Copy-paste HTML dashboard cards (43 cards, 15 chart types) built on the Vizney chart guide: pick a card by the question the screen answers, keep the card code, change only its JSON.",
+  "version": "0.56.0",
+  "description": "Charts read through their motion and dashboard controls as copy-paste HTML cards (3 charts, 3 controls), built on the Vizney chart guide: keep the card code, change only its JSON, and connect controls to charts with a short page script.",
   "description_i18n": {
-    "ko": "복사해 붙여 쓰는 HTML 대시보드 카드 43종(차트 15가지). Vizney 차트 가이드의 판단을 담았고, 화면이 답할 질문으로 카드를 골라 코드는 그대로 두고 JSON만 바꾼다."
+    "ko": "움직임으로 읽는 차트와 대시보드 컨트롤을 담은, 복사해 붙여 쓰는 HTML 카드(차트 3종, 컨트롤 3종). Vizney 차트 가이드의 판단을 담았고, 카드 코드는 그대로 둔 채 JSON만 바꾸며 컨트롤과 차트는 짧은 페이지 스크립트로 잇는다."
   },
   "license": "MIT",
   "author": {
@@ -21,8 +21,9 @@
   "tags": [
     "create",
     "dashboard",
-    "kpi",
     "chart",
+    "motion",
+    "controls",
     "data-visualization",
     "html",
     "cards",
@@ -47,9 +48,9 @@
     },
     "useCase": {
       "query": {
-        "en": "Build a single-page HTML dashboard with Vizney Blocks cards. Pick one card per question the screen answers from the purpose index, keep each card's code and change only its JSON data.",
-        "ko": "Vizney Blocks 카드로 한 페이지 HTML 대시보드를 만든다. 화면이 답할 질문마다 목적 색인에서 카드를 하나 고르고, 카드 코드는 그대로 둔 채 JSON 데이터만 바꾼다.",
-        "zh-CN": "用 Vizney Blocks 卡片构建单页 HTML 仪表盘。按画面要回答的问题从目的索引中各选一张卡片，保留卡片代码，只修改其 JSON 数据。"
+        "en": "Build a single-page HTML dashboard with Vizney Blocks cards: charts read through their motion and the controls that filter them. Keep each card's code, change only its JSON data, and connect the controls to the charts with a short page script.",
+        "ko": "Vizney Blocks 카드로 한 페이지 HTML 대시보드를 만든다. 움직임으로 읽는 차트와 그 차트를 거르는 컨트롤을 쓰고, 카드 코드는 그대로 둔 채 JSON 데이터만 바꾸며, 컨트롤과 차트는 짧은 페이지 스크립트로 잇는다.",
+        "zh-CN": "用 Vizney Blocks 卡片构建单页 HTML 仪表盘：通过动效阅读的图表，以及筛选这些图表的控件。保留卡片代码，只修改其 JSON 数据，并用一小段页面脚本把控件和图表连接起来。"
       }
     },
     "context": {

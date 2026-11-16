@@ -136,7 +136,10 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 .hint { margin: 16px 0 0; font-size: 14px; color: var(--muted); }
 /* Home (v0.45). The title area copies a Vizney blog category page (Knowledge Base, measured at 1647px): Spoqa Han Sans
    Neo Bold 44px at -0.02em, the description 16px in the text color, at most 600px wide; the grid is the blog's 1200px. */
-.ghead { padding-top: 89px; }
+.ghead { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px 40px; padding-top: 89px; }
+/* Buttons beside the description, with the values of Vizney Styles (.ghead-copy, .ghead-acts) so the two homes line up. */
+.ghead-copy { flex: 0 1 600px; min-width: 0; }
+.ghead-acts { display: flex; flex-wrap: wrap; gap: 10px; }
 .ghead h1 { margin: 0; font-size: clamp(34px, 1.36vw + 27px, 44px); line-height: 1.2; font-weight: 700; letter-spacing: -0.02em; }
 .ghead p { margin: 10px 0 0; max-width: 600px; font-size: 16px; line-height: 1.6; color: var(--ink); }
 .gal { padding-top: 49px; }
@@ -243,7 +246,9 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 }
 @media (max-width: 720px) {
   .wrap { padding-inline: 16px; }
-  .ghead { padding-top: 40px; }
+  .ghead { padding-top: 40px; gap: 20px; }
+  .ghead-acts { flex: 1 1 100%; display: grid; grid-template-columns: 1fr 1fr; }
+  .ghead-acts .btn { padding: 0 12px; }
   .ghead p { margin-top: 14px; }
   .gal { padding-top: 32px; }
   .gal-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }

@@ -1,6 +1,6 @@
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/vz-sans-400.woff?v=379a383dc3) format('woff');}
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/vz-sans-500.woff?v=379a383dc3) format('woff');}
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/vz-sans-700.woff?v=379a383dc3) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/vz-sans-400.woff?v=f9e76ef31e) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/vz-sans-500.woff?v=f9e76ef31e) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/vz-sans-700.woff?v=f9e76ef31e) format('woff');}
 /* Vizney Blocks site: the Vizney common header (the blog's header, kr.vizney.com · www.vizney.com: the blog is the
    reference and Blocks follows it), then a white page that opens like a blog category page. Text and frame are ink and grays;
    the one UI accent is the Vizney yellow #ffcc00 of the blog's post images (primary buttons, focus, link underlines).
@@ -139,7 +139,10 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 .hint { margin: 16px 0 0; font-size: 14px; color: var(--muted); }
 /* Home (v0.45). The title area copies a Vizney blog category page (Knowledge Base, measured at 1647px): Spoqa Han Sans
    Neo Bold 44px at -0.02em, the description 16px in the text color, at most 600px wide; the grid is the blog's 1200px. */
-.ghead { padding-top: 89px; }
+.ghead { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px 40px; padding-top: 89px; }
+/* Buttons beside the description, with the values of Vizney Styles (.ghead-copy, .ghead-acts) so the two homes line up. */
+.ghead-copy { flex: 0 1 600px; min-width: 0; }
+.ghead-acts { display: flex; flex-wrap: wrap; gap: 10px; }
 .ghead h1 { margin: 0; font-size: clamp(34px, 1.36vw + 27px, 44px); line-height: 1.2; font-weight: 700; letter-spacing: -0.02em; }
 .ghead p { margin: 10px 0 0; max-width: 600px; font-size: 16px; line-height: 1.6; color: var(--ink); }
 .gal { padding-top: 49px; }
@@ -246,7 +249,9 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 }
 @media (max-width: 720px) {
   .wrap { padding-inline: 16px; }
-  .ghead { padding-top: 40px; }
+  .ghead { padding-top: 40px; gap: 20px; }
+  .ghead-acts { flex: 1 1 100%; display: grid; grid-template-columns: 1fr 1fr; }
+  .ghead-acts .btn { padding: 0 12px; }
   .ghead p { margin-top: 14px; }
   .gal { padding-top: 32px; }
   .gal-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }

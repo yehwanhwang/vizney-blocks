@@ -70,7 +70,7 @@ document.addEventListener('vzb-change', (e) => {
 
 ## AI에게 맡기기
 
-주소를 열 수 있는 AI에는 [llms.txt](https://blocks.vizney.com/ko/llms.txt)(영어는 [/llms.txt](https://blocks.vizney.com/llms.txt)) 주소를 줍니다. 쓰는 법, 카드 여섯 장의 쓰임과 규칙, 카드 코드 주소, 컨트롤과 차트를 잇는 법이 들어 있습니다. 카드 한 장만 쓸 때는 그 카드의 `.txt` 주소를 주고 “이 카드로 우리 광고비 데이터를 그려 줘”처럼 요청하면 됩니다.
+주소를 열 수 있는 AI에는 [llms.txt](https://blocks.vizney.com/ko/llms.txt)(영어는 [/llms.txt](https://blocks.vizney.com/llms.txt)) 주소를 줍니다. 첫 화면 제목 옆의 **AI용 링크 복사**가 이 주소를 복사합니다. 쓰는 법, 카드 여섯 장의 쓰임과 규칙, 카드 코드 주소, 컨트롤과 차트를 잇는 법이 들어 있습니다. 카드 한 장만 쓸 때는 그 카드의 `.txt` 주소를 주고 “이 카드로 우리 광고비 데이터를 그려 줘”처럼 요청하면 됩니다.
 
 Claude Code, Cursor, Codex 같은 코딩 에이전트에는 스킬로 설치할 수 있습니다. 같은 카드와 규칙에 순서와 체크리스트, 예시가 더해져 있습니다.
 

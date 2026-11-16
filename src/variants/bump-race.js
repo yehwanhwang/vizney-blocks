@@ -1,8 +1,10 @@
   // Rank Lines: 기간마다 값이 큰 순서로 순위(1위가 맨 위)를 매기고, 기간 사이를 S자 선으로 잇습니다.
   // 재생하면 기간을 하나씩 넘기며 선이 오른쪽으로 자라고, 선 끝의 이름표가 그 기간의 순위 자리로 오르내려 앞지르는 순간이 보입니다.
   // 짚을 항목(focus, 비우면 첫 항목) 하나만 첫째 데이터 색이고 나머지는 회색입니다. 이름표에는 지금 순위와 이름을 적습니다.
+  // 선이나 이름표를 누르면(키보드는 위아래 화살표로 고른 뒤 Enter) 그 항목이 짚을 항목이 되어 색이 옮겨 갑니다.
   // 아래의 구간 막대가 시간 축입니다. 기간마다 눈금이 있고 손잡이 아래에 지금 기간을 적습니다. 끌거나 누르거나 좌우 화살표로 기간을 옮깁니다.
-  // 머리 오른쪽 위의 재생 · 일시정지 단추로 멈춘 자리부터(끝에 있으면 처음부터) 다시 재생합니다.
+  // 구간 막대 오른쪽(이름표 열 아래)에 되감기 · 재생/일시정지 · 빨리 감기 단추를 둡니다. 재생은 멈춘 자리부터(끝에 있으면 처음부터),
+  // 되감기와 빨리 감기는 한 번 누르면 한 기간씩, 누르고 있으면 계속 빠르게 옮겨 가다가 놓은 자리에서 가까운 기간에 멈춥니다.
   // 순위는 카드가 values로 매깁니다(better가 down이면 작은 값이 1위). 같은 값은 앞 기간 순위, 그다음 적은 순서를 따르고, 값이 null인 기간은 선을 끊습니다.
   // 움직임: 화면에 보이면 첫 기간에서 잠시 멈췄다가 끝까지 한 번 재생하고 멈춥니다. 그래프에 마우스를 올리거나 키보드로 포커스하면 잠시 멈춥니다.
   // 동작 줄이기 설정이면 재생하지 않고 마지막 기간을 그리며, 구간 막대로 옮기면 바로 그 기간을 그립니다.
@@ -17,7 +19,10 @@
     if (n < 2) throw new Error(tx(d, 'labels에 기간을 2개 이상 적으세요.'));
     if (list.length < 2 || list.length > 8) throw new Error(tx(d, 'items에 항목을 2~8개 적으세요.'));
     if (list.some((it) => !Array.isArray(it.values) || it.values.length !== n || it.values.some((v) => v != null && !fin(v)))) throw new Error(tx(d, 'labels와 values를 확인하세요.'));
-    const at = list.findIndex((it) => String(it.name) === String(d.focus));
+    // 짚을 항목: 사용자가 눌러 고른 항목(카드 요소의 data-vzb-focus)이 있으면 그것, 없으면 focus, 그것도 없으면 첫 항목
+    const picked = card.getAttribute('data-vzb-focus');
+    let at = list.findIndex((it) => String(it.name) === picked);
+    if (at < 0) at = list.findIndex((it) => String(it.name) === String(d.focus));
     const items = list.map((it, i) => ({ i, name: String(it.name), vals: it.values.map((v) => (fin(v) ? +v : null)), focus: i === Math.max(0, at) }));
     const N = items.length, down = d.better === 'down', last = n - 1;
     // 순위: 기간마다 값이 있는 항목만 큰 순서(down이면 작은 순서)로 매깁니다. 같은 값은 앞 기간 순위, 그다음 적은 순서입니다.
@@ -28,19 +33,27 @@
         .forEach((it, r) => { it.rk[t] = r + 1; });
     }
     if (items.every((it) => it.rk.every((r) => !r))) { none(); return; }
-    const focus = items.find((it) => it.focus);
+    let focus = items.find((it) => it.focus);
     const firstOf = (it) => it.rk.findIndex(Boolean), lastOf = (it) => { for (let t = last; t >= 0; t--) if (it.rk[t]) return t; return -1; };
     const rankText = (r) => (r ? tx(d, '%s위', r) : '–');
 
     head(card, d, f, null);
-    const hd = card.querySelector('.vzb-hd');
-    // 재생 · 일시정지 단추: 머리의 오른쪽 위
-    const btn = el('button', 'vzb-br-btn');
-    btn.type = 'button';
-    const ic = svgEl('svg', { class: 'vzb-br-ic', viewBox: '0 0 16 16', 'aria-hidden': 'true' });
-    ic.append(svgEl('path', { class: 'vzb-br-play', d: 'M5.6 3.9v8.2l6.6-4.1z' }), svgEl('path', { class: 'vzb-br-pause', d: 'M5.4 4v8M10.6 4v8' }));
-    btn.append(ic);
-    hd.append(btn);
+    // 재생 단추들: 되감기 · 재생/일시정지 · 빨리 감기. 구간 막대 오른쪽에 둡니다.
+    const ctl = el('div', 'vzb-br-ctl');
+    const mk = (cls, paths) => {
+      const b = el('button', `vzb-br-btn ${cls}`);
+      b.type = 'button';
+      const ic = svgEl('svg', { class: 'vzb-br-ic', viewBox: '0 0 16 16', 'aria-hidden': 'true' });
+      paths.forEach(([c, dd]) => ic.append(svgEl('path', { class: c, d: dd })));
+      b.append(ic);
+      ctl.append(b);
+      return b;
+    };
+    const rew = mk('vzb-br-rew', [['vzb-br-play', 'M8 4.4v7.2L3.2 8zM13.6 4.4v7.2L8.8 8z']]);
+    const btn = mk('vzb-br-main', [['vzb-br-play', 'M5.6 3.9v8.2l6.6-4.1z'], ['vzb-br-pause', 'M5.4 4v8M10.6 4v8']]);
+    const ff = mk('vzb-br-ff', [['vzb-br-play', 'M2.4 4.4v7.2L7.2 8zM8 4.4v7.2L12.8 8z']]);
+    rew.setAttribute('aria-label', tx(d, '되감기'));
+    ff.setAttribute('aria-label', tx(d, '빨리 감기'));
     const foot = el('div', 'vzb-foot vzb-fill vzb-br');
     const plot = el('div', 'vzb-plot vzb-br-plot');
     plot.tabIndex = 0;
@@ -59,7 +72,9 @@
     scrub.setAttribute('aria-valuemax', String(last));
     const ssvg = svgEl('svg', { class: 'vzb-br-ssvg', 'aria-hidden': 'true' });
     scrub.append(ssvg);
-    foot.append(plot, scrub);
+    const bar = el('div', 'vzb-br-bar');
+    bar.append(scrub, ctl);
+    foot.append(plot, bar);
     card.append(foot);
     // 화면 낭독기용 표: 항목(마지막 순위 순서) · 기간마다 순위와 값
     const sr = el('div', 'vzb-sr'), table = el('table'), hr = el('tr');
@@ -70,8 +85,10 @@
       tr.append(el('th', null, it.name), ...labels.map((_, t) => el('td', null, it.rk[t] ? `${rankText(it.rk[t])} (${show(f, it.vals[t])})` : '')));
       table.append(tr);
     });
+    const say = el('div', 'vzb-sr');   // 짚을 항목을 바꾸면 읽어 줍니다
+    say.setAttribute('aria-live', 'polite');
     sr.append(table);
-    card.append(sr);
+    card.append(sr, say);
 
     // 그림: 회색 선 → 짚을 항목의 선 → 선 끝 점 → 이름표 순서로 쌓아, 이름표가 늘 선 위에 오게 합니다.
     const gLines = svgEl('g', {}), gHeads = svgEl('g', {}), gLabs = svgEl('g', {});
@@ -100,7 +117,7 @@
     ssvg.append(track, fill, ...ticks, halo, thumb, endA, endB, now);
 
     const fam = getComputedStyle(card).fontFamily, fx = (v) => v.toFixed(1);
-    const nameW = Math.max(...items.map((it) => textW(rankText(N), 700, fam) + 5 + textW(it.name, it.focus ? 700 : 500, fam)));
+    const nameW = Math.max(...items.map((it) => textW(rankText(N), 700, fam) + 5 + textW(it.name, 700, fam)));   // 누구든 짚을 항목(굵게)이 될 수 있습니다
     const nowW = Math.max(...labels.map((l) => textW(l, 700, fam)));
     let W = 0, H = 0, xs = [], Y = () => 0;
     // 선 한 칸: 앞 기간 점에서 뒤 기간 점까지 가로로 나갔다 들어오는 S자 곡선(조절점은 가로 가운데)입니다.
@@ -118,7 +135,8 @@
       svg.setAttribute('height', h);
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
       // 오른쪽에는 이름표 자리를 남깁니다. 위아래는 점 반지름만큼 띄웁니다.
-      const L = 6, R = Math.max(L + 40, w - nameW - 16), top = 8, bottom = h - 8;
+      // 오른쪽 자리는 이름표와 재생 단추 가운데 넓은 쪽만큼 남깁니다.
+      const L = 6, R = Math.max(L + 40, w - Math.max(nameW + 16, ctl.offsetWidth + 14)), top = 8, bottom = h - 8;
       xs = labels.map((_, t) => L + (t * (R - L)) / last);
       Y = (r) => (N < 2 ? (top + bottom) / 2 : top + ((r - 1) * (bottom - top)) / (N - 1));
       items.forEach((it) => it.dots.forEach((c, t) => { if (it.rk[t]) { c.setAttribute('cx', fx(xs[t])); c.setAttribute('cy', fx(Y(it.rk[t]))); } }));
@@ -187,7 +205,7 @@
       halo.setAttribute('cx', fx(hx));
       halo.setAttribute('cy', 9);
       if (now.textContent !== labels[cur]) now.textContent = labels[cur];
-      const nw = nowW / 2 + 2, nx = Math.max(nw - 2, Math.min(scrub.clientWidth - nw + 2, hx));
+      const nw = nowW / 2 + 2, nx = Math.max(nw - 2, Math.min(scrub.clientWidth - nw, hx));
       now.setAttribute('x', fx(nx));
       const aw = textW(labels[0], 400, fam, 11), bw = textW(labels[last], 400, fam, 11);
       endA.style.opacity = nx - nw < Math.max(0, xs[0] - 6) + aw + 8 ? 0 : 1;
@@ -204,11 +222,29 @@
     const holds = new Set();
     let p = kept >= 0 ? kept : last, playing = false, wait = 0, rest = 0, seek = null, seen = false, inView = false, took = false, raf = 0, stamp0 = 0;
     const easeInOut = (k) => (k < 0.5 ? 2 * k * k : 1 - (-2 * k + 2) ** 2 / 2);
-    const busy = () => playing || seek || rest > 0;
+    let scan = 0;
+    const busy = () => playing || seek || scan || rest > 0;
     const on = () => busy() && inView && !holds.size && card.isConnected;
     function setBtn() {
       btn.classList.toggle('is-on', playing);
       btn.setAttribute('aria-label', playing ? tx(d, '일시정지') : tx(d, '재생'));
+    }
+    // 짚을 항목 바꾸기: 색 · 굵기 · 선 끝 점 크기를 옮기고 그 선을 맨 위로 올립니다. 다시 그려도 이어 가도록 카드 요소에 적어 둡니다.
+    function setFocus(it) {
+      if (!it || it === focus) return;
+      focus = it;
+      items.forEach((x) => {
+        x.focus = x === it;
+        [x.line, x.head, x.lab].forEach((n2) => n2.classList.toggle('is-focus', x.focus));
+        x.head.setAttribute('r', x.focus ? 5 : 4);
+      });
+      gLines.append(it.line);
+      card.setAttribute('data-vzb-focus', it.name);
+      const a = firstOf(it), b = lastOf(it);
+      plot.setAttribute('aria-label', tx(d, '%1 순위 변화, %2–%3. %4: %5 → %6. 위아래 화살표로 항목을 옮깁니다. 모든 순위는 이어지는 표에 있습니다.',
+        d.title || '', labels[0], labels[last], it.name, rankText(it.rk[a]), rankText(it.rk[b])));
+      say.textContent = tx(d, '%s 강조', it.name);
+      render();
     }
     function tick(stamp) {
       raf = 0;
@@ -219,6 +255,8 @@
         seek.t = Math.min(seek.dur, seek.t + dt);
         p = seek.from + (seek.to - seek.from) * easeInOut(seek.t / seek.dur);
         if (seek.t >= seek.dur) { p = seek.to; const then = seek.then; seek = null; if (then) then(); }
+      } else if (scan) {
+        p = Math.max(0, Math.min(last, p + (scan * dt) / (STEP / 3)));   // 누르고 있는 동안 재생의 세 배 빠르기로
       } else if (rest > 0) {
         rest -= dt;
         if (rest <= 0) { rest = 0; glide(0, 900, () => { wait = 500; playing = true; setBtn(); }); }   // 갤러리: 처음으로 감고 다시 재생
@@ -257,6 +295,25 @@
       card.setAttribute('data-vzb-period', labels[t]);
       glide(t, dur);
     }
+    // 되감기 · 빨리 감기: 누르면 한 기간, 누르고 있으면 계속. 키보드(Enter · Space)는 한 기간씩입니다.
+    [[rew, -1], [ff, 1]].forEach(([b, dir]) => {
+      let timer = 0;
+      const stop = () => {
+        clearTimeout(timer);
+        timer = 0;
+        if (scan) { scan = 0; pickAt(p, 180); }
+      };
+      b.addEventListener('pointerdown', (e) => {
+        if (e.button) return;
+        b.setPointerCapture(e.pointerId);
+        pickAt((seek ? seek.to : Math.round(p)) + dir, 220);
+        if (!still) timer = setTimeout(() => { timer = 0; seek = null; scan = dir; stamp0 = 0; kick(); }, 380);
+      });
+      b.addEventListener('pointerup', stop);
+      b.addEventListener('pointercancel', stop);
+      b.addEventListener('lostpointercapture', stop);
+      b.addEventListener('click', (e) => { if (e.detail === 0) pickAt((seek ? seek.to : Math.round(p)) + dir, 220); });
+    });
     // 구간 막대: 누르면 그 기간으로 미끄러지고, 끄는 동안은 손을 따라 기간 사이도 그립니다. 놓으면 가까운 기간에 멈춥니다.
     const qAt = (cx) => { const r = scrub.getBoundingClientRect(), x = cx - r.left; return Math.max(0, Math.min(last, ((x - xs[0]) / Math.max(1, xs[last] - xs[0])) * last)); };
     let drag = null;
@@ -297,7 +354,7 @@
     plot.addEventListener('blur', () => { holds.delete('focus'); kick(); });
     // 툴팁: 선을 짚으면 그 기간(지나온 기간 가운데 가장 가까운 기간)의 순위 · 값 · 앞 기간 대비 오르내림을 보이고 그 항목만 진하게 남깁니다.
     // 키보드는 그래프에 포커스한 뒤 위아래 화살표로 지금 기간의 순위 순서대로 옮깁니다.
-    let tipT = null;
+    let tipT = null, tipIt = null;
     const ranked = (t) => items.filter((it) => it.rk[t]).sort((a, b) => a.rk[t] - b.rk[t]);
     interact(plot, () => ranked(Math.round(p)).length,
       (cx, cy) => {
@@ -314,6 +371,7 @@
       (k) => {
         const t = tipT != null ? tipT : Math.round(p), it = ranked(Math.round(p))[k] || ranked(t)[k];
         tipT = null;
+        tipIt = it;
         svg.classList.add('is-hover');
         items.forEach((x) => [x.line, x.head, x.lab].forEach((n2) => n2.classList.toggle('is-on', x === it)));
         const r = plot.getBoundingClientRect(), rk = it.rk[t], pv = t > 0 ? it.rk[t - 1] : 0;
@@ -323,10 +381,12 @@
         const tb = tipBody({ value: rankText(rk), note }, it.name);
         return { x: r.left + xs[t], y: r.top + Y(rk || 1) - 8, label: it.name, value: tb.node, text: tb.text };
       },
-      () => { svg.classList.remove('is-hover'); items.forEach((x) => [x.line, x.head, x.lab].forEach((n2) => n2.classList.remove('is-on'))); },
+      () => { tipIt = null; svg.classList.remove('is-hover'); items.forEach((x) => [x.line, x.head, x.lab].forEach((n2) => n2.classList.remove('is-on'))); },
       true);
+    plot.addEventListener('click', () => setFocus(tipIt));
+    plot.addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && tipIt) { e.preventDefault(); setFocus(tipIt); } });
 
-    btn.hidden = still;
+    btn.hidden = still;   // 동작 줄이기에서는 재생하지 않고, 되감기 · 빨리 감기는 한 기간씩 바로 옮깁니다
     setBtn();
     const auto = !still && !live;
     if (auto) p = 0;

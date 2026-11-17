@@ -1,4 +1,4 @@
-<!-- Vizney Blocks 스킬의 한국어판. 스킬 입구는 같은 폴더의 SKILL.md(영어)이고, 한국어로 일할 때 이 파일을 따른다. Vizney Blocks(blocks.vizney.com)의 HTML 카드로 움직임으로 읽는 차트와 대시보드 컨트롤을 화면에 넣는다. 차트(Bar Overflow · Waffle Flip · Bump Race · Waterfall Walk)를 그리거나 컨트롤(Range Slider · Filter Chips · Download Button)을 둘 때, 사용자가 Vizney Blocks를 언급할 때 쓴다. 카드 코드는 그대로 두고 JSON 데이터만 바꾸며, 컨트롤과 차트는 짧은 페이지 스크립트로 잇는다. -->
+<!-- Vizney Blocks 스킬의 한국어판. 스킬 입구는 같은 폴더의 SKILL.md(영어)이고, 한국어로 일할 때 이 파일을 따른다. Vizney Blocks(blocks.vizney.com)의 HTML 카드로 움직임으로 읽는 차트와 대시보드 컨트롤을 화면에 넣는다. 차트(Bar Overflow · Waffle Flip · Bump Race · Waterfall Walk)를 그리거나 컨트롤(Date Picker · Range Slider · Filter Chips · Download Button)을 둘 때, 사용자가 Vizney Blocks를 언급할 때 쓴다. 카드 코드는 그대로 두고 JSON 데이터만 바꾸며, 컨트롤과 차트는 짧은 페이지 스크립트로 잇는다. -->
 
 # Vizney Blocks 카드로 화면 만들기
 
@@ -8,7 +8,7 @@ Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담�
 
 ## 카드
 
-지금 있는 카드는 차트 4종과 컨트롤 3종이 전부다. 요청에 맞는 카드가 없으면 카드를 억지로 맞추지 않는다. 그 부분은 직접 만들고, 카드로 만들지 않았다고 사용자에게 알린다.
+지금 있는 카드는 차트 4종과 컨트롤 4종이 전부다. 요청에 맞는 카드가 없으면 카드를 억지로 맞추지 않는다. 그 부분은 직접 만들고, 카드로 만들지 않았다고 사용자에게 알린다.
 
 ### 차트
 
@@ -19,6 +19,7 @@ Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담�
 
 ### 컨트롤
 
+- Date Picker (`date-picker`) — 달력으로 기간(시작일과 끝일)이나 날짜 하나를 고르는 컨트롤입니다. 주문일이나 기준일처럼 날짜로 화면을 거를 때 씁니다. 가만히 있을 때는 지금 기간과 일수를 적은 단추 하나이고, 누르면 그 아래에 한 달 달력이 떠오릅니다.
 - Range Slider (`range-slider`) — 손잡이 둘로 숫자 범위를 고르는 컨트롤입니다. 주문 금액이나 수량처럼 이어지는 값으로 화면을 거를 때 씁니다. 값의 분포를 주면 끄는 동안 레일 위에 막대로 떠올라, 고른 범위에 데이터가 얼마나 드는지 보여 줍니다.
 - Filter Chips (`filter-chips`) — 정해 둔 항목 가운데 여러 개를 칩으로 고르는 컨트롤입니다. 채널이나 지역처럼 몇 개 안 되는 이름으로 화면을 거를 때 씁니다. 맨 앞의 전체 칩이 지금 몇 개를 골랐는지 보여 줍니다.
 - Download Button (`download-button`) — 화면에 있는 차트 카드의 데이터를 파일로 내려받는 단추입니다. 처음에는 아이콘만 있고, 마우스를 올리면 CSV · JSON · PNG 가운데 받을 형식이 나옵니다. 컨트롤로 거른 지금 데이터를 그대로 받을 때 씁니다.
@@ -64,7 +65,7 @@ Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담�
 ## 규칙
 
 - 내려받은 카드 코드를 그대로 붙여 넣고 JSON 값만 바꾼다. 스타일과 스크립트는 고치지 않는다. 같은 카드를 여러 장 쓸 때는 카드 코드를 통째로 다시 붙여 넣고 각 JSON만 바꾼다.
-- 카드는 놓인 자리의 폭을 채운다. 차트 카드의 높이는 1 · 1.5 · 2단위(1단위 168px, --vzb-unit) 가운데 하나이고, 지금 있는 차트 카드는 모두 2단위(336px)다. 컨트롤(Range Slider · Filter Chips · Download Button)은 카드 머리와 틀 없이 조작부만 그리고, 높이는 조작부 자체의 높이다. 바탕을 비워 두므로 theme은 놓을 자리의 바탕에 맞춘다(어두운 바탕이면 "dark").
+- 카드는 놓인 자리의 폭을 채운다. 차트 카드의 높이는 1 · 1.5 · 2단위(1단위 168px, --vzb-unit) 가운데 하나이고, 지금 있는 차트 카드는 모두 2단위(336px)다. 컨트롤(Date Picker · Range Slider · Filter Chips · Download Button)은 카드 머리와 틀 없이 조작부만 그리고, 높이는 조작부 자체의 높이다. 바탕을 비워 두므로 theme은 놓을 자리의 바탕에 맞춘다(어두운 바탕이면 "dark").
 - 여러 장은 감싸는 요소에 격자를 준다: display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:16px. 차트 카드는 340px보다 좁히지 않는다. 가로로 길게 읽는 차트(13개월 막대, 가로 20칸 와플, 순위 선)는 두 칸이나 전체 폭을 주면 더 잘 읽힌다. 컨트롤은 차트 위 필터 줄이나 머리글에 그대로 놓는다.
 - 색과 글꼴은 :root의 --vzb-* 변수(--vzb-primary, --vzb-font 등)로 바꾼다. 변수 목록과 쓰임은 https://blocks.vizney.com/ko/tokens.css 에 있다(카드 코드의 :where(:root) 블록과 같은 내용). 바탕은 카드마다 JSON의 theme으로 고른다. 비우면 흰 바탕에 파랑이 첫째 데이터 색이고, "dark"면 Vizney 검정 바탕에 노랑이 첫째 데이터 색이다.
 - 공통 필드: title(무엇의 값인지), subtitle(기간과 기준), format(krw 원 단위 숫자를 만·억·조로 줄여 적음. 10만 원 미만은 87,324원처럼 원 단위 그대로 · eok 억 단위 숫자 · usd 달러 금액을 $745.6K·$1.2M처럼 · count 개수, 단위는 unit · pct 퍼센트 숫자(3.4는 3.4%), 증감은 %p · days 일수), decimals(소수 자릿수, 비우면 카드가 정함), better(up · down · neutral), labels(기간 이름, 값과 같은 길이. 값이 없는 기간은 값을 null로), lang(en이면 카드가 직접 적는 문구가 영어), theme. 컨트롤: label(화면 낭독기가 읽는 이름. 화면에는 그리지 않음), name(컨트롤이 보내는 이벤트의 detail.name). 카드마다의 필드는 카드 코드의 예시 JSON과 llms.txt의 그 카드 줄에 있다.
@@ -80,7 +81,7 @@ Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담�
 
 컨트롤과 차트는 서로를 모른다. 페이지의 짧은 스크립트가 컨트롤의 이벤트를 받아 차트 카드의 JSON을 바꿔 적는다.
 
-- 컨트롤은 값이 바뀔 때마다 카드에서 `vzb-change` 이벤트를 보낸다(위로 전달되므로 `document`에서 받는다). `detail`은 `{ name, value }`이고 `name`은 그 컨트롤 JSON의 `name`이다. Range Slider의 `value`는 `[시작, 끝]` 숫자, Filter Chips의 `value`는 고른 항목을 `options` 순서대로 담은 배열이다. 지금 값은 카드의 `data-vzb-value` 속성에도 JSON으로 적혀 있다.
+- 컨트롤은 값이 바뀔 때마다 카드에서 `vzb-change` 이벤트를 보낸다(위로 전달되므로 `document`에서 받는다). `detail`은 `{ name, value }`이고 `name`은 그 컨트롤 JSON의 `name`이다. Date Picker의 `value`는 `["시작", "끝"]` 날짜 글자(YYYY-MM-DD, 끝일 포함), Range Slider의 `value`는 `[시작, 끝]` 숫자, Filter Chips의 `value`는 고른 항목을 `options` 순서대로 담은 배열이다. 지금 값은 카드의 `data-vzb-value` 속성에도 JSON으로 적혀 있다.
 - 컨트롤은 처음 그릴 때는 이벤트를 보내지 않는다. 컨트롤의 `value`와 차트의 JSON을 처음부터 같은 조건으로 적는다.
 - 차트 카드는 안의 `<script type="application/json">` 글자가 바뀌면 그 카드만 다시 그린다. 페이지가 거르기 전의 전체 데이터를 들고 있다가, 이벤트를 받으면 거른 결과로 차트의 JSON을 만들어 바꿔 적는다. 다시 그린 카드는 처음부터 재생하지 않고 마지막 장면을 바로 그리며, 보는 사람이 고른 기간과 항목은 그대로 둔다.
 - 걸러서 남은 것이 없으면 빈 배열을 준다. Bar Overflow는 `"labels": []`, Waffle Flip · Bump Race · Waterfall Walk는 `"items": []`이면 오류 대신 빈 화면을 그린다.

@@ -1,25 +1,36 @@
 {
-  "title": "Cash Balance",
-  "subtitle": "What moved it, Jan 1 → Dec 31",
+  "title": "Income Statement",
+  "subtitle": "Revenue to net income, FY2026",
   "lang": "en",
   "format": "usd",
-  "start": 2800000,
-  "startLabel": "Jan 1",
-  "endLabel": "Dec 31",
-  "labels": [
-    "Sales",
-    "Payroll",
-    "Funding",
-    "Equipment",
-    "Grants",
-    "Tax"
-  ],
-  "values": [
-    4600000,
-    -3400000,
-    4200000,
-    -3200000,
-    3000000,
-    -2600000
+  "items": [
+    {
+      "name": "Revenue",
+      "value": 48000000
+    },
+    {
+      "name": "COGS",
+      "value": -22600000
+    },
+    {
+      "name": "SG&A",
+      "value": -14800000
+    },
+    {
+      "name": "Operating profit",
+      "total": true
+    },
+    {
+      "name": "Non-operating",
+      "value": 1200000
+    },
+    {
+      "name": "Tax",
+      "value": -2800000
+    },
+    {
+      "name": "Net income",
+      "total": true
+    }
   ]
 }

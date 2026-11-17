@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Waterfall Walk · Vizney Blocks</title>
-<meta name="description" content="Waterfall Chart · Waterfall Walk. A card that joins the changes between a starting value and an ending value as one pill-shaped bar per driver. On play, a dot leaves the start pill and crosses to the next column for each driver, stretching up or down from the level it arrived at, and the end pill then pours down to the floor. Use it to show what moved a value between two points: what raised and cut the cash balance from the start to the end of the year, which drivers changed operating profit from last year to this year, or how hires and departures changed headcount. Do not use it for a trend over periods.">
+<meta name="description" content="Waterfall Chart · Waterfall Walk. A card that joins the amounts taken out of and added to a starting amount, and shows what is left along the way and at the end. On play, what is left in one column moves over to the next, where it is cut down from the top by the amount taken away (or raised by the amount added), and at a total column what is left sets into a solid bar. Use it to tell, in order, what moved a value between two points: an income statement from revenue, less cost of goods sold and operating expenses, to operating profit, and on through non-operating items and tax to net income, or headcount from the start of the year through hires and departures to the end of the year. Do not use it for a trend over periods.">
 <link rel="canonical" href="https://blocks.vizney.com/cards/waterfall-walk.html">
 <link rel="alternate" hreflang="en" href="https://blocks.vizney.com/cards/waterfall-walk.html">
 <link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/ko/cards/waterfall-walk.html">
@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Vizney Blocks">
 <meta property="og:locale" content="en_US">
 <meta property="og:title" content="Waterfall Walk · Vizney Blocks">
-<meta property="og:description" content="Waterfall Chart · Waterfall Walk. A card that joins the changes between a starting value and an ending value as one pill-shaped bar per driver. On play, a dot leaves the start pill and crosses to the next column for each driver, stretching up or down from the level it arrived at, and the end pill then pours down to the floor. Use it to show what moved a value between two points: what raised and cut the cash balance from the start to the end of the year, which drivers changed operating profit from last year to this year, or how hires and departures changed headcount. Do not use it for a trend over periods.">
+<meta property="og:description" content="Waterfall Chart · Waterfall Walk. A card that joins the amounts taken out of and added to a starting amount, and shows what is left along the way and at the end. On play, what is left in one column moves over to the next, where it is cut down from the top by the amount taken away (or raised by the amount added), and at a total column what is left sets into a solid bar. Use it to tell, in order, what moved a value between two points: an income statement from revenue, less cost of goods sold and operating expenses, to operating profit, and on through non-operating items and tax to net income, or headcount from the start of the year through hires and departures to the end of the year. Do not use it for a trend over periods.">
 <meta property="og:url" content="https://blocks.vizney.com/cards/waterfall-walk.html">
 <meta property="og:image" content="https://blocks.vizney.com/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -190,27 +190,31 @@
 .vzb-tip-note + .vzb-tip-note { margin-top: 0; }
 .vzb-fs { --vzb-c: var(--vzb-primary-soft); }
 .vzb-key.is-tick { width: 2px; height: 12px; border-radius: 1px; }
-/* Waterfall Walk: 높이 2단위. 머리 아래 큰 숫자(끝 값)와 증감 배지, 그 아래 그래프가 남은 높이를 채웁니다.
-   막대는 굵기 30px까지의 알약(양 끝이 둥근 막대)이고, 도착한 쪽 끝(머리)에 카드 바탕색 점을 뚫습니다.
-   시작과 끝 알약은 글자색(--vzb-ink), 요인 알약은 좋은 쪽 초록(--vzb-good) · 나쁜 쪽 빨강(--vzb-bad) · neutral이면 첫째 색입니다.
-   값과 이름은 11px 글자색으로 적습니다(합계의 값은 굵게). 값 글자에는 카드 바탕색 테두리를 둘러 알약 가까이에서도 읽히게 합니다.
-   움직임과 배지가 붙는 때는 스크립트가 그립니다. */
+/* Waterfall Walk: 높이 2단위. 머리 아래 큰 숫자(마지막 누계)와 비율, 그 아래 그래프가 남은 높이를 채웁니다.
+   칸은 굵기 60px까지이고 바닥에서 먼 끝만 8px 둥급니다. 합계 막대는 글자색(--vzb-ink), 증감 칸은 남는 금액을 옅은 회색(--vzb-track)으로 깔고
+   그 위 끝에 색 면을 얹습니다(좋은 쪽 초록 --vzb-good · 나쁜 쪽 빨강 --vzb-bad · neutral이면 첫째 색). 색 면 안의 꺾쇠는 카드 바탕색입니다.
+   값과 이름은 11px 글자색으로 적고(칸이 좁으면 값은 10px), 합계의 값과 이름은 굵게 적습니다. 움직임과 비율이 붙는 때는 스크립트가 그립니다. */
 .vzb-card[data-vzb="waterfall-walk"] { min-height: calc(var(--vzb-unit) * 2); }
 .vzb-card[data-vzb="waterfall-walk"] .vzb-hd { position: relative; padding-right: 36px; }   /* 오른쪽 위 다시 보기 단추 자리 */
 .vzb-ww-fig .vzb-num { font-variant-numeric: tabular-nums; }
 .vzb-ww-fig > [hidden] { display: none; }
+.vzb-ww-fig .vzb-vs b { font-weight: 500; color: var(--vzb-ink); }
 .vzb-ww-in { animation: vzb-ww-in 0.32s ease-out; }
 @keyframes vzb-ww-in { from { opacity: 0; filter: blur(3px); } to { opacity: 1; filter: none; } }
 .vzb-ww.vzb-foot { padding-top: 14px; }
 .vzb-ww-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-ww-base { stroke: var(--vzb-grid); stroke-width: 1; }
+.vzb-ww-ghost { fill: var(--vzb-track); }
 .vzb-ww-col.is-total .vzb-ww-bar { fill: var(--vzb-ink); }
-.vzb-ww-dot { fill: var(--vzb-card); }
 .vzb-ww-col.is-good .vzb-ww-bar { fill: var(--vzb-good); }
 .vzb-ww-col.is-bad .vzb-ww-bar { fill: var(--vzb-bad); }
 .vzb-ww-col.is-plain .vzb-ww-bar { fill: var(--vzb-primary); }
-.vzb-ww-val { font-size: 11px; font-weight: 500; fill: var(--vzb-ink-2); font-variant-numeric: tabular-nums; paint-order: stroke; stroke: var(--vzb-card); stroke-width: 3px; stroke-linejoin: round; }
+.vzb-ww-mark { fill: none; stroke: var(--vzb-card); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-ww-val { font-size: 11px; font-weight: 500; fill: var(--vzb-ink-2); font-variant-numeric: tabular-nums; }
+.vzb-ww-svg.is-tight .vzb-ww-val { font-size: 10px; }
 .vzb-ww-col.is-total .vzb-ww-val { font-weight: 700; fill: var(--vzb-ink); }
+.vzb-ww-ratio { font-size: 11px; font-weight: 500; fill: var(--vzb-card); font-variant-numeric: tabular-nums; pointer-events: none; }
+.vzb-ww-svg.is-tight .vzb-ww-ratio { font-size: 10px; }
 .vzb-ww-name { font-size: 11px; fill: var(--vzb-muted); }
 .vzb-ww-col.is-total .vzb-ww-name { font-weight: 500; fill: var(--vzb-ink-2); }
 .vzb-ww-col { transition: opacity 0.12s; }
@@ -224,15 +228,19 @@
 <div class="vzb-card" data-vzb="waterfall-walk">
 <script type="application/json">
 {
-  "title": "Cash Balance",
-  "subtitle": "What moved it, Jan 1 → Dec 31",
+  "title": "Income Statement",
+  "subtitle": "Revenue to net income, FY2026",
   "lang": "en",
   "format": "usd",
-  "start": 2800000,
-  "startLabel": "Jan 1",
-  "endLabel": "Dec 31",
-  "labels": ["Sales", "Payroll", "Funding", "Equipment", "Grants", "Tax"],
-  "values": [4600000, -3400000, 4200000, -3200000, 3000000, -2600000]
+  "items": [
+    { "name": "Revenue", "value": 48000000 },
+    { "name": "COGS", "value": -22600000 },
+    { "name": "SG&A", "value": -14800000 },
+    { "name": "Operating profit", "total": true },
+    { "name": "Non-operating", "value": 1200000 },
+    { "name": "Tax", "value": -2800000 },
+    { "name": "Net income", "total": true }
+  ]
 }
 </script>
 </div>
@@ -258,8 +266,8 @@
     '빨리 감기': 'Fast forward', '%s 강조': '%s highlighted',
     '%1 순위 변화, %2–%3. %4: %5 → %6. 위아래 화살표로 항목을 옮깁니다. 모든 순위는 이어지는 표에 있습니다.': '%1 rank changes, %2–%3. %4: %5 → %6. Use the up and down arrows to move between items. Every rank is in the table that follows.',
     'periods와 values를 확인하세요.': 'Check periods and values.',
-    '시작': 'Start', '끝': 'End', '누계': 'Running total', '누계 %1 → %2': 'Running total %1 → %2', 'start에 시작 값을 숫자로 적으세요.': 'Write the starting value as a number in start.',
-    '%1. %2 %3 → %4 %5, %6. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 %3 → %4 %5, %6. Use the left and right arrows to move between items. Every value is in the table that follows.',
+    '누계': 'Running total', '누계 %1 → %2': 'Running total %1 → %2', 'items에 항목을 적으세요.': 'List the items in items.', '첫 항목에 시작 값을 숫자로 적으세요.': 'Write the starting value as a number in the first item.',
+    '%1. %2 %3 → %4 %5. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 %3 → %4 %5. Use the left and right arrows to move between items. Every value is in the table that follows.',
     '%1. %2의 비중은 %3로, %4 대비 %5입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 holds %3, %5 against %4. Use the left and right arrows to move between items. Every value is in the table that follows.',
     '%1. %2의 비중은 %3입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 holds %3. Use the left and right arrows to move between items. Every value is in the table that follows.',
     '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
@@ -552,57 +560,61 @@
     return { show: go, at: () => idx, end };
   }
 
-  // Waterfall Walk: 시작 값(start)에서 출발해 요인(labels)마다의 증감(values)을 앞 알약이 끝난 높이에 이어 붙이고, 끝 값은 카드가 계산해 끝 알약으로 세웁니다.
-  // 막대는 양 끝이 둥근 알약입니다. 시작과 끝은 바닥(0)에서 서는 글자색(--vzb-ink), 요인은 결과를 좋게 만든 쪽이 초록(--vzb-good), 나쁘게 만든 쪽이
-  // 빨강(--vzb-bad)이고(better: up · down), neutral이면 모두 첫째 데이터 색입니다. 알약마다 도착한 쪽 끝(머리)에 카드 바탕색 점을 뚫어,
-  // 점이 위면 늘었고 아래면 줄었음을 색 없이도 알립니다. 알약 사이를 잇는 선은 없고, 이웃한 알약의 끝 높이가 맞닿아 이어집니다.
-  // 요인 값은 늘린 알약 위 · 줄인 알약 아래에 부호와 함께 적고, 이웃 값과 겹치면 작은 값부터 생략합니다(툴팁과 표에는 남습니다).
-  // 값이 알약 굵기보다 작으면 길이를 부풀리지 않고 그 값만큼 납작하게 그립니다. 이름이 칸보다 길면 두 줄로 엇갈려 적고, 그래도 길면 줄여 적습니다.
-  // 큰 숫자는 끝 값, 증감 배지는 시작 값 대비입니다.
-  // 움직임: 시작 알약과 큰 숫자가 놓여 있다가, 앞 알약 머리의 점만 한 공이 다음 칸으로 건너가 그 높이에서 알약으로 늘어납니다(요인마다 왼쪽부터 하나씩).
-  // 큰 숫자는 보이는 길이를 그대로 셉니다. 마지막 요인 뒤에는 공이 끝 칸으로 건너가 바닥까지 쏟아지고, 증감 배지가 붙은 뒤 멈춥니다.
+  // Waterfall Walk: 첫 항목의 값에서 출발해 항목(items)마다의 증감(value)을 앞 칸이 끝난 높이에 이어 붙이고, total로 표시한 항목에는 그때까지의 누계를
+  // 카드가 계산해 합계 막대로 세웁니다(예: 매출액 → 매출원가 · 판관비 → 영업이익 → 영업외손익 · 법인세 → 당기순이익).
+  // 합계 막대(첫 항목과 total 항목)는 바닥(0)에서 서는 글자색(--vzb-ink)입니다. 증감 칸은 앞 칸에서 넘어온 금액 가운데 남는 부분을 옅은 회색(--vzb-track)으로
+  // 깔고, 그 위 끝에 늘거나 준 만큼을 색 면으로 얹습니다. 색은 결과를 좋게 만든 쪽이 초록(--vzb-good), 나쁘게 만든 쪽이 빨강(--vzb-bad)이고
+  // (better: up · down), neutral이면 모두 첫째 데이터 색입니다. 그래서 칸의 위 끝은 앞 칸이 끝난 높이와, 회색의 위 끝은 다음 칸이 시작할 높이와 맞닿습니다
+  // (칸 사이를 잇는 선은 없습니다). 색 면 안에는 움직인 방향을 꺾쇠(∨ · ∧)로 그려 색 없이도 읽히게 합니다.
+  // 값은 칸 위에 적고(증감에는 부호), 이웃 값과 겹치면 작은 증감부터 생략합니다(툴팁과 표에는 남습니다). 이름이 칸보다 길면 두 줄로 엇갈려 적습니다.
+  // 큰 숫자는 마지막 항목까지의 누계이고, 그 옆에 첫 항목의 몇 %인지(compare: change면 첫 항목 대비 증감 배지)를 적습니다.
+  // 움직임: 첫 막대와 큰 숫자가 놓여 있다가 왼쪽부터 한 칸씩, ① 앞 칸에 남은 금액이 옆 칸으로 넘어오고 ② 증감 칸은 그 위 끝에서 준 만큼 깎여 내려가거나
+  // 는 만큼 올라가며 큰 숫자가 함께 바뀌고 ③ 합계 칸은 넘어온 금액이 위에서부터 글자색으로 굳습니다. 마지막 칸 뒤에 비율(배지)이 붙고 멈춥니다.
   // 카드가 화면에 보이면 한 번 움직이고, 다시 보기 단추로 되풀이합니다. 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 마지막 장면을 바로 그립니다.
   // 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고 되풀이합니다.
   mount('waterfall-walk', (card, d, f) => {
-    // 걸러서 남은 요인이 없을 때(labels가 빈 배열)는 오류가 아니라 빈 화면입니다.
-    if (Array.isArray(d.labels) && !d.labels.length) {
+    // 걸러서 남은 항목이 없을 때(items가 빈 배열)는 오류가 아니라 빈 화면입니다.
+    if (Array.isArray(d.items) && !d.items.length) {
       head(card, d, f, null);
       card.append(el('p', 'vzb-ww-none', tx(d, '표시할 항목이 없습니다.')));
       return;
     }
-    const labels = Array.isArray(d.labels) ? d.labels.map(String) : [], raw = Array.isArray(d.values) ? d.values : [];
-    if (!labels.length || raw.length !== labels.length) throw new Error(tx(d, 'labels와 values를 확인하세요.'));
-    if (!fin(d.start)) throw new Error(tx(d, 'start에 시작 값을 숫자로 적으세요.'));
-    const v0 = +d.start, want = d.better === 'down' ? -1 : d.better === 'neutral' ? 0 : 1;
-    const given = (s) => s != null && s !== '';
-    const startName = given(d.startLabel) ? String(d.startLabel) : tx(d, '시작'), endName = given(d.endLabel) ? String(d.endLabel) : tx(d, '끝');
-    // 칸: 시작 · 요인들 · 끝. 요인은 앞 알약이 끝난 높이(from)에서 출발해 증감만큼 오르내립니다(to). 값이 null인 요인은 높이를 그대로 넘깁니다.
-    let level = v0;
-    const steps = labels.map((name, i) => {
-      const v = fin(raw[i]) ? +raw[i] : null, from = level;
+    const src = Array.isArray(d.items) ? d.items.filter((it) => it && it.name != null && it.name !== '') : [];
+    if (!src.length) throw new Error(tx(d, 'items에 항목을 적으세요.'));
+    if (src[0].total === true || !fin(src[0].value)) throw new Error(tx(d, '첫 항목에 시작 값을 숫자로 적으세요.'));
+    const want = d.better === 'down' ? -1 : d.better === 'neutral' ? 0 : 1;
+    // 칸: 첫 항목과 total 항목은 바닥에서 서는 합계(0 → 누계)이고, 나머지는 앞 칸이 끝난 높이(from)에서 증감만큼 움직입니다(to).
+    // 값이 null인 항목은 자리만 두고 높이를 그대로 넘깁니다.
+    let level = 0;
+    const cols = src.map((it, k) => {
+      const total = k > 0 && it.total === true, v = total ? null : fin(it.value) ? +it.value : null, from = level;
       if (v != null) level += v;
-      return { kind: 'step', name, v, from, to: level };
+      const kind = k === 0 || total ? 'total' : 'step', moved = kind === 'step' && v != null && v !== 0;
+      return { k, name: String(it.name), kind, v, from: kind === 'total' ? 0 : from, to: level,
+        tone: kind === 'total' ? 'total' : !moved ? 'none' : want === 0 ? 'plain' : Math.sign(v) === want ? 'good' : 'bad' };
     });
-    const v1 = level;
-    const cols = [{ kind: 'start', name: startName, v: v0, from: 0, to: v0 }, ...steps, { kind: 'end', name: endName, v: v1, from: 0, to: v1 }];
-    const N = cols.length, S = steps.length;
-    cols.forEach((c, k) => {
-      c.k = k;
-      c.bar = c.v != null && c.v !== 0;
-      c.tone = c.kind !== 'step' ? 'total' : !c.bar ? 'none' : want === 0 ? 'plain' : Math.sign(c.v) === want ? 'good' : 'bad';
-    });
+    const N = cols.length, first = cols[0], last = cols[N - 1], v0 = first.to, v1 = last.to;
+    cols.forEach((c) => { c.prev = cols[c.k - 1] || c; });
+    const pct = (v) => `${v < 0 ? '−' : ''}${num(Math.abs(v / v0) * 100, 1)}%`;   // 첫 항목의 몇 %인지
 
     const live = card.hasAttribute('data-vzb-live');   // 데이터가 바뀌어 다시 그린 카드: 처음부터 재생하지 않고 마지막 장면을 그립니다
     head(card, d, f, null);
     const hd = card.querySelector('.vzb-hd');
-    // 큰 숫자: 끝 값. 움직이는 동안은 지금 보이는 높이를 그대로 세고, 끝 알약이 다 차면 증감 배지와 '시작 대비'가 붙습니다.
-    // 시작 값이 0 이하이면 비율이 뜻을 잃으므로 배지에 차이를 적습니다.
-    const fig = el('div', 'vzb-fig vzb-ww-fig'), numEl = figure(f, live ? v1 : v0), nowText = numEl.firstChild;
+    // 큰 숫자: 마지막 항목까지의 누계. 움직이는 동안은 지금 보이는 높이를 그대로 세고, 마지막 칸이 끝나면 옆에 비율이나 증감 배지가 붙습니다.
+    // 비율: 첫 항목의 몇 %인지(손익이면 매출액 대비 이익률). compare가 change면 첫 항목 대비 증감 배지를 답니다(시작 값이 0 이하이면 차이를 적습니다).
+    const fig = el('div', 'vzb-fig vzb-ww-fig'), numEl = figure(f, live ? v1 : v0), nowText = numEl.firstChild, after = [];
     let unitEl = numEl.querySelector('.vzb-unit');
-    const bd = badge(f, v1, v0, d.better), vs = el('span', 'vzb-vs', tx(d, '%s 대비', startName));
-    if (!(v0 > 0)) bd.lastChild.textContent = show(f, Math.abs(v1 - v0));
-    bd.hidden = vs.hidden = !live;
-    fig.append(numEl, bd, vs);
+    if (N > 1 && d.compare === 'change') {
+      const bd = badge(f, v1, v0, d.better);
+      if (!(v0 > 0)) bd.lastChild.textContent = show(f, Math.abs(v1 - v0));
+      after.push(bd, el('span', 'vzb-vs', tx(d, '%s 대비', first.name)));
+    } else if (N > 1 && v0 > 0) {
+      const share = el('span', 'vzb-vs'), [a, b] = tx(d, '%1의 %2', first.name, '\u0001').split('\u0001');
+      share.append(a, el('b', null, pct(v1)), b);
+      after.push(share);
+    }
+    after.forEach((n) => { n.hidden = !live; });
+    fig.append(numEl, ...after);
     card.append(fig);
     const btn = el('button', 'vzb-ww-btn');
     btn.type = 'button';
@@ -615,72 +627,78 @@
     const plot = el('div', 'vzb-plot');
     plot.tabIndex = 0;
     plot.setAttribute('role', 'img');
-    plot.setAttribute('aria-label', tx(d, '%1. %2 %3 → %4 %5, %6. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.', d.title || '', startName, show(f, v0), endName, show(f, v1), signed(f, v1 - v0)));
+    plot.setAttribute('aria-label', tx(d, '%1. %2 %3 → %4 %5. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.', d.title || '', first.name, show(f, v0), last.name, show(f, v1)));
     const svg = svgEl('svg', { class: 'vzb-ww-svg', 'aria-hidden': 'true' });
     plot.append(svg);
     foot.append(plot);
     card.append(foot);
-    // 화면 낭독기용 표: 이름 · 값(요인은 증감) · 누계
+    // 화면 낭독기용 표: 이름 · 값(증감은 부호와 함께, 합계는 누계) · 누계
     const sr = el('div', 'vzb-sr'), table = el('table'), hr = el('tr');
     hr.append(...[tx(d, '이름'), tx(d, '값'), tx(d, '누계')].map((k) => el('th', null, k)));
     table.append(el('caption', null, d.title || ''), hr);
-    const valText = (c) => (c.kind !== 'step' ? show(f, c.v) : c.v == null ? tx(d, '데이터 없음') : signed(f, c.v));
+    const valText = (c) => (c.kind === 'total' ? show(f, c.to) : c.v == null ? tx(d, '데이터 없음') : signed(f, c.v));
     cols.forEach((c) => { const tr = el('tr'); tr.append(el('th', null, c.name), el('td', null, valText(c)), el('td', null, show(f, c.to))); table.append(tr); });
     sr.append(table);
     card.append(sr);
 
-    // 그림: 바닥선(0) · 알약 · 머리의 점 · 값 · 이름. 알약은 출발한 높이(꼬리)에서 도착한 높이(머리)까지이고, 머리 쪽에 카드 바탕색 점을 뚫어
-    // 어느 쪽으로 움직였는지를 색 없이도 알립니다(점이 위면 늘었고, 아래면 줄었습니다). 합계 알약은 바닥에서 서고 머리가 값입니다.
-    const base = svgEl('line', { class: 'vzb-ww-base' }), barsG = svgEl('g', {});
+    // 그림: 바닥선(0)과 칸. 칸마다 둥근 윤곽(clip) 안에 남는 금액(회색)과 색 면(증감)이나 합계 면을 그리고, 그 위에 꺾쇠 · 값 · 이름을 둡니다.
+    // 윤곽의 id는 카드마다 새로 지어, 같은 카드 두 장이 한 페이지에 있어도 겹치지 않습니다.
+    const uid = Math.random().toString(36).slice(2, 8);
+    const base = svgEl('line', { class: 'vzb-ww-base' }), colsG = svgEl('g', {});
     cols.forEach((c) => {
+      const cid = `vzb-ww-${uid}-${c.k}`, cp = svgEl('clipPath', {});
+      cp.setAttribute('id', cid);
       c.g = svgEl('g', { class: `vzb-ww-col is-${c.tone}` });
-      c.pill = svgEl('rect', { class: 'vzb-ww-bar' });
-      c.dot = svgEl('circle', { class: 'vzb-ww-dot' });
+      c.clip = svgEl('rect', {});
+      cp.append(c.clip);
+      c.body = svgEl('g', { 'clip-path': `url(#${cid})` });
+      c.ghost = svgEl('rect', { class: 'vzb-ww-ghost' });
+      c.bar = svgEl('rect', { class: 'vzb-ww-bar' });
+      c.body.append(c.ghost, c.bar);
+      c.mark = svgEl('path', { class: 'vzb-ww-mark' });
       c.val = svgText(0, 0, valText(c), 'vzb-ww-val', 'middle');
       c.nm = svgText(0, 0, c.name, 'vzb-ww-name', 'middle');
-      c.g.append(c.pill, c.dot, c.val, c.nm);
-      barsG.append(c.g);
+      c.g.append(cp, c.body, c.mark, c.val, c.nm);
+      // 합계 막대 안의 비율(첫 항목의 몇 %인지): 큰 숫자 옆에 비율을 적는 카드에서, 첫 항목 뒤의 합계에만 둡니다.
+      if (c.kind === 'total' && c.k && v0 > 0 && d.compare !== 'change') { c.rt = svgText(0, 0, pct(c.to), 'vzb-ww-ratio', 'middle'); c.g.append(c.rt); }
     });
-    svg.append(base, barsG);
+    // 앞 칸이 위에 오도록 뒤 칸부터 놓습니다. 옆 칸으로 넘어가는 금액이 앞 칸의 뒤에서 나옵니다.
+    [...cols].reverse().forEach((c) => colsG.append(c.g));
+    svg.append(base, colsG);
     const fam = getComputedStyle(card).fontFamily, fx = (v) => v.toFixed(1), clamp = (v) => Math.max(0, Math.min(1, v));
     // 이름을 maxW 안에 줄여 적습니다(끝에 …). 툴팁과 표에는 온전한 이름이 있습니다.
-    const fit = (s, maxW) => {
-      if (textW(s, 400, fam, 11) <= maxW) return s;
+    const fit = (s, weight, maxW) => {
+      if (textW(s, weight, fam, 11) <= maxW) return s;
       let lo = 0, hi = s.length;
-      while (lo < hi) { const m = (lo + hi + 1) >> 1; if (textW(`${s.slice(0, m)}…`, 400, fam, 11) <= maxW) lo = m; else hi = m - 1; }
+      while (lo < hi) { const m = (lo + hi + 1) >> 1; if (textW(`${s.slice(0, m)}…`, weight, fam, 11) <= maxW) lo = m; else hi = m - 1; }
       return `${s.slice(0, Math.max(1, lo))}…`;
     };
-    // 시간표(밀리초): 시작 알약을 읽는 시간 · 요인 하나에 쓰는 시간(다음 칸으로 건너가기 HOP + 그 자리에서 늘어나기 GROW) · 끝 알약이 바닥까지 쏟아지는 시간 · 배지가 붙는 시간
-    const T0 = 520, STEP = Math.max(340, Math.min(560, 3000 / Math.max(1, S))), HOP = Math.round(STEP * 0.42), GROW = STEP - HOP - 20, POUR = 480, BADGE = 240, ARC = 6;
+    // 시간표(밀리초): 첫 막대를 읽는 시간 T0, 한 칸에 쓰는 시간 STEP = 옆 칸으로 넘어오기 CARRY + 깎이거나 굳기 MAIN + 쉼, 비율이 붙는 시간 BADGE
+    const T0 = 500, STEP = N > 1 ? Math.max(380, Math.min(600, 3300 / (N - 1))) : 0, CARRY = Math.round(STEP * 0.32), MAIN = Math.max(1, STEP - CARRY - 40), BADGE = 240, GAP = 2;
     const easeOut = (k) => 1 - (1 - k) ** 3, easeInOut = (k) => (k < 0.5 ? 4 * k ** 3 : 1 - (-2 * k + 2) ** 3 / 2);
-    cols.forEach((c) => {
-      c.at = c.kind === 'start' ? -1e9 : T0 + (c.k - 1) * STEP;   // 앞 칸의 머리에서 이 칸으로 건너오기 시작하는 때
-      c.dur = c.kind === 'end' ? POUR : GROW;
-      c.done = c.at + HOP + c.dur;
-    });
-    const DONE = cols[N - 1].done, TOTAL = DONE + 60 + BADGE;
-    let W = 0, H = 0, y = (v) => v, slot = 1, bw = 0, dotR = 0, t = 0;
+    cols.forEach((c) => { c.at = c.k ? T0 + (c.k - 1) * STEP : -1e9; c.done = c.k ? c.at + CARRY + MAIN : 0; });
+    const DONE = last.done, TOTAL = DONE + 60 + BADGE;
+    let W = 0, H = 0, y = (v) => v, slot = 1, bw = 0, R = 0, t = 0;
     function layout(w, h) {
       W = w; H = h;
       svg.setAttribute('width', w);
       svg.setAttribute('height', h);
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
       slot = w / N;
+      bw = Math.min(60, slot * 0.62);          // 칸의 62%, 60px까지
+      R = Math.min(8, bw * 0.22);              // 바닥에서 먼 끝의 둥글기
+      const tight = slot < 46, vsz = tight ? 10 : 11;   // 칸이 좁으면 값을 10px로 적습니다
+      svg.classList.toggle('is-tight', tight);
       // 이름: 한 줄에 다 들어가면 한 줄, 아니면 두 줄로 엇갈려(이웃 칸까지 써서) 적고, 그래도 넘치면 줄여 적습니다.
-      const nameW = Math.max(...cols.map((c) => textW(c.name, c.kind === 'step' ? 400 : 500, fam, 11))) + 6;
-      const two = nameW > slot, NAMEH = two ? 36 : 22, room = (two ? 2 * slot : slot) - 6;
-      // 높이: 0과 모든 알약의 양 끝이 들어가게 하고, 위아래에 값을 적을 자리를 남깁니다.
+      // 엇갈린 줄에서는 같은 줄의 이웃(두 칸 옆) 이름이 쓰고 남은 자리까지 쓰고, 양 끝 이름은 카드 여백으로 12px까지 넘어갑니다.
+      const wOf = (c) => (c.kind === 'total' ? 500 : 400), nw = cols.map((c) => textW(c.name, wOf(c), fam, 11));
+      const two = Math.max(...nw) + 6 > slot, NAMEH = two ? 36 : 22;
+      const side = (j) => (cols[j] ? 2 * slot - Math.min(nw[j], 2 * slot - 6) / 2 - 6 : Infinity);
+      const roomOf = (c) => (two ? 2 * Math.min(side(c.k - 2), side(c.k + 2), Math.min(slot * (c.k + 0.5), w - slot * (c.k + 0.5)) + 12) : slot - 6);
+      // 높이: 0과 모든 칸의 양 끝이 들어가게 하고, 위에 값을 적을 자리를 남깁니다. 0 아래로 내려가는 칸이 있으면 아래에도 남깁니다.
       const lvls = [0, ...cols.flatMap((c) => [c.from, c.to])], lo = Math.min(...lvls), hi = Math.max(...lvls), span = hi - lo || 1;
-      // 아래쪽 자리는 내려간 알약의 값이나 0 아래의 합계가 이름 줄에 닿을 때만 남깁니다.
-      const PADT = 16, yb = h - NAMEH, scale = (padb) => Math.max(1, yb - PADT - padb) / span;
-      const s0 = scale(0), low = cols.some((c) => c.bar && c.to < c.from && PADT + (hi - c.to) * s0 + 17 > yb);
-      const s = scale(low || lo < 0 ? 16 : 0);
+      const PADT = 18, PADB = lo < 0 ? 18 : 0, yb = h - NAMEH, s = Math.max(1, yb - PADT - PADB) / span;
       y = (v) => PADT + (hi - v) * s;
-      // 알약 굵기: 칸의 60%, 30px까지. 증감이 합계에 비해 작아 알약이 짧으면(요인 길이의 가운데 값 기준) 굵기도 줄여, 절반 넘는 알약이 굵기보다 길게 합니다.
-      const lens = steps.filter((c) => c.bar).map((c) => Math.abs(c.v) * s).sort((a, b) => a - b);
-      const mid = lens.length ? (lens[(lens.length - 1) >> 1] + lens[lens.length >> 1]) / 2 : 1e9;
-      bw = Math.max(Math.min(12, slot * 0.6), Math.min(30, slot * 0.6, mid / 1.3));
-      dotR = Math.max(2, bw * 0.22);
       const y0 = y(0);
       base.setAttribute('x1', 0);
       base.setAttribute('x2', w);
@@ -688,103 +706,113 @@
       base.setAttribute('y2', fx(Math.round(y0) + 0.5));
       cols.forEach((c) => {
         c.cx = slot * (c.k + 0.5);
-        c.yT = y(c.from);                      // 꼬리 끝(출발한 높이)
-        c.yH = y(c.to);                        // 머리 끝(도착한 높이)
-        c.len = Math.abs(c.yH - c.yT);
-        c.dir = c.yH < c.yT ? -1 : 1;          // 머리가 위(-1)인지 아래(1)인지
-        c.h0 = Math.min(bw, c.len);            // 건너올 때의 크기: 알약 굵기만 한 공. 값이 그보다 작으면 값만큼만
-        c.hy = c.bar ? c.yH - c.dir * c.h0 / 2 : c.yH;   // 머리의 가운데(점이 놓이는 자리)
-        c.nm.textContent = fit(c.name, room);
+        c.x = c.cx - bw / 2;
+        c.topY = y(Math.max(0, c.from, c.to));   // 다 그린 칸의 위 끝과 아래 끝
+        c.botY = y(Math.min(0, c.from, c.to));
+        c.nm.textContent = fit(c.name, wOf(c), roomOf(c));
         c.nm.setAttribute('x', fx(c.cx));
         c.nm.setAttribute('y', fx(yb + 15 + (two && c.k % 2 ? 14 : 0)));
-        // 값: 올라간 알약(과 바닥 위의 합계)은 머리 위에, 내려간 알약은 머리 아래에 적습니다.
-        const down = c.to < c.from, tw = textW(c.val.textContent, c.kind === 'step' ? 500 : 700, fam, 11) + 4;
-        c.vy = down ? c.yH + 14 : c.yH - 6;
+        // 값: 칸 위에 적습니다. 칸이 모두 0 아래에 있으면 칸 아래에 적습니다.
+        c.up = c.topY < y0 - 0.5 || c.botY <= y0 + 0.5;
+        const tw = textW(c.val.textContent, c.kind === 'step' ? 500 : 700, fam, vsz) + 3;
         c.vx = Math.max(tw / 2, Math.min(w - tw / 2, c.cx));
-        c.box = [c.vx - tw / 2, c.vx + tw / 2, down ? c.yH + 3 : c.yH - 16, down ? c.yH + 16 : c.yH - 3];
+        c.vy = c.up ? c.topY - 6 : c.botY + (tight ? 13 : 14);
+        c.box = [c.vx - tw / 2, c.vx + tw / 2, c.vy - 10, c.vy + 3];
         c.val.setAttribute('x', fx(c.vx));
-        c.val.setAttribute('y', fx(c.vy));
+        // 합계 막대 안의 비율: 막대가 글자보다 넉넉히 클 때만 가운데에 적습니다.
+        if (c.rt) {
+          c.rtOn = c.botY - c.topY >= 20 && bw >= textW(c.rt.textContent, 500, fam, vsz) + 8;
+          c.rt.setAttribute('x', fx(c.cx));
+          c.rt.setAttribute('y', fx((c.topY + c.botY) / 2 + 4));
+        }
       });
-      // 건너오는 공이 떠나는 자리: 앞쪽에서 가장 가까운, 알약이 있는 칸의 머리입니다.
-      cols.forEach((c) => { let p = cols[c.k - 1]; while (p && !p.bar && p.k > 0) p = cols[p.k - 1]; c.src = p || c; });
-      // 겹치는 값은 합계부터, 그다음 큰 증감부터 자리를 차지하고 나머지는 생략합니다.
+      // 값이 이웃 값이나 이웃 칸과 겹치면 한 줄 올려 적고(아래에 적는 값은 내려 적고), 그래도 겹치면 생략합니다. 합계부터, 그다음 큰 증감부터 자리를 잡습니다.
       const placed = [];
+      const hit = (c, b) => placed.some(([l, r, tp, bt]) => b[0] < r && b[1] > l && b[2] < bt && b[3] > tp) || cols.some((o) => o !== c && b[0] < o.x + bw && b[1] > o.x && b[2] < o.botY && b[3] > o.topY);
       [...cols].sort((a, b) => (a.kind === 'step') - (b.kind === 'step') || Math.abs(b.v || 0) - Math.abs(a.v || 0)).forEach((c) => {
-        c.valOn = c.kind !== 'step' || c.v != null;
+        c.valOn = c.kind === 'total' || c.v != null;
         if (!c.valOn) return;
-        const [l, r, tp, bt] = c.box;
-        if (placed.some(([l2, r2, t2, b2]) => l < r2 && r > l2 && tp < b2 && bt > t2)) { c.valOn = false; return; }
-        placed.push(c.box);
+        let box = c.box, vy = c.vy;
+        if (hit(c, box)) { const dy = c.up ? -13 : 13; box = [box[0], box[1], box[2] + dy, box[3] + dy]; vy += dy; }
+        if (hit(c, box)) { c.valOn = false; return; }
+        placed.push(box);
+        c.val.setAttribute('y', fx(vy));
       });
       render();
     }
-    // 한 칸의 진행: hop은 앞 칸의 머리에서 이 칸으로 건너온 정도, grow는 그 자리에서 늘어난 정도입니다. 시작 알약은 처음부터 다 서 있습니다.
-    const phase = (c) => (c.kind === 'start' ? [1, 1] : [easeInOut(clamp((t - c.at) / HOP)), (c.kind === 'end' ? easeInOut : easeOut)(clamp((t - c.at - HOP) / c.dur))]);
-    // 지금 보이는 높이(큰 숫자): 출발한 요인 가운데 마지막 요인의 알약이 지금 보이는 길이만큼입니다. 끝 알약이 쏟아지는 동안은 도착한 높이 그대로입니다.
+    // 한 칸의 진행: carry는 앞 칸에 남은 금액이 이 칸으로 넘어온 정도, main은 증감 칸이 깎이거나 올라간 정도(합계 칸은 굳은 정도)입니다.
+    const phase = (c) => (c.k ? [easeInOut(clamp((t - c.at) / Math.max(1, CARRY))), (c.kind === 'total' ? easeInOut : easeOut)(clamp((t - c.at - CARRY) / MAIN))] : [1, 1]);
+    // 지금 보이는 높이(큰 숫자): 출발한 증감 칸 가운데 마지막 칸이 지금 닿은 높이입니다. 합계 칸이 굳는 동안은 그 높이 그대로입니다.
     function shown() {
       let v = v0;
-      steps.forEach((c) => {
-        if (c.v == null || t < c.at) return;
-        const [hop, grow] = phase(c);
-        v = c.from + c.v * (c.len > 0 ? (hop * c.h0 + (c.len - c.h0) * grow) / c.len : grow);
-      });
+      cols.forEach((c) => { if (c.kind === 'step' && c.v != null && t >= c.at) v = c.from + c.v * phase(c)[1]; });
       return v;
     }
-    const pillAt = (c, x, top, w, h, dx, dy, r) => {
-      c.pill.setAttribute('x', fx(x));
-      c.pill.setAttribute('y', fx(top));
-      c.pill.setAttribute('width', fx(w));
-      c.pill.setAttribute('height', fx(h));
-      c.pill.setAttribute('rx', fx(Math.min(w, h) / 2));
-      c.dot.setAttribute('cx', fx(dx));
-      c.dot.setAttribute('cy', fx(dy));
-      c.dot.setAttribute('r', fx(Math.max(0, r)));
+    const rect = (n, x, a, b) => {
+      n.setAttribute('x', fx(x));
+      n.setAttribute('y', fx(a));
+      n.setAttribute('width', fx(bw));
+      n.setAttribute('height', fx(Math.max(0, b - a)));
     };
-    let badgeOn = live;
+    let afterOn = live;
     function render() {
       if (!W) return;
+      const y0 = y(0), cw = Math.max(3.5, Math.min(6, bw * 0.11));   // 꺾쇠의 반폭
       cols.forEach((c) => {
-        const [hop, grow] = phase(c), onAir = c.bar && t >= c.at;
-        c.pill.setAttribute('opacity', onAir ? 1 : 0);
-        c.dot.setAttribute('opacity', onAir ? 1 : 0);
-        if (onAir && hop < 1) {
-          // 건너오는 중: 앞 칸 머리의 점만 한 공이 이 칸의 색으로 떠나, 알약 굵기만큼 커지며 살짝 뛰어 건너옵니다.
-          const land = c.kind === 'end' ? c.hy : c.yT + c.dir * c.h0 / 2;
-          const sw = 2 * dotR + (bw - 2 * dotR) * hop, sh = Math.min(sw, c.h0);
-          const sx = c.src.cx + (c.cx - c.src.cx) * hop, sy = c.src.hy + (land - c.src.hy) * hop - ARC * Math.sin(Math.PI * hop);
-          pillAt(c, sx - sw / 2, sy - sh / 2, sw, sh, sx, sy, Math.min(dotR, sh / 2 - 2.5) * hop);
-        } else if (onAir) {
-          // 늘어나는 중: 요인은 꼬리를 출발한 높이에 둔 채 머리가 도착한 높이로 가고, 끝 알약은 머리를 도착한 높이에 둔 채 바닥까지 쏟아집니다.
-          const hh = c.h0 + (c.len - c.h0) * grow, rr = Math.min(bw, hh) / 2;
-          const top = c.kind === 'end' ? (c.dir < 0 ? c.yH : c.yH - hh) : (c.dir < 0 ? c.yT - hh : c.yT);
-          const headY = c.kind === 'end' ? c.hy : c.yT + c.dir * (hh - rr);
-          pillAt(c, c.cx - bw / 2, top, bw, hh, c.cx, headY, Math.min(dotR, rr - 2.5));
+        const [carry, main] = phase(c), vis = !c.k || t >= c.at;
+        c.body.setAttribute('opacity', vis ? 1 : 0);
+        const shownIn = vis ? (c.k ? clamp((t - c.done + 100) / 200) : 1) : 0;   // 칸이 다 그려질 무렵 값이 나타납니다
+        c.val.setAttribute('opacity', c.valOn ? fx(shownIn) : 0);
+        if (c.rt) c.rt.setAttribute('opacity', c.rtOn ? fx(shownIn) : 0);
+        c.mark.setAttribute('opacity', 0);
+        if (!vis) return;
+        const x = c.prev.x + (c.x - c.prev.x) * carry;                       // 앞 칸의 자리에서 이 칸의 자리로
+        const carried = c.kind === 'total' ? c.to : c.from;                  // 앞 칸에서 넘어온 높이
+        const cur = c.kind === 'total' ? c.to : c.from + (c.v || 0) * main;  // 지금 닿은 높이
+        const yC = y(carried), yN = y(cur), top = Math.min(y0, yC, yN), bot = Math.max(y0, yC, yN);
+        // 윤곽: 바닥에서 먼 끝만 둥급니다. 바닥 쪽은 R만큼 더 늘여 둥근 모서리를 그림 밖으로 보냅니다.
+        rect(c.clip, x, top < y0 ? top : y0 - R, bot > y0 ? bot : y0 + R);
+        c.clip.setAttribute('rx', fx(R));
+        if (c.kind === 'total') {
+          // 합계: 넘어온 금액(회색)이 도착한 높이에서 바닥 쪽으로 글자색으로 굳습니다.
+          const end = yN + (y0 - yN) * (c.k ? main : 1);
+          rect(c.ghost, x, top, bot);
+          rect(c.bar, x, Math.min(yN, end), Math.max(yN, end));
+          return;
         }
-        c.val.setAttribute('opacity', c.valOn ? fx(c.kind === 'start' ? 1 : clamp((t - c.done + 120) / 200)) : 0);
+        // 증감: 남는 금액(회색)은 바닥에서, 넘어온 높이와 지금 높이 가운데 바닥에 가까운 쪽까지. 색 면은 그 사이이고, 둘을 2px 띄웁니다.
+        const blockH = Math.abs(yN - yC), keep = carried * cur > 0 ? (Math.abs(carried) < Math.abs(cur) ? yC : yN) : y0, gap = blockH >= 0.5 ? GAP : 0;
+        if (keep < y0) rect(c.ghost, x, keep + gap, y0); else rect(c.ghost, x, y0, keep - gap);
+        rect(c.bar, x, Math.min(yC, yN), Math.max(yC, yN));
+        // 꺾쇠: 색 면이 움직여 간 쪽 끝 가까이에, 그 방향으로. 면이 낮거나 칸이 좁으면 그리지 않습니다.
+        const dir = yN > yC ? 1 : -1, on = bw >= 16 ? clamp((blockH - 14) / 6) : 0;
+        if (on > 0) {
+          const mx = x + bw / 2, tip = yN - dir * 7;
+          c.mark.setAttribute('d', `M${fx(mx - cw)},${fx(tip - dir * cw * 0.9)}L${fx(mx)},${fx(tip)}L${fx(mx + cw)},${fx(tip - dir * cw * 0.9)}`);
+          c.mark.setAttribute('opacity', fx(on));
+        }
       });
       const [txt, unit] = f.parts(t >= DONE ? v1 : shown());
       nowText.data = txt;
       if (unit && !unitEl) { unitEl = el('span', 'vzb-unit'); numEl.append(unitEl); }
       if (unitEl) unitEl.textContent = unit || '';
       const ready = t >= DONE + 60;
-      if (ready !== badgeOn) {
-        badgeOn = ready;
-        bd.hidden = vs.hidden = !ready;
-        bd.classList.toggle('vzb-ww-in', ready);
-        vs.classList.toggle('vzb-ww-in', ready);
+      if (ready !== afterOn) {
+        afterOn = ready;
+        after.forEach((n) => { n.hidden = !ready; n.classList.toggle('vzb-ww-in', ready); });
       }
     }
 
     // 재생: 화면에 보이고(inView) 마우스 · 포커스로 잠시 멈추지 않았을 때(holds)만 움직입니다. 카드가 페이지에서 빠지면 멈춥니다.
     const loop = !!card.closest('[data-vzb-loop]');
     const holds = new Set();
-    let playing = false, seen = false, inView = false, rest = 0, last = 0, raf = 0;
+    let playing = false, seen = false, inView = false, rest = 0, lastStamp = 0, raf = 0;
     const on = () => playing && inView && !holds.size && card.isConnected;
     function tick(stamp) {
       raf = 0;
-      if (!on()) { last = 0; return; }
-      const dt = last ? Math.min(100, stamp - last) : 16;
-      last = stamp;
+      if (!on()) { lastStamp = 0; return; }
+      const dt = lastStamp ? Math.min(100, stamp - lastStamp) : 16;
+      lastStamp = stamp;
       if (rest > 0) { rest -= dt; if (rest <= 0) t = 0; }
       else {
         t = Math.min(TOTAL, t + dt);
@@ -794,13 +822,13 @@
       if (on()) raf = requestAnimationFrame(tick);
     }
     function kick() { if (!raf && on()) raf = requestAnimationFrame(tick); }
-    function play() { t = 0; rest = 0; last = 0; playing = true; render(); kick(); }
+    function play() { t = 0; rest = 0; lastStamp = 0; playing = true; render(); kick(); }
     btn.addEventListener('click', play);
     plot.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { holds.add('hover'); render(); } });
     plot.addEventListener('pointerleave', () => { holds.delete('hover'); kick(); });
     plot.addEventListener('focus', () => { if (plot.matches(':focus-visible')) { holds.add('focus'); render(); } });   // 키보드로 들어왔을 때만 멈춥니다
     plot.addEventListener('blur', () => { holds.delete('focus'); kick(); });
-    // 툴팁: 알약을 짚으면 값을, 요인은 증감과 누계(앞 → 뒤)를, 끝 알약은 시작 대비 증감을 보여 주고 그 알약만 진하게 남깁니다.
+    // 툴팁: 칸을 짚으면 값을, 증감 칸은 누계(앞 → 뒤)를, 합계 칸은 첫 항목의 몇 %인지를 보여 주고 그 칸만 진하게 남깁니다.
     interact(plot, N,
       (cx) => Math.max(0, Math.min(N - 1, Math.floor((cx - plot.getBoundingClientRect().left) / slot))),
       (k) => {
@@ -808,9 +836,9 @@
         svg.classList.add('is-hover');
         cols.forEach((x) => x.g.classList.toggle('is-on', x === c));
         const note = c.kind === 'step' ? (c.v == null ? null : tx(d, '누계 %1 → %2', show(f, c.from), show(f, c.to)))
-          : c.kind === 'end' ? `${signed(f, v1 - v0)} · ${tx(d, '%s 대비', startName)}` : null;
+          : c.k && v0 > 0 ? tx(d, '%1의 %2', first.name, pct(c.to)) : null;
         const tb = tipBody({ value: valText(c), note }, c.name);
-        return { x: r.left + c.cx, y: r.top + Math.min(c.yT, c.yH) - 6, label: c.name, value: tb.node, text: tb.text };
+        return { x: r.left + c.cx, y: r.top + c.topY - 6, label: c.name, value: tb.node, text: tb.text };
       },
       () => { svg.classList.remove('is-hover'); cols.forEach((x) => x.g.classList.remove('is-on')); },
       false, true);

@@ -1,17 +1,12 @@
-/* Waterfall Walk: 높이 2단위. 머리 아래 큰 숫자(마지막 누계)와 증감 배지, 그 아래 그래프가 남은 높이를 채웁니다.
+/* Waterfall Walk: 높이 2단위. 머리(제목 · 부제) 아래를 그래프가 모두 씁니다. 큰 숫자 줄은 없고, 끝 값은 끝 막대의 말풍선이 알립니다.
    막대는 굵기 32px까지, 출발하는 끝은 각지게 · 도착하는 끝은 4px 둥글게 그립니다(올라가면 위, 내려가면 아래가 둥급니다).
    합계 막대는 회색(--vzb-base), 증감 막대는 좋은 쪽 초록(--vzb-good) · 나쁜 쪽 빨강(--vzb-bad) · neutral이면 첫째 색입니다.
    막대 사이는 앞 막대가 끝난 높이를 지름 3px의 점(--vzb-muted)으로 잇습니다. 이름(11px, 옅게)과 값(12px, 굵게)은 막대 끝 바로 밖에 두 줄로 적고,
    칸이 좁으면 10px · 11px로 줄입니다. 글자에는 카드 바탕색 테두리를 둘러 점이나 막대 가까이에서도 읽히게 합니다.
-   움직임과 배지가 붙는 때는 스크립트가 그립니다. */
+   말풍선은 옅은 회색(--vzb-track) 바탕에 이름 · 끝 값(18px, 굵게) · 증감(좋고 나쁨의 글자색)을 적습니다. 움직임은 스크립트가 그립니다. */
 .vzb-card[data-vzb="waterfall-walk"] { min-height: calc(var(--vzb-unit) * 2); }
 .vzb-card[data-vzb="waterfall-walk"] .vzb-hd { position: relative; padding-right: 36px; }   /* 오른쪽 위 다시 보기 단추 자리 */
-.vzb-ww-fig .vzb-num { font-variant-numeric: tabular-nums; }
-.vzb-ww-fig > [hidden] { display: none; }
-.vzb-ww-fig .vzb-vs b { font-weight: 500; color: var(--vzb-ink); }
-.vzb-ww-in { animation: vzb-ww-in 0.32s ease-out; }
-@keyframes vzb-ww-in { from { opacity: 0; filter: blur(3px); } to { opacity: 1; filter: none; } }
-.vzb-ww.vzb-foot { padding-top: 14px; }
+.vzb-ww.vzb-foot { padding-top: 8px; }
 .vzb-ww-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-ww-base { stroke: var(--vzb-grid); stroke-width: 1; }
 .vzb-ww-dots circle { fill: var(--vzb-muted); }
@@ -26,6 +21,16 @@
 .vzb-ww-col.is-total .vzb-ww-val { font-weight: 700; }
 .vzb-ww-svg.is-tight .vzb-ww-name { font-size: 10px; }
 .vzb-ww-svg.is-tight .vzb-ww-val { font-size: 11px; }
+.vzb-ww-bub { fill: var(--vzb-track); }
+.vzb-ww-bn { font-size: 11px; font-weight: 500; fill: var(--vzb-ink-2); }
+.vzb-ww-big { font-size: 18px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-ww-chg { color: var(--vzb-ink-2); font-size: 11px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.vzb-ww-chg.is-good { color: var(--vzb-good-ink); }
+.vzb-ww-chg.is-bad { color: var(--vzb-bad-ink); }
+.vzb-ww-chg text { fill: currentColor; }
+.vzb-ww-arw { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-ww-svg.is-tight .vzb-ww-bn, .vzb-ww-svg.is-tight .vzb-ww-chg { font-size: 10px; }
+.vzb-ww-svg.is-tight .vzb-ww-big { font-size: 16px; }
 .vzb-ww-col, .vzb-ww-conns { transition: opacity 0.12s; }
 .vzb-ww-svg.is-hover .vzb-ww-col:not(.is-on), .vzb-ww-svg.is-hover .vzb-ww-conns { opacity: 0.3; }
 .vzb-ww-btn { position: absolute; top: -2px; right: 0; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }

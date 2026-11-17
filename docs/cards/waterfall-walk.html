@@ -190,20 +190,15 @@
 .vzb-tip-note + .vzb-tip-note { margin-top: 0; }
 .vzb-fs { --vzb-c: var(--vzb-primary-soft); }
 .vzb-key.is-tick { width: 2px; height: 12px; border-radius: 1px; }
-/* Waterfall Walk: 높이 2단위. 머리 아래 큰 숫자(마지막 누계)와 증감 배지, 그 아래 그래프가 남은 높이를 채웁니다.
+/* Waterfall Walk: 높이 2단위. 머리(제목 · 부제) 아래를 그래프가 모두 씁니다. 큰 숫자 줄은 없고, 끝 값은 끝 막대의 말풍선이 알립니다.
    막대는 굵기 32px까지, 출발하는 끝은 각지게 · 도착하는 끝은 4px 둥글게 그립니다(올라가면 위, 내려가면 아래가 둥급니다).
    합계 막대는 회색(--vzb-base), 증감 막대는 좋은 쪽 초록(--vzb-good) · 나쁜 쪽 빨강(--vzb-bad) · neutral이면 첫째 색입니다.
    막대 사이는 앞 막대가 끝난 높이를 지름 3px의 점(--vzb-muted)으로 잇습니다. 이름(11px, 옅게)과 값(12px, 굵게)은 막대 끝 바로 밖에 두 줄로 적고,
    칸이 좁으면 10px · 11px로 줄입니다. 글자에는 카드 바탕색 테두리를 둘러 점이나 막대 가까이에서도 읽히게 합니다.
-   움직임과 배지가 붙는 때는 스크립트가 그립니다. */
+   말풍선은 옅은 회색(--vzb-track) 바탕에 이름 · 끝 값(18px, 굵게) · 증감(좋고 나쁨의 글자색)을 적습니다. 움직임은 스크립트가 그립니다. */
 .vzb-card[data-vzb="waterfall-walk"] { min-height: calc(var(--vzb-unit) * 2); }
 .vzb-card[data-vzb="waterfall-walk"] .vzb-hd { position: relative; padding-right: 36px; }   /* 오른쪽 위 다시 보기 단추 자리 */
-.vzb-ww-fig .vzb-num { font-variant-numeric: tabular-nums; }
-.vzb-ww-fig > [hidden] { display: none; }
-.vzb-ww-fig .vzb-vs b { font-weight: 500; color: var(--vzb-ink); }
-.vzb-ww-in { animation: vzb-ww-in 0.32s ease-out; }
-@keyframes vzb-ww-in { from { opacity: 0; filter: blur(3px); } to { opacity: 1; filter: none; } }
-.vzb-ww.vzb-foot { padding-top: 14px; }
+.vzb-ww.vzb-foot { padding-top: 8px; }
 .vzb-ww-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-ww-base { stroke: var(--vzb-grid); stroke-width: 1; }
 .vzb-ww-dots circle { fill: var(--vzb-muted); }
@@ -218,6 +213,16 @@
 .vzb-ww-col.is-total .vzb-ww-val { font-weight: 700; }
 .vzb-ww-svg.is-tight .vzb-ww-name { font-size: 10px; }
 .vzb-ww-svg.is-tight .vzb-ww-val { font-size: 11px; }
+.vzb-ww-bub { fill: var(--vzb-track); }
+.vzb-ww-bn { font-size: 11px; font-weight: 500; fill: var(--vzb-ink-2); }
+.vzb-ww-big { font-size: 18px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-ww-chg { color: var(--vzb-ink-2); font-size: 11px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.vzb-ww-chg.is-good { color: var(--vzb-good-ink); }
+.vzb-ww-chg.is-bad { color: var(--vzb-bad-ink); }
+.vzb-ww-chg text { fill: currentColor; }
+.vzb-ww-arw { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-ww-svg.is-tight .vzb-ww-bn, .vzb-ww-svg.is-tight .vzb-ww-chg { font-size: 10px; }
+.vzb-ww-svg.is-tight .vzb-ww-big { font-size: 16px; }
 .vzb-ww-col, .vzb-ww-conns { transition: opacity 0.12s; }
 .vzb-ww-svg.is-hover .vzb-ww-col:not(.is-on), .vzb-ww-svg.is-hover .vzb-ww-conns { opacity: 0.3; }
 .vzb-ww-btn { position: absolute; top: -2px; right: 0; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
@@ -268,7 +273,7 @@
     '%1 순위 변화, %2–%3. %4: %5 → %6. 위아래 화살표로 항목을 옮깁니다. 모든 순위는 이어지는 표에 있습니다.': '%1 rank changes, %2–%3. %4: %5 → %6. Use the up and down arrows to move between items. Every rank is in the table that follows.',
     'periods와 values를 확인하세요.': 'Check periods and values.',
     '누계': 'Running total', '누계 %1 → %2': 'Running total %1 → %2', 'items에 항목을 적으세요.': 'List the items in items.', '첫 항목에 시작 값을 숫자로 적으세요.': 'Write the starting value as a number in the first item.',
-    '%1. %2 %3 → %4 %5. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 %3 → %4 %5. Use the left and right arrows to move between items. Every value is in the table that follows.',
+    '%1. %2 %3 → %4 %5(%6). 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 %3 → %4 %5 (%6). Use the left and right arrows to move between items. Every value is in the table that follows.',
     '%1. %2의 비중은 %3로, %4 대비 %5입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 holds %3, %5 against %4. Use the left and right arrows to move between items. Every value is in the table that follows.',
     '%1. %2의 비중은 %3입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 holds %3. Use the left and right arrows to move between items. Every value is in the table that follows.',
     '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
@@ -569,10 +574,11 @@
   // 이름과 값은 막대의 도착한 끝 바로 밖에 함께 적습니다(늘린 항목과 합계는 위, 줄인 항목은 아래 · 증감에는 부호). 축 아래에 따로 이름을 두지 않아,
   // 막대를 보는 자리에서 무엇이 얼마나 늘고 줄었는지 읽힙니다. 이웃 글자나 막대와 겹치면 옆으로 조금 밀거나 막대에서 더 띄우고,
   // 그래도 자리가 없으면 이름을, 그다음 값을 생략합니다(툴팁과 표에는 남습니다).
-  // 큰 숫자는 마지막 항목까지의 누계이고, 그 옆에 첫 항목 대비 증감 배지(compare: share면 첫 항목의 몇 %인지)를 적습니다.
-  // 움직임: 첫 막대와 큰 숫자가 놓여 있다가 왼쪽부터 한 항목씩, ① 앞 막대가 끝난 높이에서 점이 하나씩 찍히며 다음 칸으로 걸어가고
-  // ② 그 높이에서 막대가 오르내리며, 막대 끝에 붙은 이름과 값이 함께 따라가고 값과 큰 숫자가 보이는 만큼을 셉니다
-  // ③ 합계 칸에서는 도착한 높이가 막대로 쏟아져 바닥까지 찹니다. 마지막 칸 뒤에 증감 배지가 붙고 멈춥니다.
+  // 머리 아래에 큰 숫자를 따로 두지 않습니다. 끝 값은 끝 막대(마지막 total 항목)에서 나온 말풍선이 이름 · 끝 값 · 첫 항목 대비 증감
+  // (compare: share면 첫 항목의 몇 %인지)과 함께 알려, 같은 숫자를 두 번 적지 않고 그 높이를 그래프가 씁니다.
+  // 움직임: 첫 막대가 놓여 있다가 왼쪽부터 한 항목씩, ① 앞 막대가 끝난 높이에서 점이 하나씩 찍히며 다음 칸으로 걸어가고
+  // ② 그 높이에서 막대가 오르내리며, 막대 끝에 붙은 이름과 값이 함께 따라가고 값이 보이는 만큼을 셉니다
+  // ③ 합계 칸에서는 도착한 높이가 막대로 쏟아져 바닥까지 찹니다. 끝 막대가 다 차면 말풍선이 막대에서 튀어나오고 멈춥니다.
   // 카드가 화면에 보이면 한 번 움직이고, 다시 보기 단추로 되풀이합니다. 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 마지막 장면을 바로 그립니다.
   // 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고 되풀이합니다.
   mount('waterfall-walk', (card, d, f) => {
@@ -607,24 +613,11 @@
     const live = card.hasAttribute('data-vzb-live');   // 데이터가 바뀌어 다시 그린 카드: 처음부터 재생하지 않고 마지막 장면을 그립니다
     head(card, d, f, null);
     const hd = card.querySelector('.vzb-hd');
-    // 큰 숫자: 마지막 항목까지의 누계. 움직이는 동안은 지금 보이는 높이를 그대로 세고, 마지막 칸이 끝나면 옆에 증감 배지가 붙습니다.
-    // 배지는 첫 항목 대비 증감입니다(시작 값이 0 이하이면 비율 대신 차이). compare가 share면 배지 대신 첫 항목의 몇 %인지 적습니다(손익의 이익률처럼).
-    const fig = el('div', 'vzb-fig vzb-ww-fig'), numEl = figure(f, live ? v1 : v0), nowText = numEl.firstChild, after = [];
-    let unitEl = numEl.querySelector('.vzb-unit');
-    if (N > 1 && d.compare === 'share') {
-      if (v0 > 0) {
-        const share = el('span', 'vzb-vs'), [a, b] = tx(d, '%1의 %2', first.name, '\u0001').split('\u0001');
-        share.append(a, el('b', null, pct(v1)), b);
-        after.push(share);
-      }
-    } else if (N > 1) {
-      const bd = badge(f, v1, v0, d.better);
-      if (!(v0 > 0)) bd.lastChild.textContent = show(f, Math.abs(v1 - v0));
-      after.push(bd, el('span', 'vzb-vs', tx(d, '%s 대비', first.name)));
-    }
-    after.forEach((n) => { n.hidden = !live; });
-    fig.append(numEl, ...after);
-    card.append(fig);
+    // 끝 막대의 말풍선에 적을 것: 첫 항목 대비 증감(시작 값이 0 이하이면 비율 대신 차이). compare가 share면 첫 항목의 몇 %인지(손익의 이익률처럼).
+    const end = N > 1 && last.kind === 'total' ? last : null;
+    let chg = null;
+    if (end && d.compare === 'share') { if (v0 > 0) chg = { dir: 0, tone: 'flat', text: tx(d, '%1의 %2', first.name, pct(v1)) }; }
+    else if (end) { const dl = delta(f, v1, v0, d.better); chg = { dir: dl.dir, tone: dl.tone, text: v0 > 0 ? dl.text : show(f, Math.abs(v1 - v0)) }; }
     const btn = el('button', 'vzb-ww-btn');
     btn.type = 'button';
     btn.setAttribute('aria-label', tx(d, '처음부터 다시'));
@@ -636,7 +629,7 @@
     const plot = el('div', 'vzb-plot');
     plot.tabIndex = 0;
     plot.setAttribute('role', 'img');
-    plot.setAttribute('aria-label', tx(d, '%1. %2 %3 → %4 %5. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.', d.title || '', first.name, show(f, v0), last.name, show(f, v1)));
+    plot.setAttribute('aria-label', tx(d, '%1. %2 %3 → %4 %5(%6). 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.', d.title || '', first.name, show(f, v0), last.name, show(f, v1), signed(f, v1 - v0)));
     const svg = svgEl('svg', { class: 'vzb-ww-svg', 'aria-hidden': 'true' });
     plot.append(svg);
     foot.append(plot);
@@ -660,6 +653,20 @@
       c.val = svgText(0, 0, valText(c), 'vzb-ww-val', 'middle');
       c.said = c.val.textContent;
       c.lab.append(c.nm, c.val);
+      if (c === end) {
+        // 끝 막대의 말풍선: 이름 · 끝 값(굵고 크게) · 증감(화살표와 좋고 나쁨의 색)
+        c.bub = svgEl('path', { class: 'vzb-ww-bub' });
+        c.nm.setAttribute('class', 'vzb-ww-bn');
+        c.val.setAttribute('class', 'vzb-ww-big');
+        c.lab.prepend(c.bub);
+        if (chg) {
+          c.chg = svgEl('g', { class: `vzb-ww-chg is-${chg.tone}` });
+          if (chg.dir) { c.arw = svgEl('path', { class: 'vzb-ww-arw', d: chg.dir > 0 ? 'M1.5 8l6-6M3 2h4.5v4.5' : 'M1.5 2l6 6M7.5 3.5v4.5h-4.5' }); c.chg.append(c.arw); }
+          c.chgText = svgText(0, 0, chg.text, null, 'start');
+          c.chg.append(c.chgText);
+          c.lab.append(c.chg);
+        }
+      }
       c.g.append(c.path, c.lab);
       colsG.append(c.g);
       if (c.k < N - 1) { c.dots = svgEl('g', { class: 'vzb-ww-dots' }); dotsG.append(c.dots); }
@@ -683,15 +690,15 @@
       return `${s.slice(0, Math.max(1, lo))}…`;
     };
     // 시간표(밀리초): 첫 막대를 읽는 시간 T0, 한 항목의 간격 STEP, 점이 다음 칸으로 걸어가는 시간 WALK, 막대가 움직이기 시작할 때까지 LAG,
-    // 막대가 오르내리는 시간 GROW, 합계 막대가 바닥까지 차는 시간 POUR, 배지가 붙는 시간 BADGE
-    const T0 = 500, STEP = N > 1 ? Math.max(380, Math.min(540, 2900 / (N - 1))) : 0, WALK = Math.round(STEP * 0.5), LAG = Math.round(WALK * 0.85), GROW = Math.round(STEP * 0.68), POUR = 520, BADGE = 240;
-    const easeOut = (k) => 1 - (1 - k) ** 3, easeInOut = (k) => (k < 0.5 ? 4 * k ** 3 : 1 - (-2 * k + 2) ** 3 / 2);
+    // 막대가 오르내리는 시간 GROW, 합계 막대가 바닥까지 차는 시간 POUR, 말풍선이 튀어나오는 시간 POP
+    const T0 = 500, STEP = N > 1 ? Math.max(380, Math.min(540, 2900 / (N - 1))) : 0, WALK = Math.round(STEP * 0.5), LAG = Math.round(WALK * 0.85), GROW = Math.round(STEP * 0.68), POUR = 520, POP = 260;
+    const easeOut = (k) => 1 - (1 - k) ** 3, easeBack = (k) => 1 + 2.2 * (k - 1) ** 3 + 1.2 * (k - 1) ** 2, easeInOut = (k) => (k < 0.5 ? 4 * k ** 3 : 1 - (-2 * k + 2) ** 3 / 2);
     cols.forEach((c) => {
       c.at = c.k ? T0 + (c.k - 1) * STEP : -1e9;   // 앞 막대에서 이 칸으로 점이 걸어오기 시작하는 때
       c.dur = c.kind === 'total' ? POUR : GROW;
       c.done = c.k ? c.at + LAG + c.dur : 0;
     });
-    const DONE = last.done, TOTAL = DONE + 60 + BADGE;
+    const DONE = last.done, TOTAL = DONE + (end ? POP : 0) + 60;
     let W = 0, H = 0, y = (v) => v, slot = 1, bw = 0, DOT = 1.5, t = 0;
     function layout(w, h) {
       W = w; H = h;
@@ -704,14 +711,32 @@
       const tight = slot < 56, nsz = tight ? 10 : 11, vsz = tight ? 11 : 12, LBL = nsz + vsz + 8, VAL = vsz + 6;
       svg.classList.toggle('is-tight', tight);
       DOT = tight ? 1.25 : 1.5;
-      // 높이: 0과 모든 막대의 양 끝이 들어가게 하고, 위에는 글자 두 줄의 자리를 남깁니다. 아래에는 줄인 항목의 글자가 그림 밖으로 나갈 때만 남깁니다.
+      // 말풍선의 크기: 넓으면 이름 아래에 끝 값과 증감을 한 줄로, 좁으면 세 줄로 쌓습니다. 이름은 말풍선 안에 온전히 적습니다(그림 폭을 넘으면 줄입니다).
+      const big = tight ? 16 : 18, csz = tight ? 10 : 11, px = tight ? 7 : 10, py = 6, TAIL = 5, row = !tight;
+      let B = null;
+      if (end) {
+        end.nm.textContent = fit(end.name, nsz, Math.min(160, w - 2 * px - 8));
+        const nW = textW(end.nm.textContent, 500, fam, nsz), vW = textW(valText(end), 700, fam, big), cW = chg ? (chg.dir ? 11 : 0) + textW(chg.text, 500, fam, csz) : 0;
+        const l2 = row && chg ? vW + 7 + cW : vW, bwid = Math.max(nW, l2, row ? 0 : cW) + 2 * px;
+        B = { vW, cW, l2, bwid, bh: 2 * py + (nsz + 2) + (big + 2) + (chg && !row ? csz + 3 : 0) };
+        B.ext = 4 + TAIL + B.bh;
+      }
+      // 높이: 0과 모든 막대의 양 끝이 들어가게 하고, 막대 끝 밖의 글자(끝 막대는 말풍선)가 그림 안에 들어가도록 위아래 여백을 늘려 갑니다.
       const lvls = [0, ...cols.flatMap((c) => [c.from, c.to])], lo = Math.min(...lvls), hi = Math.max(...lvls), span = hi - lo || 1;
-      const PADT = LBL + 4, room = (pb) => Math.max(1, h - 1 - PADT - pb) / span;
-      const fits = (pb) => cols.every((c) => !c.below || PADT + (hi - c.to) * room(pb) + LBL + 2 <= h);
-      let PADB = 0;
-      if (lo < 0) PADB = LBL + 4;
-      else if (!fits(0)) { let a = 0, b = LBL + 4; for (let i = 0; i < 8; i++) { const m = (a + b) / 2; if (fits(m)) b = m; else a = m; } PADB = b; }
-      const s = room(PADB);
+      const extOf = (c) => (c === end ? B.ext : LBL) + 2;
+      let PADT = LBL + 4, PADB = lo < 0 ? LBL + 4 : 0, s = 1;
+      for (let i = 0; i < 8; i++) {
+        s = Math.max(1, h - 1 - PADT - PADB) / span;
+        let addT = 0, addB = 0;
+        cols.forEach((c) => {
+          const yy = PADT + (hi - c.to) * s;
+          if (c.below) addB = Math.max(addB, yy + extOf(c) - (h - 1)); else addT = Math.max(addT, extOf(c) - yy);
+        });
+        if (addT < 0.5 && addB < 0.5) break;
+        PADT += Math.max(0, addT);
+        PADB += Math.max(0, addB);
+      }
+      s = Math.max(1, h - 1 - PADT - PADB) / span;
       y = (v) => PADT + (hi - v) * s;
       const y0 = y(0);
       base.setAttribute('x1', 0);
@@ -724,11 +749,35 @@
         c.yA = y(c.from);
         c.yB = y(c.to);
         // 글자: 값은 막대 끝 바로 밖에, 이름은 그 바깥 줄에. 이름이 너무 길면 줄여 적습니다.
-        c.nm.textContent = fit(c.name, nsz, Math.max(44, slot * 1.6));
+        if (c !== end) c.nm.textContent = fit(c.name, nsz, Math.max(44, slot * 1.6));
         c.vw = textW(valText(c), c.kind === 'step' ? 600 : 700, fam, vsz) + 4;
         c.lw = Math.max(c.vw, textW(c.nm.textContent, c.kind === 'step' ? 400 : 500, fam, nsz) + 4);
-        c.val.setAttribute('y', c.below ? vsz + 2 : -6);
-        c.nm.setAttribute('y', c.below ? vsz + nsz + 4 : -(vsz + 8));
+        c.ext = LBL;
+        c.off = 0;
+        if (c !== end) {
+          c.val.setAttribute('y', c.below ? vsz + 2 : -6);
+          c.nm.setAttribute('y', c.below ? vsz + nsz + 4 : -(vsz + 8));
+          return;
+        }
+        // 말풍선: 꼬리는 막대 가운데를 가리키고, 몸은 그림 밖으로 나가지 않게 옆으로 옮깁니다.
+        const { vW, cW, l2, bwid, bh } = B;
+        c.off = Math.max(-(bwid / 2 - 10), Math.min(bwid / 2 - 10, Math.max(bwid / 2 - 10 - c.cx, Math.min(w + 10 - c.cx - bwid / 2, 0))));
+        const top = c.below ? 4 + TAIL : -(4 + TAIL + bh);
+        B.top = top;
+        c.nm.setAttribute('x', fx(c.off));
+        c.nm.setAttribute('y', fx(top + py + nsz - 1));
+        const yv = top + py + nsz + 2 + big - 1, xl = c.off - l2 / 2;
+        c.val.setAttribute('text-anchor', row && chg ? 'start' : 'middle');
+        c.val.setAttribute('x', fx(row && chg ? xl : c.off));
+        c.val.setAttribute('y', fx(yv));
+        if (c.chg) {
+          const cx0 = row ? xl + vW + 7 : c.off - cW / 2, cy = row ? yv - 1 : yv + csz + 4;
+          if (c.arw) c.arw.setAttribute('transform', `translate(${fx(cx0)},${fx(cy - 9)})`);
+          c.chgText.setAttribute('x', fx(cx0 + (chg.dir ? 11 : 0)));
+          c.chgText.setAttribute('y', fx(cy));
+        }
+        c.lw = bwid;
+        c.ext = B.ext;
       });
       // 잇는 점: 이 막대가 끝난 높이에서 다음 막대까지, 두 막대 사이를 같은 간격으로 채웁니다.
       const conns = [], pitch = tight ? 5 : 7;
@@ -745,7 +794,7 @@
         if (n) conns.push([x1, x2, c.yB - 3, c.yB + 3, null]);
       });
       // 글자 자리 잡기: 이웃 글자 · 이웃 막대 · 잇는 점과 겹치면 옆으로 조금 밀거나 막대에서 더 띄웁니다. 합계부터, 그다음 큰 증감부터 자리를 잡고,
-      // 끝내 자리가 없으면 이름을, 그다음 값을 생략합니다.
+      // 끝내 자리가 없으면 이름을, 그다음 값을 생략합니다. 말풍선이 가장 먼저 자리를 잡습니다.
       const hits = (a, b) => a[0] < b[1] && a[1] > b[0] && a[2] < b[3] && a[3] > b[2];
       const walls = [...conns];
       cols.forEach((c) => { if (c.bar) walls.push([c.x - 1, c.x + bw + 1, Math.min(c.yA, c.yB), Math.max(c.yA, c.yB), c]); });
@@ -754,29 +803,30 @@
       const moves = [];
       [0, 4, 8, 12, 16, 22, 28].forEach((dy) => [0, 4, -4, 8, -8, 12, -12].forEach((dx) => moves.push([dx, dy])));
       moves.sort((a, b) => Math.abs(a[0]) + a[1] * 1.2 - (Math.abs(b[0]) + b[1] * 1.2));
-      [...cols].sort((a, b) => (a.kind === 'step') - (b.kind === 'step') || Math.abs(b.v || 0) - Math.abs(a.v || 0)).forEach((c) => {
+      [...cols].sort((a, b) => (b === end) - (a === end) || (a.kind === 'step') - (b.kind === 'step') || Math.abs(b.v || 0) - Math.abs(a.v || 0)).forEach((c) => {
         const dir = c.below ? 1 : -1;
-        const boxOf = (lw, ext, [dx, dy]) => { const x0 = c.cx + dx - lw / 2, ye = c.yB + dir * dy; return c.below ? [x0, x0 + lw, ye + 3, ye + ext] : [x0, x0 + lw, ye - ext, ye - 3]; };
-        let pick = moves.find((m) => free(c, boxOf(c.lw, LBL, m)));
+        const boxOf = (lw, ext, [dx, dy]) => { const x0 = c.cx + c.off + dx - lw / 2, ye = c.yB + dir * dy; return c.below ? [x0, x0 + lw, ye + 3, ye + ext] : [x0, x0 + lw, ye - ext, ye - 3]; };
+        let pick = moves.find((m) => free(c, boxOf(c.lw, c.ext, m)));
+        if (!pick && c === end) pick = moves[0];   // 말풍선은 늘 둡니다
         c.nameOn = !!pick;
         if (!pick) pick = moves.find((m) => free(c, boxOf(c.vw, VAL, m)));   // 이름 없이 값만
         c.labOn = !!pick;
         c.dx = pick ? pick[0] : 0;
         c.dy = pick ? dir * pick[1] : 0;
-        if (pick) taken.push(boxOf(c.nameOn ? c.lw : c.vw, c.nameOn ? LBL : VAL, pick));
+        if (c === end) {
+          // 말풍선을 옮겼으면 꼬리를 그만큼 늘여, 꼬리 끝이 늘 막대 끝 4px 앞을 가리키게 합니다.
+          const { bwid, bh, top } = B, x0 = c.off - bwid / 2, r = 7, edge = c.below ? top : top + bh, tipY = (c.below ? 4 : -4) - c.dy;
+          const tx0 = Math.max(x0 + r + 5, Math.min(x0 + bwid - r - 5, -c.dx));
+          c.bub.setAttribute('d', `M${fx(x0 + r)},${fx(top)}h${fx(bwid - 2 * r)}a${r},${r} 0 0 1 ${r},${r}v${fx(bh - 2 * r)}a${r},${r} 0 0 1 ${-r},${r}h${fx(-(bwid - 2 * r))}a${r},${r} 0 0 1 ${-r},${-r}v${fx(-(bh - 2 * r))}a${r},${r} 0 0 1 ${r},${-r}Z`
+            + `M${fx(tx0 - 5)},${fx(edge)}L${fx(-c.dx)},${fx(tipY)}L${fx(tx0 + 5)},${fx(edge)}Z`);
+        }
+        if (pick) taken.push(boxOf(c.nameOn ? c.lw : c.vw, c.nameOn ? c.ext : VAL, pick));
         c.nm.setAttribute('opacity', c.nameOn ? 1 : 0);
       });
       render();
     }
     // 한 칸의 진행(0~1): 합계 칸은 도착한 높이에서 바닥까지 찬 정도, 증감 칸은 막대가 오르내린 정도입니다. 첫 막대는 처음부터 다 서 있습니다.
     const grown = (c) => (c.k ? (c.kind === 'total' ? easeInOut : easeOut)(clamp((t - c.at - LAG) / c.dur)) : 1);
-    // 지금 보이는 높이(큰 숫자): 움직이기 시작한 증감 칸 가운데 마지막 칸이 지금 닿은 높이입니다. 합계 막대가 차는 동안은 그 높이 그대로입니다.
-    function shown() {
-      let v = v0;
-      cols.forEach((c) => { if (c.kind === 'step' && c.v != null && t >= c.at + LAG) v = c.from + part(c.v, grown(c)); });
-      return v;
-    }
-    let afterOn = live;
     function render() {
       if (!W) return;
       cols.forEach((c) => {
@@ -785,8 +835,10 @@
         const tip = c.kind === 'total' ? c.yB : c.yA + (c.yB - c.yA) * e;
         c.path.setAttribute('d', !c.bar ? '' : c.kind === 'total' ? barPath(c.x, c.yB + (c.yA - c.yB) * e, c.yB, bw) : barPath(c.x, c.yA, tip, bw));
         // 글자는 막대 끝에 붙어 함께 움직이고, 증감 값은 지금 보이는 만큼을 셉니다. 점이 다 걸어올 즈음 나타납니다.
-        c.lab.setAttribute('transform', `translate(${fx(c.cx + c.dx)},${fx(tip + c.dy)})`);
-        c.lab.setAttribute('opacity', c.labOn ? fx(c.k ? clamp((t - c.at - LAG + 80) / 160) : 1) : 0);
+        // 끝 막대의 말풍선은 막대가 다 찰 즈음 꼬리 끝에서부터 튀어나옵니다.
+        const pop = c === end ? clamp((t - c.done + 100) / POP) : 1;
+        c.lab.setAttribute('transform', `translate(${fx(c.cx + c.dx)},${fx(tip + c.dy)})${pop < 1 ? ` scale(${Math.max(0.01, easeBack(pop)).toFixed(3)})` : ''}`);
+        c.lab.setAttribute('opacity', c.labOn ? fx(c === end ? clamp(pop * 3) : c.k ? clamp((t - c.at - LAG + 80) / 160) : 1) : 0);
         const now = c.kind === 'step' && c.v ? part(c.v, e) : 0;   // 0에서 시작할 때도 부호를 붙여, 늘 항목인지 줄 항목인지 먼저 알립니다
         const say = c.kind === 'step' && c.v ? (now ? signed(f, now) : `${c.v > 0 ? '+' : '−'}${show(f, 0)}`) : c.said;
         if (say !== c.said) { c.said = say; c.val.textContent = say; }
@@ -796,15 +848,6 @@
           c.dotEls.forEach((dot, i) => dot.setAttribute('r', fx(DOT * easeOut(clamp((t - nx.at - (i / n) * WALK) / 110)))));
         }
       });
-      const [txt, unit] = f.parts(t >= DONE ? v1 : shown());
-      nowText.data = txt;
-      if (unit && !unitEl) { unitEl = el('span', 'vzb-unit'); numEl.append(unitEl); }
-      if (unitEl) unitEl.textContent = unit || '';
-      const ready = t >= DONE + 60;
-      if (ready !== afterOn) {
-        afterOn = ready;
-        after.forEach((n) => { n.hidden = !ready; n.classList.toggle('vzb-ww-in', ready); });
-      }
     }
 
     // 재생: 화면에 보이고(inView) 마우스 · 포커스로 잠시 멈추지 않았을 때(holds)만 움직입니다. 카드가 페이지에서 빠지면 멈춥니다.

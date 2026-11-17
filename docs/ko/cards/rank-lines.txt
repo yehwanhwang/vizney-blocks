@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.58 · 범프 차트 · Rank Lines (rank-lines)
+<!-- Vizney Blocks v0.59 · 범프 차트 · Rank Lines (rank-lines)
      https://blocks.vizney.com/ko/cards/rank-lines.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -139,7 +139,6 @@
 .vzb-tip.is-on { opacity: 1; }
 .vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-value { font-size: 13px; font-weight: 700; }
-@media (prefers-reduced-motion: reduce) { .vzb-tip { transition: none; } }
 /* 색 이름: t1 · t2 · t3 선(파랑 · 분홍빨강 · 주황, 어두운 바탕은 노랑 · 흰색 · 회색), f1 · f2 · f3 막대와 면(같은 순서), fs 옅은 첫째 색,
    t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
 .vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
@@ -218,9 +217,6 @@
 .vzb-br-now { font-size: 12px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
 .vzb-br-end { font-size: 11px; fill: var(--vzb-muted); transition: opacity 0.12s; }
 .vzb-br-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
-@media (prefers-reduced-motion: reduce) {
-  .vzb-br-item, .vzb-br-head, .vzb-br-lab, .vzb-br-halo, .vzb-br-end { transition: none; }
-}
 </style>
 <div class="vzb-card" data-vzb="rank-lines">
 <script type="application/json">
@@ -583,7 +579,6 @@
   // 되감기와 빨리 감기는 한 번 누르면 한 기간씩, 누르고 있으면 계속 빠르게 옮겨 가다가 놓은 자리에서 가까운 기간에 멈춥니다.
   // 순위는 카드가 values로 매깁니다(better가 down이면 작은 값이 1위). 같은 값은 앞 기간 순위, 그다음 적은 순서를 따르고, 값이 null인 기간은 선을 끊습니다.
   // 움직임: 화면에 보이면 첫 기간에서 잠시 멈췄다가 끝까지 한 번 재생하고 멈춥니다. 그래프에 마우스를 올리거나 키보드로 포커스하면 잠시 멈춥니다.
-  // 동작 줄이기 설정이면 재생하지 않고 마지막 기간을 그리며, 구간 막대로 옮기면 바로 그 기간을 그립니다.
   // 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 고른 기간(카드 요소의 data-vzb-period, 없으면 마지막)을 바로 그립니다.
   // 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고 처음으로 감았다가 다시 재생합니다. 손을 대면 되풀이를 멈춥니다.
   mount('rank-lines', (card, d, f) => {
@@ -797,7 +792,7 @@
 
     // 재생: 화면에 보이고(inView) 마우스 · 포커스로 잠시 멈추지 않았을 때(holds)만 흐릅니다. 카드가 페이지에서 빠지면 멈춥니다.
     // 기간 하나를 넘기는 시간 STEP, 처음 첫 기간을 읽는 시간 LEAD. 구간 막대로 옮길 때는 짧게 미끄러집니다(seek).
-    const STEP = 520, LEAD = 700, still = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    const STEP = 520, LEAD = 700;
     const live = card.hasAttribute('data-vzb-live'), loop = !!card.closest('[data-vzb-loop]');
     const kept = labels.indexOf(card.getAttribute('data-vzb-period'));
     const holds = new Set();
@@ -850,9 +845,9 @@
       if (on()) raf = requestAnimationFrame(tick);
     }
     function kick() { if (!raf && on()) raf = requestAnimationFrame(tick); }
-    // q 자리로 dur 동안 미끄러집니다(동작 줄이기면 바로). then은 다 간 뒤에 부릅니다.
+    // q 자리로 dur 동안 미끄러집니다. then은 다 간 뒤에 부릅니다.
     function glide(q, dur, then) {
-      if (still || dur <= 0) { p = q; seek = null; render(); if (then) then(); return; }
+      if (dur <= 0) { p = q; seek = null; render(); if (then) then(); return; }
       seek = { from: p, to: q, t: 0, dur, then };
       stamp0 = 0;
       kick();
@@ -888,7 +883,7 @@
         if (e.button) return;
         b.setPointerCapture(e.pointerId);
         pickAt((seek ? seek.to : Math.round(p)) + dir, 220);
-        if (!still) timer = setTimeout(() => { timer = 0; seek = null; scan = dir; stamp0 = 0; kick(); }, 380);
+        timer = setTimeout(() => { timer = 0; seek = null; scan = dir; stamp0 = 0; kick(); }, 380);
       });
       b.addEventListener('pointerup', stop);
       b.addEventListener('pointercancel', stop);
@@ -967,9 +962,8 @@
     plot.addEventListener('click', () => setFocus(tipIt));
     plot.addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && tipIt) { e.preventDefault(); setFocus(tipIt); } });
 
-    btn.hidden = still;   // 동작 줄이기에서는 재생하지 않고, 되감기 · 빨리 감기는 한 기간씩 바로 옮깁니다
     setBtn();
-    const auto = !still && !live;
+    const auto = !live;
     if (auto) p = 0;
     onSize(plot, layout);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { measure(); if (W) layout(W, H); });

@@ -8,7 +8,7 @@
      값이 바뀌면 카드에서 vzb-change 이벤트(bubbles, detail: { name, value: [시작, 끝] })를 보내고, 카드의 data-vzb-value에 같은 값을 적습니다.
      조작: 손잡이를 끌거나, 레일을 눌러 가까운 손잡이를 옮기거나, 손잡이에 포커스한 뒤 화살표(한 칸) · Page Up/Down(열 칸쯤) · Home/End로 옮깁니다.
      두 손잡이는 같은 칸까지 만날 수 있고, 겹쳐 있을 때는 끄는 방향의 손잡이가 움직입니다. 손잡이는 용수철로 따라갑니다.
-     동작 줄이기 설정에서는 바로 옮기고 분포 창과 막대도 움직이지 않습니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리)
+     카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리)
      손을 대기 전까지 몇 가지 범위를 차례로 보여 줍니다. */
   function slider(card, d, f, cfg) {
     const n = cfg.n, R = 8, hist = cfg.hist && cfg.hist.counts.length ? cfg.hist : null;   // R: 손잡이 반지름. 레일과 막대는 양 끝에서 그만큼 들어옵니다.
@@ -51,7 +51,6 @@
     root.append(area, sr, say);
     card.append(root);
 
-    const reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     // 막대가 범위에 드는지와 범위 안의 개수: 칸이 범위에 걸친 만큼 나눠 셉니다(step을 칸 폭에 맞추면 정확히 셉니다).
     const width = hist ? (hist.max - hist.min) / bars.length : 1;
     const inRange = (i, a, b) => { const c = hist.min + width * (i + 0.5); return c >= a && c <= b; };
@@ -66,7 +65,7 @@
         const on = inRange(i, a, b);
         if (bar.classList.contains('is-in') !== on) { bar.classList.toggle('is-in', on); changed.push([bar, on, i]); }
       });
-      if (first || reduce || !bars[0] || !bars[0].animate) return;
+      if (first || !bars[0] || !bars[0].animate) return;
       const from = mover === A ? lo : hi;
       changed.sort((p, q) => Math.abs(p[2] - (from / n) * bars.length) - Math.abs(q[2] - (from / n) * bars.length))
         .forEach(([bar, on], k) => bar.animate(on ? [{ transform: 'scaleY(1)' }, { transform: 'scaleY(1.22)' }, { transform: 'scaleY(1)' }] : [{ transform: 'scaleY(1)' }, { transform: 'scaleY(0.82)' }, { transform: 'scaleY(1)' }],
@@ -149,7 +148,7 @@
       else { jump(); last = 0; }
     }
     function jump() { both.forEach((s) => { s.x = s.t; s.v = 0; }); draw(); }
-    const wake = () => { if (reduce) jump(); else if (!raf) raf = requestAnimationFrame(frame); };
+    const wake = () => { if (!raf) raf = requestAnimationFrame(frame); };
     function rest() { freed(sa); freed(sb); sa.t = pos(lo); sb.t = pos(hi); wake(); }
 
     // 끌기: 조작 영역 어디를 눌러도 가까운 손잡이가 따라옵니다. 두 손잡이가 같은 자리면 끄는 방향으로 정합니다.
@@ -214,7 +213,7 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (W) { wa = la.offsetWidth; wb = lb.offsetWidth; wm = lm.offsetWidth; draw(); } });
 
     // 갤러리(data-vzb-loop): 화면에 보이는 동안, 손을 대기 전과 손을 뗀 지 6초 뒤부터 몇 가지 범위를 차례로 보여 줍니다.
-    if (!reduce && card.closest('[data-vzb-loop]')) {
+    if (card.closest('[data-vzb-loop]')) {
       const s0 = [lo / n, hi / n], plan = [[0.08, 0.36], [0.24, 0.72], [0.04, 0.52], [0.44, 0.92], s0];
       let k = 0, seen = true;
       if ('IntersectionObserver' in window) new IntersectionObserver((es) => { seen = es[es.length - 1].isIntersecting; }).observe(card);

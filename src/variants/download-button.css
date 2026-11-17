@@ -45,8 +45,3 @@
 @keyframes vzb-dl-squash { 0% { transform: scale(1, 1); } 30% { transform: scale(1.18, 0.7); } 65% { transform: scale(0.94, 1.08); } 100% { transform: scale(1, 1); } }
 @keyframes vzb-dl-shake { 0%, 100% { transform: translateX(0); } 18% { transform: translateX(-7px); } 36% { transform: translateX(6px); } 54% { transform: translateX(-4px); } 72% { transform: translateX(2px); } }
 @keyframes vzb-dl-burst { 0% { opacity: 1; transform: rotate(var(--vzb-a)) translateX(8px) scale(1); } 100% { opacity: 0; transform: rotate(var(--vzb-a)) translateX(var(--vzb-r)) scale(0.3); } }
-@media (prefers-reduced-motion: reduce) {
-  .vzb-dl-menu, .vzb-dl-btn, .vzb-dl-opt, .vzb-dl-arrow, .vzb-dl-check, .vzb-dl-got { transition: none; }
-  .vzb-dl.is-open .vzb-dl-opt { transition-delay: 0s; }
-  .vzb-dl.is-none .vzb-dl-menu, .vzb-dl.is-done .vzb-dl-tray, .vzb-dl.is-done .vzb-dl-burst i { animation: none; }
-}

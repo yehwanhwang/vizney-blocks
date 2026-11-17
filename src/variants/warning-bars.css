@@ -25,4 +25,3 @@
 .vzb-bb-sum { flex: 1 1 auto; min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }
 .vzb-bb-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
 .vzb-bb-key { display: inline-block; width: 8px; height: 8px; margin-right: 7px; border-radius: 2px; background: var(--vzb-bad); }
-@media (prefers-reduced-motion: reduce) { .vzb-bb-col { transition: none; } }

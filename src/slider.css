@@ -23,6 +23,3 @@
 .vzb-sl.is-on .vzb-sl-hist { transform: none; }
 .vzb-sl-bar { flex: 1 1 0; min-width: 0; border-radius: 2px 2px 0 0; background: var(--vzb-other); transform-origin: 50% 100%; transition: background-color 0.18s; }
 .vzb-sl-bar.is-in { background: var(--vzb-ink); }
-@media (prefers-reduced-motion: reduce) {
-  .vzb-sl-thumb, .vzb-sl-lab, .vzb-sl-pop, .vzb-sl.is-on .vzb-sl-pop, .vzb-sl-hist, .vzb-sl-bar { transition: none; }
-}

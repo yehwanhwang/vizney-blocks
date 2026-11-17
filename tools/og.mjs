@@ -24,6 +24,9 @@ const chart = (lang) => {
   if (!code.includes(SHORT[0])) throw new Error('tools/og.mjs: the English subtitle of warning-bars changed; update SHORT');
   return code.replace(SHORT[0], SHORT[1]);
 };
+// The image is a still: Warning Bars is marked as a redrawn card (data-vzb-live), which draws its last frame at once (the months over
+// budget in red), and its replay button is left out of the picture.
+const still = (code) => code.replace('<div class="vzb-card" data-vzb="warning-bars">', '<div class="vzb-card" data-vzb="warning-bars" data-vzb-live>');
 
 // Words: a tag, a title of up to two lines and one line under it, as on a post image.
 const T = {
@@ -56,17 +59,17 @@ body { position: relative; font-family: 'VZ Sans', sans-serif; color: #ffffff; -
 .box.b { left: 48px; top: 517px; width: 48px; height: 48px; }
 .cards { position: absolute; left: 652px; top: 87px; width: 400px; display: grid; gap: 18px; }
 .cards > * { box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6); }
+.cards .vzb-bb-btn { display: none !important; }
 .bar { box-sizing: border-box; padding: 20px 24px; border: 1px solid var(--vzb-edge); border-radius: var(--vzb-radius); background: var(--vzb-card); }
 </style></head><body>
 <div class="frame"><div class="tag"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="13" height="13" rx="3" fill="#1b1b1b"/><rect x="17" y="2" width="13" height="13" rx="3" fill="#ff9500"/><rect x="2" y="17" width="13" height="13" rx="3" fill="#ffcc00"/><rect x="17" y="17" width="13" height="13" rx="3" fill="#ff2d55"/></svg>Blocks</div><h1>${T[lang].title}</h1><p>${T[lang].sub}</p><img class="logo" src="${LOGO}" alt="Vizney"></div>
-<div class="cards"><div class="bar">${card(lang, 'filter-chips')}</div><div>${chart(lang)}</div></div>
+<div class="cards"><div class="bar">${card(lang, 'filter-chips')}</div><div>${still(chart(lang))}</div></div>
 <span class="box a"></span><span class="box b"></span>
 </body></html>`;
 
 const browser = await chromium.launch(process.env.OG_CHROME ? { executablePath: process.env.OG_CHROME } : {});
 for (const lang of ['ko', 'en']) {
-  // Reduced motion: moving cards draw their last frame at once (Warning Bars with the months over budget in red).
-  const p = await browser.newPage({ viewport: { width: 1200, height: 660 }, deviceScaleFactor: 1, reducedMotion: 'reduce' });
+  const p = await browser.newPage({ viewport: { width: 1200, height: 660 }, deviceScaleFactor: 1 });
   await p.route('**/og-page', (route) => route.fulfill({ contentType: 'text/html', body: page(lang) }));
   await p.goto(`${BASE}/og-page`);
   await p.evaluate(() => document.fonts.ready);

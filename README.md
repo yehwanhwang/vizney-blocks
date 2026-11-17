@@ -93,7 +93,7 @@ pip install fonttools
 SPOQA_DIR=/path/to/spoqa-han-sans/Original/SpoqaHanSansNeo node build.mjs
 ```
 
-빌드는 맨 앞에서 `guard.mjs`를 돌려 카드가 규칙을 지키는지 검사합니다(카드 id는 카드 이름을 소문자와 하이픈으로 적은 것, 외부 리소스 없음, 색은 `tokens.css`의 변수만, 차트 카드의 높이 1 · 1.5 · 2단위와 컨트롤의 조작부 높이, 선택자와 변수는 `vzb` 접두, 애니메이션에 reduced-motion 규칙, 툴팁은 키보드로도, 예시 JSON의 길이와 계산 필드, meta.json과 파일의 짝, 카드 안 문구는 모두 `tx()`를 거쳐 영어가 있을 것, 쓰지 않는 영어 문구가 없을 것, 영어 예시 데이터와 영어 규칙이 카드마다 있을 것). 어긋나면 사유를 적고 멈춥니다. 글꼴 없이 검사만 하려면 `node build.mjs --check`를 씁니다.
+빌드는 맨 앞에서 `guard.mjs`를 돌려 카드가 규칙을 지키는지 검사합니다(카드 id는 카드 이름을 소문자와 하이픈으로 적은 것, 외부 리소스 없음, 색은 `tokens.css`의 변수만, 차트 카드의 높이 1 · 1.5 · 2단위와 컨트롤의 조작부 높이, 선택자와 변수는 `vzb` 접두, 툴팁은 키보드로도, 예시 JSON의 길이와 계산 필드, meta.json과 파일의 짝, 카드 안 문구는 모두 `tx()`를 거쳐 영어가 있을 것, 쓰지 않는 영어 문구가 없을 것, 영어 예시 데이터와 영어 규칙이 카드마다 있을 것). 어긋나면 사유를 적고 멈춥니다. 글꼴 없이 검사만 하려면 `node build.mjs --check`를 씁니다.
 
 - `src/`: 카드 공통 부품(`core.js`와 `base.css`, `chart.js` · `slider.js` · `roll.js`와 같은 이름의 `.css`), 색과 글꼴 변수(`tokens.css`: 밝은 바탕 값과 어두운 바탕 `.vzb-dark` 값), 카드별 코드와 예시 데이터(`src/variants/<id>.js` · `.css` · `.json` · `.en.json`), 카드의 종류 · 쓰임 · 규칙(`src/variants/meta.json`), 스킬 예시(`src/skill/examples/`).
 - 영어: 한국어가 원본이고 영어는 덧씌웁니다. 카드 안 문구(툴팁 · 낭독 문구 등)는 `src/core.js`의 `EN` 표와 `tx()`로 바뀌고, 사이트 문구는 `build.mjs`의 `WORDS`, 카드의 쓰임과 규칙은 `src/variants/meta.en.json`, 예시 데이터는 `<id>.en.json`(`"lang": "en"` 포함), 토큰 설명은 `src/tokens.en.css`(선언은 `tokens.css`와 같아야 합니다)에 있습니다. 카드를 더할 때는 이 넷을 함께 적어야 가드를 지납니다.

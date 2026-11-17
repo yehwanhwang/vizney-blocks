@@ -14,7 +14,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.58';
+const VERSION = 'v0.59';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -151,7 +151,7 @@ const WORDS = {
     grid: '여러 장을 한 줄에', gridp: '카드는 배치를 맡지 않습니다. 감싸는 요소에 격자를 주면 폭에 맞춰 줄이 바뀝니다. 차트 카드의 폭은 340px 이상으로 두고, 가로로 길게 읽는 차트에는 두 칸이나 전체 폭을 주세요. 지금 있는 차트 카드는 높이가 모두 2단위(336px)라 한 줄에 섞어도 높이가 맞습니다. 컨트롤은 틀이 없으므로 차트 위 필터 줄에 그대로 놓습니다.', gridNote: '차트 카드 여러 장',
     tokensTitle: '색 · 글꼴 · 바탕', tokensP: (tokens) => `색과 글꼴은 :root의 변수로 바꿉니다. 모든 카드에 한 번에 적용되고, 변수 목록은 <a href="${tokens}">tokens.css</a>에 있습니다. 어두운 화면에는 카드마다 JSON에 <code>"theme": "dark"</code>를 적습니다.`,
     notesTitle: '알아 둘 것',
-    notes: ['차트 카드는 화면에 보이면 한 번 재생하고 마지막 장면에서 멈춥니다. 동작 줄이기 설정에서는 재생하지 않고 마지막 장면을 그립니다.', '카드 안 JSON의 글자가 바뀌면 그 카드만 다시 그립니다. 이때는 처음부터 재생하지 않습니다.', '카드는 HTML에 그대로 붙이는 조각입니다. innerHTML로 넣으면 카드의 스크립트가 실행되지 않습니다.'],
+    notes: ['차트 카드는 화면에 보이면 한 번 재생하고 마지막 장면에서 멈춥니다. 움직임이 데이터의 뜻이라 운영체제의 동작 줄이기 설정과 상관없이 재생합니다.', '카드 안 JSON의 글자가 바뀌면 그 카드만 다시 그립니다. 이때는 처음부터 재생하지 않습니다.', '카드는 HTML에 그대로 붙이는 조각입니다. innerHTML로 넣으면 카드의 스크립트가 실행되지 않습니다.'],
     notesAll: (u) => `카드마다의 규칙과 컨트롤을 잇는 법은 <a href="${u}">llms.txt</a>에 모두 있습니다.`,
     homeTitle: 'Vizney Blocks · 움직임으로 읽는 차트와 대시보드 컨트롤', homeDesc: GDESC.ko,
     // site.js
@@ -182,7 +182,7 @@ const WORDS = {
     grid: 'Several cards in a row', gridp: 'Cards do not lay themselves out. Give the wrapper a grid and the rows wrap to the width. Keep a chart card at least 340px wide, and give a chart that reads along a long axis two columns or the full width. Every chart card is now 2 units tall (336px), so a mixed row lines up. The controls have no frame, so put them as they are in a filter bar above the charts.', gridNote: 'several chart cards',
     tokensTitle: 'Colors, font and background', tokensP: (tokens) => `Set colors and the font with :root variables; they apply to every card at once. The list is in <a href="${tokens}">tokens.css</a>. For a dark screen, write <code>"theme": "dark"</code> in each card’s JSON.`,
     notesTitle: 'Good to know',
-    notes: ['A chart card plays once when it comes into view and stops on its last frame. With reduced motion turned on, it draws the last frame without playing.', 'When the JSON text inside a card changes, only that card draws again, without playing from the start.', 'A card is a snippet pasted into the HTML as it is. Inserted with innerHTML, its script does not run.'],
+    notes: ['A chart card plays once when it comes into view and stops on its last frame. The motion carries the data, so it plays whatever the reduced-motion setting of the system.', 'When the JSON text inside a card changes, only that card draws again, without playing from the start.', 'A card is a snippet pasted into the HTML as it is. Inserted with innerHTML, its script does not run.'],
     notesAll: (u) => `Every card’s rules and how to connect the controls are in <a href="${u}">llms.txt</a>.`,
     homeTitle: 'Vizney Blocks · Charts in motion and dashboard controls', homeDesc: GDESC.en,
     js: { copied: 'Copied', linkCopied: 'Link copied', promptCopied: 'Prompt copied', toLight: 'Show on light', toDark: 'Show on dark', sub: 'Change only the data (JSON) on the <b>orange lines</b>. Leave the rest as it is.', blocked: 'Copying is blocked here. The code is selected; press Ctrl+C (⌘+C) to copy it.', none: 'No card found.' },
@@ -641,7 +641,7 @@ const RULES = (from, at, lang = 'ko') => (lang === 'en' ? [
   `Change colors and the font with the --vzb-* variables on :root (--vzb-primary, --vzb-font, …). The variable list and what each one does are in ${SITE}/tokens.css (the same content as the :where(:root) block in the card code). The background is picked per card with "theme" in its JSON: empty is white with blue as the first data color, "dark" is Vizney black with yellow as the first data color.`,
   `Common fields: title (what the values are), subtitle (the period and the basis), format (usd dollar amounts, shortened to $745.6K · $1.2M · count a count, with its unit in unit · pct a percentage (3.4 is 3.4%), changes in pp · days a number of days · eok and krw are Korean won notations), decimals (decimal places; empty lets the card decide), better (up · down · neutral), labels (period names, the same length as the values; null for a period without a value), lang (en: the words the card prints itself in English), theme. Controls: label (the name screen readers read; not drawn on screen) and name (detail.name of the control's events). Each card's own fields are in the example JSON of its code and ${at}.`,
   'The amount over a limit, shares, ranks, changes and totals are computed by the card, so do not write them in the JSON. Give amounts as raw values, not rounded or divided into thousands or millions.',
-  'A chart card plays once when it comes into view and stops on its last frame. The still frame reads correctly by itself, and with reduced motion turned on the card draws it without playing. A wrapper with data-vzb-loop makes the card repeat; a card that keeps moving makes its neighbours hard to read, so use that only on a showcase such as a gallery.',
+  'A chart card plays once when it comes into view and stops on its last frame. The still frame reads correctly by itself. The motion carries the data, so cards play whatever the reduced-motion setting of the system; mouse-over and keyboard focus pause them, and a replay button or player sits on the card. A wrapper with data-vzb-loop makes the card repeat; a card that keeps moving makes its neighbours hard to read, so use that only on a showcase such as a gallery.',
   'A card is a snippet pasted into the HTML document as it is. Inserted with innerHTML or React\'s dangerouslySetInnerHTML, the card\'s <script> does not run.',
 ] : [
   `${from} 카드 코드를 그대로 붙여 넣고 JSON 값만 바꾼다. 스타일과 스크립트는 고치지 않는다. 같은 카드를 여러 장 쓸 때는 카드 코드를 통째로 다시 붙여 넣고 각 JSON만 바꾼다.`,
@@ -650,7 +650,7 @@ const RULES = (from, at, lang = 'ko') => (lang === 'en' ? [
   `색과 글꼴은 :root의 --vzb-* 변수(--vzb-primary, --vzb-font 등)로 바꾼다. 변수 목록과 쓰임은 ${SITE}/ko/tokens.css 에 있다(카드 코드의 :where(:root) 블록과 같은 내용). 바탕은 카드마다 JSON의 theme으로 고른다. 비우면 흰 바탕에 파랑이 첫째 데이터 색이고, "dark"면 Vizney 검정 바탕에 노랑이 첫째 데이터 색이다.`,
   `공통 필드: title(무엇의 값인지), subtitle(기간과 기준), format(krw 원 단위 숫자를 만·억·조로 줄여 적음. 10만 원 미만은 87,324원처럼 원 단위 그대로 · eok 억 단위 숫자 · usd 달러 금액을 $745.6K·$1.2M처럼 · count 개수, 단위는 unit · pct 퍼센트 숫자(3.4는 3.4%), 증감은 %p · days 일수), decimals(소수 자릿수, 비우면 카드가 정함), better(up · down · neutral), labels(기간 이름, 값과 같은 길이. 값이 없는 기간은 값을 null로), lang(en이면 카드가 직접 적는 문구가 영어), theme. 컨트롤: label(화면 낭독기가 읽는 이름. 화면에는 그리지 않음), name(컨트롤이 보내는 이벤트의 detail.name). 카드마다의 필드는 카드 코드의 예시 JSON과 ${at}에 있다.`,
   '넘친 양, 비중, 순위, 증감, 합계는 카드가 계산하므로 JSON에 적지 않는다. 금액은 미리 반올림하거나 천·백만 단위로 나누지 않고 원래 값을 넣는다.',
-  '차트 카드는 화면에 보이면 한 번 재생하고 마지막 장면에서 멈춘다. 멈춘 장면만으로 바르게 읽히고, 동작 줄이기 설정에서는 재생하지 않고 마지막 장면을 그린다. 감싼 요소에 data-vzb-loop를 붙이면 되풀이하지만, 계속 움직이는 카드는 옆 카드를 읽기 어렵게 하므로 갤러리 같은 전시 화면에만 쓴다.',
+  '차트 카드는 화면에 보이면 한 번 재생하고 마지막 장면에서 멈춘다. 멈춘 장면만으로 바르게 읽힌다. 움직임이 데이터의 뜻이라 운영체제의 동작 줄이기 설정과 상관없이 재생하고, 마우스를 올리거나 키보드로 포커스하면 잠시 멈추며, 다시 보기 단추나 재생 단추를 둔다. 감싼 요소에 data-vzb-loop를 붙이면 되풀이하지만, 계속 움직이는 카드는 옆 카드를 읽기 어렵게 하므로 갤러리 같은 전시 화면에만 쓴다.',
   '카드는 HTML 문서에 그대로 붙이는 조각이다. innerHTML이나 React의 dangerouslySetInnerHTML로 넣으면 카드의 <script>가 실행되지 않는다.',
 ]);
 // Connecting controls and charts: the page script between them. The example is the one the plugin preview runs (DEMO below).

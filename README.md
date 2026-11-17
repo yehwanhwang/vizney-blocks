@@ -104,6 +104,10 @@ SPOQA_DIR=/path/to/spoqa-han-sans/Original/SpoqaHanSansNeo node build.mjs
 - `skills/vizney-blocks/`: 빌드 결과. 코딩 에이전트용 스킬(입구인 영어판 `SKILL.md`, 한국어로 일할 때 따르는 `SKILL.ko.md`, 예시 `examples/`)과 OpenDesign 플러그인 파일(`open-design.json`, `icon.svg`, `preview/index.html`)입니다. `docs/`처럼 직접 고치지 않습니다.
 - `releases/`: 버전별 릴리스 노트. `VERSION`을 올린 커밋이 main에 들어오면 `.github/workflows/release.yml`이 GitHub 릴리스를 만듭니다.
 
+## 후원
+
+Vizney Blocks가 쓸모 있었다면 [GitHub Sponsors](https://github.com/sponsors/yehwanhwang)로 후원할 수 있습니다. 후원은 새 블록을 만드는 데 씁니다.
+
 ## 라이선스
 
 - 카드 코드와 갤러리: [MIT License](LICENSE)

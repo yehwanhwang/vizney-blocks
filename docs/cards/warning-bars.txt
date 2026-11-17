@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.57 · Bar Chart · Warning Bars (warning-bars)
+<!-- Vizney Blocks v0.58 · Bar Chart · Warning Bars (warning-bars)
      https://blocks.vizney.com/cards/warning-bars.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">

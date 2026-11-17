@@ -1,8 +1,8 @@
 /* Waterfall Walk: 높이 2단위. 머리 아래 큰 숫자(끝 값)와 증감 배지, 그 아래 그래프가 남은 높이를 채웁니다.
-   막대는 굵기 30px까지, 출발하는 끝은 각지게 · 도착하는 끝은 4px 둥글게 그립니다(올라가면 위, 내려가면 아래가 둥급니다).
-   시작과 끝 막대는 회색(--vzb-base), 요인 막대는 좋은 쪽 초록(--vzb-good) · 나쁜 쪽 빨강(--vzb-bad) · neutral이면 첫째 색입니다.
-   이어지는 높이는 1px 회색 선으로 잇고, 값과 이름은 11px 글자색으로 적습니다(합계의 값은 굵게). 값 글자에는 카드 바탕색 테두리를 둘러
-   잇는 선과 겹쳐도 읽히게 합니다. 움직임과 배지가 붙는 때는 스크립트가 그립니다. */
+   막대는 굵기 30px까지의 알약(양 끝이 둥근 막대)이고, 도착한 쪽 끝(머리)에 카드 바탕색 점을 뚫습니다.
+   시작과 끝 알약은 글자색(--vzb-ink), 요인 알약은 좋은 쪽 초록(--vzb-good) · 나쁜 쪽 빨강(--vzb-bad) · neutral이면 첫째 색입니다.
+   값과 이름은 11px 글자색으로 적습니다(합계의 값은 굵게). 값 글자에는 카드 바탕색 테두리를 둘러 알약 가까이에서도 읽히게 합니다.
+   움직임과 배지가 붙는 때는 스크립트가 그립니다. */
 .vzb-card[data-vzb="waterfall-walk"] { min-height: calc(var(--vzb-unit) * 2); }
 .vzb-card[data-vzb="waterfall-walk"] .vzb-hd { position: relative; padding-right: 36px; }   /* 오른쪽 위 다시 보기 단추 자리 */
 .vzb-ww-fig .vzb-num { font-variant-numeric: tabular-nums; }
@@ -12,8 +12,8 @@
 .vzb-ww.vzb-foot { padding-top: 14px; }
 .vzb-ww-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-ww-base { stroke: var(--vzb-grid); stroke-width: 1; }
-.vzb-ww-conn { stroke: var(--vzb-muted); stroke-width: 1; }
-.vzb-ww-col.is-total .vzb-ww-bar { fill: var(--vzb-base); }
+.vzb-ww-col.is-total .vzb-ww-bar { fill: var(--vzb-ink); }
+.vzb-ww-dot { fill: var(--vzb-card); }
 .vzb-ww-col.is-good .vzb-ww-bar { fill: var(--vzb-good); }
 .vzb-ww-col.is-bad .vzb-ww-bar { fill: var(--vzb-bad); }
 .vzb-ww-col.is-plain .vzb-ww-bar { fill: var(--vzb-primary); }
@@ -21,8 +21,8 @@
 .vzb-ww-col.is-total .vzb-ww-val { font-weight: 700; fill: var(--vzb-ink); }
 .vzb-ww-name { font-size: 11px; fill: var(--vzb-muted); }
 .vzb-ww-col.is-total .vzb-ww-name { font-weight: 500; fill: var(--vzb-ink-2); }
-.vzb-ww-col, .vzb-ww-conns { transition: opacity 0.12s; }
-.vzb-ww-svg.is-hover .vzb-ww-col:not(.is-on), .vzb-ww-svg.is-hover .vzb-ww-conns { opacity: 0.3; }
+.vzb-ww-col { transition: opacity 0.12s; }
+.vzb-ww-svg.is-hover .vzb-ww-col:not(.is-on) { opacity: 0.3; }
 .vzb-ww-btn { position: absolute; top: -2px; right: 0; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
 .vzb-ww-btn:hover { background: var(--vzb-other); }
 .vzb-ww-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }

@@ -1,25 +1,25 @@
 {
-  "title": "Operating Profit",
-  "subtitle": "Change by driver, 2025 → 2026",
+  "title": "Cash Balance",
+  "subtitle": "What moved it, Jan 1 → Dec 31",
   "lang": "en",
   "format": "usd",
-  "start": 8200000,
-  "startLabel": "2025",
-  "endLabel": "2026",
+  "start": 2800000,
+  "startLabel": "Jan 1",
+  "endLabel": "Dec 31",
   "labels": [
-    "Volume",
-    "Price",
-    "Mix",
-    "Materials",
-    "Freight",
-    "FX"
+    "Sales",
+    "Payroll",
+    "Funding",
+    "Equipment",
+    "Grants",
+    "Tax"
   ],
   "values": [
-    3400000,
-    2100000,
-    1300000,
-    -2900000,
-    -1600000,
-    -1100000
+    4600000,
+    -3400000,
+    4200000,
+    -3200000,
+    3000000,
+    -2600000
   ]
 }

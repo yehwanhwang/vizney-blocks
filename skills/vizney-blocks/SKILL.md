@@ -1,6 +1,6 @@
 ---
 name: vizney-blocks
-description: "Add charts read through their motion and dashboard controls to an HTML page with Vizney Blocks (blocks.vizney.com) cards. Use it to draw one of the charts (Bar Overflow · Waffle Flip · Bump Race) or add one of the controls (Range Slider · Filter Chips · Download Button), or when the user mentions Vizney Blocks. Keep the card code, change only its JSON data, and connect controls to charts with a short page script. 한국어 요청이나 한국어 화면에도 쓴다(한국어판 SKILL.ko.md)."
+description: "Add charts read through their motion and dashboard controls to an HTML page with Vizney Blocks (blocks.vizney.com) cards. Use it to draw one of the charts (Bar Overflow · Waffle Flip · Bump Race · Waterfall Walk) or add one of the controls (Range Slider · Filter Chips · Download Button), or when the user mentions Vizney Blocks. Keep the card code, change only its JSON data, and connect controls to charts with a short page script. 한국어 요청이나 한국어 화면에도 쓴다(한국어판 SKILL.ko.md)."
 ---
 
 # Building screens with Vizney Blocks cards
@@ -11,13 +11,14 @@ Vizney Blocks is a set of copy-paste HTML cards: charts you read through their m
 
 ## Cards
 
-The cards are these 3 charts and 3 controls, and no others. When no card fits a request, do not bend one to it: build that part yourself and tell the user it is not a card.
+The cards are these 4 charts and 3 controls, and no others. When no card fits a request, do not bend one to it: build that part yourself and tell the user it is not a card.
 
 ### Charts
 
 - Bar Overflow (`bar-overflow`) · Bar Chart — Bars for each period stand against one horizontal line, the same limit for every period, and only the parts above the line blink red. Use it for a trend with the same limit each period, such as a monthly budget or a monthly capacity. Do not use it for a target, where more is better.
 - Waffle Flip (`waffle-flip`) · Waffle Chart — A card that draws shares as a 100-cell waffle and flips, one by one, the cells that changed hands since the earlier period. Use it to show how much one item's share grew or shrank, such as a market share or a sales mix. It draws the change between two periods only.
 - Bump Race (`bump-race`) · Bump Chart — A card that ranks the items in every period, joins the ranks with S-curves, and plays through the periods one at a time so the moments the order changes are visible. Use it to show how products, channels or branches moved up and down over a year, above all how far one item climbed. Ranks hide the size of the differences, so when the gaps matter, use a line chart.
+- Waterfall Walk (`waterfall-walk`) · Waterfall Chart — A card that joins the changes between a starting value and an ending value as one bar per driver. On play it starts from the first bar, walks through the drivers one by one, adding and taking away, and the level it reaches pours down into the end bar. Use it to show what moved a value between two points: what raised and cut operating profit from last year to this year, or how hires and departures changed headcount from the start to the end of the year. Do not use it for a trend over periods.
 
 ### Controls
 

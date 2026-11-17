@@ -1,0 +1,25 @@
+{
+  "title": "Operating Profit",
+  "subtitle": "Change by driver, 2025 → 2026",
+  "lang": "en",
+  "format": "usd",
+  "start": 8200000,
+  "startLabel": "2025",
+  "endLabel": "2026",
+  "labels": [
+    "Volume",
+    "Price",
+    "Mix",
+    "Materials",
+    "Freight",
+    "FX"
+  ],
+  "values": [
+    3400000,
+    2100000,
+    1300000,
+    -2900000,
+    -1600000,
+    -1100000
+  ]
+}

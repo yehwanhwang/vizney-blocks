@@ -288,12 +288,12 @@ const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 // v0.52: the controls are drawn bare (no head, no frame) in the middle of the tile, like the units of a motion gallery.
 // v0.49: the gallery is built one block at a time. v0.56: the gallery is the whole list; a card that is not here does not exist.
 // Blocks that move (data-vzb-loop) replay on the first screen instead of stopping at the end.
-const GALLERY = ['bar-overflow', 'waffle-flip', 'bump-race', 'range-slider', 'filter-chips', 'download-button'];
+const GALLERY = ['bar-overflow', 'waffle-flip', 'bump-race', 'waterfall-walk', 'range-slider', 'filter-chips', 'download-button'];
 const LOOP = new Set(GALLERY);
 // v0.53: tile widths follow the block. On the 3-column gallery a chart that reads along a long axis (13 months, a 5 × 20 waffle)
 // takes 2 columns; a chart that reads better compact (a donut, a single figure) and every control take 1. The tiles are laid out
 // so that rows alternate 2 + 1 and 1 + 2. A wide block left without a partner sits alone; narrow blocks left over go three to a row.
-const SPAN = { 'bar-overflow': 2, 'waffle-flip': 2, 'bump-race': 2 };
+const SPAN = { 'bar-overflow': 2, 'waffle-flip': 2, 'bump-race': 2, 'waterfall-walk': 2 };
 const wideOf = (id) => SPAN[id] === 2;
 const ORDER = (() => {
   const wide = GALLERY.filter(wideOf), narrow = GALLERY.filter((id) => !wideOf(id)), out = [];
@@ -407,6 +407,10 @@ const FIELD_OVERRIDE = {
   'bump-race': {
     ko: { title: '무엇의 순위인지(예: 판매 순위)', subtitle: '순위의 기준과 기간(예: 월별 판매 수량 순위, 2025년 11월 – 2026년 11월)', labels: '기간 이름. 월별 추이는 13개월', focus: '짚을 항목의 이름. 비우면 첫 항목', items: '항목 2~8개. 항목마다 name과 values(기간마다의 값, labels와 같은 개수. 값이 없는 기간은 null)', better: 'up(비우면, 큰 값이 1위) · down(작은 값이 1위)' },
     en: { title: 'what is ranked (e.g. Top Sellers)', subtitle: 'the basis of the rank and the period (e.g. monthly rank by units sold, Nov 2025 – Nov 2026)', labels: 'the period names; 13 months for a monthly trend', focus: 'the name of the item to follow; the first item when empty', items: '2 to 8 items, each with name and values (one per period, as many as labels; null for a period without a value)', better: 'up (default: the largest value ranks 1) or down (the smallest value ranks 1)' },
+  },
+  'waterfall-walk': {
+    ko: { title: '무엇의 값인지(예: 영업이익)', subtitle: '증감의 기준과 두 지점(예: 요인별 증감, 2025년 → 2026년)', start: '시작 값(숫자 하나). 끝 값과 누계는 카드가 계산한다', startLabel: '시작 막대의 이름(예: 2025년). 비우면 시작', endLabel: '끝 막대의 이름(예: 2026년). 비우면 끝', labels: '요인 이름. 설명하는 순서대로 3~8개', values: '요인마다의 증감(늘면 +, 줄면 −, labels와 같은 개수). 값이 없는 요인은 null', better: 'up(비우면, 늘린 요인이 초록) · down(줄인 요인이 초록) · neutral(요인을 모두 첫째 색으로)' },
+    en: { title: 'what the values are (e.g. Operating Profit)', subtitle: 'the basis of the change and the two points (e.g. Change by driver, 2025 → 2026)', start: 'the starting value (a single number); the card computes the end value and the running totals', startLabel: 'the name of the first bar (e.g. 2025); Start when empty', endLabel: 'the name of the last bar (e.g. 2026); End when empty', labels: 'the driver names, 3 to 8, in the order you explain them', values: 'the change of each driver (+ up, − down, as many as labels); null for a driver without a value', better: 'up (default: drivers that raise the value are green) · down (drivers that lower it are green) · neutral (every driver in the first color)' },
   },
   'range-slider': {
     ko: { label: '화면 낭독기가 읽는 이름(예: 주문 금액). 화면에는 그리지 않는다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '고를 수 있는 가장 작은 값', max: '고를 수 있는 가장 큰 값', step: '한 칸의 크기. 비우면 범위를 100칸쯤으로 나눈다', value: '[시작, 끝]. 비우면 전체 범위', counts: 'min~max를 같은 폭으로 나눈 칸마다의 개수(분포 막대). 없어도 된다', noun: '개수 뒤에 붙는 말(예: 건). 비우면 행' },

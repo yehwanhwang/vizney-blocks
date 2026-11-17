@@ -4,9 +4,9 @@
   "name": "vizney-blocks",
   "title": "Vizney Blocks",
   "version": "0.58.0",
-  "description": "Charts read through their motion and dashboard controls as copy-paste HTML cards (3 charts, 3 controls), built on the Vizney chart guide: keep the card code, change only its JSON, and connect controls to charts with a short page script.",
+  "description": "Copy-paste HTML cards for dashboards: charts read through their motion and the controls that filter them, built on the Vizney chart guide. Keep the card code, change only its JSON, and connect controls to charts with a short page script.",
   "description_i18n": {
-    "ko": "움직임으로 읽는 차트와 대시보드 컨트롤을 담은, 복사해 붙여 쓰는 HTML 카드(차트 3종, 컨트롤 3종). Vizney 차트 가이드의 판단을 담았고, 카드 코드는 그대로 둔 채 JSON만 바꾸며 컨트롤과 차트는 짧은 페이지 스크립트로 잇는다."
+    "ko": "대시보드에 붙여 쓰는 HTML 카드. 움직임으로 읽는 차트와 그 차트를 거르는 컨트롤을 Vizney 차트 가이드의 판단으로 만들었습니다. 카드 코드는 그대로 두고 JSON만 바꾸며, 컨트롤과 차트는 짧은 페이지 스크립트로 잇습니다."
   },
   "license": "MIT",
   "author": {

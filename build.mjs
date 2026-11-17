@@ -14,7 +14,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.57';
+const VERSION = 'v0.58';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -305,7 +305,7 @@ const ORDER = (() => {
 // The title area: the title and the description at the left, two buttons at the right (laid out as on Vizney Styles).
 // Sponsor is the yellow one and opens GitHub Sponsors; Copy AI link copies the address of llms.txt (without scripts it is a plain
 // link to that file). SPONSOR stays empty until the Sponsors profile is live: while it is empty the button is not drawn.
-const SPONSOR = '';
+const SPONSOR = 'https://github.com/sponsors/yehwanhwang';
 const HEART = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 20.5 3.6 12.3a5 5 0 0 1 7.1-7.1L12 6.5l1.3-1.3a5 5 0 0 1 7.1 7.1z"/></svg>';
 const galleryHead = (L) => `<section class="wrap ghead" aria-labelledby="ghead-title">
 <div class="ghead-copy">

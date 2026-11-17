@@ -1,7 +1,7 @@
 {
   "label": "월별 광고비 내려받기",
   "name": "export",
-  "target": "warning-bars",
+  "target": "bar-overflow",
   "filename": "monthly-ad-spend",
   "formats": [
     "csv",

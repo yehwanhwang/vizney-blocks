@@ -1,10 +1,10 @@
-<!-- Vizney Blocks 스킬의 한국어판. 스킬 입구는 같은 폴더의 SKILL.md(영어)이고, 한국어로 일할 때 이 파일을 따른다. Vizney Blocks(blocks.vizney.com)의 HTML 카드로 움직임으로 읽는 차트와 대시보드 컨트롤을 화면에 넣는다. 차트(Warning Bars · Share Waffle · Rank Lines)를 그리거나 컨트롤(Range Slider · Filter Chips · Download Button)을 둘 때, 사용자가 Vizney Blocks를 언급할 때 쓴다. 카드 코드는 그대로 두고 JSON 데이터만 바꾸며, 컨트롤과 차트는 짧은 페이지 스크립트로 잇는다. -->
+<!-- Vizney Blocks 스킬의 한국어판. 스킬 입구는 같은 폴더의 SKILL.md(영어)이고, 한국어로 일할 때 이 파일을 따른다. Vizney Blocks(blocks.vizney.com)의 HTML 카드로 움직임으로 읽는 차트와 대시보드 컨트롤을 화면에 넣는다. 차트(Bar Overflow · Waffle Flip · Bump Race)를 그리거나 컨트롤(Range Slider · Filter Chips · Download Button)을 둘 때, 사용자가 Vizney Blocks를 언급할 때 쓴다. 카드 코드는 그대로 두고 JSON 데이터만 바꾸며, 컨트롤과 차트는 짧은 페이지 스크립트로 잇는다. -->
 
 # Vizney Blocks 카드로 화면 만들기
 
 > 스킬의 한국어판이다. 영어판은 같은 폴더의 `SKILL.md`다. 순서, 카드 목록, 규칙, 체크리스트는 같은 원본에서 만들어져 내용이 같고, 카드 코드 주소(`/ko/cards/`)와 카드 문구가 한국어다.
 
-Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담은, 복사해 붙여 쓰는 HTML 카드 모음이다(v0.59, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 넘친 양 · 비중 · 순위 같은 계산과 색 · 강조 · 움직임은 카드가 Vizney 차트 가이드의 규칙대로 맡는다. 그래서 카드 코드는 그대로 두고 JSON 값만 바꾼다. 카드가 정하는 것은 그 차트를 바르게 그리는 방법이고, 화면에 무엇을 둘지는 화면을 만드는 쪽이 정한다.
+Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담은, 복사해 붙여 쓰는 HTML 카드 모음이다(v0.60, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 넘친 양 · 비중 · 순위 같은 계산과 색 · 강조 · 움직임은 카드가 Vizney 차트 가이드의 규칙대로 맡는다. 그래서 카드 코드는 그대로 두고 JSON 값만 바꾼다. 카드가 정하는 것은 그 차트를 바르게 그리는 방법이고, 화면에 무엇을 둘지는 화면을 만드는 쪽이 정한다.
 
 ## 카드
 
@@ -12,9 +12,9 @@ Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담�
 
 ### 차트
 
-- Warning Bars (`warning-bars`) · 막대 차트 — 기간별 값을 세로 막대로 세우고 모든 기간에 같은 한도를 가로선 하나로 그어, 선을 넘긴 구간만 빨갛게 깜빡여 알리는 카드입니다. 월 예산이나 월 처리량처럼 기간마다 같은 한도가 있는 값의 추이를 볼 때 씁니다. 목표처럼 넘을수록 좋은 값에는 쓰지 않습니다.
-- Share Waffle (`share-waffle`) · 와플 차트 — 100칸 와플로 비중을 그리고, 앞 기간에서 바뀐 만큼의 칸을 한 칸씩 뒤집어 보여 주는 카드입니다. 시장 점유율이나 매출 구성비처럼 한 항목의 비중이 얼마나 늘거나 줄었는지 전할 때 씁니다. 두 기간 사이의 변화만 그립니다.
-- Rank Lines (`rank-lines`) · 범프 차트 — 기간마다 순위를 매겨 S자 선으로 잇고, 재생하면 기간을 하나씩 넘기며 순위가 바뀌는 순간을 보여 주는 카드입니다. 상품 · 채널 · 지점의 순위가 한 해 동안 어떻게 오르내렸는지, 특히 한 항목이 몇 위에서 몇 위로 올라왔는지 전할 때 씁니다. 순위는 값의 차이를 감추므로, 차이의 크기가 중요하면 라인 차트를 씁니다.
+- Bar Overflow (`bar-overflow`) · 막대 차트 — 기간별 값을 세로 막대로 세우고 모든 기간에 같은 한도를 가로선 하나로 그어, 선을 넘긴 구간만 빨갛게 깜빡여 알리는 카드입니다. 월 예산이나 월 처리량처럼 기간마다 같은 한도가 있는 값의 추이를 볼 때 씁니다. 목표처럼 넘을수록 좋은 값에는 쓰지 않습니다.
+- Waffle Flip (`waffle-flip`) · 와플 차트 — 100칸 와플로 비중을 그리고, 앞 기간에서 바뀐 만큼의 칸을 한 칸씩 뒤집어 보여 주는 카드입니다. 시장 점유율이나 매출 구성비처럼 한 항목의 비중이 얼마나 늘거나 줄었는지 전할 때 씁니다. 두 기간 사이의 변화만 그립니다.
+- Bump Race (`bump-race`) · 범프 차트 — 기간마다 순위를 매겨 S자 선으로 잇고, 재생하면 기간을 하나씩 넘기며 순위가 바뀌는 순간을 보여 주는 카드입니다. 상품 · 채널 · 지점의 순위가 한 해 동안 어떻게 오르내렸는지, 특히 한 항목이 몇 위에서 몇 위로 올라왔는지 전할 때 씁니다. 순위는 값의 차이를 감추므로, 차이의 크기가 중요하면 라인 차트를 씁니다.
 
 ### 컨트롤
 
@@ -31,7 +31,7 @@ Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담�
 3. 카드 코드를 내려받는다. `https://blocks.vizney.com/ko/cards/<카드 id>.txt`가 카드 코드 원문이다(카드 문구가 한국어). 코드를 다시 쓰거나 줄이지 말고 받은 그대로 쓴다. 내려받을 수 없으면 사용자에게 그 주소의 내용을 붙여 달라고 한다.
 
    ```bash
-   curl -fsSL https://blocks.vizney.com/ko/cards/warning-bars.txt -o warning-bars.html
+   curl -fsSL https://blocks.vizney.com/ko/cards/bar-overflow.txt -o bar-overflow.html
    ```
 
 4. 카드 안 `<script type="application/json">`과 `</script>` 사이의 JSON 값만 바꾼다. 필드는 카드 코드에 든 예시 JSON이 기준이다. 예시에 없는 필드는 아래 규칙의 공통 필드와, llms.txt의 그 카드 줄에 이름이 나온 것만 더한다. 영어 화면이면 `"lang": "en"`을 더한다.
@@ -51,7 +51,7 @@ Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담�
    </div>
    <!-- 차트: 격자 한 칸에 차트 카드 코드를 하나씩 붙인다. 스크립트가 찾아야 하는 카드는 id를 준 요소로 감싼다. -->
    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:16px;">
-   <div id="spend"><!-- Warning Bars 카드 코드 --></div>
+   <div id="spend"><!-- Bar Overflow 카드 코드 --></div>
    </div>
    </body>
    </html>
@@ -70,7 +70,7 @@ Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담�
 - 넘친 양, 비중, 순위, 증감, 합계는 카드가 계산하므로 JSON에 적지 않는다. 금액은 미리 반올림하거나 천·백만 단위로 나누지 않고 원래 값을 넣는다.
 - 차트 카드는 화면에 보이면 한 번 재생하고 마지막 장면에서 멈춘다. 멈춘 장면만으로 바르게 읽힌다. 움직임이 데이터의 뜻이라 운영체제의 동작 줄이기 설정과 상관없이 재생하고, 마우스를 올리거나 키보드로 포커스하면 잠시 멈추며, 다시 보기 단추나 재생 단추를 둔다. 감싼 요소에 data-vzb-loop를 붙이면 되풀이하지만, 계속 움직이는 카드는 옆 카드를 읽기 어렵게 하므로 갤러리 같은 전시 화면에만 쓴다.
 - 카드는 HTML 문서에 그대로 붙이는 조각이다. innerHTML이나 React의 dangerouslySetInnerHTML로 넣으면 카드의 <script>가 실행되지 않는다.
-- 낮을수록 좋은 지표는 `"better": "down"`으로 둔다. Share Waffle은 줄어든 쪽이 초록 배지가 되고, Rank Lines는 작은 값이 1위가 된다.
+- 낮을수록 좋은 지표는 `"better": "down"`으로 둔다. Waffle Flip은 줄어든 쪽이 초록 배지가 되고, Bump Race는 작은 값이 1위가 된다.
 - 월별 추이는 데이터가 있으면 13개월을 넣는다. 처음과 마지막이 같은 달이라 전년 동월과 견줄 수 있다.
 - 기간 이름은 `25.09`, `3Q26`처럼 짧게 적는다. 길면 막대 아래와 구간 막대 아래에서 잘리거나 서로 붙는다.
 - 항목 이름(채널, 상품 등)은 화면 전체에서 한 언어로 맞춘다. 번역하면 모두 번역하고, 원문을 쓰면 모두 원문으로 둔다.
@@ -82,13 +82,13 @@ Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담�
 - 컨트롤은 값이 바뀔 때마다 카드에서 `vzb-change` 이벤트를 보낸다(위로 전달되므로 `document`에서 받는다). `detail`은 `{ name, value }`이고 `name`은 그 컨트롤 JSON의 `name`이다. Range Slider의 `value`는 `[시작, 끝]` 숫자, Filter Chips의 `value`는 고른 항목을 `options` 순서대로 담은 배열이다. 지금 값은 카드의 `data-vzb-value` 속성에도 JSON으로 적혀 있다.
 - 컨트롤은 처음 그릴 때는 이벤트를 보내지 않는다. 컨트롤의 `value`와 차트의 JSON을 처음부터 같은 조건으로 적는다.
 - 차트 카드는 안의 `<script type="application/json">` 글자가 바뀌면 그 카드만 다시 그린다. 페이지가 거르기 전의 전체 데이터를 들고 있다가, 이벤트를 받으면 거른 결과로 차트의 JSON을 만들어 바꿔 적는다. 다시 그린 카드는 처음부터 재생하지 않고 마지막 장면을 바로 그리며, 보는 사람이 고른 기간과 항목은 그대로 둔다.
-- 걸러서 남은 것이 없으면 빈 배열을 준다. Warning Bars는 `"labels": []`, Share Waffle과 Rank Lines는 `"items": []`이면 오류 대신 빈 화면을 그린다.
+- 걸러서 남은 것이 없으면 빈 배열을 준다. Bar Overflow는 `"labels": []`, Waffle Flip과 Bump Race는 `"items": []`이면 오류 대신 빈 화면을 그린다.
 - 같은 종류의 카드를 두 장 쓰면 카드마다 id를 준 요소로 감싸고 그 id로 가려 쓴다(아래 예시의 `#spend`).
 - Download Button은 `target`에 적은 종류(`data-vzb`)의 카드 가운데 페이지에서 처음 만나는 카드의 지금 JSON을 받는다. 그래서 컨트롤로 거른 뒤의 값이 그대로 내려간다. 받기 전에 `vzb-download` 이벤트(`detail: { name, target, format, filename, rows }`)를 보내고, 페이지가 `preventDefault()`를 부르면 파일을 만들지 않으므로 서버에서 원본을 받는 화면도 같은 단추를 쓸 수 있다.
 
 ```html
 <div><!-- Filter Chips 카드 코드: "name": "channel" --></div>
-<div id="spend"><!-- Warning Bars 카드 코드 --></div>
+<div id="spend"><!-- Bar Overflow 카드 코드 --></div>
 <script>
 // 페이지가 들고 있는 전체 데이터: 기간 이름과, 채널마다의 월별 값
 const LABELS = ['25.11', '25.12', '26.01'];
@@ -120,7 +120,7 @@ document.addEventListener('vzb-change', (e) => {
 
 - [ ] `labels`와 `values`의 길이가 같고, 값이 없는 기간은 값이 `null`이다.
 - [ ] 낮을수록 좋은 지표는 `"better": "down"`이다.
-- [ ] Warning Bars의 `limit`은 넘으면 안 되는 한도다. 넘을수록 좋은 목표에는 쓰지 않았다.
+- [ ] Bar Overflow의 `limit`은 넘으면 안 되는 한도다. 넘을수록 좋은 목표에는 쓰지 않았다.
 - [ ] 기간 이름은 짧고, 항목 이름은 화면 전체에서 한 언어다.
 
 ### 컨트롤
@@ -142,6 +142,6 @@ document.addEventListener('vzb-change', (e) => {
 
 요청 하나를 고른 카드 · JSON 핵심 · 잇는 스크립트 · 확인 결과까지 따라간 예시다. 비슷한 요청을 받으면 먼저 읽는다.
 
-- [예시 · 채널을 고르면 다시 그려지는 광고비 화면](examples/ad-spend-filter.md) — Filter Chips로 채널을 고르면 Warning Bars가 다시 그려지고, Download Button이 고른 결과를 그대로 내려받는 예시
+- [예시 · 채널을 고르면 다시 그려지는 광고비 화면](examples/ad-spend-filter.md) — Filter Chips로 채널을 고르면 Bar Overflow가 다시 그려지고, Download Button이 고른 결과를 그대로 내려받는 예시
 
 갤러리: https://blocks.vizney.com/ (한국어 https://blocks.vizney.com/ko/) · 소스: https://github.com/yehwanhwang/vizney-blocks

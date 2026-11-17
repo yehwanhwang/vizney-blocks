@@ -2,7 +2,7 @@
   "lang": "en",
   "label": "Download monthly ad spend",
   "name": "export",
-  "target": "warning-bars",
+  "target": "bar-overflow",
   "filename": "monthly-ad-spend",
   "formats": [
     "csv",

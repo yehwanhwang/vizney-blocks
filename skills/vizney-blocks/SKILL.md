@@ -1,13 +1,13 @@
 ---
 name: vizney-blocks
-description: "Add charts read through their motion and dashboard controls to an HTML page with Vizney Blocks (blocks.vizney.com) cards. Use it to draw one of the charts (Warning Bars · Share Waffle · Rank Lines) or add one of the controls (Range Slider · Filter Chips · Download Button), or when the user mentions Vizney Blocks. Keep the card code, change only its JSON data, and connect controls to charts with a short page script. 한국어 요청이나 한국어 화면에도 쓴다(한국어판 SKILL.ko.md)."
+description: "Add charts read through their motion and dashboard controls to an HTML page with Vizney Blocks (blocks.vizney.com) cards. Use it to draw one of the charts (Bar Overflow · Waffle Flip · Bump Race) or add one of the controls (Range Slider · Filter Chips · Download Button), or when the user mentions Vizney Blocks. Keep the card code, change only its JSON data, and connect controls to charts with a short page script. 한국어 요청이나 한국어 화면에도 쓴다(한국어판 SKILL.ko.md)."
 ---
 
 # Building screens with Vizney Blocks cards
 
 > 한국어로 일할 때(사용자가 한국어로 요청하거나 화면 문구가 한국어일 때)는 같은 폴더의 `SKILL.ko.md`를 읽고 그것을 따른다. Working in Korean? Read `SKILL.ko.md` in this folder and follow it instead; it has the same steps and rules with the Korean card addresses.
 
-Vizney Blocks is a set of copy-paste HTML cards: charts you read through their motion, and dashboard controls (v0.59, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. The card does the arithmetic (the amount over a limit, shares, ranks) and the colors, emphasis and motion, by the rules of the Vizney chart guide. So keep the card code and change only the JSON values. A card decides how to draw its chart correctly; what goes on the screen is up to whoever builds it.
+Vizney Blocks is a set of copy-paste HTML cards: charts you read through their motion, and dashboard controls (v0.60, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. The card does the arithmetic (the amount over a limit, shares, ranks) and the colors, emphasis and motion, by the rules of the Vizney chart guide. So keep the card code and change only the JSON values. A card decides how to draw its chart correctly; what goes on the screen is up to whoever builds it.
 
 ## Cards
 
@@ -15,9 +15,9 @@ The cards are these 3 charts and 3 controls, and no others. When no card fits a 
 
 ### Charts
 
-- Warning Bars (`warning-bars`) · Bar Chart — Bars for each period stand against one horizontal line, the same limit for every period, and only the parts above the line blink red. Use it for a trend with the same limit each period, such as a monthly budget or a monthly capacity. Do not use it for a target, where more is better.
-- Share Waffle (`share-waffle`) · Waffle Chart — A card that draws shares as a 100-cell waffle and flips, one by one, the cells that changed hands since the earlier period. Use it to show how much one item's share grew or shrank, such as a market share or a sales mix. It draws the change between two periods only.
-- Rank Lines (`rank-lines`) · Bump Chart — A card that ranks the items in every period, joins the ranks with S-curves, and plays through the periods one at a time so the moments the order changes are visible. Use it to show how products, channels or branches moved up and down over a year, above all how far one item climbed. Ranks hide the size of the differences, so when the gaps matter, use a line chart.
+- Bar Overflow (`bar-overflow`) · Bar Chart — Bars for each period stand against one horizontal line, the same limit for every period, and only the parts above the line blink red. Use it for a trend with the same limit each period, such as a monthly budget or a monthly capacity. Do not use it for a target, where more is better.
+- Waffle Flip (`waffle-flip`) · Waffle Chart — A card that draws shares as a 100-cell waffle and flips, one by one, the cells that changed hands since the earlier period. Use it to show how much one item's share grew or shrank, such as a market share or a sales mix. It draws the change between two periods only.
+- Bump Race (`bump-race`) · Bump Chart — A card that ranks the items in every period, joins the ranks with S-curves, and plays through the periods one at a time so the moments the order changes are visible. Use it to show how products, channels or branches moved up and down over a year, above all how far one item climbed. Ranks hide the size of the differences, so when the gaps matter, use a line chart.
 
 ### Controls
 
@@ -34,7 +34,7 @@ Each card's rules and fields are in its line of https://blocks.vizney.com/llms.t
 3. Download the card code. `https://blocks.vizney.com/cards/<card id>.txt` is the card code as published (card text in English). Use it as received; do not rewrite or shorten it. If you cannot download it, ask the user to paste the content of that address.
 
    ```bash
-   curl -fsSL https://blocks.vizney.com/cards/warning-bars.txt -o warning-bars.html
+   curl -fsSL https://blocks.vizney.com/cards/bar-overflow.txt -o bar-overflow.html
    ```
 
 4. Change only the JSON values between `<script type="application/json">` and `</script>` in the card. The example JSON in the card code is the reference for fields. Add a field the example lacks only when it is a common field in the rules below or is named in that card's line in llms.txt.
@@ -54,7 +54,7 @@ Each card's rules and fields are in its line of https://blocks.vizney.com/llms.t
    </div>
    <!-- Charts: paste the chart card code, one card per grid cell. Wrap a card the script must find in an element with an id. -->
    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:16px;">
-   <div id="spend"><!-- the Warning Bars card code --></div>
+   <div id="spend"><!-- the Bar Overflow card code --></div>
    </div>
    </body>
    </html>
@@ -73,7 +73,7 @@ Each card's rules and fields are in its line of https://blocks.vizney.com/llms.t
 - The amount over a limit, shares, ranks, changes and totals are computed by the card, so do not write them in the JSON. Give amounts as raw values, not rounded or divided into thousands or millions.
 - A chart card plays once when it comes into view and stops on its last frame. The still frame reads correctly by itself. The motion carries the data, so cards play whatever the reduced-motion setting of the system; mouse-over and keyboard focus pause them, and a replay button or player sits on the card. A wrapper with data-vzb-loop makes the card repeat; a card that keeps moving makes its neighbours hard to read, so use that only on a showcase such as a gallery.
 - A card is a snippet pasted into the HTML document as it is. Inserted with innerHTML or React's dangerouslySetInnerHTML, the card's <script> does not run.
-- A metric where lower is better gets `"better": "down"`. Share Waffle then shows a decrease as the green badge, and Rank Lines ranks the smallest value first.
+- A metric where lower is better gets `"better": "down"`. Waffle Flip then shows a decrease as the green badge, and Bump Race ranks the smallest value first.
 - A monthly trend gets 13 months when the data has them. The first and last are the same month, so the year-over-year comparison is visible.
 - Keep period names short, like `Sep '25` or `3Q26`. Long ones clip or run together under the bars and under the scrubber.
 - Keep item names (channels, products) in one language across the screen. Translate all of them or keep all of them as they are.
@@ -85,13 +85,13 @@ Controls and charts do not know each other. A short page script takes a control'
 - A control sends a `vzb-change` event from its card whenever its value changes (it bubbles, so listen on `document`). `detail` is `{ name, value }`, where `name` is the `name` in that control's JSON. Range Slider's `value` is `[from, to]` as numbers; Filter Chips' `value` is the picked items in the order of `options`. The current value is also on the card, as JSON in its `data-vzb-value` attribute.
 - A control sends nothing when it first draws. Write the control's `value` and the chart's JSON for the same starting condition.
 - A chart card redraws by itself when the text of its `<script type="application/json">` changes. The page keeps the full data; on an event it filters the data, builds the chart's JSON from the result and writes it back. The redrawn card does not play from the start: it draws its last frame at once and keeps the period and the item the viewer picked.
-- When the filter leaves nothing, give an empty array. Warning Bars draws an empty state for `"labels": []`, and Share Waffle and Rank Lines for `"items": []`, instead of an error.
+- When the filter leaves nothing, give an empty array. Bar Overflow draws an empty state for `"labels": []`, and Waffle Flip and Bump Race for `"items": []`, instead of an error.
 - With two cards of the same kind on a page, wrap each in an element with an id and address it through that id (`#spend` in the example).
 - Download Button downloads the current JSON of the first card on the page whose `data-vzb` is its `target`, so the file holds what the controls left on screen. Before that it sends a `vzb-download` event (`detail: { name, target, format, filename, rows }`); if the page calls `preventDefault()`, the card makes no file, so a screen that gets the source data from a server can use the same button.
 
 ```html
 <div><!-- the Filter Chips card code, with "name": "channel" --></div>
-<div id="spend"><!-- the Warning Bars card code --></div>
+<div id="spend"><!-- the Bar Overflow card code --></div>
 <script>
 // The full data the page holds: the period names and the monthly values of each channel.
 const LABELS = ["Nov '25", "Dec '25", "Jan '26"];
@@ -123,7 +123,7 @@ Go through it before handing over the file. If anything is off, fix it and check
 
 - [ ] `labels` and `values` have the same length, and a period without a value has `null`.
 - [ ] Lower-is-better metrics have `"better": "down"`.
-- [ ] The `limit` of Warning Bars is a limit not to cross. It is not used for a target, where more is better.
+- [ ] The `limit` of Bar Overflow is a limit not to cross. It is not used for a target, where more is better.
 - [ ] Period names are short, and item names are in one language across the screen.
 
 ### Controls

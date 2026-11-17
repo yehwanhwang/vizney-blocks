@@ -4,7 +4,9 @@
 // `npx skills add yehwanhwang/vizney-blocks`), which is also an OpenDesign plugin. The site embeds a renamed subset of
 // Spoqa Han Sans Neo (VZ Sans).
 // v0.56: the cards of the earlier direction, the chart pages, the purpose index, the one-page gallery and the old /en/ copies
-// are gone. The cards are the ones on the gallery, and a card id is its name in lower case with hyphens (Rank Lines → rank-lines).
+// are gone. The cards are the ones on the gallery, and a card id is its name in lower case with hyphens (Bump Race → bump-race).
+// v0.60: a chart card is named for its chart type and its motion (Bar Overflow, Waffle Flip, Bump Race); a control keeps the
+// plain name people search for (Range Slider, Filter Chips, Download Button).
 import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync, rmSync, readdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -14,7 +16,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.59';
+const VERSION = 'v0.60';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -286,12 +288,12 @@ const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 // v0.52: the controls are drawn bare (no head, no frame) in the middle of the tile, like the units of a motion gallery.
 // v0.49: the gallery is built one block at a time. v0.56: the gallery is the whole list; a card that is not here does not exist.
 // Blocks that move (data-vzb-loop) replay on the first screen instead of stopping at the end.
-const GALLERY = ['warning-bars', 'share-waffle', 'rank-lines', 'range-slider', 'filter-chips', 'download-button'];
+const GALLERY = ['bar-overflow', 'waffle-flip', 'bump-race', 'range-slider', 'filter-chips', 'download-button'];
 const LOOP = new Set(GALLERY);
 // v0.53: tile widths follow the block. On the 3-column gallery a chart that reads along a long axis (13 months, a 5 × 20 waffle)
 // takes 2 columns; a chart that reads better compact (a donut, a single figure) and every control take 1. The tiles are laid out
 // so that rows alternate 2 + 1 and 1 + 2. A wide block left without a partner sits alone; narrow blocks left over go three to a row.
-const SPAN = { 'warning-bars': 2, 'share-waffle': 2, 'rank-lines': 2 };
+const SPAN = { 'bar-overflow': 2, 'waffle-flip': 2, 'bump-race': 2 };
 const wideOf = (id) => SPAN[id] === 2;
 const ORDER = (() => {
   const wide = GALLERY.filter(wideOf), narrow = GALLERY.filter((id) => !wideOf(id)), out = [];
@@ -394,15 +396,15 @@ const FIELD_NOTE = {
 };
 // Cards whose fields mean something other than the common note.
 const FIELD_OVERRIDE = {
-  'warning-bars': {
+  'bar-overflow': {
     ko: { title: '무엇의 값인지(예: 월별 광고비)', subtitle: '기간과 한도의 기준(예: 2025년 11월–2026년 11월, 월 예산 4,000만 원 대비)', limit: '모든 기간에 같은 한도(숫자 하나)', limitLabel: '한도선의 이름(예: 예산 · 처리 용량). 비우면 한도', labels: '기간 이름. 월별 추이는 13개월', values: '기간마다의 값(labels와 같은 개수)' },
     en: { title: 'what the values are (e.g. Monthly Ad Spend)', subtitle: 'the period and the basis of the limit (e.g. Nov 2025 – Nov 2026, against a $40K monthly budget)', limit: 'one limit for every period (a single number)', limitLabel: 'the name of the line (e.g. Budget, Capacity); Limit when empty', labels: 'the period names; 13 months for a monthly trend', values: 'the value of each period (as many as labels)' },
   },
-  'share-waffle': {
+  'waffle-flip': {
     ko: { title: '무엇의 비중인지(예: 시장 점유율)', subtitle: '기준과 두 기간(예: 판매 대수 기준, 2025년 → 2026년)', periods: '[앞 기간, 뒤 기간]의 이름. 하나만 적으면 그 기간의 칸만 그린다', focus: '짚을 항목의 이름. 비우면 첫 항목', items: '항목 2~4개. 항목마다 name과 values([앞 기간 값, 뒤 기간 값], 비중이 아니라 원래 값)' },
     en: { title: 'what the shares are of (e.g. Market Share)', subtitle: 'the basis and the two periods (e.g. by units sold, 2025 → 2026)', periods: 'the names of [the earlier period, the later period]; with one, the card draws that period only', focus: 'the name of the item to point at; the first item when empty', items: '2 to 4 items, each with name and values ([earlier value, later value], raw values, not shares)' },
   },
-  'rank-lines': {
+  'bump-race': {
     ko: { title: '무엇의 순위인지(예: 판매 순위)', subtitle: '순위의 기준과 기간(예: 월별 판매 수량 순위, 2025년 11월 – 2026년 11월)', labels: '기간 이름. 월별 추이는 13개월', focus: '짚을 항목의 이름. 비우면 첫 항목', items: '항목 2~8개. 항목마다 name과 values(기간마다의 값, labels와 같은 개수. 값이 없는 기간은 null)', better: 'up(비우면, 큰 값이 1위) · down(작은 값이 1위)' },
     en: { title: 'what is ranked (e.g. Top Sellers)', subtitle: 'the basis of the rank and the period (e.g. monthly rank by units sold, Nov 2025 – Nov 2026)', labels: 'the period names; 13 months for a monthly trend', focus: 'the name of the item to follow; the first item when empty', items: '2 to 8 items, each with name and values (one per period, as many as labels; null for a period without a value)', better: 'up (default: the largest value ranks 1) or down (the smallest value ranks 1)' },
   },
@@ -415,8 +417,8 @@ const FIELD_OVERRIDE = {
     en: { label: 'the name screen readers read for the chips (e.g. Channel); not drawn on screen', name: 'detail.name of the vzb-change event sent when the value changes', options: 'the names of the items to pick, about 8', value: 'the items picked at first; empty picks all', all: 'the name of the All chip; empty means All, an empty string leaves the chip out' },
   },
   'download-button': {
-    ko: { name: 'vzb-download 이벤트의 detail.name', target: '내려받을 카드의 data-vzb(예: warning-bars). 페이지에서 처음 만나는 그 카드', filename: '파일 이름. 확장자는 형식에 따라 붙는다(예: monthly-ad-spend)', formats: '받을 형식들: csv · json · png. 비우면 셋 다', label: '화면 낭독기가 읽는 단추 이름(예: 월별 광고비 내려받기). 비우면 내려받기', align: 'start(비우면) · end. end면 아이콘을 놓인 자리의 오른쪽 끝에 두고 왼쪽으로 펼친다' },
-    en: { name: 'detail.name of the vzb-download event', target: 'the data-vzb of the card to download (e.g. warning-bars); the first such card on the page', filename: 'the file name; the extension follows the format (e.g. monthly-ad-spend)', formats: 'the formats: csv, json, png; empty means all three', label: 'the name screen readers read for the button (e.g. Download monthly ad spend); Download when empty', align: 'start (default) or end; end puts the icon at the right end of its slot and opens to the left' },
+    ko: { name: 'vzb-download 이벤트의 detail.name', target: '내려받을 카드의 data-vzb(예: bar-overflow). 페이지에서 처음 만나는 그 카드', filename: '파일 이름. 확장자는 형식에 따라 붙는다(예: monthly-ad-spend)', formats: '받을 형식들: csv · json · png. 비우면 셋 다', label: '화면 낭독기가 읽는 단추 이름(예: 월별 광고비 내려받기). 비우면 내려받기', align: 'start(비우면) · end. end면 아이콘을 놓인 자리의 오른쪽 끝에 두고 왼쪽으로 펼친다' },
+    en: { name: 'detail.name of the vzb-download event', target: 'the data-vzb of the card to download (e.g. bar-overflow); the first such card on the page', filename: 'the file name; the extension follows the format (e.g. monthly-ad-spend)', formats: 'the formats: csv, json, png; empty means all three', label: 'the name screen readers read for the button (e.g. Download monthly ad spend); Download when empty', align: 'start (default) or end; end puts the icon at the right end of its slot and opens to the left' },
   },
 };
 const promptHead = (v, L) => {
@@ -662,12 +664,12 @@ const CONNECT = {
       '컨트롤은 값이 바뀔 때마다 카드에서 `vzb-change` 이벤트를 보낸다(위로 전달되므로 `document`에서 받는다). `detail`은 `{ name, value }`이고 `name`은 그 컨트롤 JSON의 `name`이다. Range Slider의 `value`는 `[시작, 끝]` 숫자, Filter Chips의 `value`는 고른 항목을 `options` 순서대로 담은 배열이다. 지금 값은 카드의 `data-vzb-value` 속성에도 JSON으로 적혀 있다.',
       '컨트롤은 처음 그릴 때는 이벤트를 보내지 않는다. 컨트롤의 `value`와 차트의 JSON을 처음부터 같은 조건으로 적는다.',
       '차트 카드는 안의 `<script type="application/json">` 글자가 바뀌면 그 카드만 다시 그린다. 페이지가 거르기 전의 전체 데이터를 들고 있다가, 이벤트를 받으면 거른 결과로 차트의 JSON을 만들어 바꿔 적는다. 다시 그린 카드는 처음부터 재생하지 않고 마지막 장면을 바로 그리며, 보는 사람이 고른 기간과 항목은 그대로 둔다.',
-      '걸러서 남은 것이 없으면 빈 배열을 준다. Warning Bars는 `"labels": []`, Share Waffle과 Rank Lines는 `"items": []`이면 오류 대신 빈 화면을 그린다.',
+      '걸러서 남은 것이 없으면 빈 배열을 준다. Bar Overflow는 `"labels": []`, Waffle Flip과 Bump Race는 `"items": []`이면 오류 대신 빈 화면을 그린다.',
       '같은 종류의 카드를 두 장 쓰면 카드마다 id를 준 요소로 감싸고 그 id로 가려 쓴다(아래 예시의 `#spend`).',
       'Download Button은 `target`에 적은 종류(`data-vzb`)의 카드 가운데 페이지에서 처음 만나는 카드의 지금 JSON을 받는다. 그래서 컨트롤로 거른 뒤의 값이 그대로 내려간다. 받기 전에 `vzb-download` 이벤트(`detail: { name, target, format, filename, rows }`)를 보내고, 페이지가 `preventDefault()`를 부르면 파일을 만들지 않으므로 서버에서 원본을 받는 화면도 같은 단추를 쓸 수 있다.',
     ],
     code: `<div><!-- Filter Chips 카드 코드: "name": "channel" --></div>
-<div id="spend"><!-- Warning Bars 카드 코드 --></div>
+<div id="spend"><!-- Bar Overflow 카드 코드 --></div>
 <script>
 // 페이지가 들고 있는 전체 데이터: 기간 이름과, 채널마다의 월별 값
 const LABELS = ['25.11', '25.12', '26.01'];
@@ -690,12 +692,12 @@ document.addEventListener('vzb-change', (e) => {
       'A control sends a `vzb-change` event from its card whenever its value changes (it bubbles, so listen on `document`). `detail` is `{ name, value }`, where `name` is the `name` in that control\'s JSON. Range Slider\'s `value` is `[from, to]` as numbers; Filter Chips\' `value` is the picked items in the order of `options`. The current value is also on the card, as JSON in its `data-vzb-value` attribute.',
       'A control sends nothing when it first draws. Write the control\'s `value` and the chart\'s JSON for the same starting condition.',
       'A chart card redraws by itself when the text of its `<script type="application/json">` changes. The page keeps the full data; on an event it filters the data, builds the chart\'s JSON from the result and writes it back. The redrawn card does not play from the start: it draws its last frame at once and keeps the period and the item the viewer picked.',
-      'When the filter leaves nothing, give an empty array. Warning Bars draws an empty state for `"labels": []`, and Share Waffle and Rank Lines for `"items": []`, instead of an error.',
+      'When the filter leaves nothing, give an empty array. Bar Overflow draws an empty state for `"labels": []`, and Waffle Flip and Bump Race for `"items": []`, instead of an error.',
       'With two cards of the same kind on a page, wrap each in an element with an id and address it through that id (`#spend` in the example).',
       'Download Button downloads the current JSON of the first card on the page whose `data-vzb` is its `target`, so the file holds what the controls left on screen. Before that it sends a `vzb-download` event (`detail: { name, target, format, filename, rows }`); if the page calls `preventDefault()`, the card makes no file, so a screen that gets the source data from a server can use the same button.',
     ],
     code: `<div><!-- the Filter Chips card code, with "name": "channel" --></div>
-<div id="spend"><!-- the Warning Bars card code --></div>
+<div id="spend"><!-- the Bar Overflow card code --></div>
 <script>
 // The full data the page holds: the period names and the monthly values of each channel.
 const LABELS = ["Nov '25", "Dec '25", "Jan '26"];
@@ -820,7 +822,7 @@ const skillPage = (lang) => (lang === 'en' ? `<!doctype html>
    </div>
    <!-- Charts: paste the chart card code, one card per grid cell. Wrap a card the script must find in an element with an id. -->
    <div style="${GRID};">
-   <div id="spend"><!-- the Warning Bars card code --></div>
+   <div id="spend"><!-- the Bar Overflow card code --></div>
    </div>
    </body>
    </html>` : `<!doctype html>
@@ -836,7 +838,7 @@ const skillPage = (lang) => (lang === 'en' ? `<!doctype html>
    </div>
    <!-- 차트: 격자 한 칸에 차트 카드 코드를 하나씩 붙인다. 스크립트가 찾아야 하는 카드는 id를 준 요소로 감싼다. -->
    <div style="${GRID};">
-   <div id="spend"><!-- Warning Bars 카드 코드 --></div>
+   <div id="spend"><!-- Bar Overflow 카드 코드 --></div>
    </div>
    </body>
    </html>`);
@@ -879,7 +881,7 @@ ${skillCards(KO)}
 ## 규칙
 
 ${RULES('내려받은', 'llms.txt의 그 카드 줄').map((x) => `- ${x}`).join('\n')}
-- 낮을수록 좋은 지표는 \`"better": "down"\`으로 둔다. Share Waffle은 줄어든 쪽이 초록 배지가 되고, Rank Lines는 작은 값이 1위가 된다.
+- 낮을수록 좋은 지표는 \`"better": "down"\`으로 둔다. Waffle Flip은 줄어든 쪽이 초록 배지가 되고, Bump Race는 작은 값이 1위가 된다.
 - 월별 추이는 데이터가 있으면 13개월을 넣는다. 처음과 마지막이 같은 달이라 전년 동월과 견줄 수 있다.
 - 기간 이름은 \`25.09\`, \`3Q26\`처럼 짧게 적는다. 길면 막대 아래와 구간 막대 아래에서 잘리거나 서로 붙는다.
 - 항목 이름(채널, 상품 등)은 화면 전체에서 한 언어로 맞춘다. 번역하면 모두 번역하고, 원문을 쓰면 모두 원문으로 둔다.
@@ -909,7 +911,7 @@ ${CONNECT.ko.code}
 
 - [ ] \`labels\`와 \`values\`의 길이가 같고, 값이 없는 기간은 값이 \`null\`이다.
 - [ ] 낮을수록 좋은 지표는 \`"better": "down"\`이다.
-- [ ] Warning Bars의 \`limit\`은 넘으면 안 되는 한도다. 넘을수록 좋은 목표에는 쓰지 않았다.
+- [ ] Bar Overflow의 \`limit\`은 넘으면 안 되는 한도다. 넘을수록 좋은 목표에는 쓰지 않았다.
 - [ ] 기간 이름은 짧고, 항목 이름은 화면 전체에서 한 언어다.
 
 ### 컨트롤
@@ -979,7 +981,7 @@ Each card's rules and fields are in its line of ${SITE}/llms.txt. Read that line
 ## Rules
 
 ${RULES('you downloaded', 'in that card\'s line in llms.txt', 'en').map((x) => `- ${x}`).join('\n')}
-- A metric where lower is better gets \`"better": "down"\`. Share Waffle then shows a decrease as the green badge, and Rank Lines ranks the smallest value first.
+- A metric where lower is better gets \`"better": "down"\`. Waffle Flip then shows a decrease as the green badge, and Bump Race ranks the smallest value first.
 - A monthly trend gets 13 months when the data has them. The first and last are the same month, so the year-over-year comparison is visible.
 - Keep period names short, like \`Sep '25\` or \`3Q26\`. Long ones clip or run together under the bars and under the scrubber.
 - Keep item names (channels, products) in one language across the screen. Translate all of them or keep all of them as they are.
@@ -1009,7 +1011,7 @@ Go through it before handing over the file. If anything is off, fix it and check
 
 - [ ] \`labels\` and \`values\` have the same length, and a period without a value has \`null\`.
 - [ ] Lower-is-better metrics have \`"better": "down"\`.
-- [ ] The \`limit\` of Warning Bars is a limit not to cross. It is not used for a target, where more is better.
+- [ ] The \`limit\` of Bar Overflow is a limit not to cross. It is not used for a target, where more is better.
 - [ ] Period names are short, and item names are in one language across the screen.
 
 ### Controls
@@ -1088,10 +1090,10 @@ writeFileSync(join(root, 'skills/vizney-blocks/open-design.json'), `${JSON.strin
 writeFileSync(join(root, 'skills/vizney-blocks/icon.svg'), ICON);
 
 const skeleton = (body) => `<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>\n${body}</body></html>`;
-// The preview: the English cards with their example data, Filter Chips and Download Button in a filter bar, Warning Bars
-// redrawn from the chips by the CONNECT script (with the full data), then Share Waffle and Rank Lines.
+// The preview: the English cards with their example data, Filter Chips and Download Button in a filter bar, Bar Overflow
+// redrawn from the chips by the CONNECT script (with the full data), then Waffle Flip and Bump Race.
 const DEMO = {
-  labels: JSON.parse(r(vp('warning-bars', 'en.json'))).labels,
+  labels: JSON.parse(r(vp('bar-overflow', 'en.json'))).labels,
   spend: { Social: [8600, 16200, 9700, 9700, 11900, 9100, 12900, 13300, 10000, 14500, 10100, 10000, 16400], Search: [9500, 10300, 10100, 10400, 12800, 10100, 8500, 8600, 10600, 15300, 11000, 10900, 10700], Display: [5500, 6000, 3600, 3500, 7200, 5800, 4900, 5000, 3700, 5200, 6200, 6200, 6200], Video: [5300, 5900, 3500, 3600, 4300, 5600, 4800, 5000, 3700, 5200, 3700, 6000, 6100], Affiliate: [2800, 5000, 3000, 3100, 3800, 2900, 2500, 4200, 3200, 4500, 3200, 3200, 3100], Retargeting: [2500, 2700, 1600, 2700, 3400, 2700, 2200, 2300, 1700, 4000, 2900, 2900, 2800] },
   budget: { Social: 12000, Search: 11200, Display: 5600, Video: 4800, Affiliate: 3600, Retargeting: 2800 },
 };
@@ -1111,11 +1113,11 @@ ${withData(ENL.byId['download-button'].code, (d) => ({ ...d, align: 'end' }))}</
 </div>
 <div class="vzb-demo-grid">
 <div id="spend">
-${withData(ENL.byId['warning-bars'].code, (d) => ({ ...d, subtitle: 'All channels, against a $40K monthly budget' }))}</div>
+${withData(ENL.byId['bar-overflow'].code, (d) => ({ ...d, subtitle: 'All channels, against a $40K monthly budget' }))}</div>
 <div>
-${withData(ENL.byId['share-waffle'].code, (d) => d)}</div>
+${withData(ENL.byId['waffle-flip'].code, (d) => d)}</div>
 <div class="is-wide">
-${withData(ENL.byId['rank-lines'].code, (d) => d)}</div>
+${withData(ENL.byId['bump-race'].code, (d) => d)}</div>
 </div>
 </div>
 <script>

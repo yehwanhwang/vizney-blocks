@@ -6,7 +6,7 @@
 <p class="vzb-asof">Example data · pick channels to redraw Monthly Ad Spend; the download gets what is on screen</p>
 <div class="vzb-demo-bar">
 <div><div class="vzb-demo-lab">Channel</div>
-<!-- Vizney Blocks v0.59 · Controls · Filter Chips (filter-chips)
+<!-- Vizney Blocks v0.60 · Controls · Filter Chips (filter-chips)
      https://blocks.vizney.com/cards/filter-chips.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <style>
@@ -479,7 +479,7 @@
 </script>
 </div>
 <div>
-<!-- Vizney Blocks v0.59 · Controls · Download Button (download-button)
+<!-- Vizney Blocks v0.60 · Controls · Download Button (download-button)
      https://blocks.vizney.com/cards/download-button.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <style>
@@ -652,7 +652,7 @@
   "lang": "en",
   "label": "Download monthly ad spend",
   "name": "export",
-  "target": "warning-bars",
+  "target": "bar-overflow",
   "filename": "monthly-ad-spend",
   "formats": ["csv", "json", "png"],
   "align": "end"
@@ -1113,8 +1113,8 @@
 </div>
 <div class="vzb-demo-grid">
 <div id="spend">
-<!-- Vizney Blocks v0.59 · Bar Chart · Warning Bars (warning-bars)
-     https://blocks.vizney.com/cards/warning-bars.html · © 2026 Vizney · MIT License
+<!-- Vizney Blocks v0.60 · Bar Chart · Bar Overflow (bar-overflow)
+     https://blocks.vizney.com/cards/bar-overflow.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <style>
 /* Vizney Blocks tokens: re-declare the same variables on your page's :root and they apply to every card.
@@ -1279,11 +1279,11 @@
 .vzb-tip-note + .vzb-tip-note { margin-top: 0; }
 .vzb-fs { --vzb-c: var(--vzb-primary-soft); }
 .vzb-key.is-tick { width: 2px; height: 12px; border-radius: 1px; }
-/* Warning Bars: 높이 2단위. 세로 막대는 굵기 30px까지, 위쪽 끝만 4px 둥글게 그리고 한도선에 닿으면 선 아래에서 각지게 끊습니다.
+/* Bar Overflow: 높이 2단위. 세로 막대는 굵기 30px까지, 위쪽 끝만 4px 둥글게 그리고 한도선에 닿으면 선 아래에서 각지게 끊습니다.
    선 아래는 회색(--vzb-base), 선 위로 넘친 구간만 빨강(--vzb-bad)입니다. 한도선은 글자색 1.5px 실선으로 막대 위에 긋고, 이름은 선 바로 위에 적습니다.
    기간 이름은 바닥선 아래 11px, 넘친 양은 넘친 막대 위에 10.5px 굵은 빨간 글자(--vzb-bad-ink)로 적습니다.
    그래프 아래 줄에는 다시 보기 단추와 카드가 계산한 한 줄(넘친 기간 수와 넘친 양)을 둡니다. 깜빡임은 스크립트가 불투명도로 그립니다. */
-.vzb-card[data-vzb="warning-bars"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-card[data-vzb="bar-overflow"] { min-height: calc(var(--vzb-unit) * 2); }
 .vzb-bb.vzb-foot { padding-top: 12px; }
 .vzb-bb-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-bb-base { stroke: var(--vzb-grid); stroke-width: 1; }
@@ -1297,7 +1297,7 @@
 .vzb-bb-col { transition: opacity 0.12s; }
 .vzb-bb-svg.is-hover .vzb-bb-col:not(.is-on) { opacity: 0.3; }
 .vzb-bb-ctl { display: flex; align-items: center; gap: 10px; min-height: 28px; margin-top: 8px; }
-.vzb-card[data-vzb="warning-bars"] .vzb-hd { position: relative; padding-right: 36px; }   /* 오른쪽 위 다시 보기 단추 자리 */
+.vzb-card[data-vzb="bar-overflow"] .vzb-hd { position: relative; padding-right: 36px; }   /* 오른쪽 위 다시 보기 단추 자리 */
 .vzb-bb-btn { position: absolute; top: -2px; right: 0; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
 .vzb-bb-btn:hover { background: var(--vzb-other); }
 .vzb-bb-btn[hidden] { display: none; }
@@ -1307,7 +1307,7 @@
 .vzb-bb-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
 .vzb-bb-key { display: inline-block; width: 8px; height: 8px; margin-right: 7px; border-radius: 2px; background: var(--vzb-bad); }
 </style>
-<div class="vzb-card" data-vzb="warning-bars">
+<div class="vzb-card" data-vzb="bar-overflow">
 <script type="application/json">
 {
   "title": "Monthly Ad Spend",
@@ -1635,14 +1635,14 @@
     return { show: go, at: () => idx, end };
   }
 
-  // Warning Bars: 기간별(보통 월별) 값을 세로 막대로 세우고, 모든 기간에 같은 한도(limit, 예: 월 예산)를 가로선 하나로 긋습니다.
+  // Bar Overflow: 기간별(보통 월별) 값을 세로 막대로 세우고, 모든 기간에 같은 한도(limit, 예: 월 예산)를 가로선 하나로 긋습니다.
   // 선 아래는 회색, 선을 넘긴 구간만 빨강(--vzb-bad)입니다. 넘친 막대 위에는 넘친 양을 적고(칸이 모자라면 생략), 넘친 기간의 이름은 굵게 적습니다.
   // 아래 줄에는 넘친 기간 수와 넘친 양의 합을 카드가 계산해 적습니다. 비율 지표(pct)는 합을 적지 않습니다.
   // 움직임: 한도선이 먼저 그어져 있고, 막대가 왼쪽부터 하나씩 차오릅니다. 선을 넘는 순간부터 넘친 구간이 빨갛게 자라고,
   // 마지막 막대가 다 차면 넘친 구간만 세 번 깜빡이고 멈춥니다. 막대가 차기 전에는 막대 자리를 미리 그리지 않습니다.
   // 카드가 화면에 보이면 한 번 움직이고, 다시 보기 단추로 되풀이합니다. 데이터가 바뀌어 다시 그릴 때
   // (data-vzb-live)는 마지막 장면을 바로 그립니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고 되풀이합니다.
-  mount('warning-bars', (card, d, f) => {
+  mount('bar-overflow', (card, d, f) => {
     // 걸러서 남은 기간이 없을 때(labels가 빈 배열)는 오류가 아니라 빈 화면입니다.
     if (Array.isArray(d.labels) && !d.labels.length) {
       head(card, d, f, null);
@@ -1854,8 +1854,8 @@
 </script>
 </div>
 <div>
-<!-- Vizney Blocks v0.59 · Waffle Chart · Share Waffle (share-waffle)
-     https://blocks.vizney.com/cards/share-waffle.html · © 2026 Vizney · MIT License
+<!-- Vizney Blocks v0.60 · Waffle Chart · Waffle Flip (waffle-flip)
+     https://blocks.vizney.com/cards/waffle-flip.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <style>
 /* Vizney Blocks tokens: re-declare the same variables on your page's :root and they apply to every card.
@@ -2020,12 +2020,12 @@
 .vzb-tip-note + .vzb-tip-note { margin-top: 0; }
 .vzb-fs { --vzb-c: var(--vzb-primary-soft); }
 .vzb-key.is-tick { width: 2px; height: 12px; border-radius: 1px; }
-/* Share Waffle: 높이 2단위. 머리 아래 짚을 항목의 비중을 큰 숫자로 적고, 그 바로 아래에 와플 100칸(5줄 × 20칸)과 범례를 둡니다(넓으면 범례는 칸 오른쪽).
+/* Waffle Flip: 높이 2단위. 머리 아래 짚을 항목의 비중을 큰 숫자로 적고, 그 바로 아래에 와플 100칸(5줄 × 20칸)과 범례를 둡니다(넓으면 범례는 칸 오른쪽).
    칸은 카드 높이와 폭 안에서 될 수 있는 만큼 키웁니다(한 변 30px까지, 틈 3px, 좁으면 2px) 모서리 2px이고, 짚을 항목은 첫째 데이터 색, 나머지는 글자색을 50 · 30 · 16% 깐 회색 단계입니다.
    괄호는 바뀐 칸이 든 세로줄들 아래에 글자색보다 옅은 1.25px 선으로 긋고, 바뀐 %p를 굵게 적습니다.
    칸이 뒤집히는 움직임은 스크립트가 그리고, 배지는 흐려졌다 또렷해지며 나옵니다.
    두 기간을 주면 머리 오른쪽 위에 기간 단추를 둡니다: 옅은 바탕 위에서 고른 기간만 글자색 알약(글자는 카드 바탕색)이 미끄러져 옮겨 갑니다. */
-.vzb-card[data-vzb="share-waffle"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-card[data-vzb="waffle-flip"] { min-height: calc(var(--vzb-unit) * 2); }
 .vzb-wf-fig > [hidden] { display: none; }
 .vzb-wf-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
 .vzb-wf-fig .vzb-num { font-variant-numeric: tabular-nums; }
@@ -2044,7 +2044,7 @@
 .vzb-wf.is-side { display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 28px; align-items: start; }   /* 넓은 카드: 범례를 칸 오른쪽에 세로로 */
 .vzb-wf.is-side .vzb-wf-ctl { margin-top: 0; }
 .vzb-wf.is-side .vzb-wf-legend { flex-direction: column; align-items: flex-start; gap: 6px; }   /* 항목은 글자 폭만큼(칸 크기를 잴 때 범례 폭으로 씁니다) */
-.vzb-card[data-vzb="share-waffle"] .vzb-hd { position: relative; }
+.vzb-card[data-vzb="waffle-flip"] .vzb-hd { position: relative; }
 .vzb-wf-per { position: absolute; top: -2px; right: 0; display: inline-flex; padding: 2px; border-radius: 14px; background: var(--vzb-track); }   /* 제목 오른쪽 자리는 스크립트가 단추 폭만큼 비웁니다 */
 .vzb-wf-pill { position: absolute; top: 2px; bottom: 2px; left: 0; width: 0; border-radius: 12px; background: var(--vzb-ink); pointer-events: none; }
 .vzb-wf-per.is-ready .vzb-wf-pill { transition: transform 0.38s cubic-bezier(0.3, 1.4, 0.5, 1), width 0.38s cubic-bezier(0.3, 1.4, 0.5, 1); }
@@ -2065,7 +2065,7 @@
 .vzb-wf-in { animation: vzb-wf-in 0.32s ease-out; }
 @keyframes vzb-wf-in { from { opacity: 0; filter: blur(3px); } to { opacity: 1; filter: none; } }
 </style>
-<div class="vzb-card" data-vzb="share-waffle">
+<div class="vzb-card" data-vzb="waffle-flip">
 <script type="application/json">
 {
   "title": "Market Share",
@@ -2410,7 +2410,7 @@
     return { show: go, at: () => idx, end };
   }
 
-  // Share Waffle: 와플 100칸(5줄 × 20칸)으로 비중을 그리고, 두 기간 사이에 바뀐 만큼의 칸을 한 칸씩 뒤집어 보여 줍니다.
+  // Waffle Flip: 와플 100칸(5줄 × 20칸)으로 비중을 그리고, 두 기간 사이에 바뀐 만큼의 칸을 한 칸씩 뒤집어 보여 줍니다.
   // 짚을 항목(focus, 비우면 첫 항목) 하나만 첫째 데이터 색이고, 나머지는 글자색을 옅게 깐 회색 단계입니다(적은 순서대로 진한 회색부터).
   // 칸은 짚을 항목부터 왼쪽 위에서 세로로 채웁니다(한 세로줄 5칸이 5%). 그래서 짚을 항목이 늘거나 줄면 그 덩어리의 끝에서 칸이 뒤집히고,
   // 뒤 기간을 보일 때 뒤집힌 칸 아래에 괄호와 바뀐 %p를 적습니다. 큰 숫자와 범례의 비중은 지금 보이는 칸 수를 그대로 세므로 칸이 뒤집힐 때마다 1%씩 바뀌고,
@@ -2421,7 +2421,7 @@
   // 움직임: 화면에 보이면 앞 기간의 칸이 놓여 있다가 단추가 뒤 기간으로 옮겨 가며 바뀐 칸이 차례로 뒤집힙니다. 한 기간만 주면 단추 없이 그 기간의 칸만 그립니다.
   // 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 고른 기간의 멈춘 장면을 바로 그립니다.
   // 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고 두 기간을 오갑니다. 단추를 직접 고르면 오가기를 멈춥니다.
-  mount('share-waffle', (card, d, f) => {
+  mount('waffle-flip', (card, d, f) => {
     // 걸러서 남은 항목이 없을 때(items가 빈 배열이거나 모든 값이 0)는 오류가 아니라 빈 화면입니다.
     const none = () => { head(card, d, f, null); card.append(el('p', 'vzb-wf-none', tx(d, '표시할 항목이 없습니다.'))); };
     if (Array.isArray(d.items) && (!d.items.length || d.items.every((it) => it && Array.isArray(it.values) && it.values.every((v) => fin(v) && +v === 0)))) { none(); return; }
@@ -2725,8 +2725,8 @@
 </script>
 </div>
 <div class="is-wide">
-<!-- Vizney Blocks v0.59 · Bump Chart · Rank Lines (rank-lines)
-     https://blocks.vizney.com/cards/rank-lines.html · © 2026 Vizney · MIT License
+<!-- Vizney Blocks v0.60 · Bump Chart · Bump Race (bump-race)
+     https://blocks.vizney.com/cards/bump-race.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <style>
 /* Vizney Blocks tokens: re-declare the same variables on your page's :root and they apply to every card.
@@ -2891,7 +2891,7 @@
 .vzb-tip-note + .vzb-tip-note { margin-top: 0; }
 .vzb-fs { --vzb-c: var(--vzb-primary-soft); }
 .vzb-key.is-tick { width: 2px; height: 12px; border-radius: 1px; }
-/* Rank Lines: 높이 2단위. 그래프는 머리 아래 남은 높이를 채우고, 맨 아래에 구간 막대(34px)를 둡니다.
+/* Bump Race: 높이 2단위. 그래프는 머리 아래 남은 높이를 채우고, 맨 아래에 구간 막대(34px)를 둡니다.
    선은 2px S자 곡선이고, 짚을 항목만 첫째 데이터 색, 나머지는 글자색을 카드 바탕에 30% 섞은 회색입니다(겹쳐도 진해지지 않게 불투명).
    기간마다 지름 5px 점은 짚을 항목(과 마우스로 짚은 항목)에만 찍고, 선 끝 점(지름 8px · 짚을 항목 10px)은 카드 바탕색 2px 테두리로 겹친 선과 떼어 냅니다.
    이름표는 선 끝 오른쪽 10px에 '순위 이름'으로 적습니다(12px, 순위는 굵게 옅은 글자색, 짚을 항목은 이름까지 굵게 글자색).
@@ -2900,7 +2900,7 @@
    손잡이 아래에 지금 기간을 굵게 적고, 처음과 끝 기간은 옅게 적되 지금 기간과 겹치면 감춥니다.
    구간 막대 오른쪽(이름표 열 아래)에 되감기 · 재생/일시정지(28px 원) · 빨리 감기를 둡니다. 선이나 이름표를 누르면 그 항목이 짚을 항목이 됩니다.
    선이 자라는 움직임은 스크립트가 그립니다. */
-.vzb-card[data-vzb="rank-lines"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-card[data-vzb="bump-race"] { min-height: calc(var(--vzb-unit) * 2); }
 .vzb-br.vzb-foot { padding-top: 14px; }
 .vzb-br-svg, .vzb-br-ssvg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-br-item { --vzb-c: color-mix(in srgb, var(--vzb-ink) 30%, var(--vzb-card)); transition: opacity 0.12s; }
@@ -2944,7 +2944,7 @@
 .vzb-br-end { font-size: 11px; fill: var(--vzb-muted); transition: opacity 0.12s; }
 .vzb-br-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
 </style>
-<div class="vzb-card" data-vzb="rank-lines">
+<div class="vzb-card" data-vzb="bump-race">
 <script type="application/json">
 {
   "title": "Top Sellers",
@@ -3297,7 +3297,7 @@
     return { show: go, at: () => idx, end };
   }
 
-  // Rank Lines: 기간마다 값이 큰 순서로 순위(1위가 맨 위)를 매기고, 기간 사이를 S자 선으로 잇습니다.
+  // Bump Race: 기간마다 값이 큰 순서로 순위(1위가 맨 위)를 매기고, 기간 사이를 S자 선으로 잇습니다.
   // 재생하면 기간을 하나씩 넘기며 선이 오른쪽으로 자라고, 선 끝의 이름표가 그 기간의 순위 자리로 오르내려 앞지르는 순간이 보입니다.
   // 짚을 항목(focus, 비우면 첫 항목) 하나만 첫째 데이터 색이고 나머지는 회색입니다. 이름표에는 지금 순위와 이름을 적습니다.
   // 선이나 이름표를 누르면(키보드는 위아래 화살표로 고른 뒤 Enter) 그 항목이 짚을 항목이 되어 색이 옮겨 갑니다.
@@ -3308,7 +3308,7 @@
   // 움직임: 화면에 보이면 첫 기간에서 잠시 멈췄다가 끝까지 한 번 재생하고 멈춥니다. 그래프에 마우스를 올리거나 키보드로 포커스하면 잠시 멈춥니다.
   // 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 고른 기간(카드 요소의 data-vzb-period, 없으면 마지막)을 바로 그립니다.
   // 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고 처음으로 감았다가 다시 재생합니다. 손을 대면 되풀이를 멈춥니다.
-  mount('rank-lines', (card, d, f) => {
+  mount('bump-race', (card, d, f) => {
     // 걸러서 남은 항목이 없을 때(items가 빈 배열)는 오류가 아니라 빈 화면입니다.
     const none = () => { head(card, d, f, null); card.append(el('p', 'vzb-br-none', tx(d, '표시할 항목이 없습니다.'))); };
     if (Array.isArray(d.items) && !d.items.length) { none(); return; }

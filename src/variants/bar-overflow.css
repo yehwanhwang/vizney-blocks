@@ -1,8 +1,8 @@
-/* Warning Bars: 높이 2단위. 세로 막대는 굵기 30px까지, 위쪽 끝만 4px 둥글게 그리고 한도선에 닿으면 선 아래에서 각지게 끊습니다.
+/* Bar Overflow: 높이 2단위. 세로 막대는 굵기 30px까지, 위쪽 끝만 4px 둥글게 그리고 한도선에 닿으면 선 아래에서 각지게 끊습니다.
    선 아래는 회색(--vzb-base), 선 위로 넘친 구간만 빨강(--vzb-bad)입니다. 한도선은 글자색 1.5px 실선으로 막대 위에 긋고, 이름은 선 바로 위에 적습니다.
    기간 이름은 바닥선 아래 11px, 넘친 양은 넘친 막대 위에 10.5px 굵은 빨간 글자(--vzb-bad-ink)로 적습니다.
    그래프 아래 줄에는 다시 보기 단추와 카드가 계산한 한 줄(넘친 기간 수와 넘친 양)을 둡니다. 깜빡임은 스크립트가 불투명도로 그립니다. */
-.vzb-card[data-vzb="warning-bars"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-card[data-vzb="bar-overflow"] { min-height: calc(var(--vzb-unit) * 2); }
 .vzb-bb.vzb-foot { padding-top: 12px; }
 .vzb-bb-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-bb-base { stroke: var(--vzb-grid); stroke-width: 1; }
@@ -16,7 +16,7 @@
 .vzb-bb-col { transition: opacity 0.12s; }
 .vzb-bb-svg.is-hover .vzb-bb-col:not(.is-on) { opacity: 0.3; }
 .vzb-bb-ctl { display: flex; align-items: center; gap: 10px; min-height: 28px; margin-top: 8px; }
-.vzb-card[data-vzb="warning-bars"] .vzb-hd { position: relative; padding-right: 36px; }   /* 오른쪽 위 다시 보기 단추 자리 */
+.vzb-card[data-vzb="bar-overflow"] .vzb-hd { position: relative; padding-right: 36px; }   /* 오른쪽 위 다시 보기 단추 자리 */
 .vzb-bb-btn { position: absolute; top: -2px; right: 0; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
 .vzb-bb-btn:hover { background: var(--vzb-other); }
 .vzb-bb-btn[hidden] { display: none; }

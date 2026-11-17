@@ -9,7 +9,9 @@
 //   6. 접근성: a card that reacts to the pointer also takes the keyboard. Motion plays whatever the reduced-motion setting (v0.59).
 //   7. 데이터: the example JSON parses, labels and values have the same length, and no field the card computes is written in.
 //   8. 메타: every meta.json card has its .js and .json, no orphan source file, uses are known parts, and the card id is the card
-//      name in lower case with hyphens (Rank Lines → rank-lines), so the name on the gallery and the address always agree.
+//      name in lower case with hyphens (Bump Race → bump-race), so the name on the gallery and the address always agree.
+//      A chart card's name begins with its chart type (the id of its group in meta.json: Bar Overflow is a bar chart) and the
+//      rest names its motion (v0.60), so the name says both what is drawn and what moves.
 //   9. 문구: every Korean string a card can show goes through tx() in core.js, every tx() key has an English entry in EN and every
 //      EN entry is used, so "lang": "en" leaves no Korean behind. The won notations (조 · 억 · 만 · 원) are the only bare Korean.
 //  10. 영어: every card has its English example (src/variants/<id>.en.json, with "lang": "en") and its English wording
@@ -117,6 +119,7 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
   for (const v of all) {
     const slug = String(v.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     if (v.id !== slug) fail(v.id, `카드 id는 카드 이름을 소문자와 하이픈으로 적은 것이어야 한다(${v.name} → ${slug})`);
+    if (v.cat !== 'control' && !slug.startsWith(`${v.cat}-`)) fail(v.id, `차트 카드의 이름은 차트 종류(${v.cat})로 시작하고 그 뒤에 움직임을 적는다(예: Bar Overflow)`);
     if (!existsSync(join(vdir, `${v.id}.js`))) fail(v.id, 'src/variants/<id>.js가 없다');
     if (!existsSync(join(vdir, `${v.id}.json`))) fail(v.id, 'src/variants/<id>.json(예시 데이터)이 없다');
     if (!v.when) fail(v.id, 'meta.json에 when(언제 쓰는지)이 없다');

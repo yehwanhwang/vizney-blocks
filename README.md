@@ -27,13 +27,13 @@ Copy-paste HTML cards: charts you read through their motion, and the dashboard c
 
 ## 카드
 
-카드 id는 카드 이름을 소문자와 하이픈으로 적은 것입니다(Rank Lines → `rank-lines`). 카드 코드는 `https://blocks.vizney.com/ko/cards/<id>.txt`(영어는 `/cards/<id>.txt`)에, 그 카드만 그린 페이지는 같은 자리의 `.html`에 있습니다.
+차트 카드의 이름은 차트 종류 뒤에 그 카드의 움직임을 붙여 짓고(Bar Overflow: 막대가 한도를 넘침, Waffle Flip: 와플 칸이 뒤집힘, Bump Race: 범프 차트의 순위 다툼), 컨트롤은 찾는 말 그대로 짓습니다. 카드 id는 카드 이름을 소문자와 하이픈으로 적은 것입니다(Bump Race → `bump-race`). 카드 코드는 `https://blocks.vizney.com/ko/cards/<id>.txt`(영어는 `/cards/<id>.txt`)에, 그 카드만 그린 페이지는 같은 자리의 `.html`에 있습니다.
 
 | 카드 | 종류 | 쓰는 때 |
 |---|---|---|
-| [Warning Bars](https://blocks.vizney.com/ko/cards/warning-bars.html) | 막대 차트 | 월 예산이나 월 처리량처럼 기간마다 같은 한도가 있는 값의 추이. 한도선을 넘긴 구간만 빨갛게 깜빡입니다 |
-| [Share Waffle](https://blocks.vizney.com/ko/cards/share-waffle.html) | 와플 차트 | 시장 점유율이나 매출 구성비처럼 한 항목의 비중이 두 기간 사이에 얼마나 늘거나 줄었는지. 바뀐 만큼의 칸이 한 칸씩 뒤집힙니다 |
-| [Rank Lines](https://blocks.vizney.com/ko/cards/rank-lines.html) | 범프 차트 | 상품 · 채널 · 지점의 순위가 기간마다 어떻게 오르내렸는지. 기간을 하나씩 넘기며 앞지르는 순간을 보여 줍니다 |
+| [Bar Overflow](https://blocks.vizney.com/ko/cards/bar-overflow.html) | 막대 차트 | 월 예산이나 월 처리량처럼 기간마다 같은 한도가 있는 값의 추이. 한도선을 넘긴 구간만 빨갛게 깜빡입니다 |
+| [Waffle Flip](https://blocks.vizney.com/ko/cards/waffle-flip.html) | 와플 차트 | 시장 점유율이나 매출 구성비처럼 한 항목의 비중이 두 기간 사이에 얼마나 늘거나 줄었는지. 바뀐 만큼의 칸이 한 칸씩 뒤집힙니다 |
+| [Bump Race](https://blocks.vizney.com/ko/cards/bump-race.html) | 범프 차트 | 상품 · 채널 · 지점의 순위가 기간마다 어떻게 오르내렸는지. 기간을 하나씩 넘기며 앞지르는 순간을 보여 줍니다 |
 | [Range Slider](https://blocks.vizney.com/ko/cards/range-slider.html) | 컨트롤 | 주문 금액이나 수량처럼 이어지는 값으로 화면을 거를 때. 끄는 동안 범위에 드는 분포가 레일 위에 뜹니다 |
 | [Filter Chips](https://blocks.vizney.com/ko/cards/filter-chips.html) | 컨트롤 | 채널이나 지역처럼 몇 개 안 되는 이름으로 화면을 거를 때. 전체 칩이 지금 몇 개를 골랐는지 보여 줍니다 |
 | [Download Button](https://blocks.vizney.com/ko/cards/download-button.html) | 컨트롤 | 화면에 있는 차트 카드의 지금 데이터를 CSV · JSON · PNG로 받을 때 |
@@ -52,7 +52,7 @@ v0.56에서 이전 방향의 카드와 차트 페이지를 모두 지웠습니�
 
 ```html
 <div><!-- Filter Chips 카드 코드: "name": "channel" --></div>
-<div id="spend"><!-- Warning Bars 카드 코드 --></div>
+<div id="spend"><!-- Bar Overflow 카드 코드 --></div>
 <script>
 const LABELS = ['25.11', '25.12', '26.01'];
 const SPEND = { SNS: [8600000, 16200000, 9700000], 검색: [9500000, 10300000, 10100000] };
@@ -99,7 +99,7 @@ SPOQA_DIR=/path/to/spoqa-han-sans/Original/SpoqaHanSansNeo node build.mjs
 - 영어: 한국어가 원본이고 영어는 덧씌웁니다. 카드 안 문구(툴팁 · 낭독 문구 등)는 `src/core.js`의 `EN` 표와 `tx()`로 바뀌고, 사이트 문구는 `build.mjs`의 `WORDS`, 카드의 쓰임과 규칙은 `src/variants/meta.en.json`, 예시 데이터는 `<id>.en.json`(`"lang": "en"` 포함), 토큰 설명은 `src/tokens.en.css`(선언은 `tokens.css`와 같아야 합니다)에 있습니다. 카드를 더할 때는 이 넷을 함께 적어야 가드를 지납니다.
 - `build.mjs`: 빌드 스크립트. `VERSION`, 공통 규칙(`RULES`), 컨트롤과 차트를 잇는 법(`CONNECT`), 스킬 원본, 첫 화면 갤러리 목록(`GALLERY`), 블록별 타일 폭(`SPAN`), 갤러리에서 되풀이할 카드(`LOOP`)가 들어 있습니다.
 - `page/`: 사이트 화면(`site.css`, `site.js`), 머리글과 공유 이미지에 쓰는 로고(`vizney-logo.png`), 파비콘. 머리글은 Vizney 공통 헤더로, Vizney 블로그(kr.vizney.com · www.vizney.com) 헤더를 값 그대로 옮긴 것입니다(Vizney Styles도 같은 값을 씁니다). 블로그가 기준이므로 블로그가 바뀔 때만 값을 고칩니다. 카드 찾기는 돋보기나 ⌘K로 엽니다. UI 강조색은 블로그 포스트 이미지의 노랑(#ffcc00) 하나만 씁니다.
-- `tools/`: 부분 글꼴 만들기(`font.py`), 글꼴 라이선스, 공유 이미지(영어 `og.png`, 한국어 `og-ko.png`). 공유 이미지는 Vizney 블로그 포스트 대표 이미지 서식(Figma 원본 1200 × 660)을 따르되 바탕은 검정으로, 오른쪽에는 실제 카드 두 장(Filter Chips와 Warning Bars)을 둡니다. 빌드한 뒤 `docs/`를 띄워 두고 `node tools/og.mjs`(Playwright 필요)로 다시 만들고 한 번 더 빌드합니다.
+- `tools/`: 부분 글꼴 만들기(`font.py`), 글꼴 라이선스, 공유 이미지(영어 `og.png`, 한국어 `og-ko.png`). 공유 이미지는 Vizney 블로그 포스트 대표 이미지 서식(Figma 원본 1200 × 660)을 따르되 바탕은 검정으로, 오른쪽에는 실제 카드 두 장(Filter Chips와 Bar Overflow)을 둡니다. 빌드한 뒤 `docs/`를 띄워 두고 `node tools/og.mjs`(Playwright 필요)로 다시 만들고 한 번 더 빌드합니다.
 - `docs/`: 빌드 결과. 첫 화면(`/`, `/ko/`), 카드 페이지와 코드(`/cards/`, `/ko/cards/`), `llms.txt`, `tokens.css`, 404 화면이 들어 있습니다. GitHub Pages가 이 폴더를 blocks.vizney.com으로 내보냅니다.
 - `skills/vizney-blocks/`: 빌드 결과. 코딩 에이전트용 스킬(입구인 영어판 `SKILL.md`, 한국어로 일할 때 따르는 `SKILL.ko.md`, 예시 `examples/`)과 OpenDesign 플러그인 파일(`open-design.json`, `icon.svg`, `preview/index.html`)입니다. `docs/`처럼 직접 고치지 않습니다.
 - `releases/`: 버전별 릴리스 노트. `VERSION`을 올린 커밋이 main에 들어오면 `.github/workflows/release.yml`이 GitHub 릴리스를 만듭니다.

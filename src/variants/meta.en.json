@@ -27,7 +27,7 @@
   }
  },
  "cards": {
-  "warning-bars": {
+  "bar-overflow": {
    "when": "Bars for each period stand against one horizontal line, the same limit for every period, and only the parts above the line blink red. Use it for a trend with the same limit each period, such as a monthly budget or a monthly capacity. Do not use it for a target, where more is better.",
    "rules": [
     "Write the periods in `labels`, their values in `values` (the same length) and one limit for every period in `limit`. Write `null` for a period with no value: its slot stays empty, since leaving the period out would shift the time axis. The line is named by `limitLabel` (Limit when empty), written above it with its value. One horizontal line means you only compare bar tops with the line to see which periods went over.",
@@ -36,7 +36,7 @@
     "When the card comes into view the line is already drawn, the bars rise one by one from the left, then only the parts above the line blink three times and stop. No bar is drawn before it rises. The still frame alone shows which periods went over and by how much. Replay it with the button at the top right; when the data changes and the card redraws, the last frame is drawn at once. A monthly trend shows 13 months."
    ]
   },
-  "share-waffle": {
+  "waffle-flip": {
    "when": "A card that draws shares as a 100-cell waffle and flips, one by one, the cells that changed hands since the earlier period. Use it to show how much one item's share grew or shrank, such as a market share or a sales mix. It draws the change between two periods only.",
    "rules": [
     "List 2 to 4 items in `items`, each with the raw values (units sold, sales and so on) of the `periods` (the earlier one, then the later one) in `values`. The card computes the shares and the change in points. Each period's cells add up to 100 by giving the leftover cells to the largest remainders (one cell is 1%). With a single period in `periods`, the card draws that period's cells with no period switch. When filtering leaves no item, give an empty `items` array for an empty card.",
@@ -46,7 +46,7 @@
     "With two periods, a period switch sits at the top right of the head. When the card comes into view, the earlier period's cells sit still, then the switch moves to the later period and only the changed cells flip one after another, while the big number and the legend shares follow the visible cells one point at a time. When all have flipped, the bracket and the badge appear and the card stops. The still frame alone shows the current share and how far it moved. Click the switch or use the left and right arrow keys to go back and forth between the two periods (going back, the cells flip in reverse, last flipped first); the switch tells which period the big number and the legend show, so the earlier values are always one step away. When the data changes and the card redraws, it draws the picked period's still frame at once. Hover a cell, or focus the chart and press the left and right arrow keys, to see that item's share (one decimal) and raw value for the period on screen, plus the change in points against the earlier period when the later one is on screen."
    ]
   },
-  "rank-lines": {
+  "bump-race": {
    "when": "A card that ranks the items in every period, joins the ranks with S-curves, and plays through the periods one at a time so the moments the order changes are visible. Use it to show how products, channels or branches moved up and down over a year, above all how far one item climbed. Ranks hide the size of the differences, so when the gaps matter, use a line chart.",
    "rules": [
     "Put the period names in `labels` and 2 to 8 items in `items`, each with the value of every period (units sold and so on) in `values`. The card ranks each period from the largest value (`better: down` makes the smallest value rank 1). Ties follow the previous period's rank, then the listed order, and a null value takes the item out of that period's ranking and breaks its line. Draw 13 months for a monthly trend.",
@@ -77,7 +77,7 @@
   "download-button": {
    "when": "A button that downloads the data of a chart card on the screen as a file. It starts as an icon alone; hover and the formats to pick from (CSV, JSON, PNG) come out. Use it to export exactly what the controls show.",
    "rules": [
-    "Write the kind of the card to download in `target` (its `data-vzb`, e.g. `warning-bars`). The table comes from the current JSON of the first such card on the page: `items`, else `labels` with `values` (adding `limit` and `target` as columns when present), `labels` with `series`, else the first array of objects. It reads the JSON after the controls changed it, so you get what you see.",
+    "Write the kind of the card to download in `target` (its `data-vzb`, e.g. `bar-overflow`). The table comes from the current JSON of the first such card on the page: `items`, else `labels` with `values` (adding `limit` and `target` as columns when present), `labels` with `series`, else the first array of objects. It reads the JSON after the controls changed it, so you get what you see.",
     "List the formats in `formats` (`csv`, `json`, `png`; empty means all three). The CSV starts with a BOM so Excel reads non-English text correctly, and the PNG is the card as you see it at twice the size (its text may be drawn in a font installed on the device). The file name is `filename` plus the extension of the format.",
     "An icon alone takes little room on the screen; hover it, reach it with the keyboard or press it and the button widens and the formats come out one by one. Pressing the icon again while open downloads the first format, Esc closes it, and the left and right arrows move between the formats. The widened button floats over what is next to it instead of pushing it, and when there is no room on the right it opens to the left, keeping the icon in place. To put it at the right end, as at the top right of a screen, set `align` to `end`: the icon sits at the right end and the button opens to the left.",
     "Before downloading, the card sends a `vzb-download` event (`detail: { name, target, format, filename, rows }`). If the page calls `preventDefault()` the card makes no file, so a screen that fetches the source data from a server can use the same button.",

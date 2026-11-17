@@ -1,6 +1,6 @@
 # 예시 · 채널을 고르면 다시 그려지는 광고비 화면
 
-Filter Chips로 채널을 고르면 Warning Bars가 다시 그려지고, Download Button이 고른 결과를 그대로 내려받는 예시다. 스킬의 미리보기(`preview/index.html`)는 같은 화면의 영어판이며, 같은 방식의 스크립트로 잇는다.
+Filter Chips로 채널을 고르면 Bar Overflow가 다시 그려지고, Download Button이 고른 결과를 그대로 내려받는 예시다. 스킬의 미리보기(`preview/index.html`)는 같은 화면의 영어판이며, 같은 방식의 스크립트로 잇는다.
 
 ## 요청
 
@@ -10,13 +10,13 @@ Filter Chips로 채널을 고르면 Warning Bars가 다시 그려지고, Downloa
 
 | 화면에 둘 것 | 카드(id) | 확인한 것 |
 |---|---|---|
-| 월별 광고비가 예산을 넘었는가 | Warning Bars (`warning-bars`) | 예산은 넘으면 안 되는 한도다. 모든 달에 같은 값이라 한도선 하나로 그릴 수 있다 |
+| 월별 광고비가 예산을 넘었는가 | Bar Overflow (`bar-overflow`) | 예산은 넘으면 안 되는 한도다. 모든 달에 같은 값이라 한도선 하나로 그릴 수 있다 |
 | 채널 고르기 | Filter Chips (`filter-chips`) | 채널이 여섯 개라 한눈에 들어온다 |
 | 지금 보이는 값 내려받기 | Download Button (`download-button`) | 고른 채널의 값을 받아야 하므로 서버 원본이 아니라 화면의 카드에서 받는다 |
 
 가정: 금액은 원 단위 원래 값(`"format": "krw"`) · 채널을 고르면 한도도 고른 채널의 예산 합으로 바꾼다(전체 예산과 견주면 일부 채널만 볼 때 늘 남는 것처럼 보이기 때문이다).
 
-카드에 없는 것: 채널별 비중이나 전환율은 요청에 없어 넣지 않았다. 필요하면 Share Waffle(두 기간의 비중 변화)을 검토하고, 맞는 카드가 없는 차트는 직접 만든다.
+카드에 없는 것: 채널별 비중이나 전환율은 요청에 없어 넣지 않았다. 필요하면 Waffle Flip(두 기간의 비중 변화)을 검토하고, 맞는 카드가 없는 차트는 직접 만든다.
 
 ## 4단계 · JSON 핵심
 
@@ -28,7 +28,7 @@ Filter Chips. 처음부터 모든 채널을 고른 상태로 두어, 처음 화�
   "value": ["SNS", "검색", "디스플레이", "동영상", "제휴", "리타게팅"] }
 ```
 
-Warning Bars. 13개월의 전체 합과 전체 예산으로 시작한다.
+Bar Overflow. 13개월의 전체 합과 전체 예산으로 시작한다.
 
 ```json
 { "title": "월별 광고비", "subtitle": "모든 채널, 월 예산 4,000만 원 대비", "format": "krw",
@@ -40,13 +40,13 @@ Warning Bars. 13개월의 전체 합과 전체 예산으로 시작한다.
 Download Button. 필터 줄의 오른쪽 끝에 두므로 `align`을 `end`로 적어 왼쪽으로 펼친다.
 
 ```json
-{ "label": "월별 광고비 내려받기", "name": "export", "target": "warning-bars",
+{ "label": "월별 광고비 내려받기", "name": "export", "target": "bar-overflow",
   "filename": "monthly-ad-spend", "formats": ["csv", "png"], "align": "end" }
 ```
 
 ## 5–6단계 · 붙이기와 잇기
 
-컨트롤은 제목을 그리지 않으므로 필터 줄에서 페이지가 '채널'이라고 적는다. Warning Bars는 스크립트가 찾을 수 있게 `id="spend"`인 요소로 감싼다.
+컨트롤은 제목을 그리지 않으므로 필터 줄에서 페이지가 '채널'이라고 적는다. Bar Overflow는 스크립트가 찾을 수 있게 `id="spend"`인 요소로 감싼다.
 
 ```html
 <script>

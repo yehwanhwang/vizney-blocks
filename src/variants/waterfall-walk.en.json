@@ -1,35 +1,35 @@
 {
-  "title": "Income Statement",
-  "subtitle": "Revenue to net income, FY2026",
+  "title": "Members",
+  "subtitle": "What changed it, Jan 1 → Dec 31",
   "lang": "en",
-  "format": "usd",
+  "format": "count",
   "items": [
     {
-      "name": "Revenue",
-      "value": 48000000
+      "name": "Jan 1",
+      "value": 720
     },
     {
-      "name": "COGS",
-      "value": -22600000
+      "name": "New",
+      "value": 360
     },
     {
-      "name": "SG&A",
-      "value": -14800000
+      "name": "Referrals",
+      "value": 240
     },
     {
-      "name": "Operating profit",
-      "total": true
+      "name": "Returning",
+      "value": 150
     },
     {
-      "name": "Non-operating",
-      "value": 1200000
+      "name": "Canceled",
+      "value": -300
     },
     {
-      "name": "Tax",
-      "value": -2800000
+      "name": "Expired",
+      "value": -180
     },
     {
-      "name": "Net income",
+      "name": "Dec 31",
       "total": true
     }
   ]

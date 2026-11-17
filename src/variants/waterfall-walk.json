@@ -1,35 +1,35 @@
 {
-  "title": "손익계산서",
-  "subtitle": "매출액에서 당기순이익까지, 2026년",
-  "format": "krw",
-  "decimals": 0,
+  "title": "회원 수",
+  "subtitle": "무엇이 늘리고 줄였나, 연초 → 연말",
+  "format": "count",
+  "unit": "명",
   "items": [
     {
-      "name": "매출액",
-      "value": 48000000000
+      "name": "연초",
+      "value": 720
     },
     {
-      "name": "매출원가",
-      "value": -22600000000
+      "name": "신규 가입",
+      "value": 360
     },
     {
-      "name": "판관비",
-      "value": -14800000000
+      "name": "지인 추천",
+      "value": 240
     },
     {
-      "name": "영업이익",
-      "total": true
+      "name": "재가입",
+      "value": 150
     },
     {
-      "name": "영업외손익",
-      "value": 1200000000
+      "name": "해지",
+      "value": -300
     },
     {
-      "name": "법인세",
-      "value": -2800000000
+      "name": "만료",
+      "value": -180
     },
     {
-      "name": "당기순이익",
+      "name": "연말",
       "total": true
     }
   ]

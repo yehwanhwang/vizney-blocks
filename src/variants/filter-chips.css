@@ -21,4 +21,3 @@
 .vzb-ch-chip[aria-pressed="true"] .vzb-ch-ck path { stroke-dashoffset: 0; transition-delay: 0.12s; }
 .vzb-ch-count { margin-left: 5px; padding: 2px 5px; border-radius: 8px; background: color-mix(in srgb, var(--vzb-ink) 10%, transparent); font-size: 11px; font-weight: 700; line-height: 1.2em; }
 .vzb-ch-chip[aria-pressed="true"] .vzb-ch-count { background: color-mix(in srgb, var(--vzb-card) 22%, transparent); }
-@media (prefers-reduced-motion: reduce) { .vzb-ch-chip, .vzb-ch-ck, .vzb-ch-ck path { transition: none; } }

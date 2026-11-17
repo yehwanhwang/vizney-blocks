@@ -3,7 +3,7 @@
   // 아래 줄에는 넘친 기간 수와 넘친 양의 합을 카드가 계산해 적습니다. 비율 지표(pct)는 합을 적지 않습니다.
   // 움직임: 한도선이 먼저 그어져 있고, 막대가 왼쪽부터 하나씩 차오릅니다. 선을 넘는 순간부터 넘친 구간이 빨갛게 자라고,
   // 마지막 막대가 다 차면 넘친 구간만 세 번 깜빡이고 멈춥니다. 막대가 차기 전에는 막대 자리를 미리 그리지 않습니다.
-  // 카드가 화면에 보이면 한 번 움직이고, 다시 보기 단추로 되풀이합니다. 동작 줄이기 설정이거나 데이터가 바뀌어 다시 그릴 때
+  // 카드가 화면에 보이면 한 번 움직이고, 다시 보기 단추로 되풀이합니다. 데이터가 바뀌어 다시 그릴 때
   // (data-vzb-live)는 마지막 장면을 바로 그립니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고 되풀이합니다.
   mount('warning-bars', (card, d, f) => {
     // 걸러서 남은 기간이 없을 때(labels가 빈 배열)는 오류가 아니라 빈 화면입니다.
@@ -154,7 +154,6 @@
     }
 
     // 재생: 화면에 보이고(inView) 마우스 · 포커스로 잠시 멈추지 않았을 때(holds)만 움직입니다. 카드가 페이지에서 빠지면 멈춥니다.
-    const still = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     const live = card.hasAttribute('data-vzb-live');   // 데이터가 바뀌어 다시 그린 카드: 처음부터 재생하지 않습니다
     const loop = !!card.closest('[data-vzb-loop]');
     const holds = new Set();
@@ -199,12 +198,11 @@
       () => { svg.classList.remove('is-hover'); items.forEach((x) => x.g.classList.remove('is-on')); },
       false, true);
 
-    btn.hidden = still;
-    if (still || live) t = 1e9;   // 마지막 장면에서 시작합니다
+    if (live) t = 1e9;   // 마지막 장면에서 시작합니다
     onSize(plot, layout);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (W) layout(W, H); });
     // 화면에 처음 보일 때 움직입니다. 화면 밖에 있는 동안은 멈춰 둡니다.
-    const start = () => { if (!seen) { seen = true; if (!still && !live) play(); } };
+    const start = () => { if (!seen) { seen = true; if (!live) play(); } };
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver((es) => {
         if (!card.isConnected) { io.disconnect(); return; }

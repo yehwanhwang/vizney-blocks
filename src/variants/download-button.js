@@ -9,7 +9,7 @@
   // 움직임(download-button.css): 형식은 늘어나는 단추 안에서 차례로 나오고, 받으면 단추가 접히며 화살표가 받침으로 떨어져 체크로 바뀌고
   // 작은 점들이 터집니다. 옆에는 받은 형식과 행 수가 굴러 올라왔다가 1.8초 뒤 사라집니다. 받을 데이터가 없으면 단추가 좌우로 떱니다.
   // 열린 상태에서 아이콘을 다시 누르면 첫 형식으로 받습니다. Esc는 닫고, 좌우 화살표는 형식 사이를 옮깁니다.
-  // 동작 줄이기 설정에서는 움직임 없이 상태만 바뀝니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 파일은 만들지 않고 고르는 모습만 되풀이합니다.
+  // 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 파일은 만들지 않고 고르는 모습만 되풀이합니다.
   mount('download-button', (card, d, f) => {
     const FORMATS = ['csv', 'json', 'png'];
     const formats = (Array.isArray(d.formats) ? d.formats.map((x) => String(x).toLowerCase()).filter((x) => FORMATS.includes(x)) : FORMATS);
@@ -219,8 +219,7 @@
     items.forEach((o) => o.addEventListener('click', () => { idle = performance.now() + 8000; run(o.dataset.fmt); }));
 
     // 갤러리(data-vzb-loop): 화면에 보이는 동안, 손을 대기 전과 손을 뗀 지 8초 뒤부터 열어서 형식을 고르는 모습을 되풀이합니다(파일은 만들지 않습니다).
-    const reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    if (!reduce && card.closest('[data-vzb-loop]')) {
+    if (card.closest('[data-vzb-loop]')) {
       let seen = true, k = 0;
       if ('IntersectionObserver' in window) new IntersectionObserver((es) => { seen = es[es.length - 1].isIntersecting; }).observe(card);
       const timer = setInterval(() => {

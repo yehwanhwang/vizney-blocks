@@ -50,6 +50,3 @@
 .vzb-br-now { font-size: 12px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
 .vzb-br-end { font-size: 11px; fill: var(--vzb-muted); transition: opacity 0.12s; }
 .vzb-br-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
-@media (prefers-reduced-motion: reduce) {
-  .vzb-br-item, .vzb-br-head, .vzb-br-lab, .vzb-br-halo, .vzb-br-end { transition: none; }
-}

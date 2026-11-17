@@ -42,7 +42,3 @@
 .vzb-wf-key.vzb-wf-c3 { opacity: 0.16; }
 .vzb-wf-in { animation: vzb-wf-in 0.32s ease-out; }
 @keyframes vzb-wf-in { from { opacity: 0; filter: blur(3px); } to { opacity: 1; filter: none; } }
-@media (prefers-reduced-motion: reduce) {
-  .vzb-wf-cell, .vzb-wf-legend li, .vzb-wf-opt, .vzb-wf-per.is-ready .vzb-wf-pill { transition: none; }
-  .vzb-wf-in { animation: none; }
-}

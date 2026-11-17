@@ -2,7 +2,7 @@
   // 고른 칩은 글자색으로 채우고 체크가 그려집니다. 맨 앞의 전체 칩(all, 비우면 '전체', 빈 글자면 없음)은 고른 수를 굴러가는 숫자로 보여 주고,
   // 누르면 모두 고르거나 이미 모두 골랐으면 모두 풉니다. value는 처음 고른 항목이고 비우면 모두입니다.
   // 값이 바뀌면 카드에서 vzb-change 이벤트(bubbles, detail: { name, value: 고른 항목을 options 순서대로 })를 보내고, data-vzb-value에도 적습니다.
-  // 칩은 누르면 살짝 눌렸다 튀어 오르고, 고르면 체크가 그려지며 칩이 넓어집니다(filter-chips.css). 동작 줄이기 설정에서는 바로 바뀝니다.
+  // 칩은 누르면 살짝 눌렸다 튀어 오르고, 고르면 체크가 그려지며 칩이 넓어집니다(filter-chips.css).
   // 칩이 두 줄을 넘으면 한 줄로 두고 가로로 밀어 봅니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 손을 대기 전까지 고르기를 차례로 보여 줍니다.
   mount('filter-chips', (card, d, f) => {
     const opts = [...new Set((Array.isArray(d.options) ? d.options : []).filter((o) => o != null && o !== '').map(String))];
@@ -37,7 +37,6 @@
     foot.append(list, say);
     card.append(foot);
 
-    const reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     function paint() {
       chips.forEach((b, i) => b.setAttribute('aria-pressed', String(sel.has(opts[i]))));
       if (all) {
@@ -84,7 +83,7 @@
     onSize(list, fit);
 
     // 갤러리(data-vzb-loop): 화면에 보이는 동안, 손을 대기 전과 손을 뗀 지 6초 뒤부터 칩을 차례로 눌러 보입니다.
-    if (!reduce && card.closest('[data-vzb-loop]')) {
+    if (card.closest('[data-vzb-loop]')) {
       const plan = [3, 4, -1, 5, 4];   // 한 바퀴 돌면 처음 고른 넷으로 돌아옵니다
       let k = 0, seen = true;
       if ('IntersectionObserver' in window) new IntersectionObserver((es) => { seen = es[es.length - 1].isIntersecting; }).observe(card);

@@ -6,7 +6,7 @@
 //   4. 높이: the min-height rule of each chart card (.vzb-card[data-vzb="<id>"]) is one of 1 · 1.5 · 2 units and matches TIER
 //      (2 when not listed); the controls are drawn bare at the height of the control (min-height: 0), and only they are.
 //   5. 충돌: every selector is scoped (contains "vzb"), no element ids, no globals (window.x =); the code is one IIFE.
-//   6. 접근성: a file that animates has a prefers-reduced-motion rule; a card that reacts to the pointer also takes the keyboard.
+//   6. 접근성: a card that reacts to the pointer also takes the keyboard. Motion plays whatever the reduced-motion setting (v0.59).
 //   7. 데이터: the example JSON parses, labels and values have the same length, and no field the card computes is written in.
 //   8. 메타: every meta.json card has its .js and .json, no orphan source file, uses are known parts, and the card id is the card
 //      name in lower case with hyphens (Rank Lines → rank-lines), so the name on the gallery and the address always agree.
@@ -150,7 +150,6 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
       }
     }
     if (file.endsWith('.css')) {
-      if (/transition|animation/.test(noComments) && !/prefers-reduced-motion:\s*reduce/.test(noComments)) fail(file, 'transition·animation이 있으면 같은 파일에 @media (prefers-reduced-motion: reduce) 규칙을 둔다');
       // Every selector is scoped to the cards.
       for (const m of noComments.replace(/@media[^{]*\{/g, '').matchAll(/(^|[}{;])\s*([^{}@;]+?)\s*\{/g)) {
         for (const sel of m[2].split(',')) {

@@ -7,7 +7,7 @@
   // 툴팁과 표에는 원래 값과 소수 한 자리 비중을 함께 적습니다.
   // 기간 단추: 두 기간을 주면 머리 오른쪽 위에 두 기간을 오가는 단추를 둡니다. 누르거나 좌우 화살표로 고르면 바뀐 칸만 뒤집혀 그 기간이 됩니다.
   // 움직임: 화면에 보이면 앞 기간의 칸이 놓여 있다가 단추가 뒤 기간으로 옮겨 가며 바뀐 칸이 차례로 뒤집힙니다. 한 기간만 주면 단추 없이 그 기간의 칸만 그립니다.
-  // 동작 줄이기 설정이면 뒤집지 않고 바로 바꾸고, 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 고른 기간의 멈춘 장면을 바로 그립니다.
+  // 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 고른 기간의 멈춘 장면을 바로 그립니다.
   // 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고 두 기간을 오갑니다. 단추를 직접 고르면 오가기를 멈춥니다.
   mount('share-waffle', (card, d, f) => {
     // 걸러서 남은 항목이 없을 때(items가 빈 배열이거나 모든 값이 0)는 오류가 아니라 빈 화면입니다.
@@ -224,7 +224,6 @@
     }
 
     // 재생: 화면에 보이고(inView) 마우스 · 포커스로 잠시 멈추지 않았을 때(holds)만 움직입니다. 카드가 페이지에서 빠지면 멈춥니다.
-    const still = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     const live = card.hasAttribute('data-vzb-live');   // 데이터가 바뀌어 다시 그린 카드: 처음부터 재생하지 않습니다
     const loop = !!card.closest('[data-vzb-loop]');
     const holds = new Set();
@@ -246,7 +245,6 @@
     function kick() { if (!raf && on()) raf = requestAnimationFrame(tick); }
     // 기간 p로 갑니다. 다른 기간으로 가는 중에 되돌리면, 이미 뒤집힌 칸부터 거꾸로 되짚습니다.
     function go(p, wait) {
-      if (still) { from = to = p; t = 0; render(); return; }
       if (from !== to && p === from) {
         const span = endOf() - lead, s = Math.max(0, Math.min(span, t - lead));
         from = to; to = p; lead = 0; t = span - s;
@@ -294,8 +292,8 @@
       () => { svg.classList.remove('is-hover'); legend.classList.remove('is-hover'); items.forEach((x) => x.li.classList.remove('is-on')); cells.forEach((c) => c.classList.remove('is-on')); },
       false, true);
 
-    // 처음 장면: 재생할 카드는 앞 기간에 멈춰 기다리고, 아니면(동작 줄이기 · 다시 그림 · 한 기간) 고른 기간 또는 뒤 기간입니다.
-    const auto = !still && !live && P > 1;
+    // 처음 장면: 재생할 카드는 앞 기간에 멈춰 기다리고, 아니면(다시 그림 · 한 기간) 고른 기간 또는 뒤 기간입니다.
+    const auto = !live && P > 1;
     if (auto) from = to = 0;
     onSize(foot, layout);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (W) layout(foot.clientWidth); });

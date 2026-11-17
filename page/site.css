@@ -265,4 +265,3 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
   .fields dl { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   .fields dd { margin-bottom: 10px; }
 }
-@media (prefers-reduced-motion: reduce) { .fields > summary svg, .gt.is-bare .vzb-dl-anchor { transition: none; } }

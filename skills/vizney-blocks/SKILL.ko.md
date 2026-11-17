@@ -83,7 +83,7 @@ Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담�
 - 컨트롤은 값이 바뀔 때마다 카드에서 `vzb-change` 이벤트를 보낸다(위로 전달되므로 `document`에서 받는다). `detail`은 `{ name, value }`이고 `name`은 그 컨트롤 JSON의 `name`이다. Range Slider의 `value`는 `[시작, 끝]` 숫자, Filter Chips의 `value`는 고른 항목을 `options` 순서대로 담은 배열이다. 지금 값은 카드의 `data-vzb-value` 속성에도 JSON으로 적혀 있다.
 - 컨트롤은 처음 그릴 때는 이벤트를 보내지 않는다. 컨트롤의 `value`와 차트의 JSON을 처음부터 같은 조건으로 적는다.
 - 차트 카드는 안의 `<script type="application/json">` 글자가 바뀌면 그 카드만 다시 그린다. 페이지가 거르기 전의 전체 데이터를 들고 있다가, 이벤트를 받으면 거른 결과로 차트의 JSON을 만들어 바꿔 적는다. 다시 그린 카드는 처음부터 재생하지 않고 마지막 장면을 바로 그리며, 보는 사람이 고른 기간과 항목은 그대로 둔다.
-- 걸러서 남은 것이 없으면 빈 배열을 준다. Bar Overflow는 `"labels": []`, Waffle Flip과 Bump Race는 `"items": []`이면 오류 대신 빈 화면을 그린다.
+- 걸러서 남은 것이 없으면 빈 배열을 준다. Bar Overflow는 `"labels": []`, Waffle Flip · Bump Race · Waterfall Walk는 `"items": []`이면 오류 대신 빈 화면을 그린다.
 - 같은 종류의 카드를 두 장 쓰면 카드마다 id를 준 요소로 감싸고 그 id로 가려 쓴다(아래 예시의 `#spend`).
 - Download Button은 `target`에 적은 종류(`data-vzb`)의 카드 가운데 페이지에서 처음 만나는 카드의 지금 JSON을 받는다. 그래서 컨트롤로 거른 뒤의 값이 그대로 내려간다. 받기 전에 `vzb-download` 이벤트(`detail: { name, target, format, filename, rows }`)를 보내고, 페이지가 `preventDefault()`를 부르면 파일을 만들지 않으므로 서버에서 원본을 받는 화면도 같은 단추를 쓸 수 있다.
 

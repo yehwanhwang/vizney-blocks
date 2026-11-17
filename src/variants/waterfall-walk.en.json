@@ -1,0 +1,36 @@
+{
+  "title": "Members",
+  "subtitle": "What changed it, Jan 1 → Dec 31",
+  "lang": "en",
+  "format": "count",
+  "items": [
+    {
+      "name": "Jan 1",
+      "value": 720
+    },
+    {
+      "name": "New",
+      "value": 360
+    },
+    {
+      "name": "Referrals",
+      "value": 240
+    },
+    {
+      "name": "Returning",
+      "value": 150
+    },
+    {
+      "name": "Canceled",
+      "value": -300
+    },
+    {
+      "name": "Expired",
+      "value": -180
+    },
+    {
+      "name": "Dec 31",
+      "total": true
+    }
+  ]
+}

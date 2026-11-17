@@ -1,23 +1,24 @@
 ---
 name: vizney-blocks
-description: "Add charts read through their motion and dashboard controls to an HTML page with Vizney Blocks (blocks.vizney.com) cards. Use it to draw one of the charts (Bar Overflow · Waffle Flip · Bump Race) or add one of the controls (Range Slider · Filter Chips · Download Button), or when the user mentions Vizney Blocks. Keep the card code, change only its JSON data, and connect controls to charts with a short page script. 한국어 요청이나 한국어 화면에도 쓴다(한국어판 SKILL.ko.md)."
+description: "Add charts read through their motion and dashboard controls to an HTML page with Vizney Blocks (blocks.vizney.com) cards. Use it to draw one of the charts (Bar Overflow · Waffle Flip · Bump Race · Waterfall Walk) or add one of the controls (Range Slider · Filter Chips · Download Button), or when the user mentions Vizney Blocks. Keep the card code, change only its JSON data, and connect controls to charts with a short page script. 한국어 요청이나 한국어 화면에도 쓴다(한국어판 SKILL.ko.md)."
 ---
 
 # Building screens with Vizney Blocks cards
 
 > 한국어로 일할 때(사용자가 한국어로 요청하거나 화면 문구가 한국어일 때)는 같은 폴더의 `SKILL.ko.md`를 읽고 그것을 따른다. Working in Korean? Read `SKILL.ko.md` in this folder and follow it instead; it has the same steps and rules with the Korean card addresses.
 
-Vizney Blocks is a set of copy-paste HTML cards: charts you read through their motion, and dashboard controls (v0.60, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. The card does the arithmetic (the amount over a limit, shares, ranks) and the colors, emphasis and motion, by the rules of the Vizney chart guide. So keep the card code and change only the JSON values. A card decides how to draw its chart correctly; what goes on the screen is up to whoever builds it.
+Vizney Blocks is a set of copy-paste HTML cards: charts you read through their motion, and dashboard controls (v0.61, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. The card does the arithmetic (the amount over a limit, shares, ranks) and the colors, emphasis and motion, by the rules of the Vizney chart guide. So keep the card code and change only the JSON values. A card decides how to draw its chart correctly; what goes on the screen is up to whoever builds it.
 
 ## Cards
 
-The cards are these 3 charts and 3 controls, and no others. When no card fits a request, do not bend one to it: build that part yourself and tell the user it is not a card.
+The cards are these 4 charts and 3 controls, and no others. When no card fits a request, do not bend one to it: build that part yourself and tell the user it is not a card.
 
 ### Charts
 
 - Bar Overflow (`bar-overflow`) · Bar Chart — Bars for each period stand against one horizontal line, the same limit for every period, and only the parts above the line blink red. Use it for a trend with the same limit each period, such as a monthly budget or a monthly capacity. Do not use it for a target, where more is better.
 - Waffle Flip (`waffle-flip`) · Waffle Chart — A card that draws shares as a 100-cell waffle and flips, one by one, the cells that changed hands since the earlier period. Use it to show how much one item's share grew or shrank, such as a market share or a sales mix. It draws the change between two periods only.
 - Bump Race (`bump-race`) · Bump Chart — A card that ranks the items in every period, joins the ranks with S-curves, and plays through the periods one at a time so the moments the order changes are visible. Use it to show how products, channels or branches moved up and down over a year, above all how far one item climbed. Ranks hide the size of the differences, so when the gaps matter, use a line chart.
+- Waterfall Walk (`waterfall-walk`) · Waterfall Chart — A card that joins what raised and what cut a value between a starting point and an end point, as one bar per item. On play, dots appear one by one from the level where the last bar ended and walk to the next item, the bar then rises or falls from that level, and the name and value attached to its end travel with it. Use it to tell, in order, what moved a value between two points: how the members at the start of the year became the members at the end through sign-ups and cancellations, which drivers turned last year's operating profit into this year's, or how much of revenue is left as operating profit and net income after costs. Do not use it for a trend over periods.
 
 ### Controls
 

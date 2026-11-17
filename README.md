@@ -27,13 +27,14 @@ Copy-paste HTML cards: charts you read through their motion, and the dashboard c
 
 ## 카드
 
-차트 카드의 이름은 차트 종류 뒤에 그 카드의 움직임을 붙여 짓고(Bar Overflow: 막대가 한도를 넘침, Waffle Flip: 와플 칸이 뒤집힘, Bump Race: 범프 차트의 순위 다툼), 컨트롤은 찾는 말 그대로 짓습니다. 카드 id는 카드 이름을 소문자와 하이픈으로 적은 것입니다(Bump Race → `bump-race`). 카드 코드는 `https://blocks.vizney.com/ko/cards/<id>.txt`(영어는 `/cards/<id>.txt`)에, 그 카드만 그린 페이지는 같은 자리의 `.html`에 있습니다.
+차트 카드의 이름은 차트 종류 뒤에 그 카드의 움직임을 붙여 짓고(Bar Overflow: 막대가 한도를 넘침, Waffle Flip: 와플 칸이 뒤집힘, Bump Race: 범프 차트의 순위 다툼, Waterfall Walk: 워터폴의 단계를 한 걸음씩 걸어감), 컨트롤은 찾는 말 그대로 짓습니다. 카드 id는 카드 이름을 소문자와 하이픈으로 적은 것입니다(Bump Race → `bump-race`). 카드 코드는 `https://blocks.vizney.com/ko/cards/<id>.txt`(영어는 `/cards/<id>.txt`)에, 그 카드만 그린 페이지는 같은 자리의 `.html`에 있습니다.
 
 | 카드 | 종류 | 쓰는 때 |
 |---|---|---|
 | [Bar Overflow](https://blocks.vizney.com/ko/cards/bar-overflow.html) | 막대 차트 | 월 예산이나 월 처리량처럼 기간마다 같은 한도가 있는 값의 추이. 한도선을 넘긴 구간만 빨갛게 깜빡입니다 |
 | [Waffle Flip](https://blocks.vizney.com/ko/cards/waffle-flip.html) | 와플 차트 | 시장 점유율이나 매출 구성비처럼 한 항목의 비중이 두 기간 사이에 얼마나 늘거나 줄었는지. 바뀐 만큼의 칸이 한 칸씩 뒤집힙니다 |
 | [Bump Race](https://blocks.vizney.com/ko/cards/bump-race.html) | 범프 차트 | 상품 · 채널 · 지점의 순위가 기간마다 어떻게 오르내렸는지. 기간을 하나씩 넘기며 앞지르는 순간을 보여 줍니다 |
+| [Waterfall Walk](https://blocks.vizney.com/ko/cards/waterfall-walk.html) | 워터폴 차트 | 시작 값에서 끝 값까지 무엇이 얼마나 늘리고 줄였는지. 점이 다음 항목으로 걸어가며 막대를 하나씩 이어 붙이고, 끝 막대의 말풍선이 끝 값과 증감을 알립니다 |
 | [Range Slider](https://blocks.vizney.com/ko/cards/range-slider.html) | 컨트롤 | 주문 금액이나 수량처럼 이어지는 값으로 화면을 거를 때. 끄는 동안 범위에 드는 분포가 레일 위에 뜹니다 |
 | [Filter Chips](https://blocks.vizney.com/ko/cards/filter-chips.html) | 컨트롤 | 채널이나 지역처럼 몇 개 안 되는 이름으로 화면을 거를 때. 전체 칩이 지금 몇 개를 골랐는지 보여 줍니다 |
 | [Download Button](https://blocks.vizney.com/ko/cards/download-button.html) | 컨트롤 | 화면에 있는 차트 카드의 지금 데이터를 CSV · JSON · PNG로 받을 때 |

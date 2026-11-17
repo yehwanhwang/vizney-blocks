@@ -16,7 +16,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.60';
+const VERSION = 'v0.61';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -288,12 +288,12 @@ const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 // v0.52: the controls are drawn bare (no head, no frame) in the middle of the tile, like the units of a motion gallery.
 // v0.49: the gallery is built one block at a time. v0.56: the gallery is the whole list; a card that is not here does not exist.
 // Blocks that move (data-vzb-loop) replay on the first screen instead of stopping at the end.
-const GALLERY = ['bar-overflow', 'waffle-flip', 'bump-race', 'range-slider', 'filter-chips', 'download-button'];
+const GALLERY = ['bar-overflow', 'waffle-flip', 'bump-race', 'waterfall-walk', 'range-slider', 'filter-chips', 'download-button'];
 const LOOP = new Set(GALLERY);
 // v0.53: tile widths follow the block. On the 3-column gallery a chart that reads along a long axis (13 months, a 5 × 20 waffle)
 // takes 2 columns; a chart that reads better compact (a donut, a single figure) and every control take 1. The tiles are laid out
 // so that rows alternate 2 + 1 and 1 + 2. A wide block left without a partner sits alone; narrow blocks left over go three to a row.
-const SPAN = { 'bar-overflow': 2, 'waffle-flip': 2, 'bump-race': 2 };
+const SPAN = { 'bar-overflow': 2, 'waffle-flip': 2, 'bump-race': 2, 'waterfall-walk': 2 };
 const wideOf = (id) => SPAN[id] === 2;
 const ORDER = (() => {
   const wide = GALLERY.filter(wideOf), narrow = GALLERY.filter((id) => !wideOf(id)), out = [];
@@ -407,6 +407,10 @@ const FIELD_OVERRIDE = {
   'bump-race': {
     ko: { title: '무엇의 순위인지(예: 판매 순위)', subtitle: '순위의 기준과 기간(예: 월별 판매 수량 순위, 2025년 11월 – 2026년 11월)', labels: '기간 이름. 월별 추이는 13개월', focus: '짚을 항목의 이름. 비우면 첫 항목', items: '항목 2~8개. 항목마다 name과 values(기간마다의 값, labels와 같은 개수. 값이 없는 기간은 null)', better: 'up(비우면, 큰 값이 1위) · down(작은 값이 1위)' },
     en: { title: 'what is ranked (e.g. Top Sellers)', subtitle: 'the basis of the rank and the period (e.g. monthly rank by units sold, Nov 2025 – Nov 2026)', labels: 'the period names; 13 months for a monthly trend', focus: 'the name of the item to follow; the first item when empty', items: '2 to 8 items, each with name and values (one per period, as many as labels; null for a period without a value)', better: 'up (default: the largest value ranks 1) or down (the smallest value ranks 1)' },
+  },
+  'waterfall-walk': {
+    ko: { title: '무엇의 값인지(예: 회원 수)', subtitle: '무엇을 보는지와 두 지점(예: 무엇이 늘리고 줄였나, 연초 → 연말)', items: '읽는 순서대로 적은 항목. 첫 항목은 시작 값({ name, value }), 증감 항목은 { name, value }(늘면 +, 줄면 −, 값이 없으면 null), 그때까지의 누계를 세울 자리(끝이나 중간 합계)에는 { name, total: true }(값은 카드가 계산한다). 이름은 막대 끝에 적으므로 짧게', compare: '끝 막대의 말풍선에 적을 것. 비우면 첫 항목 대비 증감, share면 첫 항목의 몇 %인지(손익의 이익률처럼)', better: 'up(비우면, 늘린 항목이 초록) · down(줄인 항목이 초록) · neutral(증감을 모두 첫째 색으로)' },
+    en: { title: 'what the values are (e.g. Members)', subtitle: 'what it shows and the two points (e.g. What changed it, Jan 1 → Dec 31)', items: 'the items in reading order: the first is the starting value ({ name, value }), a change is { name, value } (+ up, − down, null when it has no value), and { name, total: true } stands a running total at that point, at the end or as a subtotal (the card computes its value). Names are printed at the bar ends, so keep them short', compare: 'what the callout on the end bar adds: empty for the change against the first item, share for its share of the first item (like a margin on an income statement)', better: 'up (default: items that raise the value are green) · down (items that lower it are green) · neutral (every change in the first color)' },
   },
   'range-slider': {
     ko: { label: '화면 낭독기가 읽는 이름(예: 주문 금액). 화면에는 그리지 않는다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '고를 수 있는 가장 작은 값', max: '고를 수 있는 가장 큰 값', step: '한 칸의 크기. 비우면 범위를 100칸쯤으로 나눈다', value: '[시작, 끝]. 비우면 전체 범위', counts: 'min~max를 같은 폭으로 나눈 칸마다의 개수(분포 막대). 없어도 된다', noun: '개수 뒤에 붙는 말(예: 건). 비우면 행' },

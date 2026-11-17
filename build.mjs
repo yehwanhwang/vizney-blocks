@@ -1050,7 +1050,8 @@ for (const e of EXAMPLES) copyFileSync(join(root, 'src/skill/examples', e.file),
 // `od plugin install github:yehwanhwang/vizney-blocks/skills/vizney-blocks`; the community marketplace index
 // (nexu-io/open-design, plugins/registry/community) points at this folder, so the manifest version follows VERSION.
 const ICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect x="2" y="2" width="13" height="13" rx="3" fill="#1b1b1b"/><rect x="17" y="2" width="13" height="13" rx="3" fill="#ff9500"/><rect x="2" y="17" width="13" height="13" rx="3" fill="#ffcc00"/><rect x="17" y="17" width="13" height="13" rx="3" fill="#ff2d55"/></svg>\n';
-const PLUGIN_DESC = `Charts read through their motion and dashboard controls as copy-paste HTML cards (${ENL.charts.length} charts, ${ENL.controls.length} controls), built on the Vizney chart guide: keep the card code, change only its JSON, and connect controls to charts with a short page script.`;
+// No card counts here: OpenDesign's marketplace index copies this text, and the gallery grows one block at a time.
+const PLUGIN_DESC = 'Copy-paste HTML cards for dashboards: charts read through their motion and the controls that filter them, built on the Vizney chart guide. Keep the card code, change only its JSON, and connect controls to charts with a short page script.';
 const manifest = {
   $schema: 'https://open-design.ai/schemas/plugin.v1.json',
   specVersion: '1.0.0',
@@ -1058,7 +1059,7 @@ const manifest = {
   title: 'Vizney Blocks',
   version: `${VERSION.slice(1)}.0`,
   description: PLUGIN_DESC,
-  description_i18n: { ko: `움직임으로 읽는 차트와 대시보드 컨트롤을 담은, 복사해 붙여 쓰는 HTML 카드(차트 ${KO.charts.length}종, 컨트롤 ${KO.controls.length}종). Vizney 차트 가이드의 판단을 담았고, 카드 코드는 그대로 둔 채 JSON만 바꾸며 컨트롤과 차트는 짧은 페이지 스크립트로 잇는다.` },
+  description_i18n: { ko: '대시보드에 붙여 쓰는 HTML 카드. 움직임으로 읽는 차트와 그 차트를 거르는 컨트롤을 Vizney 차트 가이드의 판단으로 만들었습니다. 카드 코드는 그대로 두고 JSON만 바꾸며, 컨트롤과 차트는 짧은 페이지 스크립트로 잇습니다.' },
   license: 'MIT',
   author: { name: 'Yehwan Hwang · Vizney', url: SITE },
   homepage: SITE,

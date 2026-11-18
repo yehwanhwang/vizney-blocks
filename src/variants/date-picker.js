@@ -1,7 +1,9 @@
   // Date Picker: 달력으로 기간(시작일과 끝일)이나 날짜 하나를 고르는 컨트롤입니다(주문일 · 기준일 필터). 카드 머리 없이 지금 기간을 적은 단추만 그립니다.
-  // 단추를 누르면 그 아래(아래에 자리가 없으면 위)에 한 달 달력이 옆 내용 위로 겹쳐 떠오릅니다(오른쪽에 자리가 없거나 align이 end면 단추 오른쪽 끝에 맞춥니다).
+  // 단추를 누르면 그 아래(아래에 자리가 없으면 위)에 한 달 달력이 옆 내용 위로 겹쳐 떠오릅니다. 단추와 달력은 늘 같은 폭(290px, 놓인 자리가 더 좁으면 그 폭)이라
+  // 기간이 바뀌어도 단추가 늘고 줄지 않습니다. 기간 글자가 단추에 다 들어가지 않으면 기준일과 같은 해의 기간은 연도를 빼고,
+  // 그래도 길면 숫자 날짜(26. 10. 17. / 10/17/26)로 줄여 적습니다(화면 낭독기는 늘 연도까지 읽습니다).
   // 날짜 둘을 차례로 누르면 기간이 됩니다. 첫 날짜를 누른 뒤에는 마우스나 포커스가 닿은 날짜까지 옅은 띠와 일수가 따라오고,
-  // 두 번째 날짜를 누르면 띠가 시작일에서 끝일까지 한 번에 그어지며(처음엔 빠르고 끝에서 느려집니다), 단추의 글자가 흐려지며 바뀌고 단추 폭이 새 글자에 맞춰 늘고 줄며 일수가 굴러갑니다.
+  // 두 번째 날짜를 누르면 띠가 시작일에서 끝일까지 한 번에 그어지며(처음엔 빠르고 끝에서 느려집니다), 단추의 기간이 살짝 떠오르며 바뀌고 일수가 굴러갑니다.
   // 달력은 늘 6주를 그리고, 그 달 앞뒤의 칸은 앞 · 다음 달의 날짜로 흐리게 채웁니다. 달마다 높이가 같고, 기간이 달을 넘어 이어지는 것이 보입니다.
   // 달을 넘기면 달력이 시간의 방향(다음 달은 왼쪽, 이전 달은 오른쪽)으로 밀려납니다.
   // min · max(YYYY-MM-DD) 밖의 날짜는 흐리게 두고 고를 수 없습니다(데이터가 있는 날짜만 고르게 합니다).
@@ -67,7 +69,11 @@
     const monthFmt = new Intl.DateTimeFormat(loc, { year: 'numeric', month: 'long', timeZone: 'UTC' });
     const fullFmt = new Intl.DateTimeFormat(loc, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
     const wkFmt = new Intl.DateTimeFormat(loc, { weekday: 'narrow', timeZone: 'UTC' });
-    const rangeText = (a, b) => (a === b ? fmt.format(D(a)) : fmt.formatRange ? fmt.formatRange(D(a), D(b)) : `${fmt.format(D(a))} – ${fmt.format(D(b))}`);
+    const noYear = new Intl.DateTimeFormat(loc, { month: en ? 'short' : 'long', day: 'numeric', timeZone: 'UTC' });
+    const short = new Intl.DateTimeFormat(loc, { year: '2-digit', month: 'numeric', day: 'numeric', timeZone: 'UTC' });
+    // 기간 글자. 한국어 물결표 앞뒤 띄어쓰기는 브라우저마다 달라 늘 한 칸씩 띄웁니다.
+    const spanText = (f, a, b) => (a === b ? f.format(D(a)) : f.formatRange ? f.formatRange(D(a), D(b)) : `${f.format(D(a))} – ${f.format(D(b))}`).replace(/\s*~\s*/, ' ~ ');
+    const rangeText = (a, b) => spanText(fmt, a, b);
     const unitOf = (n) => tx(d, n === 1 ? '일간|1' : '일간');
     const daysText = (n) => withUnit(num(n, 0), unitOf(n));
     const valueText = () => (one ? fmt.format(D(lo)) : `${rangeText(lo, hi)}, ${daysText(hi - lo + 1)}`);
@@ -247,15 +253,23 @@
     const goMonth = (n) => { const mo = monthOf(n); if (!cur || mo !== cur.month) turn(mo, cur ? Math.sign(mo - cur.month) : 0); };
 
     // 단추의 글자: 바뀌면 흐려지며 바뀌고, 단추 폭이 새 글자에 맞춰 용수철처럼 늘고 줄며, 일수가 굴러갑니다.
+    // 단추의 글자: 폭이 정해진 단추에 들어가는 가장 긴 표기를 고릅니다(연도까지 → 기준일과 같은 해면 연도 없이 → 숫자 날짜).
+    function fitText() {
+      const yr = parts(anchor).y, tries = [spanText(fmt, lo, hi)];
+      if (parts(lo).y === yr && parts(hi).y === yr) tries.push(spanText(noYear, lo, hi));
+      tries.push(spanText(short, lo, hi));
+      for (const t of tries) {
+        txt.textContent = t;
+        if (!val.clientWidth || val.scrollWidth <= val.clientWidth) break;   // 마지막 표기도 넘치면 말줄임표로 줄입니다
+      }
+    }
+    // 기간이 바뀌면 새 기간이 살짝 떠오르며 나타나고 일수가 굴러갑니다. 단추의 폭과 색은 그대로라 글자는 늘 바탕과 대비됩니다.
     function label(anim) {
-      const t = one ? fmt.format(D(lo)) : rangeText(lo, hi), n = hi - lo + 1, w0 = btn.offsetWidth;
+      const n = hi - lo + 1;
       btn.setAttribute('aria-label', `${name}: ${valueText()}`);
-      txt.textContent = t;
       if (!one) { roll(cntNum, num(n, 0)); cntUnit.textContent = en ? ` ${unitOf(n)}` : unitOf(n); }
-      if (!anim || !btn.animate) return;
-      const w1 = btn.offsetWidth;
-      if (Math.abs(w1 - w0) > 1) btn.animate([{ width: `${w0}px` }, { width: `${w1}px` }], { duration: 360, easing: 'cubic-bezier(0.34, 1.3, 0.64, 1)' });
-      txt.animate([{ opacity: 0, filter: 'blur(3px)', transform: 'translateY(5px)' }, { opacity: 1, filter: 'blur(0)', transform: 'none' }], { duration: 300, easing: 'ease-out' });
+      fitText();   // 일수의 자릿수가 바뀌면 글자 자리도 바뀌므로 일수를 먼저 적습니다
+      if (anim && val.animate) val.animate([{ opacity: 0.4, transform: 'translateY(5px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });   // 투명에서 시작하지 않아 어느 순간에도 글자가 읽힙니다
     }
     function emit(quiet) {
       const value = one ? iso(lo) : [iso(lo), iso(hi)];
@@ -265,13 +279,12 @@
       card.dispatchEvent(new CustomEvent('vzb-change', { bubbles: true, detail: { name: d.name || '', value } }));
     }
 
-    // 열고 닫기: 아래에 달력이 들어갈 자리가 없고 위가 더 넓으면 위로, 오른쪽에 자리가 없으면(align end면 왼쪽에 자리가 있는 한) 단추 오른쪽 끝에 맞춥니다.
+    // 열고 닫기: 아래에 달력이 들어갈 자리가 없고 위가 더 넓으면 위로 엽니다(달력은 단추와 같은 폭이라 옆으로 넘치지 않습니다).
     let open = false, closeT = 0;
     const loop = !!card.closest('[data-vzb-loop]');
     function place() {
-      const r = btn.getBoundingClientRect(), vw = document.documentElement.clientWidth || window.innerWidth, vh = window.innerHeight || document.documentElement.clientHeight;
-      const pw = pop.offsetWidth, ph = pop.offsetHeight, end = d.align === 'end';
-      root.classList.toggle('is-right', end ? r.right - pw >= 8 || r.left + pw > vw - 8 : r.left + pw > vw - 8 && r.right - pw >= 8);
+      const r = btn.getBoundingClientRect(), vh = window.innerHeight || document.documentElement.clientHeight;
+      const ph = pop.offsetHeight;
       const below = vh - r.bottom - 8, above = r.top - 8;
       root.classList.toggle('is-up', below < ph + 8 && above > below);
     }
@@ -388,6 +401,7 @@
     label(false);
     emit(true);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (card.isConnected) label(false); });
+    onSize(val, () => fitText());   // 놓인 자리가 좁아지거나 일수의 자릿수가 바뀌어 글자 자리가 줄면 표기를 다시 고릅니다
 
     // 갤러리(data-vzb-loop): 화면에 보이는 동안 달력을 연 채로 두고, 손을 대기 전과 손을 뗀 지 6초 뒤부터 고르기를 차례로 보여 줍니다.
     // 시작일을 누르고 → 끝일까지 띠가 따라오다 누르고 → 빠른 선택 → 이전 달 → 마지막 빠른 선택 → 다음 달.

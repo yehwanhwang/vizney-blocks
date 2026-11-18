@@ -36,8 +36,8 @@ Copy-paste HTML cards: charts you read through their motion, and the dashboard c
 | [Bump Race](https://blocks.vizney.com/ko/cards/bump-race.html) | 범프 차트 | 상품 · 채널 · 지점의 순위가 기간마다 어떻게 오르내렸는지. 기간을 하나씩 넘기며 앞지르는 순간을 보여 줍니다 |
 | [Waterfall Walk](https://blocks.vizney.com/ko/cards/waterfall-walk.html) | 워터폴 차트 | 시작 값에서 끝 값까지 무엇이 얼마나 늘리고 줄였는지. 점이 다음 항목으로 걸어가며 막대를 하나씩 이어 붙이고, 끝 막대의 말풍선이 끝 값과 증감을 알립니다 |
 | [Funnel Wave](https://blocks.vizney.com/ko/cards/funnel-wave.html) | 퍼널 차트 | 리드에서 계약까지처럼 정해진 순서의 단계를 지나며 처음 100 가운데 얼마가 끝까지 오는지. 물이 흘러 들어와 단계마다 남은 만큼의 높이로 내려가고, 칸마다 첫 단계 대비 비율을 적습니다 |
-| [Date Picker](https://blocks.vizney.com/ko/cards/date-picker.html) | 컨트롤 | 주문일이나 기준일처럼 날짜로 화면을 거를 때. 날짜 둘을 고르는 동안 기간과 일수가 따라오고, 고르면 띠가 시작일에서 끝일까지 그어집니다 |
-| [Range Slider](https://blocks.vizney.com/ko/cards/range-slider.html) | 컨트롤 | 주문 금액이나 수량처럼 이어지는 값으로 화면을 거를 때. 끄는 동안 범위에 드는 분포가 레일 위에 뜹니다 |
+| [Date Picker](https://blocks.vizney.com/ko/cards/date-picker.html) | 컨트롤 | 주문일이나 기준일처럼 날짜로 화면을 거를 때. 날짜 둘을 고르는 동안 기간과 일수가 따라오고, 고르면 띠가 시작일에서 끝일까지 그어집니다. 날짜를 직접 치거나 연월 제목을 눌러 먼 달 · 해로 바로 갈 수 있습니다 |
+| [Range Slider](https://blocks.vizney.com/ko/cards/range-slider.html) | 컨트롤 | 주문 금액이나 수량처럼 이어지는 값으로 화면을 거를 때. 끄는 동안 범위에 드는 분포가 레일 위에 뜨고, 값을 눌러 금액을 직접 칠 수 있습니다 |
 | [Filter Chips](https://blocks.vizney.com/ko/cards/filter-chips.html) | 컨트롤 | 채널이나 지역처럼 몇 개 안 되는 이름으로 화면을 거를 때. 전체 칩이 지금 몇 개를 골랐는지 보여 줍니다 |
 | [Download Button](https://blocks.vizney.com/ko/cards/download-button.html) | 컨트롤 | 화면에 있는 차트 카드의 지금 데이터를 CSV · JSON · PNG로 받을 때 |
 

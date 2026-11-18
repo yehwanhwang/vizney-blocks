@@ -4,7 +4,10 @@
      범위 안 개수를 굴러가는 숫자로 적습니다(가만히 둘 때는 레일과 값만 보여 필터 줄에서 자리를 적게 차지합니다).
      손잡이가 지나가며 막대가 범위에 들어오면 손잡이에서 가까운 차례로 살짝 솟았다 내려앉고, 나가면 살짝 꺼집니다.
      cfg: { n: 칸 수(자리는 0…n), text(i): 그 자리의 글자, value(i): 이벤트로 보내는 값, start: [앞, 뒤] 자리, aria: [앞 손잡이 이름, 뒤 손잡이 이름],
-            hist: { counts: min~max를 같은 폭으로 나눈 칸마다의 개수, min, max, noun: 개수 뒤에 붙는 말(비우면 행) } }(hist가 있으면 value(i)는 숫자)
+            hist: { counts: min~max를 같은 폭으로 나눈 칸마다의 개수, min, max, noun: 개수 뒤에 붙는 말(비우면 행) },
+            edit: { raw(i): 입력칸에 넣을 숫자 글자, read(글자): 그 값의 자리(칸 사이도 됨) 또는 null, pre · suf: 입력칸 앞뒤의 단위 } }
+     (hist가 있으면 value(i)는 숫자). 자리는 끌기와 화살표로는 칸마다 옮기고, 직접 친 값은 칸 사이의 자리(소수)도 그대로 씁니다.
+     edit가 있으면 손잡이 아래 값을 누르거나 손잡이에서 Enter를 눌러 그 자리에 입력칸을 열고 값을 칩니다(Enter · 칸 밖으로 나가면 적용, Esc는 취소).
      값이 바뀌면 카드에서 vzb-change 이벤트(bubbles, detail: { name, value: [시작, 끝] })를 보내고, 카드의 data-vzb-value에 같은 값을 적습니다.
      조작: 손잡이를 끌거나, 레일을 눌러 가까운 손잡이를 옮기거나, 손잡이에 포커스한 뒤 화살표(한 칸) · Page Up/Down(열 칸쯤) · Home/End로 옮깁니다.
      두 손잡이는 같은 칸까지 만날 수 있고, 겹쳐 있을 때는 끄는 방향의 손잡이가 움직입니다. 손잡이는 용수철로 따라갑니다.
@@ -48,6 +51,27 @@
     labs.setAttribute('aria-hidden', 'true');
     labs.append(la, lb, lm);
     area.append(rail, labs);
+    // 직접 입력: 앞 · 뒤 입력칸을 '–'로 이어 손잡이 사이 가운데 아래에 띄웁니다(레일 아래 값 자리를 덮고, 아래 내용은 밀지 않습니다).
+    const ed = cfg.edit ? el('div', 'vzb-sl-ed') : null, inA = cfg.edit ? el('input', 'vzb-sl-in') : null, inB = cfg.edit ? el('input', 'vzb-sl-in') : null;
+    if (ed) {
+      const field = (inp, k) => {
+        const box = el('label', 'vzb-sl-field');
+        inp.type = 'text';
+        inp.inputMode = 'decimal';
+        inp.autocomplete = 'off';
+        inp.spellcheck = false;
+        inp.setAttribute('aria-label', cfg.aria[k]);
+        if (cfg.edit.pre) box.append(el('span', 'vzb-sl-affix', cfg.edit.pre));
+        box.append(inp);
+        if (cfg.edit.suf) box.append(el('span', 'vzb-sl-affix', cfg.edit.suf));
+        return box;
+      };
+      ed.append(field(inA, 0), el('span', 'vzb-sl-dash', '–'), field(inB, 1));
+      ed.hidden = true;
+      labs.append(ed);
+      labs.classList.add('is-editable');
+      [la, lb, lm].forEach((x) => { x.title = tx(d, '눌러서 값 입력'); });
+    }
     root.append(area, sr, say);
     card.append(root);
 
@@ -136,6 +160,7 @@
       la.classList.toggle('is-off', one);
       lb.classList.toggle('is-off', one);
       lm.classList.toggle('is-off', !one);
+      if (editing) placeEd();
     }
     function frame(now) {
       raf = 0;
@@ -169,6 +194,14 @@
     }
     area.addEventListener('pointerdown', (e) => {
       if (e.button) return;
+      if (ed && e.target.closest('.vzb-sl-ed')) return;   // 입력칸 안의 누르기는 끌기가 아닙니다
+      if (editing) finish(true);                          // 입력하던 중에 레일을 누르면 친 값을 적용한 뒤 끕니다
+      if (ed && e.target.closest('.vzb-sl-lab')) {        // 값을 누르면 입력칸을 엽니다(합친 값은 누른 쪽에 가까운 손잡이)
+        e.preventDefault();
+        const x = local(e);
+        edit(e.target === la ? 0 : e.target === lb ? 1 : Math.abs(x - sa.t) <= Math.abs(x - sb.t) ? 0 : 1);
+        return;
+      }
       const x = local(e), da = Math.abs(x - sa.t), db = Math.abs(x - sb.t);
       drag = { x, who: da < db ? A : db < da ? B : x > sb.t ? B : x < sa.t ? A : null };
       drag.off = Math.min(da, db) <= R + 2 ? x - (da <= db ? sa.t : sb.t) : 0;   // 손잡이를 잡았으면 잡은 자리를 지키고, 막대 · 트랙을 눌렀으면 손잡이가 그리로 옵니다
@@ -193,10 +226,11 @@
     area.addEventListener('pointercancel', drop);
     // 키보드: 화살표는 한 칸, Page Up · Down은 열 칸쯤, Home · End는 갈 수 있는 끝(다른 손잡이를 넘지 않습니다)
     const keys = (first) => (e) => {
+      if (ed && e.key === 'Enter') { e.preventDefault(); edit(first ? 0 : 1); return; }
       const big = Math.max(1, Math.round(n / 10));
       const by = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1, PageUp: big, PageDown: -big }[e.key];
       let v = first ? lo : hi;
-      if (by) v += by; else if (e.key === 'Home') v = first ? 0 : lo; else if (e.key === 'End') v = first ? hi : n; else return;
+      if (by) v = Math.round(v) + by;   // 직접 친 값(칸 사이)에서도 가까운 칸에서 한 칸씩 옮깁니다 else if (e.key === 'Home') v = first ? 0 : lo; else if (e.key === 'End') v = first ? hi : n; else return;
       e.preventDefault();
       idle = performance.now() + 6000;
       reveal(true, 1400);
@@ -206,6 +240,62 @@
     };
     A.addEventListener('keydown', keys(true));
     B.addEventListener('keydown', keys(false));
+
+    // 직접 입력의 흐름: 열면 지금 값을 넣고 누른 쪽을 고릅니다. 치는 동안 손잡이 · 분포가 따라오고(이벤트는 보내지 않음),
+    // Enter나 입력칸 밖으로 나가면 적용해 이벤트를 한 번 보냅니다. 앞 값이 뒤 값보다 크면 서로 바꿉니다. Esc는 연 때의 값으로 되돌립니다.
+    let editing = null;
+    const readOr = (inp, or) => { const i = cfg.edit.read(inp.value); return i == null ? or : Math.max(0, Math.min(n, i)); };
+    function placeEd() {
+      if (!editing) return;
+      const w = ed.offsetWidth, x = Math.max(0, Math.min(Math.max(0, W - w), (sa.t + sb.t) / 2 - w / 2));
+      ed.style.transform = `translateX(${x.toFixed(1)}px)`;
+    }
+    function edit(k) {
+      if (!ed) return;
+      if (!editing) {
+        editing = { lo, hi };
+        idle = Infinity;
+        inA.value = cfg.edit.raw(lo);
+        inB.value = cfg.edit.raw(hi);
+        const len = Math.max(5, cfg.edit.raw(n).length + 3, cfg.edit.raw(0).length + 3);   // 소수 두 자리까지 들어갈 폭
+        inA.style.width = inB.style.width = `${len}ch`;
+        ed.hidden = false;
+        labs.classList.add('is-editing');
+        reveal(true);
+        placeEd();
+      }
+      const inp = k ? inB : inA;
+      inp.focus();
+      inp.select();
+    }
+    function preview() {
+      const a = readOr(inA, editing.lo), b = readOr(inB, editing.hi);
+      lo = Math.min(a, b); hi = Math.max(a, b);
+      write();
+      rest();
+    }
+    function finish(apply, back) {
+      if (!editing) return;
+      const was = editing;
+      if (apply) preview(); else { lo = was.lo; hi = was.hi; write(); rest(); }
+      editing = null;
+      ed.hidden = true;
+      labs.classList.remove('is-editing');
+      idle = performance.now() + 6000;
+      reveal(false, 900);
+      if (lo !== was.lo || hi !== was.hi) emit();
+      if (back != null) (back ? B : A).focus();
+    }
+    if (ed) {
+      [inA, inB].forEach((inp, k) => {
+        inp.addEventListener('input', () => { if (editing) preview(); });
+        inp.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') { e.preventDefault(); finish(true, k); }
+          else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); finish(false, k); }
+        });
+      });
+      ed.addEventListener('focusout', (e) => { if (editing && !(e.relatedTarget && ed.contains(e.relatedTarget))) finish(true); });
+    }
 
     write(true);
     emit(true);

@@ -202,8 +202,9 @@
 .vzb-fs { --vzb-c: var(--vzb-primary-soft); }
 .vzb-key.is-tick { width: 2px; height: 12px; border-radius: 1px; }
 /* Bar Overflow: 높이 2단위. 세로 막대는 굵기 30px까지, 위쪽 끝만 4px 둥글게 그리고 한도선에 닿으면 선 아래에서 각지게 끊습니다.
-   선 아래는 회색(--vzb-base), 선 위로 넘친 구간만 빨강(--vzb-bad)입니다. 한도선은 글자색 1.5px 실선으로 막대 위에 긋고, 이름은 선 바로 위에 적습니다.
-   기간 이름은 바닥선 아래 11px, 넘친 양은 넘친 막대 위에 10.5px 굵은 빨간 글자(--vzb-bad-ink)로 적습니다.
+   선 아래는 회색(--vzb-base), 선 위로 넘친 구간만 빨강(--vzb-bad)입니다. 한도선은 글자색 1.5px 실선으로 막대 위에 긋고,
+   선의 오른쪽 끝(막대 칸 밖)에 이름(12px, 옅게)을 선 위에, 값(14px 굵게)을 선 아래에 붙입니다.
+   기간 이름은 바닥선 아래 12px, 넘친 양은 넘친 막대 위에 14px 굵은 빨간 글자(--vzb-bad-ink)로 적습니다.
    그래프 아래 줄에는 다시 보기 단추와 카드가 계산한 한 줄(넘친 기간 수와 넘친 양)을 둡니다. 깜빡임은 스크립트가 불투명도로 그립니다. */
 .vzb-card[data-vzb="bar-overflow"] { min-height: calc(var(--vzb-unit) * 2); }
 .vzb-bb.vzb-foot { padding-top: 12px; }
@@ -212,7 +213,8 @@
 .vzb-bb-fill { fill: var(--vzb-base); }
 .vzb-bb-over { fill: var(--vzb-bad); }
 .vzb-bb-line { stroke: var(--vzb-ink); stroke-width: 1.5; }
-.vzb-bb-lim { font-size: 12px; font-weight: 500; fill: var(--vzb-ink); paint-order: stroke; stroke: var(--vzb-card); stroke-width: 3px; stroke-linejoin: round; }
+.vzb-bb-lim { font-size: 12px; font-weight: 500; fill: var(--vzb-ink-2); }
+.vzb-bb-limv { font-size: 14px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
 .vzb-bb-name { font-size: 12px; fill: var(--vzb-muted); }
 .vzb-bb-ex { font-size: 14px; font-weight: 700; fill: var(--vzb-bad-ink); font-variant-numeric: tabular-nums; }
 .vzb-bb-col.is-over .vzb-bb-name { font-weight: 700; fill: var(--vzb-ink); }
@@ -271,7 +273,7 @@
     '%1. %2의 비중은 %3입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 holds %3. Use the left and right arrows to move between items. Every value is in the table that follows.',
     '최근 7일': 'Last 7 days', '최근 30일': 'Last 30 days', '이번 달': 'This month', '지난달': 'Last month', '이번 분기': 'This quarter', '올해': 'This year', '빠른 선택': 'Quick picks',
     '일간': 'days', '일간|1': 'day', '%s 고름': '%s picked', '이전 달': 'Previous month', '다음 달': 'Next month', 'value의 날짜를 YYYY-MM-DD로 적으세요.': 'Write the dates in value as YYYY-MM-DD.',
-    'items에 단계를 두 개 이상 적으세요.': 'Write two or more stages in items.', '첫 단계의 값은 0보다 커야 합니다.': 'The first stage needs a value above 0.', '단계': 'Stage', '앞 단계에서': 'From the previous stage', '%1에서 %2 넘어옴': '%2 moved on from %1', '퍼널의 시작': 'Start of the funnel', '시작 값': 'Starting value',
+    'items에 단계를 두 개 이상 적으세요.': 'Write two or more stages in items.', '첫 단계의 값은 0보다 커야 합니다.': 'The first stage needs a value above 0.', '단계': 'Stage', '앞 단계에서': 'From the previous stage', '%1에서 %2 넘어옴': '%2 moved on from %1', '퍼널의 시작': 'Start of the funnel', '시작 값': 'Starting value', '눌러서 값 입력': 'Click to type a value', '시작일': 'Start date', '끝일': 'End date', '날짜': 'Date', '연도와 달 고르기': 'choose month and year', '날짜로 돌아가기': 'back to the days', '이전 해': 'Previous year', '다음 해': 'Next year', '이전 열두 해': 'Previous 12 years', '다음 열두 해': 'Next 12 years', '날짜를 YYYY-MM-DD로, 고를 수 있는 날짜 안에서 적으세요.': 'Type a date as YYYY-MM-DD, within the dates you can pick.', 
     '%1. %2 %3에서 %4 %5까지, 첫 단계 대비 %6. 좌우 화살표로 단계를 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. From %2 %3 to %4 %5, %6 of the first stage. Use the left and right arrows to move between the stages. Every value is in the table that follows.',
     '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
   };
@@ -641,9 +643,11 @@
     card.append(sr);
 
     // 그림: 바닥선 · 막대(회색 아래, 빨강 위) · 기간 이름 · 넘친 양 · 한도선과 그 이름. 한도선은 막대 위에 그어 넘친 막대에서도 보이게 합니다.
+    // 한도선의 이름과 값은 선의 오른쪽 끝, 막대 칸 밖에 늘 같은 자리로 붙입니다(이름은 선 위, 값은 선 아래). 막대 사이에서 빈자리를 찾아 옮겨 다니지 않게
+    // 하기 위해서입니다. 그만큼 오른쪽에 자리(gut)를 비우고 막대는 그 왼쪽에 둡니다.
     const base = svgEl('line', { class: 'vzb-bb-base' }), barsG = svgEl('g', {}), limG = svgEl('g', { class: 'vzb-bb-limit' });
-    const limLine = svgEl('line', { class: 'vzb-bb-line' }), limText = svgText(0, 0, `${label} ${limShow}`, 'vzb-bb-lim', 'end');
-    limG.append(limLine, limText);
+    const limLine = svgEl('line', { class: 'vzb-bb-line' }), limName = svgText(0, 0, label, 'vzb-bb-lim', 'start'), limVal = svgText(0, 0, limShow, 'vzb-bb-limv', 'start');
+    limG.append(limLine, limName, limVal);
     items.forEach((it) => {
       it.g = svgEl('g', { class: 'vzb-bb-col' });
       it.fill = svgEl('path', { class: 'vzb-bb-fill' });
@@ -665,7 +669,7 @@
     // 시간표(밀리초): 한도선만 보이는 처음 · 막대 사이 간격 · 한 막대가 차는 시간 · 다 찬 뒤 쉬는 시간 · 깜빡임 한 번 · 깜빡이는 횟수
     const T0 = 300, STAG = Math.max(60, Math.min(140, 1500 / N)), DUR = 460, WAIT = 260, BLINK = 440, TIMES = 3, GAP = 1.5, NAMEH = 22;
     const easeOut = (k) => 1 - (1 - k) ** 3;
-    let W = 0, H = 0, y0 = 0, s = 1, bw = 0, slot = 1, yl = 0, t = 0, FULL = 0, TOTAL = 0;
+    let W = 0, H = 0, PW = 0, y0 = 0, s = 1, bw = 0, slot = 1, yl = 0, t = 0, FULL = 0, TOTAL = 0;
     function layout(w, h) {
       W = w; H = h;
       svg.setAttribute('width', w);
@@ -673,35 +677,43 @@
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
       y0 = h - NAMEH;
       s = Math.max(1, y0 - 4) / top;
-      slot = w / N;
+      // 오른쪽 자리: 한도선 이름(12px)과 값(14px 굵게) 가운데 넓은 쪽에 선과의 틈 6px. 막대는 그 왼쪽(PW)에 둡니다.
+      const gut = Math.ceil(Math.max(textW(label, 500, fam, 12), textW(limShow, 700, fam, 14))) + 8;
+      PW = Math.max(w * 0.6, w - gut);
+      slot = PW / N;
       bw = Math.max(4, Math.min(30, slot * 0.62));
       yl = y0 - lim * s;
       base.setAttribute('x1', 0);
-      base.setAttribute('x2', w);
+      base.setAttribute('x2', fx(PW));
       base.setAttribute('y1', y0 + 0.5);
       base.setAttribute('y2', y0 + 0.5);
       limLine.setAttribute('x1', 0);
-      limLine.setAttribute('x2', w);
+      limLine.setAttribute('x2', fx(PW + 2));
       limLine.setAttribute('y1', fx(yl));
       limLine.setAttribute('y2', fx(yl));
       // 기간 이름: 다 들어가면 모두, 모자라면 몇 칸마다 하나씩(마지막 칸은 늘 적습니다)
       const nameW = Math.max(...items.map((it) => textW(it.name, 400, fam, 12))) + 6;
       const every = Math.max(1, Math.ceil(nameW / slot));
-      // 넘친 양: 14px로 적고, 이웃한 넘친 양끼리 겹치면 12px로, 그래도 겹치면 적지 않습니다(툴팁과 요약 줄에는 남습니다).
+      // 넘친 양: 14px로 적고, 이웃한 넘친 양끼리 겹치면 12px로 내립니다. 12px로도 겹치면 넘친 양이 큰 막대부터 자리를 잡고,
+      // 자리를 못 잡은 막대만 적지 않습니다(그 막대는 툴팁이 넘친 양을 적고, 합은 요약 줄에 남습니다).
       // 글자는 제 칸 밖으로 나가도 되지만 그림 밖으로는 나가지 않게 안쪽으로 당깁니다.
-      const place = (size) => {
-        let prev = -Infinity, ok = true;
-        spill.forEach((it) => {
-          const lw = textW(it.ex.textContent, 700, fam, size) + 4, cx = slot * (it.k + 0.5);
-          it.exW = lw;
-          it.exX = Math.max(lw / 2, Math.min(w - lw / 2, cx));
-          if (it.exX - lw / 2 < prev + 4) ok = false;
-          prev = it.exX + lw / 2;
-        });
-        return ok;
+      const spot = (it, size) => {
+        const lw = textW(it.ex.textContent, 700, fam, size) + 4, cx = slot * (it.k + 0.5);
+        it.exW = lw;
+        it.exX = Math.max(lw / 2, Math.min(PW - lw / 2, cx));
       };
-      const exSize = place(14) ? 14 : place(12) ? 12 : 0;
-      if (exSize) place(exSize);
+      const clear = (list) => list.every((it, k) => !k || it.exX - it.exW / 2 >= list[k - 1].exX + list[k - 1].exW / 2 + 4);
+      let exSize = 14;
+      spill.forEach((it) => spot(it, 14));
+      if (!clear(spill)) { exSize = 12; spill.forEach((it) => spot(it, 12)); }
+      const shown = new Set(spill);
+      if (!clear(spill)) {
+        shown.clear();
+        [...spill].sort((a, b) => b.over - a.over).forEach((it) => {
+          const near = [...shown, it].sort((a, b) => a.k - b.k);
+          if (clear(near)) shown.add(it);
+        });
+      }
       items.forEach((it) => {
         it.cx = slot * (it.k + 0.5);
         it.x = it.cx - bw / 2;
@@ -709,26 +721,17 @@
         it.nm.setAttribute('x', fx(it.cx));
         it.nm.setAttribute('y', fx(y0 + 15));
         it.nm.setAttribute('opacity', (N - 1 - it.k) % every === 0 ? 1 : 0);
-        it.ex.setAttribute('x', fx(it.over > 0 && exSize ? it.exX : it.cx));
+        it.exOn = shown.has(it);
+        it.ex.setAttribute('x', fx(it.exOn ? it.exX : it.cx));
         it.ex.setAttribute('y', fx(it.yv - 5));
         it.ex.style.fontSize = exSize === 12 ? '12px' : '';
-        it.exOn = it.over > 0 && !!exSize;
         it.start = T0 + it.k * STAG;
       });
-      // 한도선의 이름은 선 바로 위, 한도를 넘는 막대(와 넘친 양)가 없는 자리에 적습니다. 오른쪽 끝부터 왼쪽으로 찾고,
-      // 그런 자리가 없으면(거의 모든 기간이 넘을 때) 오른쪽 끝의 선 바로 아래에 적습니다. 선 아래는 모두 회색이라 빨강과 겹치지 않습니다.
-      const lw = textW(limText.textContent, 500, fam, 12) + 6;
-      // 막는 자리는 넘친 막대의 칸이고, 넘친 양이 작아 그 글자가 이름과 같은 높이에 걸치면 글자 자리까지 막습니다. 이웃과는 4px 띄웁니다.
-      const blocked = items.filter((it) => it.over > 0).map((it) => {
-        const a = it.cx - slot / 2, b = it.cx + slot / 2;
-        return it.exOn && it.yv > yl - 16 ? [Math.min(a, it.exX - it.exW / 2), Math.max(b, it.exX + it.exW / 2)] : [a, b];
-      });
-      const fits = (x) => x - lw >= 0 && blocked.every(([a, b]) => b <= x - lw || a >= x);
-      const ends = [w, ...blocked.map(([a]) => a - 4).sort((p, q) => q - p)];
-      const at = ends.find(fits);
-      limText.setAttribute('text-anchor', 'end');
-      limText.setAttribute('x', fx(at == null ? w : at));
-      limText.setAttribute('y', fx(at == null ? yl + 14 : yl - 5));
+      // 한도선의 이름(위)과 값(아래)은 선 끝에서 6px 띄워 선을 가운데로 위아래에 둡니다.
+      limName.setAttribute('x', fx(PW + 8));
+      limName.setAttribute('y', fx(yl - 4));
+      limVal.setAttribute('x', fx(PW + 8));
+      limVal.setAttribute('y', fx(yl + 15));
       FULL = T0 + (N - 1) * STAG + DUR;
       TOTAL = FULL + (spill.length ? WAIT + BLINK * TIMES : 240);
       render();

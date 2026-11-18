@@ -2,8 +2,10 @@
    일수(굴러가는 숫자) · 펼침 표시를 둡니다. 열려 있는 동안은 글자색으로 채웁니다(고른 칩과 같습니다). 바탕과 글자색은 한 번에 바꾸고
    단추 안 글자에도 색을 직접 적어, 어떤 순간에도 글자가 바탕과 같은 색이 되지 않게 합니다.
    단추와 달력은 같은 폭(300px, 놓인 자리가 더 좁으면 그 폭)이라 기간이 바뀌어도 단추가 늘고 줄지 않습니다.
-   달력은 카드(카드 바탕 · 테두리 · 그림자)로 단추 아래 8px에 떠오릅니다. 날짜 칸은 39 × 30px, 날짜는 지름 28px의 원(13px 글자)이고,
-   늘 6주를 그려 앞뒤 칸은 앞 · 다음 달의 날짜를 흐린 글자(--vzb-muted)로 채웁니다.
+   달력은 카드(카드 바탕 · 테두리 · 그림자)로 단추 아래 8px에 떠오릅니다. 맨 위에 시작일 · 끝일 입력칸(높이 36px, 14px), 그 아래 연월 제목
+   (누르면 열두 달 · 열두 해 화면)과 이전 · 다음 단추를 둡니다. 날짜 칸은 5주로 39 × 36px, 날짜는 지름 32px의 원(14px 글자)이고,
+   6주에 걸치는 달만 같은 높이(180px) 안에 6주를 넣어 칸 30px · 원 28px로 그립니다. 앞뒤 칸은 앞 · 다음 달의 날짜를 흐린 글자(--vzb-muted)로 채웁니다.
+   열두 달 · 열두 해 화면은 요일 줄과 날짜 칸 자리(200px)를 3 × 4 단추로 채웁니다.
    고른 기간은 글자색을 12% 섞은 띠로, 양 끝은 글자색 원으로 그립니다. 고르는 중의 띠는 7%이고, 닿은 날짜는 글자색 고리입니다.
    띠는 앞머리가 칸을 차례로 지나며 그어지고(스크립트가 칸마다 --vzb-d만큼 늦게 시작해 --vzb-t 동안 긋게 정합니다), 지울 때는 흐려지며 사라집니다.
    주의 처음과 끝에서 둥글게 끝나고, 달력 밖으로 이어지면 그쪽 끝을 흐리게 합니다. min · max 밖의 날짜는 더 흐리게 두고 고를 수 없습니다. */
@@ -29,11 +31,24 @@
 .vzb-dp-unit { font-weight: 500; white-space: pre; }
 .vzb-dp-chev { flex: none; width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
 .vzb-dp.is-open .vzb-dp-chev { transform: rotate(180deg); }
-.vzb-dp-pop { position: absolute; left: 0; top: calc(100% + 8px); z-index: 3; box-sizing: border-box; width: 100%; padding: 6px 12px 10px; border: 1px solid var(--vzb-edge); border-radius: 16px; background: var(--vzb-card); box-shadow: 0 12px 32px rgba(27, 27, 27, 0.18); color: var(--vzb-ink); opacity: 0; visibility: hidden; transform: translateY(-6px) scale(0.97); transform-origin: 50% 0; transition: opacity 0.14s, transform 0.2s ease-in, visibility 0s 0.2s; }
+.vzb-dp-pop { position: absolute; left: 0; top: calc(100% + 8px); z-index: 3; box-sizing: border-box; width: 100%; padding: 12px 12px 10px; border: 1px solid var(--vzb-edge); border-radius: 16px; background: var(--vzb-card); box-shadow: 0 12px 32px rgba(27, 27, 27, 0.18); color: var(--vzb-ink); opacity: 0; visibility: hidden; transform: translateY(-6px) scale(0.97); transform-origin: 50% 0; transition: opacity 0.14s, transform 0.2s ease-in, visibility 0s 0.2s; }
 .vzb-dp.is-up .vzb-dp-pop { top: auto; bottom: calc(100% + 8px); transform: translateY(6px) scale(0.97); transform-origin: 50% 100%; }
 .vzb-dp.is-open .vzb-dp-pop { opacity: 1; visibility: visible; transform: none; transition: opacity 0.16s, transform 0.34s cubic-bezier(0.34, 1.4, 0.64, 1), visibility 0s; }
+.vzb-dp-fields { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+.vzb-dp-in { flex: 1 1 0; min-width: 0; box-sizing: border-box; height: 36px; padding: 0 10px; border: 1px solid var(--vzb-edge); border-radius: 10px; background: var(--vzb-card); color: var(--vzb-ink); font: 500 14px/1 var(--vzb-font); font-variant-numeric: tabular-nums; outline: none; transition: border-color 0.14s, box-shadow 0.14s; }
+.vzb-dp-in::placeholder { color: var(--vzb-muted); }
+.vzb-dp-in:hover { border-color: color-mix(in srgb, var(--vzb-ink) 30%, transparent); }
+.vzb-dp-in:focus { border-color: var(--vzb-ink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--vzb-ink) 14%, transparent); }
+.vzb-dp-in.is-bad { border-color: var(--vzb-bad); box-shadow: 0 0 0 3px color-mix(in srgb, var(--vzb-bad) 18%, transparent); }   /* 읽을 수 없거나 고를 수 없는 날짜 */
+.vzb-dp-dash { flex: none; font-size: 14px; color: var(--vzb-muted); }
 .vzb-dp-hd { display: flex; align-items: center; gap: 2px; height: 30px; margin-bottom: 2px; }
-.vzb-dp-title { flex: 1 1 auto; min-width: 0; padding-left: 6px; font-size: 14px; font-weight: 700; white-space: nowrap; }
+.vzb-dp-title { flex: 0 1 auto; display: inline-flex; align-items: center; gap: 4px; min-width: 0; height: 30px; margin-right: auto; padding: 0 8px; border: 0; border-radius: 8px; background: none; color: var(--vzb-ink); font: 700 14px/1 var(--vzb-font); white-space: nowrap; cursor: pointer; transition: background-color 0.15s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.vzb-dp-title:hover { background: var(--vzb-track); }
+.vzb-dp-title:active { transform: scale(0.96); transition-duration: 0.15s, 0.08s; }
+.vzb-dp-title:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 1px; }
+.vzb-dp-ttx { overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
+.vzb-dp-tchev { flex: none; width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.vzb-dp-title.is-alt .vzb-dp-tchev { transform: rotate(180deg); }
 .vzb-dp-nav { flex: none; display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--vzb-ink); cursor: pointer; transition: background-color 0.15s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
 .vzb-dp-nav:hover { background: var(--vzb-track); }
 .vzb-dp-nav:active, .vzb-dp-nav.is-press { transform: scale(0.86); transition-duration: 0.15s, 0.08s; }
@@ -41,24 +56,37 @@
 .vzb-dp-nav:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 1px; }
 .vzb-dp-nav svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .vzb-dp-wk { display: grid; grid-template-columns: repeat(7, 1fr); height: 20px; align-items: center; text-align: center; font-size: 12px; font-weight: 500; color: var(--vzb-muted); }
+.vzb-dp-body { position: relative; }
 .vzb-dp-view { position: relative; overflow: hidden; }
-.vzb-dp-grid { display: grid; grid-template-rows: repeat(6, 30px); }
+.vzb-dp-grid { display: grid; grid-auto-rows: 1fr; height: 180px; }
+.vzb-dp-alt { position: absolute; inset: 0; z-index: 2; background: var(--vzb-card); }
+.vzb-dp-alt[hidden] { display: none; }
+.vzb-dp-mgrid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr); gap: 6px; height: 100%; box-sizing: border-box; padding: 4px 0; }
+.vzb-dp-mon { min-width: 0; padding: 0; border: 0; border-radius: 12px; background: none; color: var(--vzb-ink); font: 500 14px/1 var(--vzb-font); font-variant-numeric: tabular-nums; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color 0.14s, color 0.14s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.vzb-dp-mon:hover { background: var(--vzb-track); }
+.vzb-dp-mon.is-sel { background: color-mix(in srgb, var(--vzb-ink) 12%, transparent); font-weight: 700; }   /* 고른 기간이 걸친 달 · 해 */
+.vzb-dp-mon.is-cur { box-shadow: inset 0 0 0 1.5px var(--vzb-ink); }   /* 지금 달력의 달 · 해 */
+.vzb-dp-mon:active { transform: scale(0.94); transition-duration: 0.14s, 0.14s, 0.08s; }
+.vzb-dp-mon:disabled { opacity: 0.32; cursor: default; background: none; transform: none; }
+.vzb-dp-mon:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 1px; }
 .vzb-dp-grid.is-gone { position: absolute; left: 0; top: 0; width: 100%; pointer-events: none; }
 .vzb-dp-row { display: grid; grid-template-columns: repeat(7, 1fr); }
 .vzb-dp-cell { position: relative; display: grid; place-items: center; }
-.vzb-dp-cell::before { content: ''; position: absolute; left: 0; right: 0; top: 1px; bottom: 1px; background: color-mix(in srgb, var(--vzb-ink) 12%, transparent); opacity: 0; transform: scaleX(0); transform-origin: 0 50%; transition: opacity 0.15s ease-out, transform 0s 0.15s; }
+.vzb-dp-cell::before { content: ''; position: absolute; left: 0; right: 0; top: 2px; bottom: 2px; background: color-mix(in srgb, var(--vzb-ink) 12%, transparent); opacity: 0; transform: scaleX(0); transform-origin: 0 50%; transition: opacity 0.15s ease-out, transform 0s 0.15s; }
 .vzb-dp-cell.is-in::before { opacity: 1; transform: none; transition: transform var(--vzb-t, 0ms) linear var(--vzb-d, 0ms), opacity 0s var(--vzb-d, 0ms); }
 .vzb-dp-cell.is-pv::before { background: color-mix(in srgb, var(--vzb-ink) 7%, transparent); }
 .vzb-dp-grid.is-still .vzb-dp-cell::before { transition: none; }
 .vzb-dp-cell.is-lo::before { left: 50%; }
 .vzb-dp-cell.is-hi::before { right: 50%; }
-.vzb-dp-cell:first-child::before { left: 2px; border-radius: 14px 0 0 14px; }
-.vzb-dp-cell:last-child::before { right: 2px; border-radius: 0 14px 14px 0; }
+.vzb-dp-cell:first-child::before { left: 2px; border-radius: 16px 0 0 16px; }
+.vzb-dp-cell:last-child::before { right: 2px; border-radius: 0 16px 16px 0; }
+.vzb-dp-grid.is-six .vzb-dp-cell::before { top: 1px; bottom: 1px; }
 .vzb-dp-cell.is-lo:first-child::before { left: 50%; border-radius: 0; }
 .vzb-dp-cell.is-hi:last-child::before { right: 50%; border-radius: 0; }
 .vzb-dp-cell.is-cl::before { left: 0; border-radius: 0; -webkit-mask-image: linear-gradient(to right, transparent, #fff 85%); mask-image: linear-gradient(to right, transparent, #fff 85%); }
 .vzb-dp-cell.is-cr::before { right: 0; border-radius: 0; -webkit-mask-image: linear-gradient(to left, transparent, #fff 85%); mask-image: linear-gradient(to left, transparent, #fff 85%); }
-.vzb-dp-day { position: relative; z-index: 1; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--vzb-ink); font: 500 14px/1 var(--vzb-font); font-variant-numeric: tabular-nums; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color 0.14s, color 0.14s, box-shadow 0.14s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.vzb-dp-day { position: relative; z-index: 1; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--vzb-ink); font: 500 14px/1 var(--vzb-font); font-variant-numeric: tabular-nums; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color 0.14s, color 0.14s, box-shadow 0.14s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.vzb-dp-grid.is-six .vzb-dp-day { width: 28px; height: 28px; }
 .vzb-dp-day:hover { background: var(--vzb-track); }
 .vzb-dp-cell.is-in .vzb-dp-day:hover { background: color-mix(in srgb, var(--vzb-ink) 12%, transparent); }
 .vzb-dp-cell.is-out .vzb-dp-day { color: var(--vzb-muted); }

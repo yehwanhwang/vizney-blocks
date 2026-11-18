@@ -2,11 +2,12 @@
   "lang": "en",
   "label": "order value",
   "name": "amount",
+  "noun": "orders",
   "format": "usd",
   "decimals": 0,
   "min": 0,
   "max": 500,
-  "step": 20,
+  "step": 5,
   "value": [
     60,
     260

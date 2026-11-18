@@ -60,7 +60,7 @@
   }
   // 달러 금액: 원래 값을 받아 K · M · B로 줄이고 소수 한 자리로 맞춥니다($745.6K). 접미사는 단위처럼 작게 씁니다.
   function usd(v, d) {
-    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    const a = Math.abs(v), s = v < 0 ? '-' : '';
     const [div, u] = a >= 1e9 ? [1e9, 'B'] : a >= 1e6 ? [1e6, 'M'] : a >= 1e3 ? [1e3, 'K'] : [1, ''];
     return [`${s}$${num(a / div, d != null ? d : div > 1 ? 1 : 0)}`, u];
   }

@@ -17,7 +17,7 @@
 .vzb-wf-c3 { fill-opacity: 0.16; }
 .vzb-wf-svg.is-hover .vzb-wf-cell:not(.is-on) { opacity: 0.25; }
 .vzb-wf-br { fill: none; stroke: var(--vzb-ink-2); stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }
-.vzb-wf-brt { font-size: 11px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-wf-brt { font-size: 14px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
 .vzb-wf-ctl { margin-top: 8px; }
 .vzb-wf.is-side { display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 28px; align-items: start; }   /* 넓은 카드: 범례를 칸 오른쪽에 세로로 */
 .vzb-wf.is-side .vzb-wf-ctl { margin-top: 0; }
@@ -26,11 +26,11 @@
 .vzb-wf-per { position: absolute; top: -4px; right: 0; display: inline-flex; padding: 2px; border-radius: 16px; background: var(--vzb-track); }   /* 제목 오른쪽 자리는 스크립트가 단추 폭만큼 비웁니다 */
 .vzb-wf-pill { position: absolute; top: 2px; bottom: 2px; left: 0; width: 0; border-radius: 14px; background: var(--vzb-ink); pointer-events: none; }
 .vzb-wf-per.is-ready .vzb-wf-pill { transition: transform 0.38s cubic-bezier(0.3, 1.4, 0.5, 1), width 0.38s cubic-bezier(0.3, 1.4, 0.5, 1); }
-.vzb-wf-opt { position: relative; height: 28px; padding: 0 12px; border: 0; border-radius: 14px; background: none; color: var(--vzb-ink-2); font: 500 13px/28px var(--vzb-font); font-variant-numeric: tabular-nums; white-space: nowrap; cursor: pointer; transition: color 0.2s; }
+.vzb-wf-opt { position: relative; height: 28px; padding: 0 12px; border: 0; border-radius: 14px; background: none; color: var(--vzb-ink-2); font: 500 14px/28px var(--vzb-font); font-variant-numeric: tabular-nums; white-space: nowrap; cursor: pointer; transition: color 0.2s; }
 .vzb-wf-opt:hover { color: var(--vzb-ink); }
 .vzb-wf-opt.is-on { color: var(--vzb-card); }
 .vzb-wf-opt:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
-.vzb-wf-legend { display: flex; flex-wrap: wrap; gap: 2px 14px; min-width: 0; margin: 0; padding: 0; list-style: none; font-size: 12px; line-height: 16px; color: var(--vzb-ink-2); }
+.vzb-wf-legend { display: flex; flex-wrap: wrap; gap: 2px 14px; min-width: 0; margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 20px; color: var(--vzb-ink-2); }
 .vzb-wf-legend li { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: opacity 0.12s; }
 .vzb-wf-legend.is-hover li:not(.is-on) { opacity: 0.4; }
 .vzb-wf-legend b { font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }

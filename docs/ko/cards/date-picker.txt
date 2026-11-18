@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.64 · 컨트롤 · Date Picker (date-picker)
+<!-- Vizney Blocks v0.65 · 컨트롤 · Date Picker (date-picker)
      https://blocks.vizney.com/ko/cards/date-picker.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -86,7 +86,7 @@
   border: 1px solid var(--vzb-edge);
   border-radius: var(--vzb-radius);
   box-shadow: var(--vzb-shadow);
-  font: 400 13px/18px var(--vzb-font);
+  font: 400 14px/20px var(--vzb-font);   /* 글자 크기는 세 단계: 기본 14px, 보조 12px(단위 · 축 눈금 · 요일 · 개수 · 큰 숫자 위 설명), 큰 숫자 18px(말풍선 · 툴팁). 그 밖에 제목 17px, 대표 수치 34px(단위 16px) */
   text-align: left;
   word-break: keep-all;
   overflow-wrap: anywhere;
@@ -178,7 +178,7 @@
 .vzb-dp-cell.is-hi:last-child::before { right: 50%; border-radius: 0; }
 .vzb-dp-cell.is-cl::before { left: 0; border-radius: 0; -webkit-mask-image: linear-gradient(to right, transparent, #fff 85%); mask-image: linear-gradient(to right, transparent, #fff 85%); }
 .vzb-dp-cell.is-cr::before { right: 0; border-radius: 0; -webkit-mask-image: linear-gradient(to left, transparent, #fff 85%); mask-image: linear-gradient(to left, transparent, #fff 85%); }
-.vzb-dp-day { position: relative; z-index: 1; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--vzb-ink); font: 500 13px/1 var(--vzb-font); font-variant-numeric: tabular-nums; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color 0.14s, color 0.14s, box-shadow 0.14s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.vzb-dp-day { position: relative; z-index: 1; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--vzb-ink); font: 500 14px/1 var(--vzb-font); font-variant-numeric: tabular-nums; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color 0.14s, color 0.14s, box-shadow 0.14s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
 .vzb-dp-day:hover { background: var(--vzb-track); }
 .vzb-dp-cell.is-in .vzb-dp-day:hover { background: color-mix(in srgb, var(--vzb-ink) 12%, transparent); }
 .vzb-dp-cell.is-out .vzb-dp-day { color: var(--vzb-muted); }
@@ -187,7 +187,7 @@
 .vzb-dp-day:active, .vzb-dp-day.is-press { transform: scale(0.86); transition-duration: 0.14s, 0.14s, 0.14s, 0.08s; }
 .vzb-dp-day:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 1px; }
 .vzb-dp-cell.is-off .vzb-dp-day { opacity: 0.32; cursor: default; background: none; }
-.vzb-dp-tip { position: absolute; left: 0; top: 0; z-index: 2; padding: 5px 8px; border-radius: 8px; background: var(--vzb-ink); color: var(--vzb-card); font-size: 12px; font-weight: 700; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; pointer-events: none; opacity: 0; transform: translate(-50%, calc(-100% + 4px)) scale(0.9); transition: opacity 0.12s, transform 0.26s cubic-bezier(0.34, 1.56, 0.64, 1), left 0.16s ease-out, top 0.16s ease-out; }
+.vzb-dp-tip { position: absolute; left: 0; top: 0; z-index: 2; padding: 5px 8px; border-radius: 8px; background: var(--vzb-ink); color: var(--vzb-card); font-size: 14px; font-weight: 700; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; pointer-events: none; opacity: 0; transform: translate(-50%, calc(-100% + 4px)) scale(0.9); transition: opacity 0.12s, transform 0.26s cubic-bezier(0.34, 1.56, 0.64, 1), left 0.16s ease-out, top 0.16s ease-out; }
 .vzb-dp-tip.is-on { opacity: 1; transform: translate(-50%, -100%); }
 .vzb-dp-pre { display: flex; gap: 6px; margin-top: 6px; overflow-x: auto; scrollbar-width: none; }
 .vzb-dp-pre.is-scroll:not(.is-end) { -webkit-mask-image: linear-gradient(to right, #fff calc(100% - 28px), transparent); mask-image: linear-gradient(to right, #fff calc(100% - 28px), transparent); }   /* 칩이 넘치면 가로로 밀어 보고, 끝까지 밀기 전에는 오른쪽 끝을 흐립니다 */
@@ -275,7 +275,7 @@
   }
   // 달러 금액: 원래 값을 받아 K · M · B로 줄이고 소수 한 자리로 맞춥니다($745.6K). 접미사는 단위처럼 작게 씁니다.
   function usd(v, d) {
-    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    const a = Math.abs(v), s = v < 0 ? '-' : '';
     const [div, u] = a >= 1e9 ? [1e9, 'B'] : a >= 1e6 ? [1e6, 'M'] : a >= 1e3 ? [1e3, 'K'] : [1, ''];
     return [`${s}$${num(a / div, d != null ? d : div > 1 ? 1 : 0)}`, u];
   }

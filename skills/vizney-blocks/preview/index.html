@@ -1,12 +1,12 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
-<style>body{background:#f4f5f7}.vzb-demo{box-sizing:border-box;max-width:1120px;margin:0 auto;padding:24px}.vzb-demo h1{margin:0;font:700 22px/1.4 var(--vzb-font);color:var(--vzb-ink)}.vzb-demo .vzb-asof{margin:2px 0 16px;font:400 13px/1.5 var(--vzb-font);color:var(--vzb-muted)}.vzb-demo-bar{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:16px 24px;margin-bottom:16px;padding:16px 20px;border-radius:16px;background:#ffffff}.vzb-demo-lab{margin-bottom:8px;font:500 12px/16px var(--vzb-font);color:var(--vzb-muted)}.vzb-demo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px}@media (min-width:760px){.vzb-demo-grid{grid-template-columns:minmax(0,3fr) minmax(0,2fr)}.vzb-demo-grid .is-wide{grid-column:1 / -1}}</style>
+<style>body{background:#f4f5f7}.vzb-demo{box-sizing:border-box;max-width:1120px;margin:0 auto;padding:24px}.vzb-demo h1{margin:0;font:700 22px/1.4 var(--vzb-font);color:var(--vzb-ink)}.vzb-demo .vzb-asof{margin:2px 0 16px;font:400 14px/1.5 var(--vzb-font);color:var(--vzb-muted)}.vzb-demo-bar{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:16px 24px;margin-bottom:16px;padding:16px 20px;border-radius:16px;background:#ffffff}.vzb-demo-lab{margin-bottom:8px;font:500 12px/16px var(--vzb-font);color:var(--vzb-muted)}.vzb-demo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px}@media (min-width:760px){.vzb-demo-grid{grid-template-columns:minmax(0,3fr) minmax(0,2fr)}.vzb-demo-grid .is-wide{grid-column:1 / -1}}</style>
 <div class="vzb-demo">
 <h1>Ad spend</h1>
 <p class="vzb-asof">Example data · pick channels to redraw Monthly Ad Spend; the download gets what is on screen</p>
 <div class="vzb-demo-bar">
 <div><div class="vzb-demo-lab">Channel</div>
-<!-- Vizney Blocks v0.64 · Controls · Filter Chips (filter-chips)
+<!-- Vizney Blocks v0.65 · Controls · Filter Chips (filter-chips)
      https://blocks.vizney.com/cards/filter-chips.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <style>
@@ -93,7 +93,7 @@
   border: 1px solid var(--vzb-edge);
   border-radius: var(--vzb-radius);
   box-shadow: var(--vzb-shadow);
-  font: 400 13px/18px var(--vzb-font);
+  font: 400 14px/20px var(--vzb-font);   /* 글자 크기는 세 단계: 기본 14px, 보조 12px(단위 · 축 눈금 · 요일 · 개수 · 큰 숫자 위 설명), 큰 숫자 18px(말풍선 · 툴팁). 그 밖에 제목 17px, 대표 수치 34px(단위 16px) */
   text-align: left;
   word-break: keep-all;
   overflow-wrap: anywhere;
@@ -226,7 +226,7 @@
   }
   // 달러 금액: 원래 값을 받아 K · M · B로 줄이고 소수 한 자리로 맞춥니다($745.6K). 접미사는 단위처럼 작게 씁니다.
   function usd(v, d) {
-    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    const a = Math.abs(v), s = v < 0 ? '-' : '';
     const [div, u] = a >= 1e9 ? [1e9, 'B'] : a >= 1e6 ? [1e6, 'M'] : a >= 1e3 ? [1e3, 'K'] : [1, ''];
     return [`${s}$${num(a / div, d != null ? d : div > 1 ? 1 : 0)}`, u];
   }
@@ -483,7 +483,7 @@
 </script>
 </div>
 <div>
-<!-- Vizney Blocks v0.64 · Controls · Download Button (download-button)
+<!-- Vizney Blocks v0.65 · Controls · Download Button (download-button)
      https://blocks.vizney.com/cards/download-button.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <style>
@@ -570,7 +570,7 @@
   border: 1px solid var(--vzb-edge);
   border-radius: var(--vzb-radius);
   box-shadow: var(--vzb-shadow);
-  font: 400 13px/18px var(--vzb-font);
+  font: 400 14px/20px var(--vzb-font);   /* 글자 크기는 세 단계: 기본 14px, 보조 12px(단위 · 축 눈금 · 요일 · 개수 · 큰 숫자 위 설명), 큰 숫자 18px(말풍선 · 툴팁). 그 밖에 제목 17px, 대표 수치 34px(단위 16px) */
   text-align: left;
   word-break: keep-all;
   overflow-wrap: anywhere;
@@ -622,7 +622,7 @@
 .vzb-dl-btn:focus-visible, .vzb-dl-opt:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: -2px; }
 .vzb-dl-opts { flex: none; display: inline-flex; align-items: center; gap: 2px; padding-right: 6px; }   /* 늘어나는 동안 줄어들지 않고 단추 밖으로 가려졌다 드러납니다 */
 .vzb-dl.is-left .vzb-dl-opts { padding: 0 0 0 6px; }
-.vzb-dl-opt { flex: none; height: 32px; padding: 0 10px; white-space: nowrap; border: 0; border-radius: 16px; background: none; color: inherit; font: 700 12px/1 var(--vzb-font); letter-spacing: 0.02em; cursor: pointer; opacity: 0; transform: translateX(-8px); transition: opacity 0.14s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.14s; }
+.vzb-dl-opt { flex: none; height: 32px; padding: 0 10px; white-space: nowrap; border: 0; border-radius: 16px; background: none; color: inherit; font: 700 14px/1 var(--vzb-font); cursor: pointer; opacity: 0; transform: translateX(-8px); transition: opacity 0.14s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.14s; }
 .vzb-dl.is-left .vzb-dl-opt { transform: translateX(8px); }
 .vzb-dl.is-open .vzb-dl-opt { opacity: 1; transform: none; transition-delay: calc(var(--vzb-i) * 0.05s + 0.06s), calc(var(--vzb-i) * 0.05s + 0.06s), 0s; }
 .vzb-dl-opt:hover, .vzb-dl-opt.is-pick { background: color-mix(in srgb, var(--vzb-card) 20%, var(--vzb-ink)); }
@@ -728,7 +728,7 @@
   }
   // 달러 금액: 원래 값을 받아 K · M · B로 줄이고 소수 한 자리로 맞춥니다($745.6K). 접미사는 단위처럼 작게 씁니다.
   function usd(v, d) {
-    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    const a = Math.abs(v), s = v < 0 ? '-' : '';
     const [div, u] = a >= 1e9 ? [1e9, 'B'] : a >= 1e6 ? [1e6, 'M'] : a >= 1e3 ? [1e3, 'K'] : [1, ''];
     return [`${s}$${num(a / div, d != null ? d : div > 1 ? 1 : 0)}`, u];
   }
@@ -1121,7 +1121,7 @@
 </div>
 <div class="vzb-demo-grid">
 <div id="spend">
-<!-- Vizney Blocks v0.64 · Bar Chart · Bar Overflow (bar-overflow)
+<!-- Vizney Blocks v0.65 · Bar Chart · Bar Overflow (bar-overflow)
      https://blocks.vizney.com/cards/bar-overflow.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <style>
@@ -1208,7 +1208,7 @@
   border: 1px solid var(--vzb-edge);
   border-radius: var(--vzb-radius);
   box-shadow: var(--vzb-shadow);
-  font: 400 13px/18px var(--vzb-font);
+  font: 400 14px/20px var(--vzb-font);   /* 글자 크기는 세 단계: 기본 14px, 보조 12px(단위 · 축 눈금 · 요일 · 개수 · 큰 숫자 위 설명), 큰 숫자 18px(말풍선 · 툴팁). 그 밖에 제목 17px, 대표 수치 34px(단위 16px) */
   text-align: left;
   word-break: keep-all;
   overflow-wrap: anywhere;
@@ -1253,14 +1253,15 @@
   background: var(--vzb-tip);
   color: #ffffff;
   box-shadow: 0 10px 24px -8px rgba(27, 27, 27, 0.4);
-  font: 400 12px/17px var(--vzb-font);
+  font: 400 14px/20px var(--vzb-font);
   white-space: nowrap;
   opacity: 0;
   transition: opacity 0.12s;
 }
 .vzb-tip.is-on { opacity: 1; }
 .vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
-.vzb-tip-value { font-size: 13px; font-weight: 700; }
+.vzb-tip-value { font-weight: 700; }
+.vzb-tip-value.is-big { font-size: 18px; line-height: 24px; }   /* 툴팁이 대신 보여 주는 큰 숫자 */
 /* 색 이름: t1 · t2 · t3 선(파랑 · 분홍빨강 · 주황, 어두운 바탕은 노랑 · 흰색 · 회색), f1 · f2 · f3 막대와 면(같은 순서), fs 옅은 첫째 색,
    t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
 .vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
@@ -1281,7 +1282,7 @@
 .vzb-tip-body { display: flex; flex-direction: column; }
 .vzb-tip-rows { display: grid; grid-template-columns: auto auto auto; justify-content: start; align-items: center; column-gap: 8px; row-gap: 1px; margin-top: 3px; }
 .vzb-tip-row { display: contents; }
-.vzb-tip-row b { font-size: 13px; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.vzb-tip-row b { font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
 .vzb-tip-row span { color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-note { margin-top: 3px; color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-note + .vzb-tip-note { margin-top: 0; }
@@ -1301,9 +1302,9 @@
 .vzb-bb-fill { fill: var(--vzb-base); }
 .vzb-bb-over { fill: var(--vzb-bad); }
 .vzb-bb-line { stroke: var(--vzb-ink); stroke-width: 1.5; }
-.vzb-bb-lim { font-size: 11px; font-weight: 500; fill: var(--vzb-ink); paint-order: stroke; stroke: var(--vzb-card); stroke-width: 3px; stroke-linejoin: round; }
-.vzb-bb-name { font-size: 11px; fill: var(--vzb-muted); }
-.vzb-bb-ex { font-size: 10.5px; font-weight: 700; fill: var(--vzb-bad-ink); font-variant-numeric: tabular-nums; }
+.vzb-bb-lim { font-size: 12px; font-weight: 500; fill: var(--vzb-ink); paint-order: stroke; stroke: var(--vzb-card); stroke-width: 3px; stroke-linejoin: round; }
+.vzb-bb-name { font-size: 12px; fill: var(--vzb-muted); }
+.vzb-bb-ex { font-size: 14px; font-weight: 700; fill: var(--vzb-bad-ink); font-variant-numeric: tabular-nums; }
 .vzb-bb-col.is-over .vzb-bb-name { font-weight: 700; fill: var(--vzb-ink); }
 .vzb-bb-col { transition: opacity 0.12s; }
 .vzb-bb-svg.is-hover .vzb-bb-col:not(.is-on) { opacity: 0.3; }
@@ -1316,7 +1317,7 @@
 .vzb-bb-btn[hidden] { display: none; }
 .vzb-bb-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
 .vzb-bb-ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.vzb-bb-sum { flex: 1 1 auto; min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-bb-sum { flex: 1 1 auto; min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }
 .vzb-bb-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
 .vzb-bb-key { display: inline-block; width: 8px; height: 8px; margin-right: 7px; border-radius: 2px; background: var(--vzb-bad); }
 </style>
@@ -1399,7 +1400,7 @@
   }
   // 달러 금액: 원래 값을 받아 K · M · B로 줄이고 소수 한 자리로 맞춥니다($745.6K). 접미사는 단위처럼 작게 씁니다.
   function usd(v, d) {
-    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    const a = Math.abs(v), s = v < 0 ? '-' : '';
     const [div, u] = a >= 1e9 ? [1e9, 'B'] : a >= 1e6 ? [1e6, 'M'] : a >= 1e3 ? [1e3, 'K'] : [1, ''];
     return [`${s}$${num(a / div, d != null ? d : div > 1 ? 1 : 0)}`, u];
   }
@@ -1608,7 +1609,7 @@
   }
   // 차이를 부호와 함께 적습니다. 비율 지표는 %p입니다.
   function signed(f, diff) {
-    const s = diff > 0 ? '+' : diff < 0 ? '−' : '';
+    const s = diff > 0 ? '+' : diff < 0 ? '-' : '';   // 줄어든 값은 하이픈(-)으로 적습니다. 복사해 표 계산기에 붙여도 음수로 읽힙니다
     return f.rel ? `${s}${show(f, Math.abs(diff))}` : `${s}${pp(f, diff)}%p`;
   }
   // pick(clientX, clientY) → 순번, point(순번) → { x, y, label, value, text, side }(화면 좌표), clear() → 강조 해제
@@ -1760,10 +1761,23 @@
       limLine.setAttribute('y1', fx(yl));
       limLine.setAttribute('y2', fx(yl));
       // 기간 이름: 다 들어가면 모두, 모자라면 몇 칸마다 하나씩(마지막 칸은 늘 적습니다)
-      const nameW = Math.max(...items.map((it) => textW(it.name, 400, fam, 11))) + 6;
+      const nameW = Math.max(...items.map((it) => textW(it.name, 400, fam, 12))) + 6;
       const every = Math.max(1, Math.ceil(nameW / slot));
-      // 넘친 양은 칸 안에 들어갈 때만 적습니다
-      const exFits = Math.max(0, ...spill.map((it) => textW(it.ex.textContent, 700, fam, 10.5))) + 4 <= slot;
+      // 넘친 양: 14px로 적고, 이웃한 넘친 양끼리 겹치면 12px로, 그래도 겹치면 적지 않습니다(툴팁과 요약 줄에는 남습니다).
+      // 글자는 제 칸 밖으로 나가도 되지만 그림 밖으로는 나가지 않게 안쪽으로 당깁니다.
+      const place = (size) => {
+        let prev = -Infinity, ok = true;
+        spill.forEach((it) => {
+          const lw = textW(it.ex.textContent, 700, fam, size) + 4, cx = slot * (it.k + 0.5);
+          it.exW = lw;
+          it.exX = Math.max(lw / 2, Math.min(w - lw / 2, cx));
+          if (it.exX - lw / 2 < prev + 4) ok = false;
+          prev = it.exX + lw / 2;
+        });
+        return ok;
+      };
+      const exSize = place(14) ? 14 : place(12) ? 12 : 0;
+      if (exSize) place(exSize);
       items.forEach((it) => {
         it.cx = slot * (it.k + 0.5);
         it.x = it.cx - bw / 2;
@@ -1771,17 +1785,22 @@
         it.nm.setAttribute('x', fx(it.cx));
         it.nm.setAttribute('y', fx(y0 + 15));
         it.nm.setAttribute('opacity', (N - 1 - it.k) % every === 0 ? 1 : 0);
-        it.ex.setAttribute('x', fx(it.cx));
+        it.ex.setAttribute('x', fx(it.over > 0 && exSize ? it.exX : it.cx));
         it.ex.setAttribute('y', fx(it.yv - 5));
-        it.exOn = it.over > 0 && exFits;
+        it.ex.style.fontSize = exSize === 12 ? '12px' : '';
+        it.exOn = it.over > 0 && !!exSize;
         it.start = T0 + it.k * STAG;
       });
       // 한도선의 이름은 선 바로 위, 한도를 넘는 막대(와 넘친 양)가 없는 자리에 적습니다. 오른쪽 끝부터 왼쪽으로 찾고,
       // 그런 자리가 없으면(거의 모든 기간이 넘을 때) 오른쪽 끝의 선 바로 아래에 적습니다. 선 아래는 모두 회색이라 빨강과 겹치지 않습니다.
-      const lw = textW(limText.textContent, 500, fam, 11) + 6;
-      const blocked = items.filter((it) => it.over > 0).map((it) => [it.cx - slot / 2, it.cx + slot / 2]);
+      const lw = textW(limText.textContent, 500, fam, 12) + 6;
+      // 막는 자리는 넘친 막대의 칸이고, 넘친 양이 작아 그 글자가 이름과 같은 높이에 걸치면 글자 자리까지 막습니다. 이웃과는 4px 띄웁니다.
+      const blocked = items.filter((it) => it.over > 0).map((it) => {
+        const a = it.cx - slot / 2, b = it.cx + slot / 2;
+        return it.exOn && it.yv > yl - 16 ? [Math.min(a, it.exX - it.exW / 2), Math.max(b, it.exX + it.exW / 2)] : [a, b];
+      });
       const fits = (x) => x - lw >= 0 && blocked.every(([a, b]) => b <= x - lw || a >= x);
-      const ends = [w, ...blocked.map(([a]) => a).sort((p, q) => q - p)];
+      const ends = [w, ...blocked.map(([a]) => a - 4).sort((p, q) => q - p)];
       const at = ends.find(fits);
       limText.setAttribute('text-anchor', 'end');
       limText.setAttribute('x', fx(at == null ? w : at));
@@ -1875,7 +1894,7 @@
 </script>
 </div>
 <div>
-<!-- Vizney Blocks v0.64 · Waffle Chart · Waffle Flip (waffle-flip)
+<!-- Vizney Blocks v0.65 · Waffle Chart · Waffle Flip (waffle-flip)
      https://blocks.vizney.com/cards/waffle-flip.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <style>
@@ -1962,7 +1981,7 @@
   border: 1px solid var(--vzb-edge);
   border-radius: var(--vzb-radius);
   box-shadow: var(--vzb-shadow);
-  font: 400 13px/18px var(--vzb-font);
+  font: 400 14px/20px var(--vzb-font);   /* 글자 크기는 세 단계: 기본 14px, 보조 12px(단위 · 축 눈금 · 요일 · 개수 · 큰 숫자 위 설명), 큰 숫자 18px(말풍선 · 툴팁). 그 밖에 제목 17px, 대표 수치 34px(단위 16px) */
   text-align: left;
   word-break: keep-all;
   overflow-wrap: anywhere;
@@ -2007,14 +2026,15 @@
   background: var(--vzb-tip);
   color: #ffffff;
   box-shadow: 0 10px 24px -8px rgba(27, 27, 27, 0.4);
-  font: 400 12px/17px var(--vzb-font);
+  font: 400 14px/20px var(--vzb-font);
   white-space: nowrap;
   opacity: 0;
   transition: opacity 0.12s;
 }
 .vzb-tip.is-on { opacity: 1; }
 .vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
-.vzb-tip-value { font-size: 13px; font-weight: 700; }
+.vzb-tip-value { font-weight: 700; }
+.vzb-tip-value.is-big { font-size: 18px; line-height: 24px; }   /* 툴팁이 대신 보여 주는 큰 숫자 */
 /* 색 이름: t1 · t2 · t3 선(파랑 · 분홍빨강 · 주황, 어두운 바탕은 노랑 · 흰색 · 회색), f1 · f2 · f3 막대와 면(같은 순서), fs 옅은 첫째 색,
    t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
 .vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
@@ -2035,7 +2055,7 @@
 .vzb-tip-body { display: flex; flex-direction: column; }
 .vzb-tip-rows { display: grid; grid-template-columns: auto auto auto; justify-content: start; align-items: center; column-gap: 8px; row-gap: 1px; margin-top: 3px; }
 .vzb-tip-row { display: contents; }
-.vzb-tip-row b { font-size: 13px; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.vzb-tip-row b { font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
 .vzb-tip-row span { color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-note { margin-top: 3px; color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-note + .vzb-tip-note { margin-top: 0; }
@@ -2063,7 +2083,7 @@
 .vzb-wf-c3 { fill-opacity: 0.16; }
 .vzb-wf-svg.is-hover .vzb-wf-cell:not(.is-on) { opacity: 0.25; }
 .vzb-wf-br { fill: none; stroke: var(--vzb-ink-2); stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }
-.vzb-wf-brt { font-size: 11px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-wf-brt { font-size: 14px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
 .vzb-wf-ctl { margin-top: 8px; }
 .vzb-wf.is-side { display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 28px; align-items: start; }   /* 넓은 카드: 범례를 칸 오른쪽에 세로로 */
 .vzb-wf.is-side .vzb-wf-ctl { margin-top: 0; }
@@ -2072,11 +2092,11 @@
 .vzb-wf-per { position: absolute; top: -4px; right: 0; display: inline-flex; padding: 2px; border-radius: 16px; background: var(--vzb-track); }   /* 제목 오른쪽 자리는 스크립트가 단추 폭만큼 비웁니다 */
 .vzb-wf-pill { position: absolute; top: 2px; bottom: 2px; left: 0; width: 0; border-radius: 14px; background: var(--vzb-ink); pointer-events: none; }
 .vzb-wf-per.is-ready .vzb-wf-pill { transition: transform 0.38s cubic-bezier(0.3, 1.4, 0.5, 1), width 0.38s cubic-bezier(0.3, 1.4, 0.5, 1); }
-.vzb-wf-opt { position: relative; height: 28px; padding: 0 12px; border: 0; border-radius: 14px; background: none; color: var(--vzb-ink-2); font: 500 13px/28px var(--vzb-font); font-variant-numeric: tabular-nums; white-space: nowrap; cursor: pointer; transition: color 0.2s; }
+.vzb-wf-opt { position: relative; height: 28px; padding: 0 12px; border: 0; border-radius: 14px; background: none; color: var(--vzb-ink-2); font: 500 14px/28px var(--vzb-font); font-variant-numeric: tabular-nums; white-space: nowrap; cursor: pointer; transition: color 0.2s; }
 .vzb-wf-opt:hover { color: var(--vzb-ink); }
 .vzb-wf-opt.is-on { color: var(--vzb-card); }
 .vzb-wf-opt:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
-.vzb-wf-legend { display: flex; flex-wrap: wrap; gap: 2px 14px; min-width: 0; margin: 0; padding: 0; list-style: none; font-size: 12px; line-height: 16px; color: var(--vzb-ink-2); }
+.vzb-wf-legend { display: flex; flex-wrap: wrap; gap: 2px 14px; min-width: 0; margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 20px; color: var(--vzb-ink-2); }
 .vzb-wf-legend li { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: opacity 0.12s; }
 .vzb-wf-legend.is-hover li:not(.is-on) { opacity: 0.4; }
 .vzb-wf-legend b { font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }
@@ -2185,7 +2205,7 @@
   }
   // 달러 금액: 원래 값을 받아 K · M · B로 줄이고 소수 한 자리로 맞춥니다($745.6K). 접미사는 단위처럼 작게 씁니다.
   function usd(v, d) {
-    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    const a = Math.abs(v), s = v < 0 ? '-' : '';
     const [div, u] = a >= 1e9 ? [1e9, 'B'] : a >= 1e6 ? [1e6, 'M'] : a >= 1e3 ? [1e3, 'K'] : [1, ''];
     return [`${s}$${num(a / div, d != null ? d : div > 1 ? 1 : 0)}`, u];
   }
@@ -2394,7 +2414,7 @@
   }
   // 차이를 부호와 함께 적습니다. 비율 지표는 %p입니다.
   function signed(f, diff) {
-    const s = diff > 0 ? '+' : diff < 0 ? '−' : '';
+    const s = diff > 0 ? '+' : diff < 0 ? '-' : '';   // 줄어든 값은 하이픈(-)으로 적습니다. 복사해 표 계산기에 붙여도 음수로 읽힙니다
     return f.rel ? `${s}${show(f, Math.abs(diff))}` : `${s}${pp(f, diff)}%p`;
   }
   // pick(clientX, clientY) → 순번, point(순번) → { x, y, label, value, text, side }(화면 좌표), clear() → 강조 해제
@@ -2480,7 +2500,7 @@
     const cats = periods.map((_, p) => catsOf(p)), before = cats[0], after = cats[last];
     const flips = before.map((c, i) => (c !== after[i] ? i : -1)).filter((i) => i >= 0);   // 바뀐 칸(짚을 항목의 끝부터, 번호 순서)
     const pct = format({ format: 'pct', decimals: 0 }, d);
-    const ppText = (v, k) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${tx(d, '%s%p', num(Math.abs(v), k))}`;
+    const ppText = (v, k) => `${v > 0 ? '+' : v < 0 ? '-' : ''}${tx(d, '%s%p', num(Math.abs(v), k))}`;
     const pctText = (v, k) => `${num(v, k)}%`;
 
     head(card, d, f, null);
@@ -2614,7 +2634,7 @@
         brace.setAttribute('d', `M${fx(x1)},${fx(y - 4)}V${fx(y)}H${fx(x2)}V${fx(y - 4)}`);
         brace.len = (x2 - x1) + 8;
         brace.setAttribute('stroke-dasharray', fx(brace.len));
-        const tw = textW(braceText.textContent, 700, fam, 11) + 6, right = x2 + tw <= w;
+        const tw = textW(braceText.textContent, 700, fam, 14) + 6, right = x2 + tw <= w;
         braceText.setAttribute('text-anchor', right ? 'start' : 'end');
         braceText.setAttribute('x', fx(right ? x2 + 6 : x1 - 6));
         braceText.setAttribute('y', fx(y + 4));
@@ -2758,7 +2778,7 @@
 </script>
 </div>
 <div class="is-wide">
-<!-- Vizney Blocks v0.64 · Bump Chart · Bump Race (bump-race)
+<!-- Vizney Blocks v0.65 · Bump Chart · Bump Race (bump-race)
      https://blocks.vizney.com/cards/bump-race.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <style>
@@ -2845,7 +2865,7 @@
   border: 1px solid var(--vzb-edge);
   border-radius: var(--vzb-radius);
   box-shadow: var(--vzb-shadow);
-  font: 400 13px/18px var(--vzb-font);
+  font: 400 14px/20px var(--vzb-font);   /* 글자 크기는 세 단계: 기본 14px, 보조 12px(단위 · 축 눈금 · 요일 · 개수 · 큰 숫자 위 설명), 큰 숫자 18px(말풍선 · 툴팁). 그 밖에 제목 17px, 대표 수치 34px(단위 16px) */
   text-align: left;
   word-break: keep-all;
   overflow-wrap: anywhere;
@@ -2890,14 +2910,15 @@
   background: var(--vzb-tip);
   color: #ffffff;
   box-shadow: 0 10px 24px -8px rgba(27, 27, 27, 0.4);
-  font: 400 12px/17px var(--vzb-font);
+  font: 400 14px/20px var(--vzb-font);
   white-space: nowrap;
   opacity: 0;
   transition: opacity 0.12s;
 }
 .vzb-tip.is-on { opacity: 1; }
 .vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
-.vzb-tip-value { font-size: 13px; font-weight: 700; }
+.vzb-tip-value { font-weight: 700; }
+.vzb-tip-value.is-big { font-size: 18px; line-height: 24px; }   /* 툴팁이 대신 보여 주는 큰 숫자 */
 /* 색 이름: t1 · t2 · t3 선(파랑 · 분홍빨강 · 주황, 어두운 바탕은 노랑 · 흰색 · 회색), f1 · f2 · f3 막대와 면(같은 순서), fs 옅은 첫째 색,
    t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
 .vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
@@ -2918,7 +2939,7 @@
 .vzb-tip-body { display: flex; flex-direction: column; }
 .vzb-tip-rows { display: grid; grid-template-columns: auto auto auto; justify-content: start; align-items: center; column-gap: 8px; row-gap: 1px; margin-top: 3px; }
 .vzb-tip-row { display: contents; }
-.vzb-tip-row b { font-size: 13px; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.vzb-tip-row b { font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
 .vzb-tip-row span { color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-note { margin-top: 3px; color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-note + .vzb-tip-note { margin-top: 0; }
@@ -2946,7 +2967,7 @@
 .vzb-br-item:not(.is-focus):not(.is-on) .vzb-br-dot { opacity: 0; }   /* 기간 점은 짚을 항목과 짚은 항목에만 찍어 회색 선을 가볍게 둡니다 */
 .vzb-br-head { fill: color-mix(in srgb, var(--vzb-ink) 55%, var(--vzb-card)); stroke: var(--vzb-card); stroke-width: 2; transition: opacity 0.12s; }
 .vzb-br-head.is-focus { fill: var(--vzb-primary); }
-.vzb-br-lab { font-size: 12px; font-weight: 500; fill: var(--vzb-ink-2); paint-order: stroke; stroke: var(--vzb-card); stroke-width: 3px; stroke-linejoin: round; transition: opacity 0.12s; }
+.vzb-br-lab { font-size: 14px; font-weight: 500; fill: var(--vzb-ink-2); paint-order: stroke; stroke: var(--vzb-card); stroke-width: 3px; stroke-linejoin: round; transition: opacity 0.12s; }
 .vzb-br-lab.is-focus { font-weight: 700; fill: var(--vzb-ink); }
 .vzb-br-lab.is-clash { opacity: 0.15; }   /* 앞지르는 동안 겹친 이름표는 잠시 옅게 */
 .vzb-br-rk { font-weight: 700; fill: var(--vzb-muted); font-variant-numeric: tabular-nums; }
@@ -2976,8 +2997,8 @@
 .vzb-br-halo { fill: var(--vzb-ink); fill-opacity: 0; transition: fill-opacity 0.16s; }
 .vzb-br-scrub.is-drag .vzb-br-halo { fill-opacity: 0.16; }   /* 잡고 끄는 동안 손잡이 둘레가 옅게 번집니다 */
 .vzb-br-scrub:focus-visible .vzb-br-thumb { stroke: var(--vzb-primary); stroke-width: 2; }
-.vzb-br-now { font-size: 12px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
-.vzb-br-end { font-size: 11px; fill: var(--vzb-muted); transition: opacity 0.12s; }
+.vzb-br-now { font-size: 14px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-br-end { font-size: 12px; fill: var(--vzb-muted); transition: opacity 0.12s; }
 .vzb-br-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
 </style>
 <div class="vzb-card" data-vzb="bump-race">
@@ -3084,7 +3105,7 @@
   }
   // 달러 금액: 원래 값을 받아 K · M · B로 줄이고 소수 한 자리로 맞춥니다($745.6K). 접미사는 단위처럼 작게 씁니다.
   function usd(v, d) {
-    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    const a = Math.abs(v), s = v < 0 ? '-' : '';
     const [div, u] = a >= 1e9 ? [1e9, 'B'] : a >= 1e6 ? [1e6, 'M'] : a >= 1e3 ? [1e3, 'K'] : [1, ''];
     return [`${s}$${num(a / div, d != null ? d : div > 1 ? 1 : 0)}`, u];
   }
@@ -3293,7 +3314,7 @@
   }
   // 차이를 부호와 함께 적습니다. 비율 지표는 %p입니다.
   function signed(f, diff) {
-    const s = diff > 0 ? '+' : diff < 0 ? '−' : '';
+    const s = diff > 0 ? '+' : diff < 0 ? '-' : '';   // 줄어든 값은 하이픈(-)으로 적습니다. 복사해 표 계산기에 붙여도 음수로 읽힙니다
     return f.rel ? `${s}${show(f, Math.abs(diff))}` : `${s}${pp(f, diff)}%p`;
   }
   // pick(clientX, clientY) → 순번, point(순번) → { x, y, label, value, text, side }(화면 좌표), clear() → 강조 해제
@@ -3461,8 +3482,8 @@
     // 이름표 열과 지금 기간 글자의 폭: 글꼴이 늦게 실리면 처음에는 대체 글꼴로 재게 되므로, 글꼴이 실린 뒤 다시 잽니다(아래 fonts.ready).
     let nameW = 0, nowW = 0;
     const measure = () => {
-      nameW = Math.max(...items.map((it) => textW(rankText(N), 700, fam) + 5 + textW(it.name, 700, fam)));   // 누구든 짚을 항목(굵게)이 될 수 있습니다
-      nowW = Math.max(...labels.map((l) => textW(l, 700, fam)));
+      nameW = Math.max(...items.map((it) => textW(rankText(N), 700, fam, 14) + 5 + textW(it.name, 700, fam, 14)));   // 누구든 짚을 항목(굵게)이 될 수 있습니다
+      nowW = Math.max(...labels.map((l) => textW(l, 700, fam, 14)));
     };
     measure();
     let W = 0, H = 0, xs = [], Y = () => 0;
@@ -3553,7 +3574,7 @@
       if (now.textContent !== labels[cur]) now.textContent = labels[cur];
       const nw = nowW / 2 + 2, nx = Math.max(nw - 2, Math.min(scrub.clientWidth - nw, hx));
       now.setAttribute('x', fx(nx));
-      const aw = textW(labels[0], 400, fam, 11), bw = textW(labels[last], 400, fam, 11);
+      const aw = textW(labels[0], 400, fam, 12), bw = textW(labels[last], 400, fam, 12);
       endA.style.opacity = nx - nw < Math.max(0, xs[0] - 6) + aw + 8 ? 0 : 1;
       endB.style.opacity = nx + nw > xs[last] + 6 - bw - 8 ? 0 : 1;
       scrub.setAttribute('aria-valuenow', String(cur));

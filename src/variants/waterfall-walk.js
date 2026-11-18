@@ -40,7 +40,7 @@
     // 움직이는 동안의 숫자: 값이 모두 정수면 정수로 셉니다(소수 자리가 깜빡이지 않게).
     const whole = cols.every((c) => c.v == null || Number.isInteger(c.v));
     const part = (v, e) => (e >= 1 ? v : whole ? Math.round(v * e) : v * e);
-    const pct = (v) => `${v < 0 ? '−' : ''}${num(Math.abs(v / v0) * 100, 1)}%`;   // 첫 항목의 몇 %인지
+    const pct = (v) => `${v < 0 ? '-' : ''}${num(Math.abs(v / v0) * 100, 1)}%`;   // 첫 항목의 몇 %인지
 
     const live = card.hasAttribute('data-vzb-live');   // 데이터가 바뀌어 다시 그린 카드: 처음부터 재생하지 않고 마지막 장면을 그립니다
     head(card, d, f, null);
@@ -139,18 +139,19 @@
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
       slot = w / N;
       bw = Math.min(32, slot * 0.62);
-      // 글자 크기: 이름 11px · 값 12px, 칸이 좁으면 10px · 11px. LBL은 막대 끝에서 이름 줄 바깥까지, VAL은 값 줄 바깥까지의 길이입니다.
-      const tight = slot < 56, nsz = tight ? 10 : 11, vsz = tight ? 11 : 12, LBL = nsz + vsz + 8, VAL = vsz + 6;
+      // 글자 크기: 이름 · 값 14px, 칸이 좁으면 12px. LBL은 막대 끝에서 이름 줄 바깥까지, VAL은 값 줄 바깥까지의 길이입니다.
+      const tight = slot < 64, nsz = tight ? 12 : 14, vsz = nsz, LBL = nsz + vsz + 8, VAL = vsz + 6;
       svg.classList.toggle('is-tight', tight);
       DOT = tight ? 1.25 : 1.5;
       // 말풍선의 크기: 넓으면 이름 아래에 끝 값과 증감을 한 줄로, 좁으면 세 줄로 쌓습니다. 이름은 말풍선 안에 온전히 적습니다(그림 폭을 넘으면 줄입니다).
-      const big = tight ? 16 : 18, csz = tight ? 10 : 11, px = tight ? 7 : 10, py = 6, TAIL = 5, row = !tight;
+      // 말풍선의 이름과 증감은 큰 숫자에 붙는 설명이라 12px, 끝 값은 18px(좁으면 14px)입니다.
+      const big = tight ? 14 : 18, csz = 12, bsz = 12, px = tight ? 7 : 10, py = 6, TAIL = 5, row = !tight;
       let B = null;
       if (end) {
-        end.nm.textContent = fit(end.name, nsz, Math.min(160, w - 2 * px - 8));
-        const nW = textW(end.nm.textContent, 500, fam, nsz), vW = textW(valText(end), 700, fam, big), cW = chg ? (chg.dir ? 11 : 0) + textW(chg.text, 500, fam, csz) : 0;
+        end.nm.textContent = fit(end.name, bsz, Math.min(160, w - 2 * px - 8));
+        const nW = textW(end.nm.textContent, 500, fam, bsz), vW = textW(valText(end), 700, fam, big), cW = chg ? (chg.dir ? 11 : 0) + textW(chg.text, 500, fam, csz) : 0;
         const l2 = row && chg ? vW + 7 + cW : vW, bwid = Math.max(nW, l2, row ? 0 : cW) + 2 * px;
-        B = { vW, cW, l2, bwid, bh: 2 * py + (nsz + 2) + (big + 2) + (chg && !row ? csz + 3 : 0) };
+        B = { vW, cW, l2, bwid, bh: 2 * py + (bsz + 2) + (big + 2) + (chg && !row ? csz + 3 : 0) };
         B.ext = 4 + TAIL + B.bh;
       }
       // 높이: 0과 모든 막대의 양 끝이 들어가게 하고, 막대 끝 밖의 글자(끝 막대는 말풍선)가 그림 안에 들어가도록 위아래 여백을 늘려 갑니다.
@@ -197,8 +198,8 @@
         const top = c.below ? 4 + TAIL : -(4 + TAIL + bh);
         B.top = top;
         c.nm.setAttribute('x', fx(c.off));
-        c.nm.setAttribute('y', fx(top + py + nsz - 1));
-        const yv = top + py + nsz + 2 + big - 1, xl = c.off - l2 / 2;
+        c.nm.setAttribute('y', fx(top + py + bsz - 1));
+        const yv = top + py + bsz + 2 + big - 1, xl = c.off - l2 / 2;
         c.val.setAttribute('text-anchor', row && chg ? 'start' : 'middle');
         c.val.setAttribute('x', fx(row && chg ? xl : c.off));
         c.val.setAttribute('y', fx(yv));
@@ -272,7 +273,7 @@
         c.lab.setAttribute('transform', `translate(${fx(c.cx + c.dx)},${fx(tip + c.dy)})${pop < 1 ? ` scale(${Math.max(0.01, easeBack(pop)).toFixed(3)})` : ''}`);
         c.lab.setAttribute('opacity', c.labOn ? fx(c === end ? clamp(pop * 3) : c.k ? clamp((t - c.at - LAG + 80) / 160) : 1) : 0);
         const now = c.kind === 'step' && c.v ? part(c.v, e) : 0;   // 0에서 시작할 때도 부호를 붙여, 늘 항목인지 줄 항목인지 먼저 알립니다
-        const say = c.kind === 'step' && c.v ? (now ? signed(f, now) : `${c.v > 0 ? '+' : '−'}${show(f, 0)}`) : c.said;
+        const say = c.kind === 'step' && c.v ? (now ? signed(f, now) : `${c.v > 0 ? '+' : '-'}${show(f, 0)}`) : c.said;
         if (say !== c.said) { c.said = say; c.val.textContent = say; }
         // 잇는 점: 다음 칸의 차례가 오면 앞에서부터 하나씩 찍힙니다.
         if (c.dotEls) {

@@ -23,7 +23,7 @@
 </head>
 <body>
 <main style="--w:640px">
-<!-- Vizney Blocks v0.64 · 와플 차트 · Waffle Flip (waffle-flip)
+<!-- Vizney Blocks v0.65 · 와플 차트 · Waffle Flip (waffle-flip)
      https://blocks.vizney.com/ko/cards/waffle-flip.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -111,7 +111,7 @@
   border: 1px solid var(--vzb-edge);
   border-radius: var(--vzb-radius);
   box-shadow: var(--vzb-shadow);
-  font: 400 13px/18px var(--vzb-font);
+  font: 400 14px/20px var(--vzb-font);   /* 글자 크기는 세 단계: 기본 14px, 보조 12px(단위 · 축 눈금 · 요일 · 개수 · 큰 숫자 위 설명), 큰 숫자 18px(말풍선 · 툴팁). 그 밖에 제목 17px, 대표 수치 34px(단위 16px) */
   text-align: left;
   word-break: keep-all;
   overflow-wrap: anywhere;
@@ -156,14 +156,15 @@
   background: var(--vzb-tip);
   color: #ffffff;
   box-shadow: 0 10px 24px -8px rgba(27, 27, 27, 0.4);
-  font: 400 12px/17px var(--vzb-font);
+  font: 400 14px/20px var(--vzb-font);
   white-space: nowrap;
   opacity: 0;
   transition: opacity 0.12s;
 }
 .vzb-tip.is-on { opacity: 1; }
 .vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
-.vzb-tip-value { font-size: 13px; font-weight: 700; }
+.vzb-tip-value { font-weight: 700; }
+.vzb-tip-value.is-big { font-size: 18px; line-height: 24px; }   /* 툴팁이 대신 보여 주는 큰 숫자 */
 /* 색 이름: t1 · t2 · t3 선(파랑 · 분홍빨강 · 주황, 어두운 바탕은 노랑 · 흰색 · 회색), f1 · f2 · f3 막대와 면(같은 순서), fs 옅은 첫째 색,
    t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
 .vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
@@ -184,7 +185,7 @@
 .vzb-tip-body { display: flex; flex-direction: column; }
 .vzb-tip-rows { display: grid; grid-template-columns: auto auto auto; justify-content: start; align-items: center; column-gap: 8px; row-gap: 1px; margin-top: 3px; }
 .vzb-tip-row { display: contents; }
-.vzb-tip-row b { font-size: 13px; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.vzb-tip-row b { font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
 .vzb-tip-row span { color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-note { margin-top: 3px; color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-note + .vzb-tip-note { margin-top: 0; }
@@ -212,7 +213,7 @@
 .vzb-wf-c3 { fill-opacity: 0.16; }
 .vzb-wf-svg.is-hover .vzb-wf-cell:not(.is-on) { opacity: 0.25; }
 .vzb-wf-br { fill: none; stroke: var(--vzb-ink-2); stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }
-.vzb-wf-brt { font-size: 11px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-wf-brt { font-size: 14px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
 .vzb-wf-ctl { margin-top: 8px; }
 .vzb-wf.is-side { display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 28px; align-items: start; }   /* 넓은 카드: 범례를 칸 오른쪽에 세로로 */
 .vzb-wf.is-side .vzb-wf-ctl { margin-top: 0; }
@@ -221,11 +222,11 @@
 .vzb-wf-per { position: absolute; top: -4px; right: 0; display: inline-flex; padding: 2px; border-radius: 16px; background: var(--vzb-track); }   /* 제목 오른쪽 자리는 스크립트가 단추 폭만큼 비웁니다 */
 .vzb-wf-pill { position: absolute; top: 2px; bottom: 2px; left: 0; width: 0; border-radius: 14px; background: var(--vzb-ink); pointer-events: none; }
 .vzb-wf-per.is-ready .vzb-wf-pill { transition: transform 0.38s cubic-bezier(0.3, 1.4, 0.5, 1), width 0.38s cubic-bezier(0.3, 1.4, 0.5, 1); }
-.vzb-wf-opt { position: relative; height: 28px; padding: 0 12px; border: 0; border-radius: 14px; background: none; color: var(--vzb-ink-2); font: 500 13px/28px var(--vzb-font); font-variant-numeric: tabular-nums; white-space: nowrap; cursor: pointer; transition: color 0.2s; }
+.vzb-wf-opt { position: relative; height: 28px; padding: 0 12px; border: 0; border-radius: 14px; background: none; color: var(--vzb-ink-2); font: 500 14px/28px var(--vzb-font); font-variant-numeric: tabular-nums; white-space: nowrap; cursor: pointer; transition: color 0.2s; }
 .vzb-wf-opt:hover { color: var(--vzb-ink); }
 .vzb-wf-opt.is-on { color: var(--vzb-card); }
 .vzb-wf-opt:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
-.vzb-wf-legend { display: flex; flex-wrap: wrap; gap: 2px 14px; min-width: 0; margin: 0; padding: 0; list-style: none; font-size: 12px; line-height: 16px; color: var(--vzb-ink-2); }
+.vzb-wf-legend { display: flex; flex-wrap: wrap; gap: 2px 14px; min-width: 0; margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 20px; color: var(--vzb-ink-2); }
 .vzb-wf-legend li { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: opacity 0.12s; }
 .vzb-wf-legend.is-hover li:not(.is-on) { opacity: 0.4; }
 .vzb-wf-legend b { font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }
@@ -333,7 +334,7 @@
   }
   // 달러 금액: 원래 값을 받아 K · M · B로 줄이고 소수 한 자리로 맞춥니다($745.6K). 접미사는 단위처럼 작게 씁니다.
   function usd(v, d) {
-    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    const a = Math.abs(v), s = v < 0 ? '-' : '';
     const [div, u] = a >= 1e9 ? [1e9, 'B'] : a >= 1e6 ? [1e6, 'M'] : a >= 1e3 ? [1e3, 'K'] : [1, ''];
     return [`${s}$${num(a / div, d != null ? d : div > 1 ? 1 : 0)}`, u];
   }
@@ -542,7 +543,7 @@
   }
   // 차이를 부호와 함께 적습니다. 비율 지표는 %p입니다.
   function signed(f, diff) {
-    const s = diff > 0 ? '+' : diff < 0 ? '−' : '';
+    const s = diff > 0 ? '+' : diff < 0 ? '-' : '';   // 줄어든 값은 하이픈(-)으로 적습니다. 복사해 표 계산기에 붙여도 음수로 읽힙니다
     return f.rel ? `${s}${show(f, Math.abs(diff))}` : `${s}${pp(f, diff)}%p`;
   }
   // pick(clientX, clientY) → 순번, point(순번) → { x, y, label, value, text, side }(화면 좌표), clear() → 강조 해제
@@ -628,7 +629,7 @@
     const cats = periods.map((_, p) => catsOf(p)), before = cats[0], after = cats[last];
     const flips = before.map((c, i) => (c !== after[i] ? i : -1)).filter((i) => i >= 0);   // 바뀐 칸(짚을 항목의 끝부터, 번호 순서)
     const pct = format({ format: 'pct', decimals: 0 }, d);
-    const ppText = (v, k) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${tx(d, '%s%p', num(Math.abs(v), k))}`;
+    const ppText = (v, k) => `${v > 0 ? '+' : v < 0 ? '-' : ''}${tx(d, '%s%p', num(Math.abs(v), k))}`;
     const pctText = (v, k) => `${num(v, k)}%`;
 
     head(card, d, f, null);
@@ -762,7 +763,7 @@
         brace.setAttribute('d', `M${fx(x1)},${fx(y - 4)}V${fx(y)}H${fx(x2)}V${fx(y - 4)}`);
         brace.len = (x2 - x1) + 8;
         brace.setAttribute('stroke-dasharray', fx(brace.len));
-        const tw = textW(braceText.textContent, 700, fam, 11) + 6, right = x2 + tw <= w;
+        const tw = textW(braceText.textContent, 700, fam, 14) + 6, right = x2 + tw <= w;
         braceText.setAttribute('text-anchor', right ? 'start' : 'end');
         braceText.setAttribute('x', fx(right ? x2 + 6 : x1 - 6));
         braceText.setAttribute('y', fx(y + 4));

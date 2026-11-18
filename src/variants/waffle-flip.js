@@ -37,7 +37,7 @@
     const cats = periods.map((_, p) => catsOf(p)), before = cats[0], after = cats[last];
     const flips = before.map((c, i) => (c !== after[i] ? i : -1)).filter((i) => i >= 0);   // 바뀐 칸(짚을 항목의 끝부터, 번호 순서)
     const pct = format({ format: 'pct', decimals: 0 }, d);
-    const ppText = (v, k) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${tx(d, '%s%p', num(Math.abs(v), k))}`;
+    const ppText = (v, k) => `${v > 0 ? '+' : v < 0 ? '-' : ''}${tx(d, '%s%p', num(Math.abs(v), k))}`;
     const pctText = (v, k) => `${num(v, k)}%`;
 
     head(card, d, f, null);
@@ -171,7 +171,7 @@
         brace.setAttribute('d', `M${fx(x1)},${fx(y - 4)}V${fx(y)}H${fx(x2)}V${fx(y - 4)}`);
         brace.len = (x2 - x1) + 8;
         brace.setAttribute('stroke-dasharray', fx(brace.len));
-        const tw = textW(braceText.textContent, 700, fam, 11) + 6, right = x2 + tw <= w;
+        const tw = textW(braceText.textContent, 700, fam, 14) + 6, right = x2 + tw <= w;
         braceText.setAttribute('text-anchor', right ? 'start' : 'end');
         braceText.setAttribute('x', fx(right ? x2 + 6 : x1 - 6));
         braceText.setAttribute('y', fx(y + 4));

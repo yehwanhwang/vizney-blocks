@@ -23,7 +23,7 @@
 </head>
 <body>
 <main style="--w:640px">
-<!-- Vizney Blocks v0.64 · 막대 차트 · Bar Overflow (bar-overflow)
+<!-- Vizney Blocks v0.65 · 막대 차트 · Bar Overflow (bar-overflow)
      https://blocks.vizney.com/ko/cards/bar-overflow.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -111,7 +111,7 @@
   border: 1px solid var(--vzb-edge);
   border-radius: var(--vzb-radius);
   box-shadow: var(--vzb-shadow);
-  font: 400 13px/18px var(--vzb-font);
+  font: 400 14px/20px var(--vzb-font);   /* 글자 크기는 세 단계: 기본 14px, 보조 12px(단위 · 축 눈금 · 요일 · 개수 · 큰 숫자 위 설명), 큰 숫자 18px(말풍선 · 툴팁). 그 밖에 제목 17px, 대표 수치 34px(단위 16px) */
   text-align: left;
   word-break: keep-all;
   overflow-wrap: anywhere;
@@ -156,14 +156,15 @@
   background: var(--vzb-tip);
   color: #ffffff;
   box-shadow: 0 10px 24px -8px rgba(27, 27, 27, 0.4);
-  font: 400 12px/17px var(--vzb-font);
+  font: 400 14px/20px var(--vzb-font);
   white-space: nowrap;
   opacity: 0;
   transition: opacity 0.12s;
 }
 .vzb-tip.is-on { opacity: 1; }
 .vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
-.vzb-tip-value { font-size: 13px; font-weight: 700; }
+.vzb-tip-value { font-weight: 700; }
+.vzb-tip-value.is-big { font-size: 18px; line-height: 24px; }   /* 툴팁이 대신 보여 주는 큰 숫자 */
 /* 색 이름: t1 · t2 · t3 선(파랑 · 분홍빨강 · 주황, 어두운 바탕은 노랑 · 흰색 · 회색), f1 · f2 · f3 막대와 면(같은 순서), fs 옅은 첫째 색,
    t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
 .vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
@@ -184,7 +185,7 @@
 .vzb-tip-body { display: flex; flex-direction: column; }
 .vzb-tip-rows { display: grid; grid-template-columns: auto auto auto; justify-content: start; align-items: center; column-gap: 8px; row-gap: 1px; margin-top: 3px; }
 .vzb-tip-row { display: contents; }
-.vzb-tip-row b { font-size: 13px; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.vzb-tip-row b { font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
 .vzb-tip-row span { color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-note { margin-top: 3px; color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-note + .vzb-tip-note { margin-top: 0; }
@@ -204,9 +205,9 @@
 .vzb-bb-fill { fill: var(--vzb-base); }
 .vzb-bb-over { fill: var(--vzb-bad); }
 .vzb-bb-line { stroke: var(--vzb-ink); stroke-width: 1.5; }
-.vzb-bb-lim { font-size: 11px; font-weight: 500; fill: var(--vzb-ink); paint-order: stroke; stroke: var(--vzb-card); stroke-width: 3px; stroke-linejoin: round; }
-.vzb-bb-name { font-size: 11px; fill: var(--vzb-muted); }
-.vzb-bb-ex { font-size: 10.5px; font-weight: 700; fill: var(--vzb-bad-ink); font-variant-numeric: tabular-nums; }
+.vzb-bb-lim { font-size: 12px; font-weight: 500; fill: var(--vzb-ink); paint-order: stroke; stroke: var(--vzb-card); stroke-width: 3px; stroke-linejoin: round; }
+.vzb-bb-name { font-size: 12px; fill: var(--vzb-muted); }
+.vzb-bb-ex { font-size: 14px; font-weight: 700; fill: var(--vzb-bad-ink); font-variant-numeric: tabular-nums; }
 .vzb-bb-col.is-over .vzb-bb-name { font-weight: 700; fill: var(--vzb-ink); }
 .vzb-bb-col { transition: opacity 0.12s; }
 .vzb-bb-svg.is-hover .vzb-bb-col:not(.is-on) { opacity: 0.3; }
@@ -219,7 +220,7 @@
 .vzb-bb-btn[hidden] { display: none; }
 .vzb-bb-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
 .vzb-bb-ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.vzb-bb-sum { flex: 1 1 auto; min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-bb-sum { flex: 1 1 auto; min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }
 .vzb-bb-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
 .vzb-bb-key { display: inline-block; width: 8px; height: 8px; margin-right: 7px; border-radius: 2px; background: var(--vzb-bad); }
 </style>
@@ -301,7 +302,7 @@
   }
   // 달러 금액: 원래 값을 받아 K · M · B로 줄이고 소수 한 자리로 맞춥니다($745.6K). 접미사는 단위처럼 작게 씁니다.
   function usd(v, d) {
-    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    const a = Math.abs(v), s = v < 0 ? '-' : '';
     const [div, u] = a >= 1e9 ? [1e9, 'B'] : a >= 1e6 ? [1e6, 'M'] : a >= 1e3 ? [1e3, 'K'] : [1, ''];
     return [`${s}$${num(a / div, d != null ? d : div > 1 ? 1 : 0)}`, u];
   }
@@ -510,7 +511,7 @@
   }
   // 차이를 부호와 함께 적습니다. 비율 지표는 %p입니다.
   function signed(f, diff) {
-    const s = diff > 0 ? '+' : diff < 0 ? '−' : '';
+    const s = diff > 0 ? '+' : diff < 0 ? '-' : '';   // 줄어든 값은 하이픈(-)으로 적습니다. 복사해 표 계산기에 붙여도 음수로 읽힙니다
     return f.rel ? `${s}${show(f, Math.abs(diff))}` : `${s}${pp(f, diff)}%p`;
   }
   // pick(clientX, clientY) → 순번, point(순번) → { x, y, label, value, text, side }(화면 좌표), clear() → 강조 해제
@@ -662,10 +663,23 @@
       limLine.setAttribute('y1', fx(yl));
       limLine.setAttribute('y2', fx(yl));
       // 기간 이름: 다 들어가면 모두, 모자라면 몇 칸마다 하나씩(마지막 칸은 늘 적습니다)
-      const nameW = Math.max(...items.map((it) => textW(it.name, 400, fam, 11))) + 6;
+      const nameW = Math.max(...items.map((it) => textW(it.name, 400, fam, 12))) + 6;
       const every = Math.max(1, Math.ceil(nameW / slot));
-      // 넘친 양은 칸 안에 들어갈 때만 적습니다
-      const exFits = Math.max(0, ...spill.map((it) => textW(it.ex.textContent, 700, fam, 10.5))) + 4 <= slot;
+      // 넘친 양: 14px로 적고, 이웃한 넘친 양끼리 겹치면 12px로, 그래도 겹치면 적지 않습니다(툴팁과 요약 줄에는 남습니다).
+      // 글자는 제 칸 밖으로 나가도 되지만 그림 밖으로는 나가지 않게 안쪽으로 당깁니다.
+      const place = (size) => {
+        let prev = -Infinity, ok = true;
+        spill.forEach((it) => {
+          const lw = textW(it.ex.textContent, 700, fam, size) + 4, cx = slot * (it.k + 0.5);
+          it.exW = lw;
+          it.exX = Math.max(lw / 2, Math.min(w - lw / 2, cx));
+          if (it.exX - lw / 2 < prev + 4) ok = false;
+          prev = it.exX + lw / 2;
+        });
+        return ok;
+      };
+      const exSize = place(14) ? 14 : place(12) ? 12 : 0;
+      if (exSize) place(exSize);
       items.forEach((it) => {
         it.cx = slot * (it.k + 0.5);
         it.x = it.cx - bw / 2;
@@ -673,17 +687,22 @@
         it.nm.setAttribute('x', fx(it.cx));
         it.nm.setAttribute('y', fx(y0 + 15));
         it.nm.setAttribute('opacity', (N - 1 - it.k) % every === 0 ? 1 : 0);
-        it.ex.setAttribute('x', fx(it.cx));
+        it.ex.setAttribute('x', fx(it.over > 0 && exSize ? it.exX : it.cx));
         it.ex.setAttribute('y', fx(it.yv - 5));
-        it.exOn = it.over > 0 && exFits;
+        it.ex.style.fontSize = exSize === 12 ? '12px' : '';
+        it.exOn = it.over > 0 && !!exSize;
         it.start = T0 + it.k * STAG;
       });
       // 한도선의 이름은 선 바로 위, 한도를 넘는 막대(와 넘친 양)가 없는 자리에 적습니다. 오른쪽 끝부터 왼쪽으로 찾고,
       // 그런 자리가 없으면(거의 모든 기간이 넘을 때) 오른쪽 끝의 선 바로 아래에 적습니다. 선 아래는 모두 회색이라 빨강과 겹치지 않습니다.
-      const lw = textW(limText.textContent, 500, fam, 11) + 6;
-      const blocked = items.filter((it) => it.over > 0).map((it) => [it.cx - slot / 2, it.cx + slot / 2]);
+      const lw = textW(limText.textContent, 500, fam, 12) + 6;
+      // 막는 자리는 넘친 막대의 칸이고, 넘친 양이 작아 그 글자가 이름과 같은 높이에 걸치면 글자 자리까지 막습니다. 이웃과는 4px 띄웁니다.
+      const blocked = items.filter((it) => it.over > 0).map((it) => {
+        const a = it.cx - slot / 2, b = it.cx + slot / 2;
+        return it.exOn && it.yv > yl - 16 ? [Math.min(a, it.exX - it.exW / 2), Math.max(b, it.exX + it.exW / 2)] : [a, b];
+      });
       const fits = (x) => x - lw >= 0 && blocked.every(([a, b]) => b <= x - lw || a >= x);
-      const ends = [w, ...blocked.map(([a]) => a).sort((p, q) => q - p)];
+      const ends = [w, ...blocked.map(([a]) => a - 4).sort((p, q) => q - p)];
       const at = ends.find(fits);
       limText.setAttribute('text-anchor', 'end');
       limText.setAttribute('x', fx(at == null ? w : at));

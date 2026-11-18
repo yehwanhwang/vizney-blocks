@@ -15,22 +15,21 @@
 .vzb-ww-col.is-bad .vzb-ww-bar { fill: var(--vzb-bad); }
 .vzb-ww-col.is-plain .vzb-ww-bar { fill: var(--vzb-primary); }
 .vzb-ww-name, .vzb-ww-val { paint-order: stroke; stroke: var(--vzb-card); stroke-width: 3px; stroke-linejoin: round; }
-.vzb-ww-name { font-size: 11px; fill: var(--vzb-muted); }
-.vzb-ww-val { font-size: 12px; font-weight: 600; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-ww-name { font-size: 14px; fill: var(--vzb-muted); }
+.vzb-ww-val { font-size: 14px; font-weight: 600; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
 .vzb-ww-col.is-total .vzb-ww-name { font-weight: 500; fill: var(--vzb-ink-2); }
 .vzb-ww-col.is-total .vzb-ww-val { font-weight: 700; }
-.vzb-ww-svg.is-tight .vzb-ww-name { font-size: 10px; }
-.vzb-ww-svg.is-tight .vzb-ww-val { font-size: 11px; }
+.vzb-ww-svg.is-tight .vzb-ww-name { font-size: 12px; }
+.vzb-ww-svg.is-tight .vzb-ww-val { font-size: 12px; }
 .vzb-ww-bub { fill: var(--vzb-track); }
-.vzb-ww-bn { font-size: 11px; font-weight: 500; fill: var(--vzb-ink-2); }
+.vzb-ww-bn { font-size: 12px; font-weight: 500; fill: var(--vzb-ink-2); }
 .vzb-ww-big { font-size: 18px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
-.vzb-ww-chg { color: var(--vzb-ink-2); font-size: 11px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.vzb-ww-chg { color: var(--vzb-ink-2); font-size: 12px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .vzb-ww-chg.is-good { color: var(--vzb-good-ink); }
 .vzb-ww-chg.is-bad { color: var(--vzb-bad-ink); }
 .vzb-ww-chg text { fill: currentColor; }
 .vzb-ww-arw { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-.vzb-ww-svg.is-tight .vzb-ww-bn, .vzb-ww-svg.is-tight .vzb-ww-chg { font-size: 10px; }
-.vzb-ww-svg.is-tight .vzb-ww-big { font-size: 16px; }
+.vzb-ww-svg.is-tight .vzb-ww-big { font-size: 14px; }
 .vzb-ww-col, .vzb-ww-conns { transition: opacity 0.12s; }
 .vzb-ww-svg.is-hover .vzb-ww-col:not(.is-on), .vzb-ww-svg.is-hover .vzb-ww-conns { opacity: 0.3; }
 .vzb-ww-lab { transition: opacity 0.12s; }

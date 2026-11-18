@@ -1,11 +1,12 @@
 {
   "label": "주문 금액",
   "name": "amount",
+  "noun": "건",
   "format": "count",
   "unit": "원",
   "min": 0,
   "max": 500000,
-  "step": 20000,
+  "step": 5000,
   "value": [
     60000,
     260000

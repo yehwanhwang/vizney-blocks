@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.66 · 컨트롤 · Range Slider (range-slider)
+<!-- Vizney Blocks v0.67 · 컨트롤 · Range Slider (range-slider)
      https://blocks.vizney.com/ko/cards/range-slider.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -117,7 +117,9 @@
    두 값이 겹치면 '앞 – 뒤' 하나로 합칩니다. 분포가 있으면 끄는 동안과 키보드로 옮기는 동안만 레일 위에 분포 창이 떠오릅니다
    (카드 바탕 · 테두리 · 그림자, 위에 범위 안 개수, 아래에 분포 막대). 창은 레일 위로 겹쳐 떠서 자리를 밀어내지 않습니다.
    고른 범위 안의 막대 · 고른 구간 · 손잡이는 글자색(밝은 바탕 검정, 어두운 바탕 흰색), 범위 밖의 막대와 레일은 회색입니다.
-   바탕을 비워 두므로 손잡이에 테두리를 두르지 않습니다. 손잡이의 용수철과 막대의 솟음은 스크립트가 그립니다. */
+   바탕을 비워 두므로 손잡이에 테두리를 두르지 않습니다. 손잡이의 용수철과 막대의 솟음은 스크립트가 그립니다.
+   값을 직접 칠 수 있으면 값 글자에 점선 밑줄을 긋고(누를 수 있다는 표시), 마우스를 올리면 트랙 회색 바탕을 두릅니다. 누르면 그 자리에
+   입력칸 둘(높이 32px, 글자색 1.5px 테두리, 14px 굵게)이 '–'로 이어져 떠오르고, 레일 아래 값은 그동안 숨습니다. */
 .vzb-sl { position: relative; }
 .vzb-sl-area { position: relative; padding-top: 1px; cursor: pointer; touch-action: pan-y; -webkit-user-select: none; user-select: none; }
 .vzb-sl-rail { position: relative; height: 22px; }
@@ -129,15 +131,26 @@
 .vzb-sl-thumb:focus-visible { box-shadow: 0 0 0 2px var(--vzb-primary); }
 .vzb-sl-labs { position: relative; height: 18px; margin-top: 6px; }
 .vzb-sl-lab { position: absolute; left: 0; top: 0; white-space: nowrap; font-size: 14px; line-height: 18px; font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; transition: opacity 0.12s; }
-.vzb-sl-lab.is-off { opacity: 0; }
-.vzb-sl-pop { position: absolute; left: 0; right: 0; bottom: calc(100% + 6px); z-index: 3; padding: 8px 0 6px; border: 1px solid var(--vzb-edge); border-radius: 12px; background: var(--vzb-card); box-shadow: 0 10px 28px rgba(27, 27, 27, 0.16); opacity: 0; visibility: hidden; transform: translateY(6px); transform-origin: 50% 100%; pointer-events: none; transition: opacity 0.16s, transform 0.24s cubic-bezier(0.34, 1.45, 0.64, 1), visibility 0s 0.24s; }
+.vzb-sl-lab.is-off { opacity: 0; pointer-events: none; }   /* 숨긴 값은 누르기를 받지 않아, 보이는 값이 마우스를 받습니다 */
+.vzb-sl-pop { position: absolute; left: 0; right: 0; bottom: calc(100% + 8px); z-index: 3; padding: 10px 0 8px; border: 1px solid var(--vzb-edge); border-radius: 12px; background: var(--vzb-card); box-shadow: 0 10px 28px rgba(27, 27, 27, 0.16); opacity: 0; visibility: hidden; transform: translateY(6px); transform-origin: 50% 100%; pointer-events: none; transition: opacity 0.16s, transform 0.24s cubic-bezier(0.34, 1.45, 0.64, 1), visibility 0s 0.24s; }
 .vzb-sl.is-on .vzb-sl-pop { opacity: 1; visibility: visible; transform: none; transition: opacity 0.16s, transform 0.24s cubic-bezier(0.34, 1.45, 0.64, 1), visibility 0s; }
-.vzb-sl-pophd { display: flex; align-items: baseline; height: 18px; padding: 0 8px; white-space: pre; font-size: 12px; line-height: 18px; color: var(--vzb-muted); font-variant-numeric: tabular-nums; }
-.vzb-sl-pophd .vzb-rl { font-weight: 700; color: var(--vzb-ink); }
-.vzb-sl-hist { display: flex; align-items: flex-end; gap: 2px; height: 28px; margin: 6px 8px 0; transform: scaleY(0.4); transform-origin: 50% 100%; transition: transform 0.26s cubic-bezier(0.34, 1.45, 0.64, 1); }
+.vzb-sl-pophd { display: flex; align-items: baseline; height: 20px; padding: 0 12px; white-space: pre; font-size: 12px; line-height: 20px; color: var(--vzb-muted); font-variant-numeric: tabular-nums; }
+.vzb-sl-pophd .vzb-rl { font-size: 14px; font-weight: 700; color: var(--vzb-ink); }
+.vzb-sl-hist { display: flex; align-items: flex-end; gap: 2px; height: 84px; margin: 10px 12px 0; transform: scaleY(0.4); transform-origin: 50% 100%; transition: transform 0.26s cubic-bezier(0.34, 1.45, 0.64, 1); }
 .vzb-sl.is-on .vzb-sl-hist { transform: none; }
 .vzb-sl-bar { flex: 1 1 0; min-width: 0; border-radius: 2px 2px 0 0; background: var(--vzb-other); transform-origin: 50% 100%; transition: background-color 0.18s; }
 .vzb-sl-bar.is-in { background: var(--vzb-ink); }
+.vzb-sl-labs.is-editable .vzb-sl-lab { cursor: text; text-decoration: underline dotted color-mix(in srgb, var(--vzb-ink) 45%, transparent); text-decoration-thickness: 1.5px; text-underline-offset: 4px; border-radius: 6px; transition: opacity 0.12s, background-color 0.14s, box-shadow 0.14s; }
+.vzb-sl-labs.is-editable .vzb-sl-lab:hover { background: var(--vzb-track); box-shadow: 0 0 0 4px var(--vzb-track); }
+.vzb-sl-labs.is-editing .vzb-sl-lab { opacity: 0; pointer-events: none; }
+.vzb-sl-ed { position: absolute; left: 0; top: -7px; z-index: 2; display: flex; align-items: center; gap: 6px; cursor: default; animation: vzb-sl-ed 0.2s cubic-bezier(0.23, 1, 0.32, 1); }
+.vzb-sl-ed[hidden] { display: none; }
+@keyframes vzb-sl-ed { from { opacity: 0; transform: translateY(-4px) scale(0.96); } }
+.vzb-sl-field { display: flex; align-items: center; gap: 2px; height: 32px; box-sizing: border-box; padding: 0 10px; border: 1.5px solid var(--vzb-ink); border-radius: 10px; background: var(--vzb-card); cursor: text; }
+.vzb-sl-field:focus-within { box-shadow: 0 0 0 3px color-mix(in srgb, var(--vzb-ink) 16%, transparent); }
+.vzb-sl-in { min-width: 0; padding: 0; border: 0; outline: none; background: none; color: var(--vzb-ink); font: 700 14px/1 var(--vzb-font); font-variant-numeric: tabular-nums; }
+.vzb-sl-affix { font-size: 12px; font-weight: 500; color: var(--vzb-muted); }
+.vzb-sl-dash { font-size: 14px; font-weight: 700; color: var(--vzb-muted); }
 /* 굴러가는 숫자: 숫자 칸의 높이는 글자 높이(1.2em)이고, 칸 안의 0–9 띠가 위아래로 굴러 새 값에 섭니다. */
 .vzb-rl { display: inline-flex; vertical-align: bottom; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .vzb-rl-col { display: inline-block; height: 1.2em; overflow: hidden; }
@@ -154,11 +167,12 @@
 {
   "label": "주문 금액",
   "name": "amount",
+  "noun": "건",
   "format": "count",
   "unit": "원",
   "min": 0,
   "max": 500000,
-  "step": 20000,
+  "step": 5000,
   "value": [60000, 260000],
   "counts": [38, 112, 196, 248, 231, 198, 162, 131, 104, 86, 70, 57, 46, 38, 31, 25, 21, 17, 14, 12, 10, 8, 7, 6, 5]
 }
@@ -192,7 +206,7 @@
     '%1. %2의 비중은 %3입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 holds %3. Use the left and right arrows to move between items. Every value is in the table that follows.',
     '최근 7일': 'Last 7 days', '최근 30일': 'Last 30 days', '이번 달': 'This month', '지난달': 'Last month', '이번 분기': 'This quarter', '올해': 'This year', '빠른 선택': 'Quick picks',
     '일간': 'days', '일간|1': 'day', '%s 고름': '%s picked', '이전 달': 'Previous month', '다음 달': 'Next month', 'value의 날짜를 YYYY-MM-DD로 적으세요.': 'Write the dates in value as YYYY-MM-DD.',
-    'items에 단계를 두 개 이상 적으세요.': 'Write two or more stages in items.', '첫 단계의 값은 0보다 커야 합니다.': 'The first stage needs a value above 0.', '단계': 'Stage', '앞 단계에서': 'From the previous stage', '%1에서 %2 넘어옴': '%2 moved on from %1', '퍼널의 시작': 'Start of the funnel', '시작 값': 'Starting value',
+    'items에 단계를 두 개 이상 적으세요.': 'Write two or more stages in items.', '첫 단계의 값은 0보다 커야 합니다.': 'The first stage needs a value above 0.', '단계': 'Stage', '앞 단계에서': 'From the previous stage', '%1에서 %2 넘어옴': '%2 moved on from %1', '퍼널의 시작': 'Start of the funnel', '시작 값': 'Starting value', '눌러서 값 입력': 'Click to type a value', '시작일': 'Start date', '끝일': 'End date', '날짜': 'Date', '연도와 달 고르기': 'choose month and year', '날짜로 돌아가기': 'back to the days', '이전 해': 'Previous year', '다음 해': 'Next year', '이전 열두 해': 'Previous 12 years', '다음 열두 해': 'Next 12 years', '날짜를 YYYY-MM-DD로, 고를 수 있는 날짜 안에서 적으세요.': 'Type a date as YYYY-MM-DD, within the dates you can pick.', 
     '%1. %2 %3에서 %4 %5까지, 첫 단계 대비 %6. 좌우 화살표로 단계를 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. From %2 %3 to %4 %5, %6 of the first stage. Use the left and right arrows to move between the stages. Every value is in the table that follows.',
     '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
   };
@@ -370,7 +384,10 @@
      범위 안 개수를 굴러가는 숫자로 적습니다(가만히 둘 때는 레일과 값만 보여 필터 줄에서 자리를 적게 차지합니다).
      손잡이가 지나가며 막대가 범위에 들어오면 손잡이에서 가까운 차례로 살짝 솟았다 내려앉고, 나가면 살짝 꺼집니다.
      cfg: { n: 칸 수(자리는 0…n), text(i): 그 자리의 글자, value(i): 이벤트로 보내는 값, start: [앞, 뒤] 자리, aria: [앞 손잡이 이름, 뒤 손잡이 이름],
-            hist: { counts: min~max를 같은 폭으로 나눈 칸마다의 개수, min, max, noun: 개수 뒤에 붙는 말(비우면 행) } }(hist가 있으면 value(i)는 숫자)
+            hist: { counts: min~max를 같은 폭으로 나눈 칸마다의 개수, min, max, noun: 개수 뒤에 붙는 말(비우면 행) },
+            edit: { raw(i): 입력칸에 넣을 숫자 글자, read(글자): 그 값의 자리(칸 사이도 됨) 또는 null, pre · suf: 입력칸 앞뒤의 단위 } }
+     (hist가 있으면 value(i)는 숫자). 자리는 끌기와 화살표로는 칸마다 옮기고, 직접 친 값은 칸 사이의 자리(소수)도 그대로 씁니다.
+     edit가 있으면 손잡이 아래 값을 누르거나 손잡이에서 Enter를 눌러 그 자리에 입력칸을 열고 값을 칩니다(Enter · 칸 밖으로 나가면 적용, Esc는 취소).
      값이 바뀌면 카드에서 vzb-change 이벤트(bubbles, detail: { name, value: [시작, 끝] })를 보내고, 카드의 data-vzb-value에 같은 값을 적습니다.
      조작: 손잡이를 끌거나, 레일을 눌러 가까운 손잡이를 옮기거나, 손잡이에 포커스한 뒤 화살표(한 칸) · Page Up/Down(열 칸쯤) · Home/End로 옮깁니다.
      두 손잡이는 같은 칸까지 만날 수 있고, 겹쳐 있을 때는 끄는 방향의 손잡이가 움직입니다. 손잡이는 용수철로 따라갑니다.
@@ -414,6 +431,27 @@
     labs.setAttribute('aria-hidden', 'true');
     labs.append(la, lb, lm);
     area.append(rail, labs);
+    // 직접 입력: 앞 · 뒤 입력칸을 '–'로 이어 손잡이 사이 가운데 아래에 띄웁니다(레일 아래 값 자리를 덮고, 아래 내용은 밀지 않습니다).
+    const ed = cfg.edit ? el('div', 'vzb-sl-ed') : null, inA = cfg.edit ? el('input', 'vzb-sl-in') : null, inB = cfg.edit ? el('input', 'vzb-sl-in') : null;
+    if (ed) {
+      const field = (inp, k) => {
+        const box = el('label', 'vzb-sl-field');
+        inp.type = 'text';
+        inp.inputMode = 'decimal';
+        inp.autocomplete = 'off';
+        inp.spellcheck = false;
+        inp.setAttribute('aria-label', cfg.aria[k]);
+        if (cfg.edit.pre) box.append(el('span', 'vzb-sl-affix', cfg.edit.pre));
+        box.append(inp);
+        if (cfg.edit.suf) box.append(el('span', 'vzb-sl-affix', cfg.edit.suf));
+        return box;
+      };
+      ed.append(field(inA, 0), el('span', 'vzb-sl-dash', '–'), field(inB, 1));
+      ed.hidden = true;
+      labs.append(ed);
+      labs.classList.add('is-editable');
+      [la, lb, lm].forEach((x) => { x.title = tx(d, '눌러서 값 입력'); });
+    }
     root.append(area, sr, say);
     card.append(root);
 
@@ -502,6 +540,7 @@
       la.classList.toggle('is-off', one);
       lb.classList.toggle('is-off', one);
       lm.classList.toggle('is-off', !one);
+      if (editing) placeEd();
     }
     function frame(now) {
       raf = 0;
@@ -535,6 +574,14 @@
     }
     area.addEventListener('pointerdown', (e) => {
       if (e.button) return;
+      if (ed && e.target.closest('.vzb-sl-ed')) return;   // 입력칸 안의 누르기는 끌기가 아닙니다
+      if (editing) finish(true);                          // 입력하던 중에 레일을 누르면 친 값을 적용한 뒤 끕니다
+      if (ed && e.target.closest('.vzb-sl-lab')) {        // 값을 누르면 입력칸을 엽니다(합친 값은 누른 쪽에 가까운 손잡이)
+        e.preventDefault();
+        const x = local(e);
+        edit(e.target === la ? 0 : e.target === lb ? 1 : Math.abs(x - sa.t) <= Math.abs(x - sb.t) ? 0 : 1);
+        return;
+      }
       const x = local(e), da = Math.abs(x - sa.t), db = Math.abs(x - sb.t);
       drag = { x, who: da < db ? A : db < da ? B : x > sb.t ? B : x < sa.t ? A : null };
       drag.off = Math.min(da, db) <= R + 2 ? x - (da <= db ? sa.t : sb.t) : 0;   // 손잡이를 잡았으면 잡은 자리를 지키고, 막대 · 트랙을 눌렀으면 손잡이가 그리로 옵니다
@@ -559,10 +606,11 @@
     area.addEventListener('pointercancel', drop);
     // 키보드: 화살표는 한 칸, Page Up · Down은 열 칸쯤, Home · End는 갈 수 있는 끝(다른 손잡이를 넘지 않습니다)
     const keys = (first) => (e) => {
+      if (ed && e.key === 'Enter') { e.preventDefault(); edit(first ? 0 : 1); return; }
       const big = Math.max(1, Math.round(n / 10));
       const by = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1, PageUp: big, PageDown: -big }[e.key];
       let v = first ? lo : hi;
-      if (by) v += by; else if (e.key === 'Home') v = first ? 0 : lo; else if (e.key === 'End') v = first ? hi : n; else return;
+      if (by) v = Math.round(v) + by;   // 직접 친 값(칸 사이)에서도 가까운 칸에서 한 칸씩 옮깁니다 else if (e.key === 'Home') v = first ? 0 : lo; else if (e.key === 'End') v = first ? hi : n; else return;
       e.preventDefault();
       idle = performance.now() + 6000;
       reveal(true, 1400);
@@ -572,6 +620,62 @@
     };
     A.addEventListener('keydown', keys(true));
     B.addEventListener('keydown', keys(false));
+
+    // 직접 입력의 흐름: 열면 지금 값을 넣고 누른 쪽을 고릅니다. 치는 동안 손잡이 · 분포가 따라오고(이벤트는 보내지 않음),
+    // Enter나 입력칸 밖으로 나가면 적용해 이벤트를 한 번 보냅니다. 앞 값이 뒤 값보다 크면 서로 바꿉니다. Esc는 연 때의 값으로 되돌립니다.
+    let editing = null;
+    const readOr = (inp, or) => { const i = cfg.edit.read(inp.value); return i == null ? or : Math.max(0, Math.min(n, i)); };
+    function placeEd() {
+      if (!editing) return;
+      const w = ed.offsetWidth, x = Math.max(0, Math.min(Math.max(0, W - w), (sa.t + sb.t) / 2 - w / 2));
+      ed.style.transform = `translateX(${x.toFixed(1)}px)`;
+    }
+    function edit(k) {
+      if (!ed) return;
+      if (!editing) {
+        editing = { lo, hi };
+        idle = Infinity;
+        inA.value = cfg.edit.raw(lo);
+        inB.value = cfg.edit.raw(hi);
+        const len = Math.max(5, cfg.edit.raw(n).length + 3, cfg.edit.raw(0).length + 3);   // 소수 두 자리까지 들어갈 폭
+        inA.style.width = inB.style.width = `${len}ch`;
+        ed.hidden = false;
+        labs.classList.add('is-editing');
+        reveal(true);
+        placeEd();
+      }
+      const inp = k ? inB : inA;
+      inp.focus();
+      inp.select();
+    }
+    function preview() {
+      const a = readOr(inA, editing.lo), b = readOr(inB, editing.hi);
+      lo = Math.min(a, b); hi = Math.max(a, b);
+      write();
+      rest();
+    }
+    function finish(apply, back) {
+      if (!editing) return;
+      const was = editing;
+      if (apply) preview(); else { lo = was.lo; hi = was.hi; write(); rest(); }
+      editing = null;
+      ed.hidden = true;
+      labs.classList.remove('is-editing');
+      idle = performance.now() + 6000;
+      reveal(false, 900);
+      if (lo !== was.lo || hi !== was.hi) emit();
+      if (back != null) (back ? B : A).focus();
+    }
+    if (ed) {
+      [inA, inB].forEach((inp, k) => {
+        inp.addEventListener('input', () => { if (editing) preview(); });
+        inp.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') { e.preventDefault(); finish(true, k); }
+          else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); finish(false, k); }
+        });
+      });
+      ed.addEventListener('focusout', (e) => { if (editing && !(e.relatedTarget && ed.contains(e.relatedTarget))) finish(true); });
+    }
 
     write(true);
     emit(true);
@@ -615,7 +719,8 @@
     [...box.children].forEach((node, i) => { if (node.classList.contains('vzb-rl-col')) node.firstChild.style.transform = `translateY(${-10 * +chars[i]}%)`; });
   }
 
-  // Range Slider: 숫자 범위를 손잡이 둘로 고르는 컨트롤입니다(주문 금액 · 수량 필터). min과 max 사이를 step 간격으로 고르고
+  // Range Slider: 숫자 범위를 손잡이 둘로 고르는 컨트롤입니다(주문 금액 · 수량 필터). min과 max 사이를 끌거나 화살표로 step 간격으로 고르고,
+  // 손잡이 아래 값을 눌러(손잡이에서 Enter) 칸에 맞지 않는 값도 직접 칠 수 있습니다
   // (step을 비우면 범위의 1/100에 가까운 1 · 2 · 5와 그 열 배들), 고른 값은 format대로 손잡이 아래에 붙어 따라갑니다. value는 처음 범위 [시작, 끝]이고 비우면 전체입니다.
   // counts(min~max를 같은 폭으로 나눈 칸마다의 개수)를 주면 끄는 동안과 키보드로 옮기는 동안 레일 위에 분포 막대가 떠오르고, 범위 안의 개수를 noun(비우면 행)과 함께 적습니다..
   // 값이 바뀌면 vzb-change 이벤트의 detail.value로 [시작, 끝] 숫자를 보냅니다(src/slider.js).
@@ -629,11 +734,25 @@
     }
     const n = Math.max(1, Math.round((max - min) / step));
     const at = (i) => (i >= n ? max : +(min + i * step).toPrecision(12));
-    const seat = (v, or) => (fin(v) ? Math.max(0, Math.min(n, Math.round((+v - min) / step))) : or);
+    // 자리: 값이 min에서 몇 칸째인지. 칸 사이의 값(직접 친 값, 칸에 맞지 않는 처음 값)은 소수 자리로 그대로 둡니다.
+    const seat = (v, or) => (fin(v) ? Math.max(0, Math.min(n, (+v - min) / step)) : or);
     const v = Array.isArray(d.value) ? d.value : [], a = seat(v[0], 0), b = seat(v[1], n);
     const name = d.label || d.title || tx(d, '범위');   // 제목을 그리지 않으므로 화면 낭독기용 이름은 label에서 읽습니다
     const hist = Array.isArray(d.counts) && d.counts.length ? { counts: d.counts.map((c) => (fin(c) ? +c : 0)), min, max, noun: d.noun || '' } : null;
-    slider(card, d, f, { n, text: (i) => show(f, at(i)), value: at, start: [Math.min(a, b), Math.max(a, b)], aria: [tx(d, '%s 최소', name), tx(d, '%s 최대', name)], hist });
+    // 직접 입력: 입력칸에는 단위 없는 숫자(천 단위 쉼표)를 넣고, 단위는 칸 앞뒤에 둡니다($ · 원 · unit 등). 칠 때는 쉼표 · 단위를 빼고 읽고,
+    // K · M · B(천 · 백만 · 십억)와 천 · 만 · 억을 붙인 값도 읽습니다(6만 → 60000, 1.2K → 1200).
+    const affix = { usd: ['$', ''], krw: ['', '원'], eok: ['', '억'], pct: ['', '%'], days: ['', tx(d, '일')] }[d.format] || ['', d.unit || ''];
+    const plain = (v) => num(v, Number.isInteger(v) ? 0 : 2).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '');
+    // 배수 글자(화면에 쓰지 않으므로 유니코드로 적습니다): \uCC9C 천 · \uB9CC 만 · \uC5B5 억 · \uC870 조. eok은 값이 이미 억 단위입니다.
+    const MUL = d.format === 'eok' ? { '\uC5B5': 1, '\uC870': 1e4 } : { k: 1e3, m: 1e6, b: 1e9, '\uCC9C': 1e3, '\uB9CC': 1e4, '\uC5B5': 1e8 };
+    const read = (s) => {
+      const m = /(-?\d+(?:\.\d+)?)\s*([kmb\uCC9C\uB9CC\uC5B5\uC870])?/i.exec(String(s).replace(/,/g, ''));
+      if (!m) return null;
+      const v = parseFloat(m[1]) * (MUL[(m[2] || '').toLowerCase()] || 1);
+      return isFinite(v) ? seat(Math.max(min, Math.min(max, v)), null) : null;
+    };
+    slider(card, d, f, { n, text: (i) => show(f, at(i)), value: at, start: [Math.min(a, b), Math.max(a, b)], aria: [tx(d, '%s 최소', name), tx(d, '%s 최대', name)], hist,
+      edit: { raw: (i) => plain(at(i)), read, pre: affix[0], suf: affix[1] } });
   });
 })();
 </script>

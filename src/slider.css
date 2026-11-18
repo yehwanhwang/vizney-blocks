@@ -2,7 +2,9 @@
    두 값이 겹치면 '앞 – 뒤' 하나로 합칩니다. 분포가 있으면 끄는 동안과 키보드로 옮기는 동안만 레일 위에 분포 창이 떠오릅니다
    (카드 바탕 · 테두리 · 그림자, 위에 범위 안 개수, 아래에 분포 막대). 창은 레일 위로 겹쳐 떠서 자리를 밀어내지 않습니다.
    고른 범위 안의 막대 · 고른 구간 · 손잡이는 글자색(밝은 바탕 검정, 어두운 바탕 흰색), 범위 밖의 막대와 레일은 회색입니다.
-   바탕을 비워 두므로 손잡이에 테두리를 두르지 않습니다. 손잡이의 용수철과 막대의 솟음은 스크립트가 그립니다. */
+   바탕을 비워 두므로 손잡이에 테두리를 두르지 않습니다. 손잡이의 용수철과 막대의 솟음은 스크립트가 그립니다.
+   값을 직접 칠 수 있으면 값 글자에 점선 밑줄을 긋고(누를 수 있다는 표시), 마우스를 올리면 트랙 회색 바탕을 두릅니다. 누르면 그 자리에
+   입력칸 둘(높이 32px, 글자색 1.5px 테두리, 14px 굵게)이 '–'로 이어져 떠오르고, 레일 아래 값은 그동안 숨습니다. */
 .vzb-sl { position: relative; }
 .vzb-sl-area { position: relative; padding-top: 1px; cursor: pointer; touch-action: pan-y; -webkit-user-select: none; user-select: none; }
 .vzb-sl-rail { position: relative; height: 22px; }
@@ -14,12 +16,23 @@
 .vzb-sl-thumb:focus-visible { box-shadow: 0 0 0 2px var(--vzb-primary); }
 .vzb-sl-labs { position: relative; height: 18px; margin-top: 6px; }
 .vzb-sl-lab { position: absolute; left: 0; top: 0; white-space: nowrap; font-size: 14px; line-height: 18px; font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; transition: opacity 0.12s; }
-.vzb-sl-lab.is-off { opacity: 0; }
-.vzb-sl-pop { position: absolute; left: 0; right: 0; bottom: calc(100% + 6px); z-index: 3; padding: 8px 0 6px; border: 1px solid var(--vzb-edge); border-radius: 12px; background: var(--vzb-card); box-shadow: 0 10px 28px rgba(27, 27, 27, 0.16); opacity: 0; visibility: hidden; transform: translateY(6px); transform-origin: 50% 100%; pointer-events: none; transition: opacity 0.16s, transform 0.24s cubic-bezier(0.34, 1.45, 0.64, 1), visibility 0s 0.24s; }
+.vzb-sl-lab.is-off { opacity: 0; pointer-events: none; }   /* 숨긴 값은 누르기를 받지 않아, 보이는 값이 마우스를 받습니다 */
+.vzb-sl-pop { position: absolute; left: 0; right: 0; bottom: calc(100% + 8px); z-index: 3; padding: 10px 0 8px; border: 1px solid var(--vzb-edge); border-radius: 12px; background: var(--vzb-card); box-shadow: 0 10px 28px rgba(27, 27, 27, 0.16); opacity: 0; visibility: hidden; transform: translateY(6px); transform-origin: 50% 100%; pointer-events: none; transition: opacity 0.16s, transform 0.24s cubic-bezier(0.34, 1.45, 0.64, 1), visibility 0s 0.24s; }
 .vzb-sl.is-on .vzb-sl-pop { opacity: 1; visibility: visible; transform: none; transition: opacity 0.16s, transform 0.24s cubic-bezier(0.34, 1.45, 0.64, 1), visibility 0s; }
-.vzb-sl-pophd { display: flex; align-items: baseline; height: 18px; padding: 0 8px; white-space: pre; font-size: 12px; line-height: 18px; color: var(--vzb-muted); font-variant-numeric: tabular-nums; }
-.vzb-sl-pophd .vzb-rl { font-weight: 700; color: var(--vzb-ink); }
-.vzb-sl-hist { display: flex; align-items: flex-end; gap: 2px; height: 28px; margin: 6px 8px 0; transform: scaleY(0.4); transform-origin: 50% 100%; transition: transform 0.26s cubic-bezier(0.34, 1.45, 0.64, 1); }
+.vzb-sl-pophd { display: flex; align-items: baseline; height: 20px; padding: 0 12px; white-space: pre; font-size: 12px; line-height: 20px; color: var(--vzb-muted); font-variant-numeric: tabular-nums; }
+.vzb-sl-pophd .vzb-rl { font-size: 14px; font-weight: 700; color: var(--vzb-ink); }
+.vzb-sl-hist { display: flex; align-items: flex-end; gap: 2px; height: 84px; margin: 10px 12px 0; transform: scaleY(0.4); transform-origin: 50% 100%; transition: transform 0.26s cubic-bezier(0.34, 1.45, 0.64, 1); }
 .vzb-sl.is-on .vzb-sl-hist { transform: none; }
 .vzb-sl-bar { flex: 1 1 0; min-width: 0; border-radius: 2px 2px 0 0; background: var(--vzb-other); transform-origin: 50% 100%; transition: background-color 0.18s; }
 .vzb-sl-bar.is-in { background: var(--vzb-ink); }
+.vzb-sl-labs.is-editable .vzb-sl-lab { cursor: text; text-decoration: underline dotted color-mix(in srgb, var(--vzb-ink) 45%, transparent); text-decoration-thickness: 1.5px; text-underline-offset: 4px; border-radius: 6px; transition: opacity 0.12s, background-color 0.14s, box-shadow 0.14s; }
+.vzb-sl-labs.is-editable .vzb-sl-lab:hover { background: var(--vzb-track); box-shadow: 0 0 0 4px var(--vzb-track); }
+.vzb-sl-labs.is-editing .vzb-sl-lab { opacity: 0; pointer-events: none; }
+.vzb-sl-ed { position: absolute; left: 0; top: -7px; z-index: 2; display: flex; align-items: center; gap: 6px; cursor: default; animation: vzb-sl-ed 0.2s cubic-bezier(0.23, 1, 0.32, 1); }
+.vzb-sl-ed[hidden] { display: none; }
+@keyframes vzb-sl-ed { from { opacity: 0; transform: translateY(-4px) scale(0.96); } }
+.vzb-sl-field { display: flex; align-items: center; gap: 2px; height: 32px; box-sizing: border-box; padding: 0 10px; border: 1.5px solid var(--vzb-ink); border-radius: 10px; background: var(--vzb-card); cursor: text; }
+.vzb-sl-field:focus-within { box-shadow: 0 0 0 3px color-mix(in srgb, var(--vzb-ink) 16%, transparent); }
+.vzb-sl-in { min-width: 0; padding: 0; border: 0; outline: none; background: none; color: var(--vzb-ink); font: 700 14px/1 var(--vzb-font); font-variant-numeric: tabular-nums; }
+.vzb-sl-affix { font-size: 12px; font-weight: 500; color: var(--vzb-muted); }
+.vzb-sl-dash { font-size: 14px; font-weight: 700; color: var(--vzb-muted); }

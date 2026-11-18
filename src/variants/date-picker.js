@@ -4,20 +4,26 @@
   // 그래도 길면 숫자 날짜(26. 10. 17. / 10/17/26)로 줄여 적습니다(화면 낭독기는 늘 연도까지 읽습니다).
   // 날짜 둘을 차례로 누르면 기간이 됩니다. 첫 날짜를 누른 뒤에는 마우스나 포커스가 닿은 날짜까지 옅은 띠와 일수가 따라오고,
   // 두 번째 날짜를 누르면 띠가 시작일에서 끝일까지 한 번에 그어지며(처음엔 빠르고 끝에서 느려집니다), 단추의 기간이 살짝 떠오르며 바뀌고 일수가 굴러갑니다.
-  // 달력은 늘 6주를 그리고, 그 달 앞뒤의 칸은 앞 · 다음 달의 날짜로 흐리게 채웁니다. 달마다 높이가 같고, 기간이 달을 넘어 이어지는 것이 보입니다.
-  // 달을 넘기면 달력이 시간의 방향(다음 달은 왼쪽, 이전 달은 오른쪽)으로 밀려납니다.
-  // min · max(YYYY-MM-DD) 밖의 날짜는 흐리게 두고 고를 수 없습니다(데이터가 있는 날짜만 고르게 합니다).
-  // presets(last7 · last30 · month · lastmonth · quarter · year · all)는 달력 아래에 칩으로 두고 max(비우면 오늘)를 기준으로 계산하며,
+  // 달력은 5주를 그리고(6주에 걸치는 달만 같은 높이 안에 6주를 넣습니다), 그 달 앞뒤의 칸은 앞 · 다음 달의 날짜로 흐리게 채웁니다.
+  // 달마다 높이가 같고, 기간이 달을 넘어 이어지는 것이 보입니다. 달을 넘기면 달력이 시간의 방향(다음 달은 왼쪽, 이전 달은 오른쪽)으로 밀려납니다.
+  // 달력 위의 연월 제목을 누르면 열두 달 화면으로, 한 번 더 누르면 열두 해 화면으로 넘어가 먼 달 · 해로 바로 갑니다(고르면 한 단계씩 돌아옵니다).
+  // 달력 맨 위의 입력칸에는 시작일과 끝일을 직접 칠 수 있습니다(2026-10-01 · 2026.10.1 · 20261001 · 10/1/2026 · 10-1처럼 적어도 읽습니다).
+  // min · max(YYYY-MM-DD, 또는 "today"면 오늘) 밖의 날짜는 흐리게 두고 고를 수 없습니다(데이터가 있는 날짜만 고르게 합니다).
+  // presets(last7 · last30 · month · lastmonth · quarter · year · all)는 달력 아래에 칩으로 두고 max(비우거나 "today"면 오늘)를 기준으로 계산하며,
   // 지금 기간과 같은 칩은 글자색으로 채웁니다. value는 처음 기간 ["시작", "끝"]이고 비우면 기준일까지 30일입니다.
   // "mode": "day"면 날짜 하나("YYYY-MM-DD")를 고릅니다(띠 · 일수 · presets 없음).
   // 값이 바뀌면 카드에서 vzb-change 이벤트(bubbles, detail: { name, value })를 보내고, data-vzb-value에도 적습니다.
   // 키보드: 단추에서 Enter · Space · 아래 화살표로 열고, 달력에서 화살표(하루 · 한 주) · Page Up/Down(한 달, Shift면 한 해) · Home/End(주의 처음 · 끝)로
-  // 옮기고 Enter · Space로 고릅니다. Esc는 고르던 것을 버리고 닫습니다.
+  // 옮기고 Enter · Space로 고릅니다. 열두 달 · 열두 해 화면에서는 화살표로 옮기고 Enter로 고르며, Esc는 한 단계 돌아갑니다.
+  // 입력칸에서는 Enter로 적용하고 닫습니다. Esc는 고르던 것을 버리고 닫습니다.
   // 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 달력을 연 채로, 손을 대기 전과 손을 뗀 지 6초 뒤부터 고르기를 차례로 보여 줍니다.
   mount('date-picker', (card, d, f) => {
     const DAY = 864e5, en = d.lang === 'en', loc = en ? 'en-US' : 'ko-KR';
     // 날짜는 1970-01-01부터 센 날 수(정수)로 다룹니다. 시간대와 상관없이 같은 날짜가 되도록 UTC로 셉니다.
+    // "today"는 보는 사람의 오늘(그 브라우저의 날짜)입니다. 예시나 화면을 열 때마다 오늘을 기준으로 그리게 합니다.
+    const todayN = () => { const t = new Date(); return Date.UTC(t.getFullYear(), t.getMonth(), t.getDate()) / DAY; };
     const parse = (s) => {
+      if (/^\s*today\s*$/i.test(String(s))) return todayN();
       const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s == null ? '' : s).trim());
       if (!m) return null;
       const t = Date.UTC(+m[1], +m[2] - 1, +m[3]);
@@ -32,7 +38,7 @@
     const one = d.mode === 'day';
     const min = has('min') ? parse(d.min) : -Infinity, max = has('max') ? parse(d.max) : Infinity;
     if (min == null || max == null || min > max) throw new Error(tx(d, 'min과 max를 확인하세요.'));
-    const now = new Date(), anchor = isFinite(max) ? max : Math.max(min, at(now.getFullYear(), now.getMonth(), now.getDate()));   // 기준일: max, 없으면 오늘
+    const anchor = isFinite(max) ? max : Math.max(min, todayN());   // 기준일: max, 없으면 오늘
     const clamp = (n) => Math.max(min, Math.min(max, n));
     let lo, hi;
     if (one) {
@@ -77,6 +83,22 @@
     const unitOf = (n) => tx(d, n === 1 ? '일간|1' : '일간');
     const daysText = (n) => withUnit(num(n, 0), unitOf(n));
     const valueText = () => (one ? fmt.format(D(lo)) : `${rangeText(lo, hi)}, ${daysText(hi - lo + 1)}`);
+    // 직접 친 날짜 읽기: 숫자 묶음 셋이면 앞이 네 자리일 때 연 · 월 · 일, 아니면 월 · 일 · 연(10/1/2026)으로 읽고, 둘이면 기준일의 해의 월 · 일,
+    // 여덟 자리 숫자는 연월일로 읽습니다. 없는 날짜(2월 30일 등)는 읽지 않습니다.
+    const typed = (s) => {
+      const t = String(s == null ? '' : s).trim();
+      if (!t) return null;
+      if (/^today$/i.test(t)) return todayN();
+      const g = /^\d{8}$/.test(t) ? [t.slice(0, 4), t.slice(4, 6), t.slice(6)] : t.match(/\d+/g) || [];
+      let y, mo, dd;
+      if (g.length === 3 && g[0].length === 4) [y, mo, dd] = g.map(Number);
+      else if (g.length === 3) { [mo, dd, y] = g.map(Number); if (y < 100) y += 2000; }
+      else if (g.length === 2) { y = parts(anchor).y; [mo, dd] = g.map(Number); }
+      else return null;
+      if (!(mo >= 1 && mo <= 12 && dd >= 1 && dd <= 31)) return null;
+      const n = at(y, mo - 1, dd);
+      return parts(n).d === dd ? n : null;
+    };
     const name = d.label || tx(d, '기간');   // 제목을 그리지 않으므로 화면 낭독기용 이름은 label에서 읽습니다
 
     // 단추: 달력 아이콘 · 지금 기간 · 일수 · 펼침 표시
@@ -99,12 +121,30 @@
     chev.append(svgEl('path', { d: 'M3 4.6l3 3 3-3' }));
     btn.append(ic, val, ...(one ? [] : [cnt]), chev);
 
-    // 달력: 달 이름과 이전 · 다음 단추, 요일, 날짜 칸(6주), 빠른 선택 칩. 고르는 동안 일수 말풍선이 따라옵니다.
+    // 달력: 맨 위에 시작일 · 끝일 입력칸, 연월 제목(누르면 열두 달 · 열두 해)과 이전 · 다음 단추, 요일, 날짜 칸(5주), 빠른 선택 칩.
+    // 고르는 동안 일수 말풍선이 따라옵니다.
     const pop = el('div', 'vzb-dp-pop');
     pop.setAttribute('role', 'dialog');
     pop.setAttribute('aria-label', name);
-    const hd = el('div', 'vzb-dp-hd'), title = el('span', 'vzb-dp-title');
-    title.setAttribute('aria-live', 'polite');
+    const fields = el('div', 'vzb-dp-fields');
+    const mkIn = (label) => {
+      const i = el('input', 'vzb-dp-in');
+      i.type = 'text';
+      i.autocomplete = 'off';
+      i.spellcheck = false;
+      i.placeholder = 'YYYY-MM-DD';
+      i.setAttribute('aria-label', label);
+      return i;
+    };
+    const inLo = mkIn(tx(d, one ? '날짜' : '시작일')), inHi = one ? null : mkIn(tx(d, '끝일'));
+    fields.append(inLo);
+    if (inHi) fields.append(el('span', 'vzb-dp-dash', '–'), inHi);
+    const hd = el('div', 'vzb-dp-hd'), title = el('button', 'vzb-dp-title'), titleTx = el('span', 'vzb-dp-ttx');
+    title.type = 'button';
+    titleTx.setAttribute('aria-live', 'polite');
+    const tchev = svgEl('svg', { class: 'vzb-dp-tchev', viewBox: '0 0 12 12', 'aria-hidden': 'true' });
+    tchev.append(svgEl('path', { d: 'M3 4.6l3 3 3-3' }));
+    title.append(titleTx, tchev);
     const navBtn = (dir) => {
       const b = el('button', 'vzb-dp-nav');
       b.type = 'button';
@@ -119,9 +159,11 @@
     const wk = el('div', 'vzb-dp-wk'), SUN = at(2000, 0, 2);   // 2000-01-02는 일요일
     wk.setAttribute('aria-hidden', 'true');
     for (let i = 0; i < 7; i++) wk.append(el('span', null, wkFmt.format(D(SUN + i))));
-    const view = el('div', 'vzb-dp-view'), tip = el('span', 'vzb-dp-tip');
+    const body = el('div', 'vzb-dp-body'), view = el('div', 'vzb-dp-view'), alt = el('div', 'vzb-dp-alt'), tip = el('span', 'vzb-dp-tip');
     tip.setAttribute('aria-hidden', 'true');
-    pop.append(hd, wk, view, tip);
+    alt.hidden = true;
+    body.append(wk, view, alt);
+    pop.append(fields, hd, body, tip);
     let chips = [], chipBox = null;
     const chipEnds = () => { if (chipBox) { chipBox.classList.toggle('is-scroll', chipBox.scrollWidth > chipBox.clientWidth + 1); chipBox.classList.toggle('is-end', chipBox.scrollLeft + chipBox.clientWidth >= chipBox.scrollWidth - 2); } };
     if (pre.length) {
@@ -142,14 +184,16 @@
     root.append(anchorEl, say);
     card.append(root);
 
-    // 한 달의 날짜 칸: 6주 × 7일. 그 달 앞뒤의 칸은 앞 · 다음 달의 날짜로 흐리게 채웁니다(마우스로는 고를 수 있고,
-    // 키보드와 화면 낭독기는 그 달의 칸에서만 고릅니다. 화살표로 달 밖으로 나가면 달이 넘어갑니다).
+    // 한 달의 날짜 칸: 5주 × 7일(6주에 걸치는 달은 6주를 같은 높이 안에 넣습니다). 그 달 앞뒤의 칸은 앞 · 다음 달의 날짜로 흐리게 채웁니다
+    // (마우스로는 고를 수 있고, 키보드와 화면 낭독기는 그 달의 칸에서만 고릅니다. 화살표로 달 밖으로 나가면 달이 넘어갑니다).
     function build(month) {
       const y = Math.floor(month / 12), m = month - y * 12, first = at(y, m, 1), last = at(y, m + 1, 0), g0 = first - parts(first).w;
+      const rows = Math.max(5, Math.ceil((last - g0 + 1) / 7));
       const g = el('div', 'vzb-dp-grid'), list = [];
       g.setAttribute('role', 'grid');
       g.setAttribute('aria-label', monthFmt.format(D(first)));
-      for (let r = 0; r < 6; r++) {
+      g.classList.toggle('is-six', rows > 5);
+      for (let r = 0; r < rows; r++) {
         const row = el('div', 'vzb-dp-row');
         row.setAttribute('role', 'row');
         for (let c = 0; c < 7; c++) {
@@ -167,7 +211,7 @@
         }
         g.append(row);
       }
-      return { g, list, first, last, g0, g1: g0 + 41, month };
+      return { g, list, first, last, g0, g1: g0 + rows * 7 - 1, month };
     }
 
     // 칠하기: 정한 기간(또는 고르는 중인 시작일 ~ 닿은 날짜)의 띠와 양 끝. sweep이면 띠의 앞머리가 시작일에서 끝일까지 한 줄로 달려가며(처음엔 빠르고
@@ -224,8 +268,9 @@
       tip.textContent = daysText(Math.abs(hov - pend) + 1);
       const jump = !tip.classList.contains('is-on');   // 처음 뜰 때는 옛 자리에서 미끄러져 오지 않고 그 자리에서 떠오릅니다
       if (jump) tip.style.transition = 'none';
-      tip.style.left = `${x.cell.offsetLeft + x.cell.offsetWidth / 2 + view.offsetLeft}px`;
-      tip.style.top = `${x.cell.offsetTop + view.offsetTop + 2}px`;
+      const pr = pop.getBoundingClientRect(), cr = x.cell.getBoundingClientRect();
+      tip.style.left = `${cr.left - pr.left - pop.clientLeft + cr.width / 2}px`;
+      tip.style.top = `${cr.top - pr.top - pop.clientTop + 2}px`;
       if (jump) { void tip.offsetWidth; tip.style.transition = ''; }
       tip.classList.add('is-on');
     }
@@ -245,10 +290,77 @@
           nx.g.animate([{ transform: `translateX(${dir * w}px)` }, { transform: 'none' }], { duration: 380, easing: ease });
         } else old.g.remove();
       }
-      title.textContent = monthFmt.format(D(nx.first));
-      if (dir && title.animate) title.animate([{ opacity: 0, transform: `translateX(${dir * 10}px)`, filter: 'blur(2px)' }, { opacity: 1, transform: 'none', filter: 'blur(0)' }], { duration: 260, easing: 'ease-out' });
-      prevB.disabled = nx.first - 1 < min;
-      nextB.disabled = nx.last + 1 > max;
+      if (mode === 'day') heading(dir);
+    }
+    // 머리: 날짜 화면은 연월, 열두 달 화면은 해, 열두 해 화면은 열두 해의 처음과 끝. 이전 · 다음 단추는 한 달 · 한 해 · 열두 해씩 옮깁니다.
+    const yearFmt = new Intl.DateTimeFormat(loc, { year: 'numeric', timeZone: 'UTC' });
+    let mode = 'day', yr = 0, yr0 = 0;
+    function heading(dir) {
+      const y = (n) => yearFmt.format(D(at(n, 0, 1)));
+      titleTx.textContent = mode === 'day' ? monthFmt.format(D(cur.first)) : mode === 'month' ? y(yr) : `${y(yr0)} – ${y(yr0 + 11)}`;
+      title.setAttribute('aria-label', `${titleTx.textContent}, ${tx(d, mode === 'year' ? '날짜로 돌아가기' : '연도와 달 고르기')}`);
+      title.classList.toggle('is-alt', mode !== 'day');
+      if (dir && titleTx.animate) titleTx.animate([{ opacity: 0, transform: `translateX(${dir * 10}px)`, filter: 'blur(2px)' }, { opacity: 1, transform: 'none', filter: 'blur(0)' }], { duration: 260, easing: 'ease-out' });
+      const [a, b] = mode === 'day' ? [cur.first - 1, cur.last + 1] : mode === 'month' ? [at(yr, 0, 0), at(yr + 1, 0, 1)] : [at(yr0, 0, 0), at(yr0 + 12, 0, 1)];
+      prevB.disabled = a < min;
+      nextB.disabled = b > max;
+      prevB.setAttribute('aria-label', tx(d, mode === 'day' ? '이전 달' : mode === 'month' ? '이전 해' : '이전 열두 해'));
+      nextB.setAttribute('aria-label', tx(d, mode === 'day' ? '다음 달' : mode === 'month' ? '다음 해' : '다음 열두 해'));
+    }
+    // 열두 달 · 열두 해 화면: 3열 × 4줄의 단추. 고른 기간이 걸친 달 · 해는 옅은 띠로, 지금 달력의 달 · 해는 고리로 표시하고,
+    // min · max 밖의 달 · 해는 흐리게 두고 고를 수 없습니다. 날짜 화면으로 돌아올 때는 고른 달이 커지며 들어옵니다.
+    const mShort = new Intl.DateTimeFormat(loc, { month: en ? 'short' : 'long', timeZone: 'UTC' });
+    function showAlt(next, dir, keys) {
+      const was = mode;
+      mode = next;
+      if (next === 'day') {
+        alt.hidden = true;
+        alt.replaceChildren();
+        heading(0);
+        if (was !== 'day' && view.animate) view.animate([{ opacity: 0, transform: 'scale(1.06)' }, { opacity: 1, transform: 'none' }], { duration: 240, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' });
+        if (keys) focusOn(clamp(Math.min(Math.max(fday, cur.first), cur.last)));
+        return;
+      }
+      const g = el('div', 'vzb-dp-mgrid'), items = [];
+      g.setAttribute('role', 'grid');
+      const curY = parts(cur.first).y;
+      for (let k = 0; k < 12; k++) {
+        const a = next === 'month' ? at(yr, k, 1) : at(yr0 + k, 0, 1), b = next === 'month' ? at(yr, k + 1, 0) : at(yr0 + k + 1, 0, 0);
+        const btnK = el('button', 'vzb-dp-mon', next === 'month' ? mShort.format(D(a)) : yearFmt.format(D(a)));
+        btnK.type = 'button';
+        btnK.tabIndex = -1;
+        btnK.disabled = b < min || a > max;
+        btnK.classList.toggle('is-sel', !one ? b >= lo && a <= hi : lo >= a && lo <= b);
+        btnK.classList.toggle('is-cur', next === 'month' ? cur.month === yr * 12 + k : curY === yr0 + k);
+        btnK.setAttribute('aria-label', next === 'month' ? monthFmt.format(D(a)) : yearFmt.format(D(a)));
+        btnK.addEventListener('click', () => {
+          if (next === 'month') { const mo = yr * 12 + k; if (mo !== cur.month) turn(mo, 0); showAlt('day', 0, btnK.matches(':focus-visible')); }
+          else { yr = yr0 + k; showAlt('month', 0, btnK.matches(':focus-visible')); }
+        });
+        items.push(btnK);
+        g.append(btnK);
+      }
+      const home = items.find((x) => x.classList.contains('is-cur') && !x.disabled) || items.find((x) => !x.disabled);
+      if (home) home.tabIndex = 0;
+      g.addEventListener('keydown', (e) => {
+        const i = items.indexOf(e.target);
+        if (i < 0) return;
+        const by = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -3, ArrowDown: 3 }[e.key];
+        if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); showAlt(mode === 'year' ? 'month' : 'day', 0, true); return; }
+        if (!by) return;
+        e.preventDefault();
+        let j = i + by;
+        while (j >= 0 && j < 12 && items[j].disabled) j += Math.sign(by);
+        if (j < 0 || j > 11) { nav(Math.sign(by)); return; }
+        items.forEach((x) => { x.tabIndex = -1; });
+        items[j].tabIndex = 0;
+        items[j].focus();
+      });
+      alt.replaceChildren(g);
+      alt.hidden = false;
+      heading(dir);
+      if (g.animate) g.animate(dir ? [{ opacity: 0, transform: `translateX(${dir * 24}px)` }, { opacity: 1, transform: 'none' }] : [{ opacity: 0, transform: was === 'day' || (was === 'year' && next === 'month') ? 'scale(0.94)' : 'scale(1.06)' }, { opacity: 1, transform: 'none' }], { duration: 240, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' });
+      if (keys && home) home.focus();
     }
     const goMonth = (n) => { const mo = monthOf(n); if (!cur || mo !== cur.month) turn(mo, cur ? Math.sign(mo - cur.month) : 0); };
 
@@ -269,7 +381,38 @@
       btn.setAttribute('aria-label', `${name}: ${valueText()}`);
       if (!one) { roll(cntNum, num(n, 0)); cntUnit.textContent = en ? ` ${unitOf(n)}` : unitOf(n); }
       fitText();   // 일수의 자릿수가 바뀌면 글자 자리도 바뀌므로 일수를 먼저 적습니다
+      syncIn();
       if (anim && val.animate) val.animate([{ opacity: 0.4, transform: 'translateY(5px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });   // 투명에서 시작하지 않아 어느 순간에도 글자가 읽힙니다
+    }
+    // 입력칸: 정한 기간을 YYYY-MM-DD로 적어 둡니다(치고 있는 칸은 건드리지 않습니다).
+    function syncIn(force) {
+      [[inLo, lo], [inHi, hi]].forEach(([i, n]) => {
+        if (!i || (!force && document.activeElement === i)) return;
+        i.value = iso(n);
+        i.classList.remove('is-bad');
+        i.removeAttribute('aria-invalid');
+      });
+    }
+    // 친 날짜 적용: 둘 다 읽히고 min · max 안이면 기간으로 정하고(거꾸로 치면 바꿉니다) 그 달을 보여 줍니다.
+    // 읽히지 않거나 고를 수 없는 날짜는 그 칸을 빨간 테두리로 두고 적용하지 않습니다. close면 적용한 뒤 닫습니다.
+    function applyTyped(close) {
+      const a = typed(inLo.value), b = inHi ? typed(inHi.value) : a;
+      const bad = (n) => n == null || n < min || n > max;
+      [[inLo, a], [inHi, b]].forEach(([i, n]) => { if (!i) return; i.classList.toggle('is-bad', bad(n)); if (bad(n)) i.setAttribute('aria-invalid', 'true'); else i.removeAttribute('aria-invalid'); });
+      if (bad(a) || bad(b)) { say.textContent = tx(d, '날짜를 YYYY-MM-DD로, 고를 수 있는 날짜 안에서 적으세요.'); return; }
+      const x = Math.min(a, b), y = Math.max(a, b), changed = x !== lo || y !== hi;
+      pend = null;
+      hov = null;
+      if (mode !== 'day') showAlt('day', 0);
+      goMonth(y);
+      lo = x;
+      hi = y;
+      fday = hi;
+      paint(changed ? 'sweep' : null);
+      label(changed);
+      syncIn(true);
+      if (changed) emit();
+      if (close && !loop) closeT = setTimeout(() => { setOpen(false); btn.focus(); }, changed ? 520 : 0);
     }
     function emit(quiet) {
       const value = one ? iso(lo) : [iso(lo), iso(hi)];
@@ -292,8 +435,8 @@
       clearTimeout(closeT);
       if (open !== v) {
         open = v;
-        if (v) { fday = hi; if (cur.month !== monthOf(hi)) turn(monthOf(hi), 0); place(); }   // 끝일이 든 달을 엽니다
-        else { pend = null; hov = null; }
+        if (v) { fday = hi; if (cur.month !== monthOf(hi)) turn(monthOf(hi), 0); syncIn(true); place(); }   // 끝일이 든 달을 엽니다
+        else { pend = null; hov = null; if (mode !== 'day') showAlt('day', 0); }
         root.classList.toggle('is-open', v);
         btn.setAttribute('aria-expanded', String(v));
         paint(v ? 'sweep' : null);
@@ -336,6 +479,8 @@
     }
     function nav(dir) {
       if (!cur || (dir < 0 ? prevB : nextB).disabled) return;
+      if (mode === 'month') { yr += dir; showAlt('month', dir); return; }
+      if (mode === 'year') { yr0 += 12 * dir; showAlt('year', dir); return; }
       turn(cur.month + dir, dir);
     }
 
@@ -346,6 +491,26 @@
     root.addEventListener('keydown', touch);
     btn.addEventListener('click', (e) => { setOpen(!open, e.detail === 0); });   // detail 0: 키보드로 누름
     btn.addEventListener('keydown', (e) => { if (e.key === 'ArrowDown') { e.preventDefault(); setOpen(true, true); } });
+    title.addEventListener('click', (e) => {
+      const keys = e.detail === 0;
+      if (mode === 'day') { yr = parts(cur.first).y; showAlt('month', 0, keys); }
+      else if (mode === 'month') { yr0 = yr - 7; showAlt('year', 0, keys); }   // 열두 해는 지난 해 쪽을 더 보여 줍니다(데이터는 대개 과거)
+      else showAlt('day', 0, keys);
+    });
+    // 입력칸: Enter로 적용하고 닫습니다. 시작일을 치고 Tab으로 끝일로 넘어갈 때는 아직 적용하지 않고, 두 칸 밖으로 나갈 때 적용합니다
+    // (시작일만 먼저 바꾸다 옛 끝일과 엇갈려 기간이 뒤집히지 않게 하기 위해서입니다).
+    let typedAt = '';
+    const typedNow = () => `${inLo.value}|${inHi ? inHi.value : ''}`;
+    [inLo, inHi].forEach((i) => {
+      if (!i) return;
+      i.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); typedAt = typedNow(); applyTyped(true); } });
+      i.addEventListener('focus', () => i.select());
+    });
+    fields.addEventListener('focusin', (e) => { if (!(e.relatedTarget && fields.contains(e.relatedTarget))) typedAt = typedNow(); });
+    fields.addEventListener('focusout', (e) => {
+      if (e.relatedTarget && fields.contains(e.relatedTarget)) return;
+      if (open && typedNow() !== typedAt) applyTyped(false);
+    });
     prevB.addEventListener('click', () => nav(-1));
     nextB.addEventListener('click', () => nav(1));
     chips.forEach((c, i) => c.addEventListener('click', () => usePreset(i)));

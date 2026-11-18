@@ -7,7 +7,7 @@ description: "Add charts read through their motion and dashboard controls to an 
 
 > 한국어로 일할 때(사용자가 한국어로 요청하거나 화면 문구가 한국어일 때)는 같은 폴더의 `SKILL.ko.md`를 읽고 그것을 따른다. Working in Korean? Read `SKILL.ko.md` in this folder and follow it instead; it has the same steps and rules with the Korean card addresses.
 
-Vizney Blocks is a set of copy-paste HTML cards: charts you read through their motion, and dashboard controls (v0.66, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. The card does the arithmetic (the amount over a limit, shares, ranks) and the colors, emphasis and motion, by the rules of the Vizney chart guide. So keep the card code and change only the JSON values. A card decides how to draw its chart correctly; what goes on the screen is up to whoever builds it.
+Vizney Blocks is a set of copy-paste HTML cards: charts you read through their motion, and dashboard controls (v0.67, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. The card does the arithmetic (the amount over a limit, shares, ranks) and the colors, emphasis and motion, by the rules of the Vizney chart guide. So keep the card code and change only the JSON values. A card decides how to draw its chart correctly; what goes on the screen is up to whoever builds it.
 
 ## Cards
 
@@ -23,7 +23,7 @@ The cards are these 5 charts and 4 controls, and no others. When no card fits a 
 
 ### Controls
 
-- Date Picker (`date-picker`) — A control that picks a period (a start and an end date), or a single date, on a calendar. Use it to filter a screen by a date, such as the order date or a reference date. At rest it is one button with the current period and its number of days; press it and a month calendar rises below it.
+- Date Picker (`date-picker`) — A control that picks a period (a start and an end date), or a single date, on a calendar. Use it to filter a screen by a date, such as the order date or a reference date. At rest it is one button with the current period and its number of days; press it and fields to type the dates and a month calendar rise below it.
 - Range Slider (`range-slider`) — A control that picks a numeric range with two thumbs. Use it to filter a screen by a continuous value such as order value or quantity. Give it the distribution of the values and, while you drag, bars rise over the rail to show how much data falls in the range.
 - Filter Chips (`filter-chips`) — A control that picks several items from a fixed list as chips. Use it to filter a screen by a few names, such as channels or regions. The All chip at the front shows how many are picked.
 - Download Button (`download-button`) — A button that downloads the data of a chart card on the screen as a file. It starts as an icon alone; hover and the formats to pick from (CSV, JSON, PNG) come out. Use it to export exactly what the controls show.

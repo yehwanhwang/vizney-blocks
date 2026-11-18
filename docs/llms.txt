@@ -1,6 +1,6 @@
 # Vizney Blocks
 
-> Charts you read through their motion and the dashboard controls that go with them, as copy-paste HTML cards: 4 charts and 4 controls (v0.61). One card is an HTML snippet that bundles <style>, a JSON data block and <script>; paste it inside <body> and it draws itself. Change only the values in the card's <script type="application/json">. © 2026 Vizney · MIT License.
+> Charts you read through their motion and the dashboard controls that go with them, as copy-paste HTML cards: 4 charts and 4 controls (v0.62). One card is an HTML snippet that bundles <style>, a JSON data block and <script>; paste it inside <body> and it draws itself. Change only the values in the card's <script type="application/json">. © 2026 Vizney · MIT License.
 
 How to use:
 - Pick a card by what it shows (the first sentences of each card below). The cards on this page are all there are; when none fits, draw that part yourself and say so, rather than bending a card. Card names describe the shape, not the metric, so put what the values are in the JSON title.

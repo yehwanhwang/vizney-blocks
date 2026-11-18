@@ -315,9 +315,11 @@
         const c = cols[k], r = plot.getBoundingClientRect();
         svg.classList.add('is-hover');
         cols.forEach((x) => x.g.classList.toggle('is-on', x === c));
+        // 툴팁의 증감은 막대와 같은 색으로 적고(좋음 초록 · 나쁨 빨강), 짚은 막대의 레이블은 툴팁이 떠 있는 동안 숨겨 같은 숫자가 두 번 보이지 않게 합니다(CSS).
+        const dv = c.to - v0, ntone = want === 0 || !dv ? null : Math.sign(dv) === want ? 'good' : 'bad';
         const note = c.kind === 'step' ? (c.v == null ? null : tx(d, '누계 %1 → %2', show(f, c.from), show(f, c.to)))
-          : !c.k ? null : d.compare === 'share' ? (v0 > 0 ? tx(d, '%1의 %2', first.name, pct(c.to)) : null) : `${signed(f, c.to - v0)} · ${tx(d, '%s 대비', first.name)}`;
-        const tb = tipBody({ value: valText(c), note }, c.name);
+          : !c.k ? null : d.compare === 'share' ? (v0 > 0 ? tx(d, '%1의 %2', first.name, pct(c.to)) : null) : { text: `${signed(f, dv)} · ${tx(d, '%s 대비', first.name)}`, tone: ntone };
+        const tb = tipBody({ value: valText(c), tone: c.tone === 'good' || c.tone === 'bad' ? c.tone : null, note }, c.name);
         return { x: r.left + c.cx, y: r.top + Math.min(c.yA, c.yB) - 6, label: c.name, value: tb.node, text: tb.text };
       },
       () => { svg.classList.remove('is-hover'); cols.forEach((x) => x.g.classList.remove('is-on')); },

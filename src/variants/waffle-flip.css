@@ -23,10 +23,10 @@
 .vzb-wf.is-side .vzb-wf-ctl { margin-top: 0; }
 .vzb-wf.is-side .vzb-wf-legend { flex-direction: column; align-items: flex-start; gap: 6px; }   /* 항목은 글자 폭만큼(칸 크기를 잴 때 범례 폭으로 씁니다) */
 .vzb-card[data-vzb="waffle-flip"] .vzb-hd { position: relative; }
-.vzb-wf-per { position: absolute; top: -2px; right: 0; display: inline-flex; padding: 2px; border-radius: 14px; background: var(--vzb-track); }   /* 제목 오른쪽 자리는 스크립트가 단추 폭만큼 비웁니다 */
-.vzb-wf-pill { position: absolute; top: 2px; bottom: 2px; left: 0; width: 0; border-radius: 12px; background: var(--vzb-ink); pointer-events: none; }
+.vzb-wf-per { position: absolute; top: -4px; right: 0; display: inline-flex; padding: 2px; border-radius: 16px; background: var(--vzb-track); }   /* 제목 오른쪽 자리는 스크립트가 단추 폭만큼 비웁니다 */
+.vzb-wf-pill { position: absolute; top: 2px; bottom: 2px; left: 0; width: 0; border-radius: 14px; background: var(--vzb-ink); pointer-events: none; }
 .vzb-wf-per.is-ready .vzb-wf-pill { transition: transform 0.38s cubic-bezier(0.3, 1.4, 0.5, 1), width 0.38s cubic-bezier(0.3, 1.4, 0.5, 1); }
-.vzb-wf-opt { position: relative; height: 24px; padding: 0 10px; border: 0; border-radius: 12px; background: none; color: var(--vzb-ink-2); font: 500 12px/24px var(--vzb-font); font-variant-numeric: tabular-nums; white-space: nowrap; cursor: pointer; transition: color 0.2s; }
+.vzb-wf-opt { position: relative; height: 28px; padding: 0 12px; border: 0; border-radius: 14px; background: none; color: var(--vzb-ink-2); font: 500 13px/28px var(--vzb-font); font-variant-numeric: tabular-nums; white-space: nowrap; cursor: pointer; transition: color 0.2s; }
 .vzb-wf-opt:hover { color: var(--vzb-ink); }
 .vzb-wf-opt.is-on { color: var(--vzb-card); }
 .vzb-wf-opt:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }

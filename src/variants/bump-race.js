@@ -381,9 +381,10 @@
         const r = plot.getBoundingClientRect(), rk = it.rk[t], pv = t > 0 ? it.rk[t - 1] : 0;
         const mv = rk && pv ? pv - rk : 0;
         const note = [`${labels[t]} · ${show(f, it.vals[t])}`];
-        if (t > 0 && rk && pv) note.push(`${mv > 0 ? tx(d, '%s계단 오름', mv) : mv < 0 ? tx(d, '%s계단 내림', -mv) : tx(d, '그대로')} · ${tx(d, '%s 대비', labels[t - 1])}`);
+        if (t > 0 && rk && pv) note.push({ text: `${mv > 0 ? tx(d, '%s계단 오름', mv) : mv < 0 ? tx(d, '%s계단 내림', -mv) : tx(d, '그대로')} · ${tx(d, '%s 대비', labels[t - 1])}`, tone: mv > 0 ? 'good' : mv < 0 ? 'bad' : null });
         const tb = tipBody({ value: rankText(rk), note }, it.name);
-        return { x: r.left + xs[t], y: r.top + Y(rk || 1) - 8, label: it.name, value: tb.node, text: tb.text };
+        // 툴팁은 점의 옆에 띄웁니다(앞쪽 기간은 오른쪽, 뒤쪽 기간은 왼쪽). 점 위에 띄우면 오른쪽 끝의 이름표와 같은 순위가 겹쳐 보이기 때문입니다.
+        return { x: r.left + xs[t], y: r.top + Y(rk || 1), side: xs[t] < r.width * 0.35 ? 'right' : 'left', label: it.name, value: tb.node, text: tb.text };
       },
       () => { tipIt = null; svg.classList.remove('is-hover'); items.forEach((x) => [x.line, x.head, x.lab].forEach((n2) => n2.classList.remove('is-on'))); },
       true);

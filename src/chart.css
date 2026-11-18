@@ -48,5 +48,8 @@
 .vzb-tip-row span { color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-note { margin-top: 3px; color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-note + .vzb-tip-note { margin-top: 0; }
+/* 툴팁의 증감: 툴팁 바탕이 어두우므로 좋음 · 나쁨 색을 흰색에 조금 섞어 밝게 씁니다(어두운 바탕 툴팁에서도 대비 4.5:1 이상). */
+.vzb-tip .is-good { color: color-mix(in srgb, var(--vzb-good) 82%, #fff); font-weight: 700; }
+.vzb-tip .is-bad { color: color-mix(in srgb, var(--vzb-bad) 68%, #fff); font-weight: 700; }
 .vzb-fs { --vzb-c: var(--vzb-primary-soft); }
 .vzb-key.is-tick { width: 2px; height: 12px; border-radius: 1px; }

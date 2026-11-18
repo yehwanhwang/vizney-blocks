@@ -1,6 +1,6 @@
 # Vizney Blocks
 
-> 움직임으로 읽는 차트와 대시보드 컨트롤을 담은, 복사해 붙여 쓰는 HTML 카드: 차트 5종과 컨트롤 4종(v0.65). 카드 하나는 <style>, 데이터 JSON, <script>를 한데 묶은 HTML 조각이며, <body> 안에 붙여 넣으면 그려진다. 데이터는 카드 안 <script type="application/json">의 값만 바꾼다. © 2026 Vizney · MIT License.
+> 움직임으로 읽는 차트와 대시보드 컨트롤을 담은, 복사해 붙여 쓰는 HTML 카드: 차트 5종과 컨트롤 4종(v0.66). 카드 하나는 <style>, 데이터 JSON, <script>를 한데 묶은 HTML 조각이며, <body> 안에 붙여 넣으면 그려진다. 데이터는 카드 안 <script type="application/json">의 값만 바꾼다. © 2026 Vizney · MIT License.
 
 쓰는 법:
 - 카드는 무엇을 보여 주는지로 고른다(아래 카드마다의 첫 문장들). 이 문서에 있는 카드가 전부다. 맞는 카드가 없으면 카드를 억지로 맞추지 말고 그 부분은 직접 그린 뒤 그렇게 했다고 알린다. 카드 이름은 지표가 아니라 모양이므로, 무엇의 값인지는 JSON의 title에 적는다.

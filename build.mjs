@@ -288,12 +288,12 @@ const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 // v0.52: the controls are drawn bare (no head, no frame) in the middle of the tile, like the units of a motion gallery.
 // v0.49: the gallery is built one block at a time. v0.56: the gallery is the whole list; a card that is not here does not exist.
 // Blocks that move (data-vzb-loop) replay on the first screen instead of stopping at the end.
-const GALLERY = ['bar-overflow', 'waffle-flip', 'bump-race', 'waterfall-walk', 'date-picker', 'range-slider', 'filter-chips', 'download-button'];
+const GALLERY = ['bar-overflow', 'waffle-flip', 'bump-race', 'waterfall-walk', 'funnel-wave', 'date-picker', 'range-slider', 'filter-chips', 'download-button'];
 const LOOP = new Set(GALLERY);
 // v0.53: tile widths follow the block. On the 3-column gallery a chart that reads along a long axis (13 months, a 5 × 20 waffle)
 // takes 2 columns; a chart that reads better compact (a donut, a single figure) and every control take 1. The tiles are laid out
 // so that rows alternate 2 + 1 and 1 + 2. A wide block left without a partner sits alone; narrow blocks left over go three to a row.
-const SPAN = { 'bar-overflow': 2, 'waffle-flip': 2, 'bump-race': 2, 'waterfall-walk': 2 };
+const SPAN = { 'bar-overflow': 2, 'waffle-flip': 2, 'bump-race': 2, 'waterfall-walk': 2, 'funnel-wave': 2 };
 const wideOf = (id) => SPAN[id] === 2;
 const ORDER = (() => {
   const wide = GALLERY.filter(wideOf), narrow = GALLERY.filter((id) => !wideOf(id)), out = [];
@@ -411,6 +411,10 @@ const FIELD_OVERRIDE = {
   'waterfall-walk': {
     ko: { title: '무엇의 값인지(예: 회원 수)', subtitle: '무엇을 보는지와 두 지점(예: 무엇이 늘리고 줄였나, 연초 → 연말)', items: '읽는 순서대로 적은 항목. 첫 항목은 시작 값({ name, value }), 증감 항목은 { name, value }(늘면 +, 줄면 −, 값이 없으면 null), 그때까지의 누계를 세울 자리(끝이나 중간 합계)에는 { name, total: true }(값은 카드가 계산한다). 이름은 막대 끝에 적으므로 짧게', compare: '끝 막대의 말풍선에 적을 것. 비우면 첫 항목 대비 증감, share면 첫 항목의 몇 %인지(손익의 이익률처럼)', better: 'up(비우면, 늘린 항목이 초록) · down(줄인 항목이 초록) · neutral(증감을 모두 첫째 색으로)' },
     en: { title: 'what the values are (e.g. Members)', subtitle: 'what it shows and the two points (e.g. What changed it, Jan 1 → Dec 31)', items: 'the items in reading order: the first is the starting value ({ name, value }), a change is { name, value } (+ up, − down, null when it has no value), and { name, total: true } stands a running total at that point, at the end or as a subtotal (the card computes its value). Names are printed at the bar ends, so keep them short', compare: 'what the callout on the end bar adds: empty for the change against the first item, share for its share of the first item (like a margin on an income statement)', better: 'up (default: items that raise the value are green) · down (items that lower it are green) · neutral (every change in the first color)' },
+  },
+  'funnel-wave': {
+    ko: { title: '무엇의 퍼널인지(예: 결제 퍼널)', subtitle: '처음 · 끝 단계와 기간(예: 장바구니에서 구매까지, 2026년 11월)', items: '단계 2~6개를 순서대로. 단계마다 name과 value(그 단계까지 온 수). 전환율 · 첫 단계 대비 비율 · 전체 전환율은 카드가 계산한다. 이름은 단계 칸 아래에 적으므로 짧게', unit: '값 뒤에 붙는 말(예: 명)' },
+    en: { title: 'what the funnel is (e.g. Checkout Funnel)', subtitle: 'the first and last stages and the period (e.g. From cart to purchase, November 2026)', items: '2 to 6 stages in order, each with name and value (how many reached that stage); the card computes the conversion rates, the share of the first stage and the overall conversion. Names sit under the stage cells, so keep them short', unit: 'the word after the values (e.g. people)' },
   },
   'date-picker': {
     ko: { label: '화면 낭독기가 읽는 이름(예: 주문일). 화면에는 그리지 않는다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '데이터가 있는 첫날(YYYY-MM-DD). 그 앞은 고를 수 없다', max: '데이터가 있는 마지막 날(YYYY-MM-DD). 빠른 선택의 기준일이고, 비우면 오늘이 기준일', value: '처음 기간 ["시작", "끝"](YYYY-MM-DD, 끝일 포함). 비우면 기준일까지 30일', presets: '빠른 선택 칩: last7 · last30 · month · lastmonth · quarter · year · all 가운데 세 개 안팎', mode: '날짜 하나를 고를 때만 "day"(value도 날짜 하나)', align: '화면 오른쪽 끝에 둘 때 "end"' },
@@ -672,7 +676,7 @@ const CONNECT = {
       '컨트롤은 값이 바뀔 때마다 카드에서 `vzb-change` 이벤트를 보낸다(위로 전달되므로 `document`에서 받는다). `detail`은 `{ name, value }`이고 `name`은 그 컨트롤 JSON의 `name`이다. Date Picker의 `value`는 `["시작", "끝"]` 날짜 글자(YYYY-MM-DD, 끝일 포함), Range Slider의 `value`는 `[시작, 끝]` 숫자, Filter Chips의 `value`는 고른 항목을 `options` 순서대로 담은 배열이다. 지금 값은 카드의 `data-vzb-value` 속성에도 JSON으로 적혀 있다.',
       '컨트롤은 처음 그릴 때는 이벤트를 보내지 않는다. 컨트롤의 `value`와 차트의 JSON을 처음부터 같은 조건으로 적는다.',
       '차트 카드는 안의 `<script type="application/json">` 글자가 바뀌면 그 카드만 다시 그린다. 페이지가 거르기 전의 전체 데이터를 들고 있다가, 이벤트를 받으면 거른 결과로 차트의 JSON을 만들어 바꿔 적는다. 다시 그린 카드는 처음부터 재생하지 않고 마지막 장면을 바로 그리며, 보는 사람이 고른 기간과 항목은 그대로 둔다.',
-      '걸러서 남은 것이 없으면 빈 배열을 준다. Bar Overflow는 `"labels": []`, Waffle Flip · Bump Race · Waterfall Walk는 `"items": []`이면 오류 대신 빈 화면을 그린다.',
+      '걸러서 남은 것이 없으면 빈 배열을 준다. Bar Overflow는 `"labels": []`, Waffle Flip · Bump Race · Waterfall Walk · Funnel Wave는 `"items": []`이면 오류 대신 빈 화면을 그린다.',
       '같은 종류의 카드를 두 장 쓰면 카드마다 id를 준 요소로 감싸고 그 id로 가려 쓴다(아래 예시의 `#spend`).',
       'Download Button은 `target`에 적은 종류(`data-vzb`)의 카드 가운데 페이지에서 처음 만나는 카드의 지금 JSON을 받는다. 그래서 컨트롤로 거른 뒤의 값이 그대로 내려간다. 받기 전에 `vzb-download` 이벤트(`detail: { name, target, format, filename, rows }`)를 보내고, 페이지가 `preventDefault()`를 부르면 파일을 만들지 않으므로 서버에서 원본을 받는 화면도 같은 단추를 쓸 수 있다.',
     ],
@@ -700,7 +704,7 @@ document.addEventListener('vzb-change', (e) => {
       'A control sends a `vzb-change` event from its card whenever its value changes (it bubbles, so listen on `document`). `detail` is `{ name, value }`, where `name` is the `name` in that control\'s JSON. Date Picker\'s `value` is `["start", "end"]` as date strings (YYYY-MM-DD, the end date included); Range Slider\'s `value` is `[from, to]` as numbers; Filter Chips\' `value` is the picked items in the order of `options`. The current value is also on the card, as JSON in its `data-vzb-value` attribute.',
       'A control sends nothing when it first draws. Write the control\'s `value` and the chart\'s JSON for the same starting condition.',
       'A chart card redraws by itself when the text of its `<script type="application/json">` changes. The page keeps the full data; on an event it filters the data, builds the chart\'s JSON from the result and writes it back. The redrawn card does not play from the start: it draws its last frame at once and keeps the period and the item the viewer picked.',
-      'When the filter leaves nothing, give an empty array. Bar Overflow draws an empty state for `"labels": []`, and Waffle Flip, Bump Race and Waterfall Walk for `"items": []`, instead of an error.',
+      'When the filter leaves nothing, give an empty array. Bar Overflow draws an empty state for `"labels": []`, and Waffle Flip, Bump Race, Waterfall Walk and Funnel Wave for `"items": []`, instead of an error.',
       'With two cards of the same kind on a page, wrap each in an element with an id and address it through that id (`#spend` in the example).',
       'Download Button downloads the current JSON of the first card on the page whose `data-vzb` is its `target`, so the file holds what the controls left on screen. Before that it sends a `vzb-download` event (`detail: { name, target, format, filename, rows }`); if the page calls `preventDefault()`, the card makes no file, so a screen that gets the source data from a server can use the same button.',
     ],

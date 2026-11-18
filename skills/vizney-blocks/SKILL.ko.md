@@ -1,4 +1,4 @@
-<!-- Vizney Blocks 스킬의 한국어판. 스킬 입구는 같은 폴더의 SKILL.md(영어)이고, 한국어로 일할 때 이 파일을 따른다. Vizney Blocks(blocks.vizney.com)의 HTML 카드로 움직임으로 읽는 차트와 대시보드 컨트롤을 화면에 넣는다. 차트(Bar Overflow · Waffle Flip · Bump Race · Waterfall Walk)를 그리거나 컨트롤(Date Picker · Range Slider · Filter Chips · Download Button)을 둘 때, 사용자가 Vizney Blocks를 언급할 때 쓴다. 카드 코드는 그대로 두고 JSON 데이터만 바꾸며, 컨트롤과 차트는 짧은 페이지 스크립트로 잇는다. -->
+<!-- Vizney Blocks 스킬의 한국어판. 스킬 입구는 같은 폴더의 SKILL.md(영어)이고, 한국어로 일할 때 이 파일을 따른다. Vizney Blocks(blocks.vizney.com)의 HTML 카드로 움직임으로 읽는 차트와 대시보드 컨트롤을 화면에 넣는다. 차트(Bar Overflow · Waffle Flip · Bump Race · Waterfall Walk · Funnel Wave)를 그리거나 컨트롤(Date Picker · Range Slider · Filter Chips · Download Button)을 둘 때, 사용자가 Vizney Blocks를 언급할 때 쓴다. 카드 코드는 그대로 두고 JSON 데이터만 바꾸며, 컨트롤과 차트는 짧은 페이지 스크립트로 잇는다. -->
 
 # Vizney Blocks 카드로 화면 만들기
 
@@ -8,7 +8,7 @@ Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담�
 
 ## 카드
 
-지금 있는 카드는 차트 4종과 컨트롤 4종이 전부다. 요청에 맞는 카드가 없으면 카드를 억지로 맞추지 않는다. 그 부분은 직접 만들고, 카드로 만들지 않았다고 사용자에게 알린다.
+지금 있는 카드는 차트 5종과 컨트롤 4종이 전부다. 요청에 맞는 카드가 없으면 카드를 억지로 맞추지 않는다. 그 부분은 직접 만들고, 카드로 만들지 않았다고 사용자에게 알린다.
 
 ### 차트
 
@@ -16,6 +16,7 @@ Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담�
 - Waffle Flip (`waffle-flip`) · 와플 차트 — 100칸 와플로 비중을 그리고, 앞 기간에서 바뀐 만큼의 칸을 한 칸씩 뒤집어 보여 주는 카드입니다. 시장 점유율이나 매출 구성비처럼 한 항목의 비중이 얼마나 늘거나 줄었는지 전할 때 씁니다. 두 기간 사이의 변화만 그립니다.
 - Bump Race (`bump-race`) · 범프 차트 — 기간마다 순위를 매겨 S자 선으로 잇고, 재생하면 기간을 하나씩 넘기며 순위가 바뀌는 순간을 보여 주는 카드입니다. 상품 · 채널 · 지점의 순위가 한 해 동안 어떻게 오르내렸는지, 특히 한 항목이 몇 위에서 몇 위로 올라왔는지 전할 때 씁니다. 순위는 값의 차이를 감추므로, 차이의 크기가 중요하면 라인 차트를 씁니다.
 - Waterfall Walk (`waterfall-walk`) · 워터폴 차트 — 시작 값에서 끝 값까지, 그 사이에 무엇이 얼마나 늘리고 줄였는지를 항목별 막대로 이어 붙여 보여 주는 카드입니다. 재생하면 앞 막대가 끝난 높이에서 점이 하나씩 찍히며 다음 항목으로 걸어가고, 그 높이에서 막대가 오르내리며 막대 끝에 붙은 이름과 값이 함께 따라갑니다. 연초 회원 수가 가입과 해지를 거쳐 연말에 몇 명이 됐는지, 작년 영업이익이 어떤 요인으로 올해 영업이익이 됐는지, 매출액에서 비용이 빠지고 영업이익과 당기순이익이 얼마 남는지처럼 두 지점 사이 증감의 원인을 순서대로 전할 때 씁니다. 기간마다의 추이를 볼 때는 쓰지 않습니다.
+- Funnel Wave (`funnel-wave`) · 퍼널 차트 — 장바구니에서 구매까지처럼 정해진 순서의 단계를 지나며, 단계마다 얼마나 다음 단계로 넘어가는지(전환율)를 보여 주는 카드입니다. 단계마다 그 단계까지 온 수를 물의 높이로 그리고, 재생하면 물이 왼쪽에서 흘러 들어와 단계 경계를 지날 때마다 넘어간 만큼의 높이로 내려가며 끝까지 흐릅니다. 구매 전환, 가입 절차, 영업 단계처럼 단계별 전환율과 전체 전환율을 함께 전할 때 씁니다. 순서가 없는 항목끼리 견줄 때는 쓰지 않습니다.
 
 ### 컨트롤
 
@@ -84,7 +85,7 @@ Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담�
 - 컨트롤은 값이 바뀔 때마다 카드에서 `vzb-change` 이벤트를 보낸다(위로 전달되므로 `document`에서 받는다). `detail`은 `{ name, value }`이고 `name`은 그 컨트롤 JSON의 `name`이다. Date Picker의 `value`는 `["시작", "끝"]` 날짜 글자(YYYY-MM-DD, 끝일 포함), Range Slider의 `value`는 `[시작, 끝]` 숫자, Filter Chips의 `value`는 고른 항목을 `options` 순서대로 담은 배열이다. 지금 값은 카드의 `data-vzb-value` 속성에도 JSON으로 적혀 있다.
 - 컨트롤은 처음 그릴 때는 이벤트를 보내지 않는다. 컨트롤의 `value`와 차트의 JSON을 처음부터 같은 조건으로 적는다.
 - 차트 카드는 안의 `<script type="application/json">` 글자가 바뀌면 그 카드만 다시 그린다. 페이지가 거르기 전의 전체 데이터를 들고 있다가, 이벤트를 받으면 거른 결과로 차트의 JSON을 만들어 바꿔 적는다. 다시 그린 카드는 처음부터 재생하지 않고 마지막 장면을 바로 그리며, 보는 사람이 고른 기간과 항목은 그대로 둔다.
-- 걸러서 남은 것이 없으면 빈 배열을 준다. Bar Overflow는 `"labels": []`, Waffle Flip · Bump Race · Waterfall Walk는 `"items": []`이면 오류 대신 빈 화면을 그린다.
+- 걸러서 남은 것이 없으면 빈 배열을 준다. Bar Overflow는 `"labels": []`, Waffle Flip · Bump Race · Waterfall Walk · Funnel Wave는 `"items": []`이면 오류 대신 빈 화면을 그린다.
 - 같은 종류의 카드를 두 장 쓰면 카드마다 id를 준 요소로 감싸고 그 id로 가려 쓴다(아래 예시의 `#spend`).
 - Download Button은 `target`에 적은 종류(`data-vzb`)의 카드 가운데 페이지에서 처음 만나는 카드의 지금 JSON을 받는다. 그래서 컨트롤로 거른 뒤의 값이 그대로 내려간다. 받기 전에 `vzb-download` 이벤트(`detail: { name, target, format, filename, rows }`)를 보내고, 페이지가 `preventDefault()`를 부르면 파일을 만들지 않으므로 서버에서 원본을 받는 화면도 같은 단추를 쓸 수 있다.
 

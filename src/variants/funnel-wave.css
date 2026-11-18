@@ -1,0 +1,42 @@
+/* Funnel Wave: 높이 2단위. 머리(제목 · 부제) 아래를 그래프가 모두 씁니다. 큰 숫자 줄은 없고, 첫 단계에서 끝 단계까지의 전환율은 끝 단계의 물 위에 뜬
+   말풍선(--vzb-track 바탕, 이름 11px · 전환율 18px 굵게)이 알립니다.
+   단계는 같은 폭의 칸이고, 칸마다 물의 높이가 첫 단계 대비 비율입니다. 물은 밝은 바탕에서 한 단계 옅은 첫째 색(--vzb-primary-mid)에 첫째 색 2px 표면 선,
+   어두운 바탕에서 진한 노랑(--vzb-primary)입니다. 경계에서는 물이 S자로 다음 단계의 높이까지 흘러내리고,
+   그 자리의 물 위에 전환율 알약(카드 바탕, 첫째 색 1.5px 테두리, 12px 굵게)이 떠 있습니다. 칸 사이는 격자색 1px 세로선으로 나눕니다.
+   칸 아래에는 값(14px 굵게, 단위는 11px)과 이름(12px, 옅게)을 적고, 칸이 좁으면 13px · 11px로 줄입니다.
+   물결은 스크립트가 그립니다. 물결이 이는 동안에만 표면 위아래로 옅은 겹물결 선(첫째 색 1.5px)이 비쳐 물의 깊이를 보여 줍니다.
+   짚은 단계는 칸 바탕(--vzb-track)으로 두르고, 나머지 단계의 글자와 알약은 옅게 둡니다. */
+.vzb-card[data-vzb="funnel-wave"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-card[data-vzb="funnel-wave"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
+.vzb-fw.vzb-foot { padding-top: 8px; }
+.vzb-fw-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
+.vzb-fw-band { fill: var(--vzb-track); opacity: 0; transition: opacity 0.12s; }
+.vzb-fw-svg.is-hover .vzb-fw-band { opacity: 1; }
+.vzb-fw-div { stroke: var(--vzb-grid); stroke-width: 1; }
+.vzb-fw-water { fill: var(--vzb-primary-mid); }
+.vzb-dark .vzb-fw-water { fill: var(--vzb-primary); }   /* 어두운 바탕에서 노랑을 옅게 칠하면 올리브색으로 탁해지므로 물을 진한 노랑으로 칠합니다 */
+.vzb-fw-line, .vzb-fw-ghost { fill: none; stroke: var(--vzb-primary); stroke-linejoin: round; stroke-linecap: round; }
+.vzb-fw-line { stroke-width: 2; }
+.vzb-fw-ghost { stroke-width: 1.5; }
+.vzb-fw-pill rect { fill: var(--vzb-card); stroke: var(--vzb-primary); stroke-width: 1.5; }
+.vzb-fw-pt { font-size: 12px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-fw-cnt { font-size: 14px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-fw-u { font-size: 11px; font-weight: 400; fill: var(--vzb-muted); }
+.vzb-fw-name { font-size: 12px; fill: var(--vzb-muted); }
+.vzb-fw-svg.is-tight .vzb-fw-cnt { font-size: 13px; }
+.vzb-fw-svg.is-tight .vzb-fw-name { font-size: 11px; }
+.vzb-fw-lab > text, .vzb-fw-pill > * { transition: opacity 0.12s; }
+.vzb-fw-svg.is-hover .vzb-fw-lab:not(.is-on) > text, .vzb-fw-svg.is-hover .vzb-fw-pill:not(.is-on) > * { opacity: 0.35; }
+.vzb-fw-svg.is-hover .vzb-fw-pill.is-on > * { opacity: 0; }   /* 짚은 단계로 들어오는 알약은 툴팁이 대신 보여 줍니다 */
+.vzb-fw-bb { fill: var(--vzb-track); }
+.vzb-fw-bn { font-size: 11px; font-weight: 500; fill: var(--vzb-ink-2); }
+.vzb-fw-big { font-size: 18px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-fw-bu { font-size: 12px; font-weight: 500; fill: var(--vzb-muted); }
+.vzb-fw-bub > * { transition: opacity 0.12s; }
+.vzb-fw-svg.is-hover .vzb-fw-bub > * { opacity: 0.35; }
+.vzb-fw-svg.is-hover .vzb-fw-bub.is-on > * { opacity: 0; }   /* 끝 단계를 짚으면 툴팁이 대신 보여 줍니다 */
+.vzb-fw-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
+.vzb-fw-btn:hover { background: var(--vzb-other); }
+.vzb-fw-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
+.vzb-fw-ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-fw-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }

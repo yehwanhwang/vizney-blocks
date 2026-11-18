@@ -1,0 +1,28 @@
+{
+  "title": "Checkout Funnel",
+  "subtitle": "From cart to purchase, November 2026",
+  "lang": "en",
+  "format": "count",
+  "items": [
+    {
+      "name": "Cart",
+      "value": 20000
+    },
+    {
+      "name": "Shipping",
+      "value": 13400
+    },
+    {
+      "name": "Payment",
+      "value": 10850
+    },
+    {
+      "name": "Review",
+      "value": 6950
+    },
+    {
+      "name": "Purchase",
+      "value": 6410
+    }
+  ]
+}

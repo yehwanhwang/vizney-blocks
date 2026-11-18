@@ -201,24 +201,23 @@
 .vzb-tip .is-bad { color: color-mix(in srgb, var(--vzb-bad) 68%, #fff); font-weight: 700; }
 .vzb-fs { --vzb-c: var(--vzb-primary-soft); }
 .vzb-key.is-tick { width: 2px; height: 12px; border-radius: 1px; }
-/* Funnel Wave: 높이 2단위. 머리(제목 · 부제) 아래를 그래프가 모두 씁니다. 큰 숫자 줄은 없고, 첫 단계에서 끝 단계까지의 전환율은 끝 단계의 물 위에 뜬
-   말풍선(--vzb-track 바탕, 이름 12px · 전환율 18px 굵게, % 12px)이 알립니다.
+/* Funnel Wave: 높이 2단위. 머리(제목 · 부제) 아래를 그래프가 모두 씁니다. 큰 숫자 줄은 없고, 첫 단계에서 끝 단계까지의 전환율은 끝 단계의 알약이 알립니다.
    단계는 같은 폭의 칸이고, 칸마다 물의 높이가 첫 단계 대비 비율입니다. 물의 톤은 칸마다 다릅니다: 첫째 색을 흰색에 섞는 비율(--vzb-fw-p)을 스크립트가
    단계마다 정해(첫 단계 34% → 끝 단계 100%) 첫 단계가 가장 옅고 끝 단계가 가장 진합니다. 어두운 바탕에서도 바탕색이 아니라 흰색에 섞어
    노랑이 올리브색으로 탁해지지 않습니다. 물 위에는 첫째 색 2px 표면 선을 긋습니다.
    경계에서는 물이 S자로 다음 단계의 높이까지 흘러내리고, 칸마다 물 위에 첫 단계 대비 비율을 적은 알약(카드 바탕, 첫째 색 1.5px 테두리, 14px 굵게,
-   높이 24px)이 떠 있습니다. 끝 단계는 알약 대신 말풍선이 알립니다.
-   칸 사이는 격자색 1px 세로선으로 나눕니다. 칸 아래에는 값(14px 굵게, 단위 12px)과 이름(14px, 옅게)을 적고, 칸이 좁으면 12px로 줄입니다.
+   높이 24px)이 떠 있습니다. 끝 단계의 알약이 곧 처음에서 끝까지의 전환율입니다.
+   칸 사이는 카드 바탕색 2px 구분선으로 물과 표면 선을 끊어 나눕니다. 칸 아래에는 값(14px 굵게, 단위 12px)과 이름(14px, 옅게)을 적고, 칸이 좁으면 12px로 줄입니다.
    물결은 스크립트가 그립니다. 물결이 이는 동안 물 뒤로 같은 톤을 한 겹씩 더 옅게 한 두 겹(--vzb-fw-p의 62% · 38%)이 솟아 세 겹 물결로 보이고,
    잔잔해지면 물 뒤로 숨습니다. 단계를 짚으면 그 칸을 칸 바탕(--vzb-track)으로 두르고, 그 알약은 숨기지 않고 첫째 색으로 채워 살짝 키우며
-   (숫자가 사라지면 오류처럼 보이므로), 나머지는 옅게 둡니다. 끝 단계를 짚으면 말풍선을 그대로 둡니다. */
+   (숫자가 사라지면 오류처럼 보이므로), 나머지는 옅게 둡니다. */
 .vzb-card[data-vzb="funnel-wave"] { min-height: calc(var(--vzb-unit) * 2); }
 .vzb-card[data-vzb="funnel-wave"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
 .vzb-fw.vzb-foot { padding-top: 8px; }
 .vzb-fw-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-fw-band { fill: var(--vzb-track); opacity: 0; transition: opacity 0.12s; }
 .vzb-fw-svg.is-hover .vzb-fw-band { opacity: 1; }
-.vzb-fw-div { stroke: var(--vzb-grid); stroke-width: 1; }
+.vzb-fw-div { stroke: var(--vzb-card); stroke-width: 2; }   /* 칸 사이: 카드 바탕색 2px로 물과 표면 선을 끊어 단계를 나눕니다 */
 .vzb-fw-water { fill: color-mix(in srgb, var(--vzb-primary) var(--vzb-fw-p, 100%), #fff); }
 .vzb-fw-line { fill: none; stroke: var(--vzb-primary); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
 .vzb-fw-pill rect { fill: var(--vzb-card); stroke: var(--vzb-primary); stroke-width: 1.5; transition: fill 0.2s cubic-bezier(0.23, 1, 0.32, 1); }
@@ -233,12 +232,6 @@
 .vzb-fw-svg.is-tight .vzb-fw-cnt, .vzb-fw-svg.is-tight .vzb-fw-name { font-size: 12px; }
 .vzb-fw-lab > text, .vzb-fw-pill > * { transition: opacity 0.12s; }
 .vzb-fw-svg.is-hover .vzb-fw-lab:not(.is-on) > text, .vzb-fw-svg.is-hover .vzb-fw-pill:not(.is-on) > * { opacity: 0.35; }
-.vzb-fw-bb { fill: var(--vzb-track); }
-.vzb-fw-bn { font-size: 12px; font-weight: 500; fill: var(--vzb-ink-2); }
-.vzb-fw-big { font-size: 18px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
-.vzb-fw-bu { font-size: 12px; font-weight: 500; fill: var(--vzb-muted); }
-.vzb-fw-bub > * { transition: opacity 0.12s; }
-.vzb-fw-svg.is-hover .vzb-fw-bub:not(.is-on) > * { opacity: 0.35; }
 .vzb-fw-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
 .vzb-fw-btn:hover { background: var(--vzb-other); }
 .vzb-fw-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
@@ -290,7 +283,7 @@
     '%1. %2의 비중은 %3입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 holds %3. Use the left and right arrows to move between items. Every value is in the table that follows.',
     '최근 7일': 'Last 7 days', '최근 30일': 'Last 30 days', '이번 달': 'This month', '지난달': 'Last month', '이번 분기': 'This quarter', '올해': 'This year', '빠른 선택': 'Quick picks',
     '일간': 'days', '일간|1': 'day', '%s 고름': '%s picked', '이전 달': 'Previous month', '다음 달': 'Next month', 'value의 날짜를 YYYY-MM-DD로 적으세요.': 'Write the dates in value as YYYY-MM-DD.',
-    'items에 단계를 두 개 이상 적으세요.': 'Write two or more stages in items.', '첫 단계의 값은 0보다 커야 합니다.': 'The first stage needs a value above 0.', '단계': 'Stage', '앞 단계에서': 'From the previous stage', '%1에서 %2 넘어옴': '%2 moved on from %1', '퍼널의 시작': 'Start of the funnel',
+    'items에 단계를 두 개 이상 적으세요.': 'Write two or more stages in items.', '첫 단계의 값은 0보다 커야 합니다.': 'The first stage needs a value above 0.', '단계': 'Stage', '앞 단계에서': 'From the previous stage', '%1에서 %2 넘어옴': '%2 moved on from %1', '퍼널의 시작': 'Start of the funnel', '시작 값': 'Starting value',
     '%1. %2 %3에서 %4 %5까지, 첫 단계 대비 %6. 좌우 화살표로 단계를 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. From %2 %3 to %4 %5, %6 of the first stage. Use the left and right arrows to move between the stages. Every value is in the table that follows.',
     '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
   };
@@ -603,12 +596,12 @@
   // (예: 리드 → 유효 리드 → 제안 → 협상 → 계약).
   // 단계는 같은 폭의 칸으로 나란히 두고, 칸마다 물의 높이가 첫 단계 대비 비율입니다(바닥에서 재므로 칸끼리 높이를 바로 견줍니다).
   // 칸마다 물의 톤이 다릅니다. 첫째 색 하나를 흰색에 섞는 정도만 달리해, 첫 단계가 가장 옅고 끝 단계가 가장 진합니다(전환된 끝이 먼저 보입니다).
-  // 단계 경계에서는 물이 S자로 다음 단계의 높이까지 흘러내리고, 칸마다 물 위에 첫 단계 대비 비율을 적은 알약이 떠 있습니다(100% → 55% → 26% …).
-  // 머리 아래에 큰 숫자를 따로 두지 않습니다. 끝 단계는 알약 대신 말풍선이 첫 단계에서 끝 단계까지의 전환율을 크게 알리고, 칸 아래에는 단계의 값과 이름을 적습니다.
+  // 단계 경계에서는 물이 S자로 다음 단계의 높이까지 흘러내리고, 칸마다 물 위에 첫 단계 대비 비율을 적은 알약이 떠 있습니다(100% → 55% → 26% … → 11%).
+  // 끝 단계의 알약이 곧 처음에서 끝까지의 전환율입니다. 칸 사이는 카드 바탕색 2px 구분선으로 끊어 단계를 나누고, 칸 아래에는 단계의 값과 이름을 적습니다.
   // 앞 단계에서 넘어온 비율(단계별 전환율)은 툴팁과 표에 적습니다. 퍼널은 보통 처음 100 가운데 얼마가 끝까지 왔는지로 읽기 때문입니다.
   // 움직임: 물이 왼쪽에서 흘러 들어와 경계를 지날 때마다 넘어간 만큼의 높이로 내려가며 오른쪽 끝까지 흐르고, 끝 벽에 부딪혀 찰랑이다 잔잔해집니다.
-  // 물이 닿은 단계의 값이 0부터 세어지고 그 칸의 알약이 떠오르며, 끝 단계에 물이 차면 말풍선이 튀어나와 끝 단계의 값과 함께 전환율을 셉니다.
-  // 단계를 마우스나 키보드로 짚으면 그 칸의 물이 세 겹으로 잔잔하게 일렁이고, 그 알약(끝 단계는 말풍선)은 그대로 둔 채 채워 강조하며,
+  // 물이 닿은 단계의 값이 0부터 세어지고, 앞머리가 칸의 가운데를 지나면 그 칸의 알약이 떠오릅니다.
+  // 단계를 마우스나 키보드로 짚으면 그 칸의 물이 세 겹으로 잔잔하게 일렁이고, 그 알약은 그대로 둔 채 채워 강조하며,
   // 툴팁이 그 비율을 이루는 값(첫 단계 값 → 이 단계 값)과 앞 단계에서 넘어온 비율을 알약 옆에 보여 줍니다.
   // 마우스를 움직이면 손으로 물을 미는 것처럼 물결이 일었다가 잦아듭니다. 물결은 늘 잦아들어 멈추므로, 멈춘 장면의 물 높이는 늘 값 그대로입니다.
   // 카드가 화면에 보이면 한 번 흐르고, 다시 보기 단추로 되풀이합니다. 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 마지막 장면을 바로 그립니다.
@@ -668,7 +661,7 @@
     sr.append(table);
     card.append(sr);
 
-    // 그림(아래부터): 짚은 두 칸의 바탕 · 칸 사이 세로선 · 물의 뒤 두 겹 · 물 · 물 표면 선 · 전환율 알약 · 칸 아래 글자 · 끝 단계의 말풍선
+    // 그림(아래부터): 짚은 칸의 바탕 · 물의 뒤 두 겹 · 물 · 물 표면 선 · 칸 사이 구분선(카드 바탕색) · 첫 단계 대비 알약 · 칸 아래 글자
     // 물과 뒤 겹은 단계마다 따로 그린 칸이라, 칸마다 톤이 다르고 경계에서 톤이 바뀝니다.
     const band = svgEl('rect', { class: 'vzb-fw-band', y: 0 });
     const divs = svgEl('g', {}), line = svgEl('path', { class: 'vzb-fw-line' });
@@ -693,7 +686,6 @@
       s.lab.append(s.cnt, s.nm);
       labsG.append(s.lab);
       if (k) { s.div = svgEl('line', { class: 'vzb-fw-div' }); divs.append(s.div); }
-      if (k === N - 1) return;   // 끝 단계는 말풍선이 알립니다
       // 알약: 바깥 g는 자리(물 위)를, 안쪽 g는 짚었을 때 살짝 커지는 움직임을 맡습니다.
       s.pill = svgEl('g', { class: 'vzb-fw-pill' });
       const pin = svgEl('g', { class: 'vzb-fw-pin' });
@@ -703,14 +695,7 @@
       s.pill.append(pin);
       pillsG.append(s.pill);
     });
-    // 끝 단계의 말풍선: 처음 → 끝 단계 이름(12px, 옅게)과 첫 단계에서 끝 단계까지의 전환율(18px 굵게, %는 12px). 꼬리는 끝 단계의 물 위를 가리킵니다.
-    const bub = svgEl('g', { class: 'vzb-fw-bub' }), bubPath = svgEl('path', { class: 'vzb-fw-bb' });
-    const bubName = svgText(0, 19, `${st[0].name} → ${lastS.name}`, 'vzb-fw-bn', 'middle');
-    const bubBig = svgText(0, 41, '', 'vzb-fw-big', 'middle'), bubNum = svgEl('tspan', {}), bubPct = svgEl('tspan', { class: 'vzb-fw-bu', dx: 1 });
-    bubPct.textContent = '%';
-    bubBig.append(bubNum, bubPct);
-    bub.append(bubPath, bubName, bubBig);
-    svg.append(band, divs, ...layers.map((l) => l.g), line, pillsG, labsG, bub);
+    svg.append(band, ...layers.map((l) => l.g), line, divs, pillsG, labsG);   // 칸 사이 구분선은 물과 표면 선 위에 그어 칸을 끊습니다
     const fam = getComputedStyle(card).fontFamily, fx = (v) => v.toFixed(1), clamp = (v) => Math.max(0, Math.min(1, v));
     const easeOut = (k) => 1 - (1 - k) ** 3;
     const fit = (s, size, maxW) => {
@@ -722,9 +707,7 @@
 
     // 물의 쉬는 모양: 칸마다 평평하고, 경계(k · cw)를 가운데로 폭 tw 안에서 앞 칸의 높이에서 다음 칸의 높이까지 코사인 S자로 흘러내립니다.
     const TOP = 14;   // 물이 물결쳐도 그래프 위로 넘치지 않을 여유
-    const BH = 50, TAIL = 6;   // 말풍선의 높이와 꼬리 길이
-    let bubX = 0, bubY = 0;   // 말풍선의 자리(툴팁이 말풍선 옆에 붙을 때 씁니다)
-    let W = 0, H = 0, cw = 1, y0 = 0, tw = 1, NOSE = 30, TOTAL = 1, BW = 80, showUnit = true;
+    let W = 0, H = 0, cw = 1, y0 = 0, tw = 1, NOSE = 30, TOTAL = 1, showUnit = true;
     function restAt(x) {
       const k = Math.max(0, Math.min(N - 1, Math.floor(x / cw))), lk = st[k].lv, bl = k * cw, br = bl + cw;
       if (k > 0 && x - bl < tw / 2) { const u = (x - bl + tw / 2) / tw; return st[k - 1].lv + (lk - st[k - 1].lv) * (1 - Math.cos(Math.PI * u)) / 2; }
@@ -754,10 +737,8 @@
       const tight = cw < 84, csz = tight ? 12 : 14, nsz = csz;
       svg.classList.toggle('is-tight', tight);
       y0 = h - (csz + nsz + 14);   // 물의 바닥. 그 아래에 값과 이름 두 줄
-      // 물의 가장 높은 높이: 그림 높이에서 위 여유(TOP)를 뺀 만큼. 끝 단계가 높아 그 위에 말풍선이 들어갈 자리가 없으면 물 전체를 그만큼 낮춥니다.
-      let HM = Math.max(24, y0 - TOP);
-      const fl = lastS.v / vmax, need = BH + TAIL + 14;
-      if (fl > 0 && y0 + TOP - fl * HM < need) HM = Math.max(24, (y0 + TOP - need) / fl);
+      // 물의 가장 높은 높이: 그림 높이에서 위 여유(TOP)를 뺀 만큼.
+      const HM = Math.max(24, y0 - TOP);
       tw = Math.min(cw * 0.86, 170);
       NOSE = Math.max(18, Math.min(48, cw * 0.32));
       // 값 글자: 칸 폭에 다 들어가지 않으면 단위를 빼고, 그래도 넘치면 12px로 씁니다(툴팁과 표에는 단위까지 남습니다).
@@ -788,10 +769,6 @@
       });
       band.setAttribute('width', fx(cw));
       band.setAttribute('height', fx(y0));
-      // 말풍선의 크기: 이름(12px)과 전환율(18px) 가운데 넓은 쪽에 좌우 10px. 이름은 그림 폭의 절반을 넘으면 줄여 적습니다.
-      const nameText = fit(`${st[0].name} → ${lastS.name}`, 12, Math.max(60, w * 0.5));
-      bubName.textContent = nameText;
-      BW = Math.ceil(Math.max(textW(nameText, 500, fam, 12), textW(`${num(lastS.cum * 100, 1)}%`, 700, fam, 18))) + 20;
       const m = Math.max(16, Math.round(w / 3)) + 1;
       if (m !== M) { M = m; hs = new Float32Array(M); us = new Float32Array(M); wet = new Uint8Array(M); calm = true; }
       dx = w / (M - 1);
@@ -953,27 +930,6 @@
         s.pill.setAttribute('opacity', fx(q * dr));
         s.pill.setAttribute('transform', `translate(${fx(b)},${fx(Math.min(y0 - 12, y0 - lvBuf[0][i]))}) scale(${fx(0.7 + 0.3 * easeOut(q))})`);
       });
-      // 말풍선: 끝 단계에 물이 들어서면 꼬리 끝에서 튀어나와, 끝 단계의 값과 함께 전환율을 0부터 셉니다. 끝 단계의 물 위에 떠서 물결을 따라 오르내립니다.
-      const tl = timeAt((N - 1) * cw + 8), eb = clamp((t - tl) / CNT), qb = clamp((t - tl) / POP);
-      bubNum.textContent = num(lastS.cum * 100 * (eb >= 1 ? 1 : easeOut(eb)), 1);
-      // 자리: 그림의 오른쪽 끝에 붙이고, 그 아래에 있는 물(쉬는 높이)과 알약보다 10px 위에 띄웁니다. 그림 위로는 TOP까지만 나갑니다.
-      const bx = W - BW / 2, il = Math.min(M - 1, Math.round(lastS.cx / dx));
-      let hi = 0;
-      for (let i = Math.max(0, Math.floor((W - BW) / dx)); i < M; i++) hi = Math.max(hi, rp[i] * dr);
-      st.forEach((o) => { if (o.pill && Math.abs(o.cx - bx) < (BW + o.pw) / 2 + 4) hi = Math.max(hi, Math.max(12, restAt(o.cx) * dr) + 12); });   // 알약은 바닥 위 12px보다 내려가지 않습니다
-      const tipY = Math.min(y0, y0 - lvBuf[0][il]) - 4;    // 꼬리 끝: 끝 단계의 물 위 4px
-      const by = Math.max(-TOP, Math.min(tipY - TAIL - BH, y0 - hi - 10 - BH));
-      const tx0 = Math.max(-BW / 2 + 12, Math.min(BW / 2 - 12, lastS.cx - bx)), ty = Math.max(BH, tipY - by), sc = 0.6 + 0.4 * easeOut(qb);
-      bubX = bx; bubY = by;
-      bubPath.setAttribute('d', bubble(BW, BH, tx0, ty, 8));
-      bub.setAttribute('opacity', fx(qb * dr));
-      bub.setAttribute('transform', `translate(${fx(bx + tx0 * (1 - sc))},${fx(by + ty * (1 - sc))}) scale(${fx(sc)})`);   // 꼬리 끝을 가운데로 커집니다
-    }
-    // 말풍선 모양: 폭 bw, 높이 bh, 모서리 r. 아래 변의 tx 자리에서 꼬리가 ty(말풍선 위에서 잰 높이)까지 내려갑니다.
-    function bubble(bw, bh, tx0, ty, r) {
-      const x0 = -bw / 2, tw0 = 6;
-      return `M${fx(x0 + r)},0H${fx(-x0 - r)}A${r},${r} 0 0 1 ${fx(-x0)},${r}V${fx(bh - r)}A${r},${r} 0 0 1 ${fx(-x0 - r)},${fx(bh)}`
-        + `H${fx(tx0 + tw0)}L${fx(tx0)},${fx(ty)}L${fx(tx0 - tw0)},${fx(bh)}H${fx(x0 + r)}A${r},${r} 0 0 1 ${fx(x0)},${fx(bh - r)}V${r}A${r},${r} 0 0 1 ${fx(x0 + r)},0Z`;
     }
 
     // 재생: 화면에 보이고(inView) 마우스 · 포커스로 잠시 멈추지 않았을 때(holds)만 흐름이 나아갑니다. 물결은 손을 댄 동안에도 잦아들 때까지 움직입니다.
@@ -1026,9 +982,9 @@
       lastT = e.timeStamp;
     });
     // 짚는 자리: 단계(칸). 마우스는 그 칸을 짚고, 키보드는 좌우 화살표로 옮깁니다.
-    // 짚으면 그 칸이 잔잔하게 물결치고, 그 알약(끝 단계는 말풍선)은 그대로 둔 채 채워 강조합니다. 짚은 알약을 숨기면 숫자가 사라져 오류처럼 보이기 때문입니다.
+    // 짚으면 그 칸이 잔잔하게 물결치고, 그 알약은 그대로 둔 채 채워 강조합니다. 짚은 알약을 숨기면 숫자가 사라져 오류처럼 보이기 때문입니다.
     // 툴팁은 알약의 비율을 되풀이하지 않고, 그 비율을 이루는 값('첫 단계 값 → 이 단계 값')과 앞 단계에서 넘어온 비율(단계별 전환율)을 알약 옆에 적습니다.
-    // 나머지 알약 · 단계 글자 · 말풍선은 옅게 둡니다.
+    // 나머지 알약과 단계 글자는 옅게 둡니다.
     interact(plot, N,
       (cx) => { const r = plot.getBoundingClientRect(); return Math.max(0, Math.min(N - 1, Math.floor(((cx - r.left) * N) / (r.width || 1)))); },
       (j) => {
@@ -1037,20 +993,17 @@
         svg.classList.add('is-hover');
         band.setAttribute('x', fx(j * cw));
         st.forEach((x) => { x.lab.classList.toggle('is-on', x === s); if (x.pill) x.pill.classList.toggle('is-on', x === s); });
-        bub.classList.toggle('is-on', j === N - 1);
         const tb = tipBody(j ? {
           flow: [{ name: a.name, value: show(f, a.v) }, { name: s.name, value: show(f, s.v) }],
           note: tx(d, '%1에서 %2 넘어옴', p.name, pct1(s.step)),
         } : { note: tx(d, '퍼널의 시작') }, s.name);
-        // 툴팁 자리: 짚은 알약(끝 단계는 말풍선)의 위. 그 위에 들어갈 자리(120px)가 없으면 옆(왼쪽 절반은 오른쪽, 오른쪽 절반은 왼쪽)에 둡니다.
-        let ax = s.cx, ay, hw;
-        if (s.pill) { ay = Math.min(y0 - 12, y0 - restAt(s.cx)) - 14; hw = s.pw / 2 + 6; }
-        else { ax = bubX; ay = bubY - 4; hw = BW / 2 + 6; }
+        // 툴팁 자리: 짚은 알약의 위. 그 위에 들어갈 자리(120px)가 없으면 옆(왼쪽 절반은 오른쪽, 오른쪽 절반은 왼쪽)에 둡니다.
+        const ax = s.cx, ay = Math.min(y0 - 12, y0 - restAt(s.cx)) - 14, hw = s.pw / 2 + 6;
         const side = ay < 120 ? (ax < W / 2 ? 'right' : 'left') : null;
         const sx = side === 'right' ? ax + hw : side === 'left' ? ax - hw : ax;
         return { x: r.left + sx * k2, y: r.top + (side ? Math.max(ay + 14, 60) : ay) * k2, side, label: s.name, value: tb.node, text: tb.text };
       },
-      () => { hot = -1; svg.classList.remove('is-hover'); bub.classList.remove('is-on'); st.forEach((x) => { x.lab.classList.remove('is-on'); if (x.pill) x.pill.classList.remove('is-on'); }); },
+      () => { hot = -1; svg.classList.remove('is-hover'); st.forEach((x) => { x.lab.classList.remove('is-on'); if (x.pill) x.pill.classList.remove('is-on'); }); },
       false, true);
 
     if (live) t = 1e9;   // 마지막 장면에서 시작합니다

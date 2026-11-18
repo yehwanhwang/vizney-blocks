@@ -316,12 +316,24 @@
         const c = cols[k], r = plot.getBoundingClientRect();
         svg.classList.add('is-hover');
         cols.forEach((x) => x.g.classList.toggle('is-on', x === c));
-        // 툴팁의 증감은 막대와 같은 색으로 적고(좋음 초록 · 나쁨 빨강), 짚은 막대의 레이블은 툴팁이 떠 있는 동안 숨겨 같은 숫자가 두 번 보이지 않게 합니다(CSS).
+        // 짚은 막대의 이름 · 값 · 말풍선은 숨기지 않고 그대로 둡니다(숫자가 사라지면 오류처럼 보이므로). 툴팁은 그 값을 되풀이하지 않고 값이 어떻게 이루어졌는지 적습니다:
+        // 증감 막대는 누계가 어디서 어디로 옮겨 갔는지, 첫 막대는 시작 값이라는 것, 합계 막대는 '첫 항목 → 이 합계'와 첫 항목 대비(끝 막대는 말풍선이 적으므로 뺍니다).
+        // 툴팁의 증감은 막대와 같은 색으로 적습니다(좋음 초록 · 나쁨 빨강).
         const dv = c.to - v0, ntone = want === 0 || !dv ? null : Math.sign(dv) === want ? 'good' : 'bad';
-        const note = c.kind === 'step' ? (c.v == null ? null : tx(d, '누계 %1 → %2', show(f, c.from), show(f, c.to)))
-          : !c.k ? null : d.compare === 'share' ? (v0 > 0 ? tx(d, '%1의 %2', first.name, pct(c.to)) : null) : { text: `${signed(f, dv)} · ${tx(d, '%s 대비', first.name)}`, tone: ntone };
-        const tb = tipBody({ value: valText(c), tone: c.tone === 'good' || c.tone === 'bad' ? c.tone : null, note }, c.name);
-        return { x: r.left + c.cx, y: r.top + Math.min(c.yA, c.yB) - 6, label: c.name, value: tb.node, text: tb.text };
+        let spec;
+        // 자리가 없어 값 글자를 생략한 막대(labOn 거짓)는 툴팁이 값도 적습니다.
+        const own = c.labOn ? {} : { value: valText(c), tone: c.tone === 'good' || c.tone === 'bad' ? c.tone : null };
+        if (c.kind === 'step') spec = c.v == null ? { value: valText(c) } : { ...own, note: tx(d, '누계 %1 → %2', show(f, c.from), show(f, c.to)) };
+        else if (!c.k) spec = { ...own, note: tx(d, '시작 값') };
+        else spec = {
+          flow: [{ name: first.name, value: show(f, v0) }, { name: c.name, value: show(f, c.to) }],
+          note: c === end ? null : d.compare === 'share' ? (v0 > 0 ? tx(d, '%1의 %2', first.name, pct(c.to)) : null) : { text: `${signed(f, dv)} · ${tx(d, '%s 대비', first.name)}`, tone: ntone },
+        };
+        const tb = tipBody(spec, c.name);
+        // 툴팁 자리: 막대와 그 이름 · 값 위. 끝 막대는 말풍선 왼쪽에 둡니다. 남겨 둔 레이블을 툴팁이 덮지 않게 하기 위해서입니다.
+        const lr = c.labOn ? c.lab.getBoundingClientRect() : null;
+        if (c === end && lr) return { x: lr.left, y: lr.top + lr.height / 2, side: 'left', label: c.name, value: tb.node, text: tb.text };
+        return { x: r.left + c.cx, y: Math.min(r.top + Math.min(c.yA, c.yB), lr && lr.height ? lr.top : Infinity) - 6, label: c.name, value: tb.node, text: tb.text };
       },
       () => { svg.classList.remove('is-hover'); cols.forEach((x) => x.g.classList.remove('is-on')); },
       false, true);

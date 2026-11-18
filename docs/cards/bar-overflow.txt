@@ -193,8 +193,6 @@
 .vzb-bb-col.is-over .vzb-bb-name { font-weight: 700; fill: var(--vzb-ink); }
 .vzb-bb-col { transition: opacity 0.12s; }
 .vzb-bb-svg.is-hover .vzb-bb-col:not(.is-on) { opacity: 0.3; }
-.vzb-bb-ex { transition: opacity 0.12s; }
-.vzb-bb-svg.is-hover .vzb-bb-col.is-on .vzb-bb-ex { opacity: 0; }   /* 짚은 막대의 넘친 양은 툴팁이 대신 보여 줍니다 */
 .vzb-bb-ctl { display: flex; align-items: center; gap: 10px; min-height: 28px; margin-top: 8px; }
 .vzb-card[data-vzb="bar-overflow"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
 .vzb-bb-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
@@ -248,7 +246,7 @@
     '%1. %2의 비중은 %3입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 holds %3. Use the left and right arrows to move between items. Every value is in the table that follows.',
     '최근 7일': 'Last 7 days', '최근 30일': 'Last 30 days', '이번 달': 'This month', '지난달': 'Last month', '이번 분기': 'This quarter', '올해': 'This year', '빠른 선택': 'Quick picks',
     '일간': 'days', '일간|1': 'day', '%s 고름': '%s picked', '이전 달': 'Previous month', '다음 달': 'Next month', 'value의 날짜를 YYYY-MM-DD로 적으세요.': 'Write the dates in value as YYYY-MM-DD.',
-    'items에 단계를 두 개 이상 적으세요.': 'Write two or more stages in items.', '첫 단계의 값은 0보다 커야 합니다.': 'The first stage needs a value above 0.', '단계': 'Stage', '앞 단계에서': 'From the previous stage', '%1에서 %2 넘어옴': '%2 moved on from %1', '퍼널의 시작': 'Start of the funnel',
+    'items에 단계를 두 개 이상 적으세요.': 'Write two or more stages in items.', '첫 단계의 값은 0보다 커야 합니다.': 'The first stage needs a value above 0.', '단계': 'Stage', '앞 단계에서': 'From the previous stage', '%1에서 %2 넘어옴': '%2 moved on from %1', '퍼널의 시작': 'Start of the funnel', '시작 값': 'Starting value',
     '%1. %2 %3에서 %4 %5까지, 첫 단계 대비 %6. 좌우 화살표로 단계를 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. From %2 %3 to %4 %5, %6 of the first stage. Use the left and right arrows to move between the stages. Every value is in the table that follows.',
     '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
   };
@@ -757,6 +755,7 @@
     plot.addEventListener('focus', () => { if (plot.matches(':focus-visible')) { holds.add('focus'); render(); } });   // 키보드로 들어왔을 때만 멈춥니다
     plot.addEventListener('blur', () => { holds.delete('focus'); kick(); });
     // 툴팁: 막대를 짚으면 값, 한도, 넘치거나 남은 양과 한도 대비 비율을 보여 주고 그 막대만 진하게 남깁니다.
+    // 넘친 양의 글자는 숨기지 않고 그대로 두며(숫자가 사라지면 오류처럼 보이므로), 그 글자가 보이는 막대는 툴팁에 넘친 양을 되풀이하지 않습니다.
     interact(plot, N,
       (cx) => Math.max(0, Math.min(N - 1, Math.floor((cx - plot.getBoundingClientRect().left) / slot))),
       (k) => {
@@ -768,6 +767,7 @@
           const gap = show(f, Math.abs(it.v - lim)), share = lim > 0 ? num((it.v / lim) * 100, 0) : null;
           // 한도를 넘친 줄은 막대의 넘친 부분과 같은 빨강으로 적습니다.
           if (share == null) note.push({ text: tx(d, '%s 초과|한도', gap), tone: it.v > lim ? 'bad' : null });
+          else if (it.v > lim && it.exOn) note.push({ text: tx(d, '%1의 %2', inText, `${share}%`), tone: 'bad' });
           else note.push(it.v > lim ? { text: tx(d, '%1 초과 · %2의 %3%', gap, inText, share), tone: 'bad' } : it.v < lim ? tx(d, '%1 남음 · %2의 %3%', gap, inText, share) : tx(d, '%1의 %2', inText, `${share}%`));
         }
         const tb = tipBody({ value: it.v == null ? tx(d, '데이터 없음') : show(f, it.v), note }, it.name);

@@ -32,8 +32,6 @@
 .vzb-ww-svg.is-tight .vzb-ww-big { font-size: 14px; }
 .vzb-ww-col, .vzb-ww-conns { transition: opacity 0.12s; }
 .vzb-ww-svg.is-hover .vzb-ww-col:not(.is-on), .vzb-ww-svg.is-hover .vzb-ww-conns { opacity: 0.3; }
-.vzb-ww-lab { transition: opacity 0.12s; }
-.vzb-ww-svg.is-hover .vzb-ww-col.is-on .vzb-ww-lab { opacity: 0; }   /* 짚은 막대의 이름 · 값 · 말풍선은 툴팁이 대신 보여 줍니다 */
 .vzb-ww-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
 .vzb-ww-btn:hover { background: var(--vzb-other); }
 .vzb-ww-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }

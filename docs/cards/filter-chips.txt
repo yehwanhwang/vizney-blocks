@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.64 · Controls · Filter Chips (filter-chips)
+<!-- Vizney Blocks v0.65 · Controls · Filter Chips (filter-chips)
      https://blocks.vizney.com/cards/filter-chips.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -86,7 +86,7 @@
   border: 1px solid var(--vzb-edge);
   border-radius: var(--vzb-radius);
   box-shadow: var(--vzb-shadow);
-  font: 400 13px/18px var(--vzb-font);
+  font: 400 14px/20px var(--vzb-font);   /* 글자 크기는 세 단계: 기본 14px, 보조 12px(단위 · 축 눈금 · 요일 · 개수 · 큰 숫자 위 설명), 큰 숫자 18px(말풍선 · 툴팁). 그 밖에 제목 17px, 대표 수치 34px(단위 16px) */
   text-align: left;
   word-break: keep-all;
   overflow-wrap: anywhere;
@@ -219,7 +219,7 @@
   }
   // 달러 금액: 원래 값을 받아 K · M · B로 줄이고 소수 한 자리로 맞춥니다($745.6K). 접미사는 단위처럼 작게 씁니다.
   function usd(v, d) {
-    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    const a = Math.abs(v), s = v < 0 ? '-' : '';
     const [div, u] = a >= 1e9 ? [1e9, 'B'] : a >= 1e6 ? [1e6, 'M'] : a >= 1e3 ? [1e3, 'K'] : [1, ''];
     return [`${s}$${num(a / div, d != null ? d : div > 1 ? 1 : 0)}`, u];
   }

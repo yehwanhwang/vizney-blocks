@@ -74,7 +74,7 @@
   }
   // 차이를 부호와 함께 적습니다. 비율 지표는 %p입니다.
   function signed(f, diff) {
-    const s = diff > 0 ? '+' : diff < 0 ? '−' : '';
+    const s = diff > 0 ? '+' : diff < 0 ? '-' : '';   // 줄어든 값은 하이픈(-)으로 적습니다. 복사해 표 계산기에 붙여도 음수로 읽힙니다
     return f.rel ? `${s}${show(f, Math.abs(diff))}` : `${s}${pp(f, diff)}%p`;
   }
   // pick(clientX, clientY) → 순번, point(순번) → { x, y, label, value, text, side }(화면 좌표), clear() → 강조 해제

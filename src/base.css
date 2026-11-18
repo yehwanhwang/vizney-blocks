@@ -11,7 +11,7 @@
   border: 1px solid var(--vzb-edge);
   border-radius: var(--vzb-radius);
   box-shadow: var(--vzb-shadow);
-  font: 400 13px/18px var(--vzb-font);
+  font: 400 14px/20px var(--vzb-font);   /* 글자 크기는 세 단계: 기본 14px, 보조 12px(단위 · 축 눈금 · 요일 · 개수 · 큰 숫자 위 설명), 큰 숫자 18px(말풍선 · 툴팁). 그 밖에 제목 17px, 대표 수치 34px(단위 16px) */
   text-align: left;
   word-break: keep-all;
   overflow-wrap: anywhere;

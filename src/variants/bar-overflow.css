@@ -9,9 +9,9 @@
 .vzb-bb-fill { fill: var(--vzb-base); }
 .vzb-bb-over { fill: var(--vzb-bad); }
 .vzb-bb-line { stroke: var(--vzb-ink); stroke-width: 1.5; }
-.vzb-bb-lim { font-size: 11px; font-weight: 500; fill: var(--vzb-ink); paint-order: stroke; stroke: var(--vzb-card); stroke-width: 3px; stroke-linejoin: round; }
-.vzb-bb-name { font-size: 11px; fill: var(--vzb-muted); }
-.vzb-bb-ex { font-size: 10.5px; font-weight: 700; fill: var(--vzb-bad-ink); font-variant-numeric: tabular-nums; }
+.vzb-bb-lim { font-size: 12px; font-weight: 500; fill: var(--vzb-ink); paint-order: stroke; stroke: var(--vzb-card); stroke-width: 3px; stroke-linejoin: round; }
+.vzb-bb-name { font-size: 12px; fill: var(--vzb-muted); }
+.vzb-bb-ex { font-size: 14px; font-weight: 700; fill: var(--vzb-bad-ink); font-variant-numeric: tabular-nums; }
 .vzb-bb-col.is-over .vzb-bb-name { font-weight: 700; fill: var(--vzb-ink); }
 .vzb-bb-col { transition: opacity 0.12s; }
 .vzb-bb-svg.is-hover .vzb-bb-col:not(.is-on) { opacity: 0.3; }
@@ -24,6 +24,6 @@
 .vzb-bb-btn[hidden] { display: none; }
 .vzb-bb-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
 .vzb-bb-ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.vzb-bb-sum { flex: 1 1 auto; min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-bb-sum { flex: 1 1 auto; min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }
 .vzb-bb-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
 .vzb-bb-key { display: inline-block; width: 8px; height: 8px; margin-right: 7px; border-radius: 2px; background: var(--vzb-bad); }

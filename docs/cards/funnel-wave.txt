@@ -163,6 +163,12 @@
 .vzb-tip-key.is-box { width: 10px; height: 10px; border-radius: 3px; }
 .vzb-tip-row b { font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
 .vzb-tip-row span { color: rgba(255, 255, 255, 0.72); }
+/* flow: 앞에서 뒤로 넘어가는 값을 화살표로 한 줄에 잇습니다. 값은 굵게, 이름은 옅게, 화살표는 값과 같은 흰색으로 둡니다. */
+.vzb-tip-flow { display: flex; align-items: baseline; column-gap: 8px; margin-top: 3px; }
+.vzb-tip-flow-item { display: inline-flex; align-items: baseline; column-gap: 4px; }
+.vzb-tip-flow b { font-weight: 700; font-variant-numeric: tabular-nums; }
+.vzb-tip-flow-item span { color: rgba(255, 255, 255, 0.72); }
+.vzb-tip-arrow { font-weight: 700; }
 .vzb-tip-note { margin-top: 3px; color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-note + .vzb-tip-note { margin-top: 0; }
 /* 툴팁의 증감: 툴팁 바탕이 어두우므로 좋음 · 나쁨 색을 흰색에 조금 섞어 밝게 씁니다(어두운 바탕 툴팁에서도 대비 4.5:1 이상). */
@@ -254,7 +260,7 @@
     '%1. %2의 비중은 %3입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 holds %3. Use the left and right arrows to move between items. Every value is in the table that follows.',
     '최근 7일': 'Last 7 days', '최근 30일': 'Last 30 days', '이번 달': 'This month', '지난달': 'Last month', '이번 분기': 'This quarter', '올해': 'This year', '빠른 선택': 'Quick picks',
     '일간': 'days', '일간|1': 'day', '%s 고름': '%s picked', '이전 달': 'Previous month', '다음 달': 'Next month', 'value의 날짜를 YYYY-MM-DD로 적으세요.': 'Write the dates in value as YYYY-MM-DD.',
-    'items에 단계를 두 개 이상 적으세요.': 'Write two or more stages in items.', '첫 단계의 값은 0보다 커야 합니다.': 'The first stage needs a value above 0.', '단계': 'Stage', '앞 단계에서': 'From the previous stage', '%1 넘어가지 않음(%2)': '%1 did not move on (%2)',
+    'items에 단계를 두 개 이상 적으세요.': 'Write two or more stages in items.', '첫 단계의 값은 0보다 커야 합니다.': 'The first stage needs a value above 0.', '단계': 'Stage', '앞 단계에서': 'From the previous stage', '%1 넘어가지 않음(%2)': '%1 did not move on (%2)', '전환율': 'Conversion rate',
     '%1. %2 %3에서 %4 %5까지, 전환율 %6. 좌우 화살표로 단계 사이의 전환율을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. From %2 %3 to %4 %5, a conversion rate of %6. Use the left and right arrows to move between the conversion rates of the stages. Every value is in the table that follows.',
     '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
   };
@@ -452,13 +458,13 @@
     tip.style.top = `${y - h - 12 < 8 ? y + 16 : y - h - 12}px`;
   }
   function hideTip() { if (tip) tip.classList.remove('is-on'); }
-  // 툴팁 내용: { value, tone, note } 또는 { rows: [{ tone, value, name }], note }. 값이 먼저, 이름은 뒤에 옅게 적습니다.
+  // 툴팁 내용: { value, tone, note } 또는 { rows: [{ tone, value, name }], note }, { value, flow: [{ value, name }], note }. 값이 먼저, 이름은 뒤에 옅게 적습니다.
   // 증감은 차트와 같은 뜻의 색으로 적습니다: tone이 'good'이면 초록, 'bad'면 빨강. note의 줄도 { text, tone }으로 색을 줄 수 있습니다.
   function tipBody(spec, label) {
     const body = el('span', 'vzb-tip-body');
     let text = label;
     // value는 짚은 값(big이면 18px로 크게), rows는 그 값을 이루는 항목들(견본 · 값 · 이름)입니다. 둘을 함께 주면 값 아래에 항목을 적습니다.
-    // 견본은 tone(색 이름)이나 color(카드 밖이라 토큰을 쓸 수 없을 때 미리 만든 색)로 칠하고, box면 네모로 그립니다.
+    // 견본은 tone(색 이름)으로 칠하고, box면 네모로 그립니다. flow는 앞에서 뒤로 넘어가는 값들을 화살표(→)로 한 줄에 잇습니다(예: 앞 단계 → 뒤 단계).
     if (spec.value != null) {
       body.append(el('span', `vzb-tip-value${spec.big ? ' is-big' : ''}${spec.tone ? ` is-${spec.tone}` : ''}`, spec.value));
       text += ` ${spec.value}`;
@@ -466,13 +472,23 @@
     if (spec.rows) {
       const grid = el('span', 'vzb-tip-rows');
       spec.rows.forEach((r) => {
-        const row = el('span', 'vzb-tip-row'), key = el('i', `vzb-tip-key${r.tone ? ` vzb-${r.tone}` : ''}${r.box || r.color ? ' is-box' : ''}`);
-        if (r.color) key.style.background = r.color;
+        const row = el('span', 'vzb-tip-row'), key = el('i', `vzb-tip-key${r.tone ? ` vzb-${r.tone}` : ''}${r.box ? ' is-box' : ''}`);
         row.append(key, el('b', null, r.value), el('span', null, r.name));
         grid.append(row);
         text += `, ${r.name} ${r.value}`;
       });
       body.append(grid);
+    }
+    if (spec.flow) {
+      const line = el('span', 'vzb-tip-flow');
+      spec.flow.forEach((r, i) => {
+        if (i) line.append(el('span', 'vzb-tip-arrow', '→'));
+        const item = el('span', 'vzb-tip-flow-item');
+        item.append(el('b', null, r.value), el('span', null, r.name));
+        line.append(item);
+      });
+      body.append(line);
+      text += `, ${spec.flow.map((r) => `${r.name} ${r.value}`).join(' → ')}`;
     }
     // note는 한 줄 글 또는 줄마다 나눈 배열입니다.
     (Array.isArray(spec.note) ? spec.note : [spec.note]).filter(Boolean).forEach((line) => {
@@ -683,13 +699,14 @@
     // 물결(흘러들 때와 마우스로 민 물결): 물 표면을 약 3px 간격의 점으로 나누고, 점마다 높이(hs, 위로 +)와 속도(us)를 둡니다.
     // 이웃한 점끼리 당겨 물결이 옆으로 퍼지고(빠르기 C), 제자리로 돌아오려는 힘(K)과 감쇠(DAMP)로 잦아듭니다.
     // 시간은 1/240초씩 고르게 나눠 진행해, 화면의 프레임 수와 상관없이 같은 물결이 됩니다. 얕은 물(낮은 단계)은 덜 출렁이도록 깊이에 따라 줄입니다(dep).
-    const C = 240, K = 30, DAMP = 2.4, SUB = 1000 / 240, MAXH = 12, WAKE = 34, SPLASH = 90, STIR = 60, SH = 9;
+    const C = 240, K = 30, DAMP = 3.2, SUB = 1000 / 240, MAXH = 5, WAKE = 16, SPLASH = 40, STIR = 24, SH = 9;
     // 겹물결(전환율을 짚었을 때): 겹마다 높이(a, px) · 물결 길이(l, 칸 폭의 배) · 빠르기(v, px/초) · 처음 위상(p)이 달라 서로 엇갈리며 오른쪽(흐르는 쪽)으로 흐릅니다.
-    // 앞뒤 두 칸 안에서 고르게 일고(두 칸의 바깥 끝 15%에서만 잦아들어 다른 단계의 물은 잔잔함), 0.3초쯤 커졌다가 4초 남짓에 잦아듭니다.
+    // 앞뒤 두 칸 안에서 고르게 일고(두 칸의 바깥 끝 15%에서만 잦아들어 다른 단계의 물은 잔잔함), 0.3초쯤 커졌다가 2초 남짓에 잦아듭니다.
+    // 물 높이가 곧 단계의 값이므로, 물결은 높이를 읽는 데 지장이 없게 몇 px 안에서만 일렁입니다(가장 높은 물마루도 쉬는 높이에서 5px 안).
     // 물결이 이는 동안 뒤 겹은 한 겹마다 LIFT만큼 더 솟아 겹이 보이고, 잔잔해지면 물 뒤로 숨습니다.
-    const HV = [{ a: 7, l: 0.9, v: 70, p: 0 }, { a: 9, l: 1.25, v: 46, p: 1.9 }, { a: 11, l: 0.7, v: 96, p: 3.8 }];
-    const LIFT = 9, HV_END = 4600;
-    const envOf = (ms) => { const a = ms / 1000; return Math.min(1, ((1 - Math.exp(-a / 0.15)) * Math.exp(-a / 1.4)) / 0.72); };
+    const HV = [{ a: 1.6, l: 1.1, v: 34, p: 0 }, { a: 2, l: 1.5, v: 22, p: 1.9 }, { a: 2.4, l: 0.85, v: 46, p: 3.8 }];
+    const LIFT = 2.5, HV_END = 3000;
+    const envOf = (ms) => { const a = ms / 1000; return Math.min(1, ((1 - Math.exp(-a / 0.18)) * Math.exp(-a / 0.9)) / 0.66); };
     const winOf = (u) => (u <= 0 || u >= 1 ? 0 : Math.min(1, u / 0.15, (1 - u) / 0.15) ** 2 * (3 - 2 * Math.min(1, u / 0.15, (1 - u) / 0.15)));   // 두 칸의 바깥 끝 15%만 부드럽게 0으로
     let M = 0, dx = 3, xs = [], rp = [], dep = [], room = [], hs = new Float32Array(0), us = new Float32Array(0), wet = new Uint8Array(0);
     let acc = 0, calm = true, ripple = 0, hv = [];   // ripple: 물결의 가장 큰 높이, hv: 물결치는 전환율 { j(경계), age(밀리초) }
@@ -845,7 +862,7 @@
       if (F < W) {
         const Fm = F + lead;
         if (x > Fm - NOSE) v *= Math.sqrt(Math.max(0, 1 - ((x - Fm + NOSE) / NOSE) ** 2));
-        v += (7 + 2 * m) * sp * dep[i] * Math.exp(-(((x - (Fm - NOSE * 0.85)) / (NOSE * 0.75)) ** 2));
+        v += (3 + m) * sp * dep[i] * Math.exp(-(((x - (Fm - NOSE * 0.85)) / (NOSE * 0.75)) ** 2));
       }
       const simV = m ? hs[Math.min(M - 1, i + m * SH)] * (1 + 0.3 * m) : hs[i];
       const hvV = hv.length ? hvAt(i, m) * room[i] : 0;
@@ -970,10 +987,9 @@
       lastX = x;
       lastT = e.timeStamp;
     });
-    // 툴팁의 견본 색: 툴팁은 카드 밖에 그려져 카드의 토큰(어두운 바탕의 노랑 등)을 물려받지 못하므로, 카드에서 읽은 첫째 색으로 단계의 톤을 적어 줍니다.
-    const toneColor = (p) => `color-mix(in srgb, ${getComputedStyle(card).getPropertyValue('--vzb-primary').trim()} ${p}%, #fff)`;
     // 짚는 자리: 단계 사이의 전환율(경계 j는 j번째 단계와 다음 단계 사이). 마우스는 가까운 경계를 짚고, 키보드는 좌우 화살표로 옮깁니다.
-    // 짚으면 앞뒤 두 단계가 물결치고, 툴팁이 전환율을 크게 보여 주며, 그 아래에 두 단계의 값(견본 색은 단계의 톤)과 넘어가지 않은 수를 적습니다.
+    // 짚으면 앞뒤 두 단계가 물결치고, 툴팁이 전환율을 크게 보여 주며, 그 아래에 '앞 단계 값 → 뒤 단계 값'을 화살표로 잇고 넘어가지 않은 수를 적습니다.
+    // 앞뒤는 색 견본이 아니라 화살표로 보입니다. 이웃한 단계의 톤은 비슷해서 작은 견본으로는 가리기 어렵기 때문입니다.
     // 그 알약은 툴팁이 같은 숫자를 보여 주므로 그동안 숨기고, 나머지 알약 · 단계 글자 · 말풍선은 옅게 둡니다.
     interact(plot, N - 1,
       (cx) => { const r = plot.getBoundingClientRect(); return Math.max(0, Math.min(N - 2, Math.round(((cx - r.left) * N) / (r.width || 1)) - 1)); },
@@ -986,13 +1002,13 @@
         const lost = a.v - b.v;
         const tb = tipBody({
           value: pct1(b.step), big: true,
-          rows: [{ name: a.name, value: show(f, a.v), color: toneColor(a.tone) }, { name: b.name, value: show(f, b.v), color: toneColor(b.tone) }],
+          flow: [{ name: a.name, value: show(f, a.v) }, { name: b.name, value: show(f, b.v) }],
           note: lost > 0 ? tx(d, '%1 넘어가지 않음(%2)', show(f, lost), pct1(1 - b.step)) : null,
-        }, `${a.name} → ${b.name}`);
+        }, tx(d, '전환율'));
         // 알약 위를 가리키고, 알약 위에 툴팁이 들어갈 자리(130px)가 없으면 알약 옆(왼쪽 경계는 오른쪽, 오른쪽 경계는 왼쪽)에 둡니다. 제목을 덮지 않기 위해서입니다.
         const bx = (j + 1) * cw, py = y0 - Math.max(12, restAt(bx)), side = py < 130 ? (bx < W / 2 ? 'right' : 'left') : null;
         const ax = side === 'right' ? bx + b.pw / 2 : side === 'left' ? bx - b.pw / 2 : bx;
-        return { x: r.left + ax * k2, y: r.top + (side ? Math.max(py, 66) : py - 14) * k2, side, label: `${a.name} → ${b.name}`, value: tb.node, text: tb.text };   // 옆에 둘 때도 그림 위로 넘치지 않게 조금 내립니다
+        return { x: r.left + ax * k2, y: r.top + (side ? Math.max(py, 66) : py - 14) * k2, side, label: tx(d, '전환율'), value: tb.node, text: tb.text };   // 옆에 둘 때도 그림 위로 넘치지 않게 조금 내립니다
       },
       () => { hot = -1; svg.classList.remove('is-hover'); st.forEach((x) => { x.lab.classList.remove('is-on'); if (x.pill) x.pill.classList.remove('is-on'); }); },
       false, true);

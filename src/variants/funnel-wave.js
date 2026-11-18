@@ -128,13 +128,14 @@
     // 물결(흘러들 때와 마우스로 민 물결): 물 표면을 약 3px 간격의 점으로 나누고, 점마다 높이(hs, 위로 +)와 속도(us)를 둡니다.
     // 이웃한 점끼리 당겨 물결이 옆으로 퍼지고(빠르기 C), 제자리로 돌아오려는 힘(K)과 감쇠(DAMP)로 잦아듭니다.
     // 시간은 1/240초씩 고르게 나눠 진행해, 화면의 프레임 수와 상관없이 같은 물결이 됩니다. 얕은 물(낮은 단계)은 덜 출렁이도록 깊이에 따라 줄입니다(dep).
-    const C = 240, K = 30, DAMP = 2.4, SUB = 1000 / 240, MAXH = 12, WAKE = 34, SPLASH = 90, STIR = 60, SH = 9;
+    const C = 240, K = 30, DAMP = 3.2, SUB = 1000 / 240, MAXH = 5, WAKE = 16, SPLASH = 40, STIR = 24, SH = 9;
     // 겹물결(전환율을 짚었을 때): 겹마다 높이(a, px) · 물결 길이(l, 칸 폭의 배) · 빠르기(v, px/초) · 처음 위상(p)이 달라 서로 엇갈리며 오른쪽(흐르는 쪽)으로 흐릅니다.
-    // 앞뒤 두 칸 안에서 고르게 일고(두 칸의 바깥 끝 15%에서만 잦아들어 다른 단계의 물은 잔잔함), 0.3초쯤 커졌다가 4초 남짓에 잦아듭니다.
+    // 앞뒤 두 칸 안에서 고르게 일고(두 칸의 바깥 끝 15%에서만 잦아들어 다른 단계의 물은 잔잔함), 0.3초쯤 커졌다가 2초 남짓에 잦아듭니다.
+    // 물 높이가 곧 단계의 값이므로, 물결은 높이를 읽는 데 지장이 없게 몇 px 안에서만 일렁입니다(가장 높은 물마루도 쉬는 높이에서 5px 안).
     // 물결이 이는 동안 뒤 겹은 한 겹마다 LIFT만큼 더 솟아 겹이 보이고, 잔잔해지면 물 뒤로 숨습니다.
-    const HV = [{ a: 7, l: 0.9, v: 70, p: 0 }, { a: 9, l: 1.25, v: 46, p: 1.9 }, { a: 11, l: 0.7, v: 96, p: 3.8 }];
-    const LIFT = 9, HV_END = 4600;
-    const envOf = (ms) => { const a = ms / 1000; return Math.min(1, ((1 - Math.exp(-a / 0.15)) * Math.exp(-a / 1.4)) / 0.72); };
+    const HV = [{ a: 1.6, l: 1.1, v: 34, p: 0 }, { a: 2, l: 1.5, v: 22, p: 1.9 }, { a: 2.4, l: 0.85, v: 46, p: 3.8 }];
+    const LIFT = 2.5, HV_END = 3000;
+    const envOf = (ms) => { const a = ms / 1000; return Math.min(1, ((1 - Math.exp(-a / 0.18)) * Math.exp(-a / 0.9)) / 0.66); };
     const winOf = (u) => (u <= 0 || u >= 1 ? 0 : Math.min(1, u / 0.15, (1 - u) / 0.15) ** 2 * (3 - 2 * Math.min(1, u / 0.15, (1 - u) / 0.15)));   // 두 칸의 바깥 끝 15%만 부드럽게 0으로
     let M = 0, dx = 3, xs = [], rp = [], dep = [], room = [], hs = new Float32Array(0), us = new Float32Array(0), wet = new Uint8Array(0);
     let acc = 0, calm = true, ripple = 0, hv = [];   // ripple: 물결의 가장 큰 높이, hv: 물결치는 전환율 { j(경계), age(밀리초) }
@@ -290,7 +291,7 @@
       if (F < W) {
         const Fm = F + lead;
         if (x > Fm - NOSE) v *= Math.sqrt(Math.max(0, 1 - ((x - Fm + NOSE) / NOSE) ** 2));
-        v += (7 + 2 * m) * sp * dep[i] * Math.exp(-(((x - (Fm - NOSE * 0.85)) / (NOSE * 0.75)) ** 2));
+        v += (3 + m) * sp * dep[i] * Math.exp(-(((x - (Fm - NOSE * 0.85)) / (NOSE * 0.75)) ** 2));
       }
       const simV = m ? hs[Math.min(M - 1, i + m * SH)] * (1 + 0.3 * m) : hs[i];
       const hvV = hv.length ? hvAt(i, m) * room[i] : 0;
@@ -415,10 +416,9 @@
       lastX = x;
       lastT = e.timeStamp;
     });
-    // 툴팁의 견본 색: 툴팁은 카드 밖에 그려져 카드의 토큰(어두운 바탕의 노랑 등)을 물려받지 못하므로, 카드에서 읽은 첫째 색으로 단계의 톤을 적어 줍니다.
-    const toneColor = (p) => `color-mix(in srgb, ${getComputedStyle(card).getPropertyValue('--vzb-primary').trim()} ${p}%, #fff)`;
     // 짚는 자리: 단계 사이의 전환율(경계 j는 j번째 단계와 다음 단계 사이). 마우스는 가까운 경계를 짚고, 키보드는 좌우 화살표로 옮깁니다.
-    // 짚으면 앞뒤 두 단계가 물결치고, 툴팁이 전환율을 크게 보여 주며, 그 아래에 두 단계의 값(견본 색은 단계의 톤)과 넘어가지 않은 수를 적습니다.
+    // 짚으면 앞뒤 두 단계가 물결치고, 툴팁이 전환율을 크게 보여 주며, 그 아래에 '앞 단계 값 → 뒤 단계 값'을 화살표로 잇고 넘어가지 않은 수를 적습니다.
+    // 앞뒤는 색 견본이 아니라 화살표로 보입니다. 이웃한 단계의 톤은 비슷해서 작은 견본으로는 가리기 어렵기 때문입니다.
     // 그 알약은 툴팁이 같은 숫자를 보여 주므로 그동안 숨기고, 나머지 알약 · 단계 글자 · 말풍선은 옅게 둡니다.
     interact(plot, N - 1,
       (cx) => { const r = plot.getBoundingClientRect(); return Math.max(0, Math.min(N - 2, Math.round(((cx - r.left) * N) / (r.width || 1)) - 1)); },
@@ -431,13 +431,13 @@
         const lost = a.v - b.v;
         const tb = tipBody({
           value: pct1(b.step), big: true,
-          rows: [{ name: a.name, value: show(f, a.v), color: toneColor(a.tone) }, { name: b.name, value: show(f, b.v), color: toneColor(b.tone) }],
+          flow: [{ name: a.name, value: show(f, a.v) }, { name: b.name, value: show(f, b.v) }],
           note: lost > 0 ? tx(d, '%1 넘어가지 않음(%2)', show(f, lost), pct1(1 - b.step)) : null,
-        }, `${a.name} → ${b.name}`);
+        }, tx(d, '전환율'));
         // 알약 위를 가리키고, 알약 위에 툴팁이 들어갈 자리(130px)가 없으면 알약 옆(왼쪽 경계는 오른쪽, 오른쪽 경계는 왼쪽)에 둡니다. 제목을 덮지 않기 위해서입니다.
         const bx = (j + 1) * cw, py = y0 - Math.max(12, restAt(bx)), side = py < 130 ? (bx < W / 2 ? 'right' : 'left') : null;
         const ax = side === 'right' ? bx + b.pw / 2 : side === 'left' ? bx - b.pw / 2 : bx;
-        return { x: r.left + ax * k2, y: r.top + (side ? Math.max(py, 66) : py - 14) * k2, side, label: `${a.name} → ${b.name}`, value: tb.node, text: tb.text };   // 옆에 둘 때도 그림 위로 넘치지 않게 조금 내립니다
+        return { x: r.left + ax * k2, y: r.top + (side ? Math.max(py, 66) : py - 14) * k2, side, label: tx(d, '전환율'), value: tb.node, text: tb.text };   // 옆에 둘 때도 그림 위로 넘치지 않게 조금 내립니다
       },
       () => { hot = -1; svg.classList.remove('is-hover'); st.forEach((x) => { x.lab.classList.remove('is-on'); if (x.pill) x.pill.classList.remove('is-on'); }); },
       false, true);

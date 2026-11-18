@@ -35,13 +35,14 @@ Copy-paste HTML cards: charts you read through their motion, and the dashboard c
 | [Waffle Flip](https://blocks.vizney.com/ko/cards/waffle-flip.html) | 와플 차트 | 시장 점유율이나 매출 구성비처럼 한 항목의 비중이 두 기간 사이에 얼마나 늘거나 줄었는지. 바뀐 만큼의 칸이 한 칸씩 뒤집힙니다 |
 | [Bump Race](https://blocks.vizney.com/ko/cards/bump-race.html) | 범프 차트 | 상품 · 채널 · 지점의 순위가 기간마다 어떻게 오르내렸는지. 기간을 하나씩 넘기며 앞지르는 순간을 보여 줍니다 |
 | [Waterfall Walk](https://blocks.vizney.com/ko/cards/waterfall-walk.html) | 워터폴 차트 | 시작 값에서 끝 값까지 무엇이 얼마나 늘리고 줄였는지. 점이 다음 항목으로 걸어가며 막대를 하나씩 이어 붙이고, 끝 막대의 말풍선이 끝 값과 증감을 알립니다 |
+| [Date Picker](https://blocks.vizney.com/ko/cards/date-picker.html) | 컨트롤 | 주문일이나 기준일처럼 날짜로 화면을 거를 때. 날짜 둘을 고르는 동안 기간과 일수가 따라오고, 고르면 띠가 시작일에서 끝일까지 그어집니다 |
 | [Range Slider](https://blocks.vizney.com/ko/cards/range-slider.html) | 컨트롤 | 주문 금액이나 수량처럼 이어지는 값으로 화면을 거를 때. 끄는 동안 범위에 드는 분포가 레일 위에 뜹니다 |
 | [Filter Chips](https://blocks.vizney.com/ko/cards/filter-chips.html) | 컨트롤 | 채널이나 지역처럼 몇 개 안 되는 이름으로 화면을 거를 때. 전체 칩이 지금 몇 개를 골랐는지 보여 줍니다 |
 | [Download Button](https://blocks.vizney.com/ko/cards/download-button.html) | 컨트롤 | 화면에 있는 차트 카드의 지금 데이터를 CSV · JSON · PNG로 받을 때 |
 
 카드마다의 규칙과 필드는 [llms.txt](https://blocks.vizney.com/ko/llms.txt)의 그 카드 줄에 있습니다.
 
-v0.56에서 이전 방향의 카드와 차트 페이지를 모두 지웠습니다. 지금 있는 여섯 장이 전부이고, 카드는 하나씩 다시 더해 갑니다. 갤러리를 다시 채우는 동안에는 카드 이름이 바뀌면 id와 주소도 함께 바뀌고, 예전 주소는 남기지 않습니다(없는 주소는 첫 화면으로 안내하는 404 화면이 받습니다). 지운 내용은 [releases/v0.56.md](releases/v0.56.md)에 있습니다.
+v0.56에서 이전 방향의 카드와 차트 페이지를 모두 지웠습니다. 지금 있는 여덟 장이 전부이고, 카드는 하나씩 다시 더해 갑니다. 갤러리를 다시 채우는 동안에는 카드 이름이 바뀌면 id와 주소도 함께 바뀌고, 예전 주소는 남기지 않습니다(없는 주소는 첫 화면으로 안내하는 404 화면이 받습니다). 지운 내용은 [releases/v0.56.md](releases/v0.56.md)에 있습니다.
 
 ## 컨트롤과 차트 잇기
 
@@ -71,7 +72,7 @@ document.addEventListener('vzb-change', (e) => {
 
 ## AI에게 맡기기
 
-주소를 열 수 있는 AI에는 [llms.txt](https://blocks.vizney.com/ko/llms.txt)(영어는 [/llms.txt](https://blocks.vizney.com/llms.txt)) 주소를 줍니다. 첫 화면 제목 옆의 **AI용 링크 복사**가 이 주소를 복사합니다. 쓰는 법, 카드 여섯 장의 쓰임과 규칙, 카드 코드 주소, 컨트롤과 차트를 잇는 법이 들어 있습니다. 카드 한 장만 쓸 때는 그 카드의 `.txt` 주소를 주고 “이 카드로 우리 광고비 데이터를 그려 줘”처럼 요청하면 됩니다.
+주소를 열 수 있는 AI에는 [llms.txt](https://blocks.vizney.com/ko/llms.txt)(영어는 [/llms.txt](https://blocks.vizney.com/llms.txt)) 주소를 줍니다. 첫 화면 제목 옆의 **AI용 링크 복사**가 이 주소를 복사합니다. 쓰는 법, 카드 여덟 장의 쓰임과 규칙, 카드 코드 주소, 컨트롤과 차트를 잇는 법이 들어 있습니다. 카드 한 장만 쓸 때는 그 카드의 `.txt` 주소를 주고 “이 카드로 우리 광고비 데이터를 그려 줘”처럼 요청하면 됩니다.
 
 Claude Code, Cursor, Codex 같은 코딩 에이전트에는 스킬로 설치할 수 있습니다. 같은 카드와 규칙에 순서와 체크리스트, 예시가 더해져 있습니다.
 

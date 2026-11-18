@@ -15,8 +15,6 @@
 .vzb-bb-col.is-over .vzb-bb-name { font-weight: 700; fill: var(--vzb-ink); }
 .vzb-bb-col { transition: opacity 0.12s; }
 .vzb-bb-svg.is-hover .vzb-bb-col:not(.is-on) { opacity: 0.3; }
-.vzb-bb-ex { transition: opacity 0.12s; }
-.vzb-bb-svg.is-hover .vzb-bb-col.is-on .vzb-bb-ex { opacity: 0; }   /* 짚은 막대의 넘친 양은 툴팁이 대신 보여 줍니다 */
 .vzb-bb-ctl { display: flex; align-items: center; gap: 10px; min-height: 28px; margin-top: 8px; }
 .vzb-card[data-vzb="bar-overflow"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
 .vzb-bb-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }

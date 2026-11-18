@@ -1,0 +1,28 @@
+{
+  "title": "Sales Funnel",
+  "subtitle": "From lead to won deal, Q3 2026",
+  "lang": "en",
+  "format": "count",
+  "items": [
+    {
+      "name": "Leads",
+      "value": 2400
+    },
+    {
+      "name": "Qualified",
+      "value": 1320
+    },
+    {
+      "name": "Proposal",
+      "value": 620
+    },
+    {
+      "name": "Negotiation",
+      "value": 410
+    },
+    {
+      "name": "Won",
+      "value": 264
+    }
+  ]
+}

@@ -27,7 +27,7 @@ Copy-paste HTML cards: charts you read through their motion, and the dashboard c
 
 ## 카드
 
-차트 카드의 이름은 차트 종류 뒤에 그 카드의 움직임을 붙여 짓고(Bar Overflow: 막대가 한도를 넘침, Waffle Flip: 와플 칸이 뒤집힘, Bump Race: 범프 차트의 순위 다툼, Waterfall Walk: 워터폴의 단계를 한 걸음씩 걸어감), 컨트롤은 찾는 말 그대로 짓습니다. 카드 id는 카드 이름을 소문자와 하이픈으로 적은 것입니다(Bump Race → `bump-race`). 카드 코드는 `https://blocks.vizney.com/ko/cards/<id>.txt`(영어는 `/cards/<id>.txt`)에, 그 카드만 그린 페이지는 같은 자리의 `.html`에 있습니다.
+차트 카드의 이름은 차트 종류 뒤에 그 카드의 움직임을 붙여 짓고(Bar Overflow: 막대가 한도를 넘침, Waffle Flip: 와플 칸이 뒤집힘, Bump Race: 범프 차트의 순위 다툼, Waterfall Walk: 워터폴의 단계를 한 걸음씩 걸어감, Funnel Wave: 퍼널의 단계를 물결처럼 흘러내림), 컨트롤은 찾는 말 그대로 짓습니다. 카드 id는 카드 이름을 소문자와 하이픈으로 적은 것입니다(Bump Race → `bump-race`). 카드 코드는 `https://blocks.vizney.com/ko/cards/<id>.txt`(영어는 `/cards/<id>.txt`)에, 그 카드만 그린 페이지는 같은 자리의 `.html`에 있습니다.
 
 | 카드 | 종류 | 쓰는 때 |
 |---|---|---|
@@ -35,6 +35,7 @@ Copy-paste HTML cards: charts you read through their motion, and the dashboard c
 | [Waffle Flip](https://blocks.vizney.com/ko/cards/waffle-flip.html) | 와플 차트 | 시장 점유율이나 매출 구성비처럼 한 항목의 비중이 두 기간 사이에 얼마나 늘거나 줄었는지. 바뀐 만큼의 칸이 한 칸씩 뒤집힙니다 |
 | [Bump Race](https://blocks.vizney.com/ko/cards/bump-race.html) | 범프 차트 | 상품 · 채널 · 지점의 순위가 기간마다 어떻게 오르내렸는지. 기간을 하나씩 넘기며 앞지르는 순간을 보여 줍니다 |
 | [Waterfall Walk](https://blocks.vizney.com/ko/cards/waterfall-walk.html) | 워터폴 차트 | 시작 값에서 끝 값까지 무엇이 얼마나 늘리고 줄였는지. 점이 다음 항목으로 걸어가며 막대를 하나씩 이어 붙이고, 끝 막대의 말풍선이 끝 값과 증감을 알립니다 |
+| [Funnel Wave](https://blocks.vizney.com/ko/cards/funnel-wave.html) | 퍼널 차트 | 리드에서 계약까지처럼 정해진 순서의 단계를 지나며 처음 100 가운데 얼마가 끝까지 오는지. 물이 흘러 들어와 단계마다 남은 만큼의 높이로 내려가고, 칸마다 첫 단계 대비 비율을 적습니다 |
 | [Date Picker](https://blocks.vizney.com/ko/cards/date-picker.html) | 컨트롤 | 주문일이나 기준일처럼 날짜로 화면을 거를 때. 날짜 둘을 고르는 동안 기간과 일수가 따라오고, 고르면 띠가 시작일에서 끝일까지 그어집니다 |
 | [Range Slider](https://blocks.vizney.com/ko/cards/range-slider.html) | 컨트롤 | 주문 금액이나 수량처럼 이어지는 값으로 화면을 거를 때. 끄는 동안 범위에 드는 분포가 레일 위에 뜹니다 |
 | [Filter Chips](https://blocks.vizney.com/ko/cards/filter-chips.html) | 컨트롤 | 채널이나 지역처럼 몇 개 안 되는 이름으로 화면을 거를 때. 전체 칩이 지금 몇 개를 골랐는지 보여 줍니다 |
@@ -42,7 +43,7 @@ Copy-paste HTML cards: charts you read through their motion, and the dashboard c
 
 카드마다의 규칙과 필드는 [llms.txt](https://blocks.vizney.com/ko/llms.txt)의 그 카드 줄에 있습니다.
 
-v0.56에서 이전 방향의 카드와 차트 페이지를 모두 지웠습니다. 지금 있는 여덟 장이 전부이고, 카드는 하나씩 다시 더해 갑니다. 갤러리를 다시 채우는 동안에는 카드 이름이 바뀌면 id와 주소도 함께 바뀌고, 예전 주소는 남기지 않습니다(없는 주소는 첫 화면으로 안내하는 404 화면이 받습니다). 지운 내용은 [releases/v0.56.md](releases/v0.56.md)에 있습니다.
+v0.56에서 이전 방향의 카드와 차트 페이지를 모두 지웠습니다. 지금 있는 아홉 장이 전부이고, 카드는 하나씩 다시 더해 갑니다. 갤러리를 다시 채우는 동안에는 카드 이름이 바뀌면 id와 주소도 함께 바뀌고, 예전 주소는 남기지 않습니다(없는 주소는 첫 화면으로 안내하는 404 화면이 받습니다). 지운 내용은 [releases/v0.56.md](releases/v0.56.md)에 있습니다.
 
 ## 컨트롤과 차트 잇기
 

@@ -23,7 +23,7 @@
 </head>
 <body>
 <main style="--w:640px">
-<!-- Vizney Blocks v0.65 · Bump Chart · Bump Race (bump-race)
+<!-- Vizney Blocks v0.66 · Bump Chart · Bump Race (bump-race)
      https://blocks.vizney.com/cards/bump-race.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -185,8 +185,15 @@
 .vzb-tip-body { display: flex; flex-direction: column; }
 .vzb-tip-rows { display: grid; grid-template-columns: auto auto auto; justify-content: start; align-items: center; column-gap: 8px; row-gap: 1px; margin-top: 3px; }
 .vzb-tip-row { display: contents; }
+.vzb-tip-key.is-box { width: 10px; height: 10px; border-radius: 3px; }
 .vzb-tip-row b { font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
 .vzb-tip-row span { color: rgba(255, 255, 255, 0.72); }
+/* flow: 앞에서 뒤로 넘어가는 값을 화살표로 한 줄에 잇습니다. 값은 굵게, 이름은 옅게, 화살표는 값과 같은 흰색으로 둡니다. */
+.vzb-tip-flow { display: flex; align-items: baseline; column-gap: 8px; margin-top: 3px; }
+.vzb-tip-flow-item { display: inline-flex; align-items: baseline; column-gap: 4px; }
+.vzb-tip-flow b { font-weight: 700; font-variant-numeric: tabular-nums; }
+.vzb-tip-flow-item span { color: rgba(255, 255, 255, 0.72); }
+.vzb-tip-arrow { font-weight: 700; }
 .vzb-tip-note { margin-top: 3px; color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-note + .vzb-tip-note { margin-top: 0; }
 /* 툴팁의 증감: 툴팁 바탕이 어두우므로 좋음 · 나쁨 색을 흰색에 조금 섞어 밝게 씁니다(어두운 바탕 툴팁에서도 대비 4.5:1 이상). */
@@ -314,6 +321,8 @@
     '%1. %2의 비중은 %3입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 holds %3. Use the left and right arrows to move between items. Every value is in the table that follows.',
     '최근 7일': 'Last 7 days', '최근 30일': 'Last 30 days', '이번 달': 'This month', '지난달': 'Last month', '이번 분기': 'This quarter', '올해': 'This year', '빠른 선택': 'Quick picks',
     '일간': 'days', '일간|1': 'day', '%s 고름': '%s picked', '이전 달': 'Previous month', '다음 달': 'Next month', 'value의 날짜를 YYYY-MM-DD로 적으세요.': 'Write the dates in value as YYYY-MM-DD.',
+    'items에 단계를 두 개 이상 적으세요.': 'Write two or more stages in items.', '첫 단계의 값은 0보다 커야 합니다.': 'The first stage needs a value above 0.', '단계': 'Stage', '앞 단계에서': 'From the previous stage', '%1에서 %2 넘어옴': '%2 moved on from %1', '퍼널의 시작': 'Start of the funnel', '시작 값': 'Starting value',
+    '%1. %2 %3에서 %4 %5까지, 첫 단계 대비 %6. 좌우 화살표로 단계를 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. From %2 %3 to %4 %5, %6 of the first stage. Use the left and right arrows to move between the stages. Every value is in the table that follows.',
     '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
   };
   // tx(d 또는 f, 원문, 값…): d.lang(format()이 f에 옮겨 둡니다)이 en이면 영어 문구를, 아니면 원문을 돌려줍니다.
@@ -510,23 +519,37 @@
     tip.style.top = `${y - h - 12 < 8 ? y + 16 : y - h - 12}px`;
   }
   function hideTip() { if (tip) tip.classList.remove('is-on'); }
-  // 툴팁 내용: { value, tone, note } 또는 { rows: [{ tone, value, name }], note }. 값이 먼저, 이름은 뒤에 옅게 적습니다.
+  // 툴팁 내용: { value, tone, note } 또는 { rows: [{ tone, value, name }], note }, { value, flow: [{ value, name }], note }. 값이 먼저, 이름은 뒤에 옅게 적습니다.
   // 증감은 차트와 같은 뜻의 색으로 적습니다: tone이 'good'이면 초록, 'bad'면 빨강. note의 줄도 { text, tone }으로 색을 줄 수 있습니다.
   function tipBody(spec, label) {
     const body = el('span', 'vzb-tip-body');
     let text = label;
+    // value는 짚은 값(big이면 18px로 크게), rows는 그 값을 이루는 항목들(견본 · 값 · 이름)입니다. 둘을 함께 주면 값 아래에 항목을 적습니다.
+    // 견본은 tone(색 이름)으로 칠하고, box면 네모로 그립니다. flow는 앞에서 뒤로 넘어가는 값들을 화살표(→)로 한 줄에 잇습니다(예: 앞 단계 → 뒤 단계).
+    if (spec.value != null) {
+      body.append(el('span', `vzb-tip-value${spec.big ? ' is-big' : ''}${spec.tone ? ` is-${spec.tone}` : ''}`, spec.value));
+      text += ` ${spec.value}`;
+    }
     if (spec.rows) {
       const grid = el('span', 'vzb-tip-rows');
       spec.rows.forEach((r) => {
-        const row = el('span', 'vzb-tip-row');
-        row.append(el('i', `vzb-tip-key vzb-${r.tone}`), el('b', null, r.value), el('span', null, r.name));
+        const row = el('span', 'vzb-tip-row'), key = el('i', `vzb-tip-key${r.tone ? ` vzb-${r.tone}` : ''}${r.box ? ' is-box' : ''}`);
+        row.append(key, el('b', null, r.value), el('span', null, r.name));
         grid.append(row);
         text += `, ${r.name} ${r.value}`;
       });
       body.append(grid);
-    } else {
-      body.append(el('span', `vzb-tip-value${spec.tone ? ` is-${spec.tone}` : ''}`, spec.value));
-      text += ` ${spec.value}`;
+    }
+    if (spec.flow) {
+      const line = el('span', 'vzb-tip-flow');
+      spec.flow.forEach((r, i) => {
+        if (i) line.append(el('span', 'vzb-tip-arrow', '→'));
+        const item = el('span', 'vzb-tip-flow-item');
+        item.append(el('b', null, r.value), el('span', null, r.name));
+        line.append(item);
+      });
+      body.append(line);
+      text += `, ${spec.flow.map((r) => `${r.name} ${r.value}`).join(' → ')}`;
     }
     // note는 한 줄 글 또는 줄마다 나눈 배열입니다.
     (Array.isArray(spec.note) ? spec.note : [spec.note]).filter(Boolean).forEach((line) => {

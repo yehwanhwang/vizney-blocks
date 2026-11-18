@@ -24,23 +24,37 @@
     tip.style.top = `${y - h - 12 < 8 ? y + 16 : y - h - 12}px`;
   }
   function hideTip() { if (tip) tip.classList.remove('is-on'); }
-  // 툴팁 내용: { value, tone, note } 또는 { rows: [{ tone, value, name }], note }. 값이 먼저, 이름은 뒤에 옅게 적습니다.
+  // 툴팁 내용: { value, tone, note } 또는 { rows: [{ tone, value, name }], note }, { value, flow: [{ value, name }], note }. 값이 먼저, 이름은 뒤에 옅게 적습니다.
   // 증감은 차트와 같은 뜻의 색으로 적습니다: tone이 'good'이면 초록, 'bad'면 빨강. note의 줄도 { text, tone }으로 색을 줄 수 있습니다.
   function tipBody(spec, label) {
     const body = el('span', 'vzb-tip-body');
     let text = label;
+    // value는 짚은 값(big이면 18px로 크게), rows는 그 값을 이루는 항목들(견본 · 값 · 이름)입니다. 둘을 함께 주면 값 아래에 항목을 적습니다.
+    // 견본은 tone(색 이름)으로 칠하고, box면 네모로 그립니다. flow는 앞에서 뒤로 넘어가는 값들을 화살표(→)로 한 줄에 잇습니다(예: 앞 단계 → 뒤 단계).
+    if (spec.value != null) {
+      body.append(el('span', `vzb-tip-value${spec.big ? ' is-big' : ''}${spec.tone ? ` is-${spec.tone}` : ''}`, spec.value));
+      text += ` ${spec.value}`;
+    }
     if (spec.rows) {
       const grid = el('span', 'vzb-tip-rows');
       spec.rows.forEach((r) => {
-        const row = el('span', 'vzb-tip-row');
-        row.append(el('i', `vzb-tip-key vzb-${r.tone}`), el('b', null, r.value), el('span', null, r.name));
+        const row = el('span', 'vzb-tip-row'), key = el('i', `vzb-tip-key${r.tone ? ` vzb-${r.tone}` : ''}${r.box ? ' is-box' : ''}`);
+        row.append(key, el('b', null, r.value), el('span', null, r.name));
         grid.append(row);
         text += `, ${r.name} ${r.value}`;
       });
       body.append(grid);
-    } else {
-      body.append(el('span', `vzb-tip-value${spec.tone ? ` is-${spec.tone}` : ''}`, spec.value));
-      text += ` ${spec.value}`;
+    }
+    if (spec.flow) {
+      const line = el('span', 'vzb-tip-flow');
+      spec.flow.forEach((r, i) => {
+        if (i) line.append(el('span', 'vzb-tip-arrow', '→'));
+        const item = el('span', 'vzb-tip-flow-item');
+        item.append(el('b', null, r.value), el('span', null, r.name));
+        line.append(item);
+      });
+      body.append(line);
+      text += `, ${spec.flow.map((r) => `${r.name} ${r.value}`).join(' → ')}`;
     }
     // note는 한 줄 글 또는 줄마다 나눈 배열입니다.
     (Array.isArray(spec.note) ? spec.note : [spec.note]).filter(Boolean).forEach((line) => {

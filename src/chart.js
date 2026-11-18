@@ -29,18 +29,22 @@
   function tipBody(spec, label) {
     const body = el('span', 'vzb-tip-body');
     let text = label;
+    // value는 짚은 값(big이면 18px로 크게), rows는 그 값을 이루는 항목들(견본 · 값 · 이름)입니다. 둘을 함께 주면 값 아래에 항목을 적습니다.
+    // 견본은 tone(색 이름)이나 color(카드 밖이라 토큰을 쓸 수 없을 때 미리 만든 색)로 칠하고, box면 네모로 그립니다.
+    if (spec.value != null) {
+      body.append(el('span', `vzb-tip-value${spec.big ? ' is-big' : ''}${spec.tone ? ` is-${spec.tone}` : ''}`, spec.value));
+      text += ` ${spec.value}`;
+    }
     if (spec.rows) {
       const grid = el('span', 'vzb-tip-rows');
       spec.rows.forEach((r) => {
-        const row = el('span', 'vzb-tip-row');
-        row.append(el('i', `vzb-tip-key vzb-${r.tone}`), el('b', null, r.value), el('span', null, r.name));
+        const row = el('span', 'vzb-tip-row'), key = el('i', `vzb-tip-key${r.tone ? ` vzb-${r.tone}` : ''}${r.box || r.color ? ' is-box' : ''}`);
+        if (r.color) key.style.background = r.color;
+        row.append(key, el('b', null, r.value), el('span', null, r.name));
         grid.append(row);
         text += `, ${r.name} ${r.value}`;
       });
       body.append(grid);
-    } else {
-      body.append(el('span', `vzb-tip-value${spec.tone ? ` is-${spec.tone}` : ''}`, spec.value));
-      text += ` ${spec.value}`;
     }
     // note는 한 줄 글 또는 줄마다 나눈 배열입니다.
     (Array.isArray(spec.note) ? spec.note : [spec.note]).filter(Boolean).forEach((line) => {

@@ -16,7 +16,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.64';
+const VERSION = 'v0.65';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -409,8 +409,8 @@ const FIELD_OVERRIDE = {
     en: { title: 'what is ranked (e.g. Top Sellers)', subtitle: 'the basis of the rank and the period (e.g. monthly rank by units sold, Nov 2025 – Nov 2026)', labels: 'the period names; 13 months for a monthly trend', focus: 'the name of the item to follow; the first item when empty', items: '2 to 8 items, each with name and values (one per period, as many as labels; null for a period without a value)', better: 'up (default: the largest value ranks 1) or down (the smallest value ranks 1)' },
   },
   'waterfall-walk': {
-    ko: { title: '무엇의 값인지(예: 회원 수)', subtitle: '무엇을 보는지와 두 지점(예: 무엇이 늘리고 줄였나, 연초 → 연말)', items: '읽는 순서대로 적은 항목. 첫 항목은 시작 값({ name, value }), 증감 항목은 { name, value }(늘면 +, 줄면 −, 값이 없으면 null), 그때까지의 누계를 세울 자리(끝이나 중간 합계)에는 { name, total: true }(값은 카드가 계산한다). 이름은 막대 끝에 적으므로 짧게', compare: '끝 막대의 말풍선에 적을 것. 비우면 첫 항목 대비 증감, share면 첫 항목의 몇 %인지(손익의 이익률처럼)', better: 'up(비우면, 늘린 항목이 초록) · down(줄인 항목이 초록) · neutral(증감을 모두 첫째 색으로)' },
-    en: { title: 'what the values are (e.g. Members)', subtitle: 'what it shows and the two points (e.g. What changed it, Jan 1 → Dec 31)', items: 'the items in reading order: the first is the starting value ({ name, value }), a change is { name, value } (+ up, − down, null when it has no value), and { name, total: true } stands a running total at that point, at the end or as a subtotal (the card computes its value). Names are printed at the bar ends, so keep them short', compare: 'what the callout on the end bar adds: empty for the change against the first item, share for its share of the first item (like a margin on an income statement)', better: 'up (default: items that raise the value are green) · down (items that lower it are green) · neutral (every change in the first color)' },
+    ko: { title: '무엇의 값인지(예: 회원 수)', subtitle: '무엇을 보는지와 두 지점(예: 무엇이 늘리고 줄였나, 연초 → 연말)', items: '읽는 순서대로 적은 항목. 첫 항목은 시작 값({ name, value }), 증감 항목은 { name, value }(늘면 +, 줄면 -, 값이 없으면 null), 그때까지의 누계를 세울 자리(끝이나 중간 합계)에는 { name, total: true }(값은 카드가 계산한다). 이름은 막대 끝에 적으므로 짧게', compare: '끝 막대의 말풍선에 적을 것. 비우면 첫 항목 대비 증감, share면 첫 항목의 몇 %인지(손익의 이익률처럼)', better: 'up(비우면, 늘린 항목이 초록) · down(줄인 항목이 초록) · neutral(증감을 모두 첫째 색으로)' },
+    en: { title: 'what the values are (e.g. Members)', subtitle: 'what it shows and the two points (e.g. What changed it, Jan 1 → Dec 31)', items: 'the items in reading order: the first is the starting value ({ name, value }), a change is { name, value } (+ up, - down, null when it has no value), and { name, total: true } stands a running total at that point, at the end or as a subtotal (the card computes its value). Names are printed at the bar ends, so keep them short', compare: 'what the callout on the end bar adds: empty for the change against the first item, share for its share of the first item (like a margin on an income statement)', better: 'up (default: items that raise the value are green) · down (items that lower it are green) · neutral (every change in the first color)' },
   },
   'funnel-wave': {
     ko: { title: '무엇의 퍼널인지(예: 결제 퍼널)', subtitle: '처음 · 끝 단계와 기간(예: 장바구니에서 구매까지, 2026년 11월)', items: '단계 2~6개를 순서대로. 단계마다 name과 value(그 단계까지 온 수). 전환율 · 첫 단계 대비 비율 · 전체 전환율은 카드가 계산한다. 이름은 단계 칸 아래에 적으므로 짧게', unit: '값 뒤에 붙는 말(예: 명)' },
@@ -583,7 +583,7 @@ const siteJs = r('page/site.js').trim();
 // ---------- Font: every character a page or a card can render, plus digits and number signs ----------
 mkdirSync(join(root, 'build'), { recursive: true });
 const chars = new Set([...Object.values(pages), siteJs].join('').replace(/\\u003c/g, '<'));
-for (const c of '0123456789.,+-−–%()[]/:·×…→←↑↓↗ ') chars.add(c);
+for (const c of '0123456789.,+-–%()[]/:·×…→←↑↓↗ ') chars.add(c);
 for (let c = 0x20; c < 0x7f; c++) chars.add(String.fromCharCode(c));
 writeFileSync(join(root, 'build/chars.txt'), [...chars].filter((c) => c >= ' ').join(''));
 if (!FONT_DIR) throw new Error('Set SPOQA_DIR to Original/SpoqaHanSansNeo of github.com/spoqa/spoqa-han-sans (SpoqaHanSansNeo-{Regular,Medium,Bold}.ttf)');
@@ -826,7 +826,7 @@ const skillPage = (lang) => (lang === 'en' ? `<!doctype html>
    <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ad spend</title></head>
    <body style="margin:0; padding:24px; background:#f4f5f7;">
    <h1 style="margin:0; font:700 22px/1.4 var(--vzb-font); color:var(--vzb-ink);">Ad spend</h1>
-   <p style="margin:2px 0 16px; font:400 13px/1.5 var(--vzb-font); color:var(--vzb-muted);">As of November 2026 · Data source</p>
+   <p style="margin:2px 0 16px; font:400 14px/1.5 var(--vzb-font); color:var(--vzb-muted);">As of November 2026 · Data source</p>
    <!-- Filter bar: a control draws no title, so the page names it. Give each control a slot with a width. -->
    <div style="display:grid; grid-template-columns:minmax(0, 1fr) auto; align-items:end; gap:16px 24px; margin-bottom:16px; padding:16px 20px; border-radius:16px; background:#ffffff;">
    <div><div style="margin-bottom:8px; font:500 12px/16px var(--vzb-font); color:var(--vzb-muted);">Channel</div><!-- the Filter Chips card code --></div>
@@ -842,7 +842,7 @@ const skillPage = (lang) => (lang === 'en' ? `<!doctype html>
    <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>광고비 현황</title></head>
    <body style="margin:0; padding:24px; background:#f4f5f7;">
    <h1 style="margin:0; font:700 22px/1.4 var(--vzb-font); color:var(--vzb-ink);">광고비 현황</h1>
-   <p style="margin:2px 0 16px; font:400 13px/1.5 var(--vzb-font); color:var(--vzb-muted);">2026년 11월 기준 · 데이터 출처</p>
+   <p style="margin:2px 0 16px; font:400 14px/1.5 var(--vzb-font); color:var(--vzb-muted);">2026년 11월 기준 · 데이터 출처</p>
    <!-- 필터 줄: 컨트롤은 제목을 그리지 않으므로 페이지가 이름을 적는다. 컨트롤마다 폭이 있는 자리를 준다. -->
    <div style="display:grid; grid-template-columns:minmax(0, 1fr) auto; align-items:end; gap:16px 24px; margin-bottom:16px; padding:16px 20px; border-radius:16px; background:#ffffff;">
    <div><div style="margin-bottom:8px; font:500 12px/16px var(--vzb-font); color:var(--vzb-muted);">채널</div><!-- Filter Chips 카드 코드 --></div>
@@ -1113,7 +1113,7 @@ const DEMO = {
 const withData = (code, change) => code.replace(/(<script type="application\/json">\n)([\s\S]*?)(\n<\/script>)/, (m, a, body, b) => a + json(change(JSON.parse(body))) + b).replace(`${FONT_LINK}\n`, '');
 const demoAll = Object.keys(DEMO.spend);
 const demoPage = `${FONT_LINK}
-<style>body{background:#f4f5f7}.vzb-demo{box-sizing:border-box;max-width:1120px;margin:0 auto;padding:24px}.vzb-demo h1{margin:0;font:700 22px/1.4 var(--vzb-font);color:var(--vzb-ink)}.vzb-demo .vzb-asof{margin:2px 0 16px;font:400 13px/1.5 var(--vzb-font);color:var(--vzb-muted)}.vzb-demo-bar{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:16px 24px;margin-bottom:16px;padding:16px 20px;border-radius:16px;background:#ffffff}.vzb-demo-lab{margin-bottom:8px;font:500 12px/16px var(--vzb-font);color:var(--vzb-muted)}.vzb-demo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px}@media (min-width:760px){.vzb-demo-grid{grid-template-columns:minmax(0,3fr) minmax(0,2fr)}.vzb-demo-grid .is-wide{grid-column:1 / -1}}</style>
+<style>body{background:#f4f5f7}.vzb-demo{box-sizing:border-box;max-width:1120px;margin:0 auto;padding:24px}.vzb-demo h1{margin:0;font:700 22px/1.4 var(--vzb-font);color:var(--vzb-ink)}.vzb-demo .vzb-asof{margin:2px 0 16px;font:400 14px/1.5 var(--vzb-font);color:var(--vzb-muted)}.vzb-demo-bar{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:16px 24px;margin-bottom:16px;padding:16px 20px;border-radius:16px;background:#ffffff}.vzb-demo-lab{margin-bottom:8px;font:500 12px/16px var(--vzb-font);color:var(--vzb-muted)}.vzb-demo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px}@media (min-width:760px){.vzb-demo-grid{grid-template-columns:minmax(0,3fr) minmax(0,2fr)}.vzb-demo-grid .is-wide{grid-column:1 / -1}}</style>
 <div class="vzb-demo">
 <h1>Ad spend</h1>
 <p class="vzb-asof">Example data · pick channels to redraw Monthly Ad Spend; the download gets what is on screen</p>

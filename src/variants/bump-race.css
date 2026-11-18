@@ -17,7 +17,7 @@
 .vzb-br-item:not(.is-focus):not(.is-on) .vzb-br-dot { opacity: 0; }   /* 기간 점은 짚을 항목과 짚은 항목에만 찍어 회색 선을 가볍게 둡니다 */
 .vzb-br-head { fill: color-mix(in srgb, var(--vzb-ink) 55%, var(--vzb-card)); stroke: var(--vzb-card); stroke-width: 2; transition: opacity 0.12s; }
 .vzb-br-head.is-focus { fill: var(--vzb-primary); }
-.vzb-br-lab { font-size: 12px; font-weight: 500; fill: var(--vzb-ink-2); paint-order: stroke; stroke: var(--vzb-card); stroke-width: 3px; stroke-linejoin: round; transition: opacity 0.12s; }
+.vzb-br-lab { font-size: 14px; font-weight: 500; fill: var(--vzb-ink-2); paint-order: stroke; stroke: var(--vzb-card); stroke-width: 3px; stroke-linejoin: round; transition: opacity 0.12s; }
 .vzb-br-lab.is-focus { font-weight: 700; fill: var(--vzb-ink); }
 .vzb-br-lab.is-clash { opacity: 0.15; }   /* 앞지르는 동안 겹친 이름표는 잠시 옅게 */
 .vzb-br-rk { font-weight: 700; fill: var(--vzb-muted); font-variant-numeric: tabular-nums; }
@@ -47,6 +47,6 @@
 .vzb-br-halo { fill: var(--vzb-ink); fill-opacity: 0; transition: fill-opacity 0.16s; }
 .vzb-br-scrub.is-drag .vzb-br-halo { fill-opacity: 0.16; }   /* 잡고 끄는 동안 손잡이 둘레가 옅게 번집니다 */
 .vzb-br-scrub:focus-visible .vzb-br-thumb { stroke: var(--vzb-primary); stroke-width: 2; }
-.vzb-br-now { font-size: 12px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
-.vzb-br-end { font-size: 11px; fill: var(--vzb-muted); transition: opacity 0.12s; }
+.vzb-br-now { font-size: 14px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-br-end { font-size: 12px; fill: var(--vzb-muted); transition: opacity 0.12s; }
 .vzb-br-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }

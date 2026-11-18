@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.64 · 퍼널 차트 · Funnel Wave (funnel-wave)
+<!-- Vizney Blocks v0.65 · 퍼널 차트 · Funnel Wave (funnel-wave)
      https://blocks.vizney.com/ko/cards/funnel-wave.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -86,7 +86,7 @@
   border: 1px solid var(--vzb-edge);
   border-radius: var(--vzb-radius);
   box-shadow: var(--vzb-shadow);
-  font: 400 13px/18px var(--vzb-font);
+  font: 400 14px/20px var(--vzb-font);   /* 글자 크기는 세 단계: 기본 14px, 보조 12px(단위 · 축 눈금 · 요일 · 개수 · 큰 숫자 위 설명), 큰 숫자 18px(말풍선 · 툴팁). 그 밖에 제목 17px, 대표 수치 34px(단위 16px) */
   text-align: left;
   word-break: keep-all;
   overflow-wrap: anywhere;
@@ -131,14 +131,15 @@
   background: var(--vzb-tip);
   color: #ffffff;
   box-shadow: 0 10px 24px -8px rgba(27, 27, 27, 0.4);
-  font: 400 12px/17px var(--vzb-font);
+  font: 400 14px/20px var(--vzb-font);
   white-space: nowrap;
   opacity: 0;
   transition: opacity 0.12s;
 }
 .vzb-tip.is-on { opacity: 1; }
 .vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
-.vzb-tip-value { font-size: 13px; font-weight: 700; }
+.vzb-tip-value { font-weight: 700; }
+.vzb-tip-value.is-big { font-size: 18px; line-height: 24px; }   /* 툴팁이 대신 보여 주는 큰 숫자 */
 /* 색 이름: t1 · t2 · t3 선(파랑 · 분홍빨강 · 주황, 어두운 바탕은 노랑 · 흰색 · 회색), f1 · f2 · f3 막대와 면(같은 순서), fs 옅은 첫째 색,
    t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
 .vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
@@ -159,7 +160,7 @@
 .vzb-tip-body { display: flex; flex-direction: column; }
 .vzb-tip-rows { display: grid; grid-template-columns: auto auto auto; justify-content: start; align-items: center; column-gap: 8px; row-gap: 1px; margin-top: 3px; }
 .vzb-tip-row { display: contents; }
-.vzb-tip-row b { font-size: 13px; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.vzb-tip-row b { font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
 .vzb-tip-row span { color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-note { margin-top: 3px; color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-note + .vzb-tip-note { margin-top: 0; }
@@ -295,7 +296,7 @@
   }
   // 달러 금액: 원래 값을 받아 K · M · B로 줄이고 소수 한 자리로 맞춥니다($745.6K). 접미사는 단위처럼 작게 씁니다.
   function usd(v, d) {
-    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    const a = Math.abs(v), s = v < 0 ? '-' : '';
     const [div, u] = a >= 1e9 ? [1e9, 'B'] : a >= 1e6 ? [1e6, 'M'] : a >= 1e3 ? [1e3, 'K'] : [1, ''];
     return [`${s}$${num(a / div, d != null ? d : div > 1 ? 1 : 0)}`, u];
   }
@@ -504,7 +505,7 @@
   }
   // 차이를 부호와 함께 적습니다. 비율 지표는 %p입니다.
   function signed(f, diff) {
-    const s = diff > 0 ? '+' : diff < 0 ? '−' : '';
+    const s = diff > 0 ? '+' : diff < 0 ? '-' : '';   // 줄어든 값은 하이픈(-)으로 적습니다. 복사해 표 계산기에 붙여도 음수로 읽힙니다
     return f.rel ? `${s}${show(f, Math.abs(diff))}` : `${s}${pp(f, diff)}%p`;
   }
   // pick(clientX, clientY) → 순번, point(순번) → { x, y, label, value, text, side }(화면 좌표), clear() → 강조 해제

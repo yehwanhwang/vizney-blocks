@@ -4,7 +4,7 @@
 
 > 스킬의 한국어판이다. 영어판은 같은 폴더의 `SKILL.md`다. 순서, 카드 목록, 규칙, 체크리스트는 같은 원본에서 만들어져 내용이 같고, 카드 코드 주소(`/ko/cards/`)와 카드 문구가 한국어다.
 
-Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담은, 복사해 붙여 쓰는 HTML 카드 모음이다(v0.64, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 넘친 양 · 비중 · 순위 같은 계산과 색 · 강조 · 움직임은 카드가 Vizney 차트 가이드의 규칙대로 맡는다. 그래서 카드 코드는 그대로 두고 JSON 값만 바꾼다. 카드가 정하는 것은 그 차트를 바르게 그리는 방법이고, 화면에 무엇을 둘지는 화면을 만드는 쪽이 정한다.
+Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담은, 복사해 붙여 쓰는 HTML 카드 모음이다(v0.65, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 넘친 양 · 비중 · 순위 같은 계산과 색 · 강조 · 움직임은 카드가 Vizney 차트 가이드의 규칙대로 맡는다. 그래서 카드 코드는 그대로 두고 JSON 값만 바꾼다. 카드가 정하는 것은 그 차트를 바르게 그리는 방법이고, 화면에 무엇을 둘지는 화면을 만드는 쪽이 정한다.
 
 ## 카드
 
@@ -46,7 +46,7 @@ Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담�
    <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>광고비 현황</title></head>
    <body style="margin:0; padding:24px; background:#f4f5f7;">
    <h1 style="margin:0; font:700 22px/1.4 var(--vzb-font); color:var(--vzb-ink);">광고비 현황</h1>
-   <p style="margin:2px 0 16px; font:400 13px/1.5 var(--vzb-font); color:var(--vzb-muted);">2026년 11월 기준 · 데이터 출처</p>
+   <p style="margin:2px 0 16px; font:400 14px/1.5 var(--vzb-font); color:var(--vzb-muted);">2026년 11월 기준 · 데이터 출처</p>
    <!-- 필터 줄: 컨트롤은 제목을 그리지 않으므로 페이지가 이름을 적는다. 컨트롤마다 폭이 있는 자리를 준다. -->
    <div style="display:grid; grid-template-columns:minmax(0, 1fr) auto; align-items:end; gap:16px 24px; margin-bottom:16px; padding:16px 20px; border-radius:16px; background:#ffffff;">
    <div><div style="margin-bottom:8px; font:500 12px/16px var(--vzb-font); color:var(--vzb-muted);">채널</div><!-- Filter Chips 카드 코드 --></div>

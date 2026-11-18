@@ -103,10 +103,23 @@
       limLine.setAttribute('y1', fx(yl));
       limLine.setAttribute('y2', fx(yl));
       // 기간 이름: 다 들어가면 모두, 모자라면 몇 칸마다 하나씩(마지막 칸은 늘 적습니다)
-      const nameW = Math.max(...items.map((it) => textW(it.name, 400, fam, 11))) + 6;
+      const nameW = Math.max(...items.map((it) => textW(it.name, 400, fam, 12))) + 6;
       const every = Math.max(1, Math.ceil(nameW / slot));
-      // 넘친 양은 칸 안에 들어갈 때만 적습니다
-      const exFits = Math.max(0, ...spill.map((it) => textW(it.ex.textContent, 700, fam, 10.5))) + 4 <= slot;
+      // 넘친 양: 14px로 적고, 이웃한 넘친 양끼리 겹치면 12px로, 그래도 겹치면 적지 않습니다(툴팁과 요약 줄에는 남습니다).
+      // 글자는 제 칸 밖으로 나가도 되지만 그림 밖으로는 나가지 않게 안쪽으로 당깁니다.
+      const place = (size) => {
+        let prev = -Infinity, ok = true;
+        spill.forEach((it) => {
+          const lw = textW(it.ex.textContent, 700, fam, size) + 4, cx = slot * (it.k + 0.5);
+          it.exW = lw;
+          it.exX = Math.max(lw / 2, Math.min(w - lw / 2, cx));
+          if (it.exX - lw / 2 < prev + 4) ok = false;
+          prev = it.exX + lw / 2;
+        });
+        return ok;
+      };
+      const exSize = place(14) ? 14 : place(12) ? 12 : 0;
+      if (exSize) place(exSize);
       items.forEach((it) => {
         it.cx = slot * (it.k + 0.5);
         it.x = it.cx - bw / 2;
@@ -114,17 +127,22 @@
         it.nm.setAttribute('x', fx(it.cx));
         it.nm.setAttribute('y', fx(y0 + 15));
         it.nm.setAttribute('opacity', (N - 1 - it.k) % every === 0 ? 1 : 0);
-        it.ex.setAttribute('x', fx(it.cx));
+        it.ex.setAttribute('x', fx(it.over > 0 && exSize ? it.exX : it.cx));
         it.ex.setAttribute('y', fx(it.yv - 5));
-        it.exOn = it.over > 0 && exFits;
+        it.ex.style.fontSize = exSize === 12 ? '12px' : '';
+        it.exOn = it.over > 0 && !!exSize;
         it.start = T0 + it.k * STAG;
       });
       // 한도선의 이름은 선 바로 위, 한도를 넘는 막대(와 넘친 양)가 없는 자리에 적습니다. 오른쪽 끝부터 왼쪽으로 찾고,
       // 그런 자리가 없으면(거의 모든 기간이 넘을 때) 오른쪽 끝의 선 바로 아래에 적습니다. 선 아래는 모두 회색이라 빨강과 겹치지 않습니다.
-      const lw = textW(limText.textContent, 500, fam, 11) + 6;
-      const blocked = items.filter((it) => it.over > 0).map((it) => [it.cx - slot / 2, it.cx + slot / 2]);
+      const lw = textW(limText.textContent, 500, fam, 12) + 6;
+      // 막는 자리는 넘친 막대의 칸이고, 넘친 양이 작아 그 글자가 이름과 같은 높이에 걸치면 글자 자리까지 막습니다. 이웃과는 4px 띄웁니다.
+      const blocked = items.filter((it) => it.over > 0).map((it) => {
+        const a = it.cx - slot / 2, b = it.cx + slot / 2;
+        return it.exOn && it.yv > yl - 16 ? [Math.min(a, it.exX - it.exW / 2), Math.max(b, it.exX + it.exW / 2)] : [a, b];
+      });
       const fits = (x) => x - lw >= 0 && blocked.every(([a, b]) => b <= x - lw || a >= x);
-      const ends = [w, ...blocked.map(([a]) => a).sort((p, q) => q - p)];
+      const ends = [w, ...blocked.map(([a]) => a - 4).sort((p, q) => q - p)];
       const at = ends.find(fits);
       limText.setAttribute('text-anchor', 'end');
       limText.setAttribute('x', fx(at == null ? w : at));

@@ -7,7 +7,7 @@ description: "Add charts read through their motion and dashboard controls to an 
 
 > 한국어로 일할 때(사용자가 한국어로 요청하거나 화면 문구가 한국어일 때)는 같은 폴더의 `SKILL.ko.md`를 읽고 그것을 따른다. Working in Korean? Read `SKILL.ko.md` in this folder and follow it instead; it has the same steps and rules with the Korean card addresses.
 
-Vizney Blocks is a set of copy-paste HTML cards: charts you read through their motion, and dashboard controls (v0.64, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. The card does the arithmetic (the amount over a limit, shares, ranks) and the colors, emphasis and motion, by the rules of the Vizney chart guide. So keep the card code and change only the JSON values. A card decides how to draw its chart correctly; what goes on the screen is up to whoever builds it.
+Vizney Blocks is a set of copy-paste HTML cards: charts you read through their motion, and dashboard controls (v0.65, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. The card does the arithmetic (the amount over a limit, shares, ranks) and the colors, emphasis and motion, by the rules of the Vizney chart guide. So keep the card code and change only the JSON values. A card decides how to draw its chart correctly; what goes on the screen is up to whoever builds it.
 
 ## Cards
 
@@ -49,7 +49,7 @@ Each card's rules and fields are in its line of https://blocks.vizney.com/llms.t
    <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ad spend</title></head>
    <body style="margin:0; padding:24px; background:#f4f5f7;">
    <h1 style="margin:0; font:700 22px/1.4 var(--vzb-font); color:var(--vzb-ink);">Ad spend</h1>
-   <p style="margin:2px 0 16px; font:400 13px/1.5 var(--vzb-font); color:var(--vzb-muted);">As of November 2026 · Data source</p>
+   <p style="margin:2px 0 16px; font:400 14px/1.5 var(--vzb-font); color:var(--vzb-muted);">As of November 2026 · Data source</p>
    <!-- Filter bar: a control draws no title, so the page names it. Give each control a slot with a width. -->
    <div style="display:grid; grid-template-columns:minmax(0, 1fr) auto; align-items:end; gap:16px 24px; margin-bottom:16px; padding:16px 20px; border-radius:16px; background:#ffffff;">
    <div><div style="margin-bottom:8px; font:500 12px/16px var(--vzb-font); color:var(--vzb-muted);">Channel</div><!-- the Filter Chips card code --></div>

@@ -119,8 +119,8 @@
     // 이름표 열과 지금 기간 글자의 폭: 글꼴이 늦게 실리면 처음에는 대체 글꼴로 재게 되므로, 글꼴이 실린 뒤 다시 잽니다(아래 fonts.ready).
     let nameW = 0, nowW = 0;
     const measure = () => {
-      nameW = Math.max(...items.map((it) => textW(rankText(N), 700, fam) + 5 + textW(it.name, 700, fam)));   // 누구든 짚을 항목(굵게)이 될 수 있습니다
-      nowW = Math.max(...labels.map((l) => textW(l, 700, fam)));
+      nameW = Math.max(...items.map((it) => textW(rankText(N), 700, fam, 14) + 5 + textW(it.name, 700, fam, 14)));   // 누구든 짚을 항목(굵게)이 될 수 있습니다
+      nowW = Math.max(...labels.map((l) => textW(l, 700, fam, 14)));
     };
     measure();
     let W = 0, H = 0, xs = [], Y = () => 0;
@@ -211,7 +211,7 @@
       if (now.textContent !== labels[cur]) now.textContent = labels[cur];
       const nw = nowW / 2 + 2, nx = Math.max(nw - 2, Math.min(scrub.clientWidth - nw, hx));
       now.setAttribute('x', fx(nx));
-      const aw = textW(labels[0], 400, fam, 11), bw = textW(labels[last], 400, fam, 11);
+      const aw = textW(labels[0], 400, fam, 12), bw = textW(labels[last], 400, fam, 12);
       endA.style.opacity = nx - nw < Math.max(0, xs[0] - 6) + aw + 8 ? 0 : 1;
       endB.style.opacity = nx + nw > xs[last] + 6 - bw - 8 ? 0 : 1;
       scrub.setAttribute('aria-valuenow', String(cur));

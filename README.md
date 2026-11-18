@@ -107,6 +107,8 @@ SPOQA_DIR=/path/to/spoqa-han-sans/Original/SpoqaHanSansNeo node build.mjs
 - `skills/vizney-blocks/`: 빌드 결과. 코딩 에이전트용 스킬(입구인 영어판 `SKILL.md`, 한국어로 일할 때 따르는 `SKILL.ko.md`, 예시 `examples/`)과 OpenDesign 플러그인 파일(`open-design.json`, `icon.svg`, `preview/index.html`)입니다. `docs/`처럼 직접 고치지 않습니다.
 - `releases/`: 버전별 릴리스 노트. `VERSION`을 올린 커밋이 main에 들어오면 `.github/workflows/release.yml`이 GitHub 릴리스를 만듭니다.
 
+카드와 사이트를 만드는 규칙(카드 선정과 이름, 크기, 색, 표현, 움직임, 사이트, 검증, 배포)은 [CLAUDE.md](CLAUDE.md)에 있습니다. 규칙이 바뀌면 그 변경을 담은 PR에서 CLAUDE.md도 함께 고칩니다.
+
 ## 후원
 
 Vizney Blocks가 쓸모 있었다면 [GitHub Sponsors](https://github.com/sponsors/yehwanhwang)로 후원할 수 있습니다. 후원은 새 블록을 만드는 데 씁니다.

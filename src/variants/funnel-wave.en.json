@@ -1,28 +1,28 @@
 {
-  "title": "Checkout Funnel",
-  "subtitle": "From cart to purchase, November 2026",
+  "title": "Sales Funnel",
+  "subtitle": "From lead to won deal, Q3 2026",
   "lang": "en",
   "format": "count",
   "items": [
     {
-      "name": "Cart",
-      "value": 20000
+      "name": "Leads",
+      "value": 2400
     },
     {
-      "name": "Shipping",
-      "value": 13400
+      "name": "Qualified",
+      "value": 1320
     },
     {
-      "name": "Payment",
-      "value": 10850
+      "name": "Proposal",
+      "value": 620
     },
     {
-      "name": "Review",
-      "value": 6950
+      "name": "Negotiation",
+      "value": 410
     },
     {
-      "name": "Purchase",
-      "value": 6410
+      "name": "Won",
+      "value": 264
     }
   ]
 }

@@ -117,13 +117,14 @@
   // 갤러리 타일에서만 컨트롤을 보기 좋게 가운데에 둡니다(복사하는 코드와는 상관없습니다).
   // Range Slider: 레일 위에 뜨는 분포 창까지 한 덩어리로 보고 가운데에 두도록, 창 높이만큼 위를 비웁니다.
   // Download Button: 펼쳐진 단추 전체가 가운데에 오도록, 펼칠 때 아이콘을 늘어나는 폭의 절반만큼 반대쪽으로 옮깁니다(site.css).
-  // Date Picker: 단추 아래에 뜨는 달력(단추와 같은 폭)까지 한 덩어리로 보고 가운데에 두도록, 달력 높이만큼 아래를 비웁니다(site.css).
+  // Date Picker: 닫혀 있을 때는 단추만 타일 가운데에 두고, 달력이 열리면 달력 높이만큼 아래를 비워 단추가 달력과 함께 위로 올라가게 합니다(site.css).
+  // 열림은 카드의 .vzb-dp.is-open으로 알고, 비울 높이는 --gt-dp-pad에 적어 둡니다. 실제 화면에 붙인 카드는 제자리에서 열립니다.
   function fitTile(tile) {
     const host = $('[data-mount]', tile);
     const fit = () => {
       const pop = $('.vzb-sl-pop', host), menu = $('.vzb-dl-menu', host), cal = $('.vzb-dp-pop', host);
       host.style.paddingTop = pop ? `${pop.offsetHeight + 6}px` : '';
-      host.style.paddingBottom = cal ? `${cal.offsetHeight + 8}px` : '';
+      if (cal) host.style.setProperty('--gt-dp-pad', `${cal.offsetHeight + 8}px`); else host.style.removeProperty('--gt-dp-pad');
       if (menu) tile.style.setProperty('--gt-dl-shift', `${Math.max(0, menu.scrollWidth - menu.offsetHeight) / 2}px`);
     };
     requestAnimationFrame(fit);

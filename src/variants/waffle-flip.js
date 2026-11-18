@@ -283,11 +283,13 @@
         const mine = cells.map((c, i) => [c, i]).filter(([c]) => c.cat === k);
         mine.forEach(([c]) => c.classList.add('is-on'));
         cells.forEach((c) => { if (c.cat !== k) c.classList.remove('is-on'); });
-        const cols = mine.map(([, i]) => Math.floor(i / ROWS)), mid = cols.length ? (Math.min(...cols) + Math.max(...cols) + 1) / 2 : 0;
+        // 툴팁은 짚은 칸 묶음의 옆(묶음이 왼쪽 절반이면 오른쪽, 아니면 왼쪽)에 띄웁니다. 칸 위에 띄우면 머리의 대표 수치를 덮어 같은 숫자가 겹쳐 보이기 때문입니다.
+        const cols = mine.map(([, i]) => Math.floor(i / ROWS)), c0 = cols.length ? Math.min(...cols) : 0, c1 = cols.length ? Math.max(...cols) + 1 : 0, leftHalf = (c0 + c1) / 2 < COLS / 2;
         const p = shownP(), note = [P > 1 ? `${periods[p]} · ${show(f, it.vals[p])}` : show(f, it.vals[p])];
-        if (P > 1 && p === last) note.push(`${ppText(it.share[last] - it.share[0], 1)} ${tx(d, '%s 대비', periods[0])}`);
+        const want = d.better === 'down' ? -1 : d.better === 'neutral' ? 0 : 1, dv = it.share[last] - it.share[0];
+        if (P > 1 && p === last) note.push({ text: `${ppText(dv, 1)} ${tx(d, '%s 대비', periods[0])}`, tone: want === 0 || Math.abs(dv) < 1e-9 ? null : Math.sign(dv) === want ? 'good' : 'bad' });
         const tb = tipBody({ value: pctText(it.share[p], 1), note }, it.name);
-        return { x: r.left + mid * pitch, y: r.top - 6, label: it.name, value: tb.node, text: tb.text };
+        return { x: r.left + (leftHalf ? c1 * pitch : c0 * pitch), y: r.top + (ROWS * pitch) / 2, side: leftHalf ? 'right' : 'left', label: it.name, value: tb.node, text: tb.text };
       },
       () => { svg.classList.remove('is-hover'); legend.classList.remove('is-hover'); items.forEach((x) => x.li.classList.remove('is-on')); cells.forEach((c) => c.classList.remove('is-on')); },
       false, true);

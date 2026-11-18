@@ -11,7 +11,7 @@
      카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리)
      손을 대기 전까지 몇 가지 범위를 차례로 보여 줍니다. */
   function slider(card, d, f, cfg) {
-    const n = cfg.n, R = 8, hist = cfg.hist && cfg.hist.counts.length ? cfg.hist : null;   // R: 손잡이 반지름. 레일과 막대는 양 끝에서 그만큼 들어옵니다.
+    const n = cfg.n, R = 10, hist = cfg.hist && cfg.hist.counts.length ? cfg.hist : null;   // R: 손잡이 반지름. 레일과 막대는 양 끝에서 그만큼 들어옵니다.
     let lo = cfg.start[0], hi = cfg.start[1];
     const root = el('div', 'vzb-sl'), area = el('div', 'vzb-sl-area'), say = el('p', 'vzb-sr'), sr = el('p', 'vzb-sr');
     say.setAttribute('aria-live', 'polite');

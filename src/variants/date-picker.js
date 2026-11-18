@@ -1,5 +1,5 @@
   // Date Picker: 달력으로 기간(시작일과 끝일)이나 날짜 하나를 고르는 컨트롤입니다(주문일 · 기준일 필터). 카드 머리 없이 지금 기간을 적은 단추만 그립니다.
-  // 단추를 누르면 그 아래(아래에 자리가 없으면 위)에 한 달 달력이 옆 내용 위로 겹쳐 떠오릅니다. 단추와 달력은 늘 같은 폭(290px, 놓인 자리가 더 좁으면 그 폭)이라
+  // 단추를 누르면 그 아래(아래에 자리가 없으면 위)에 한 달 달력이 옆 내용 위로 겹쳐 떠오릅니다. 단추와 달력은 늘 같은 폭(300px, 놓인 자리가 더 좁으면 그 폭)이라
   // 기간이 바뀌어도 단추가 늘고 줄지 않습니다. 기간 글자가 단추에 다 들어가지 않으면 기준일과 같은 해의 기간은 연도를 빼고,
   // 그래도 길면 숫자 날짜(26. 10. 17. / 10/17/26)로 줄여 적습니다(화면 낭독기는 늘 연도까지 읽습니다).
   // 날짜 둘을 차례로 누르면 기간이 됩니다. 첫 날짜를 누른 뒤에는 마우스나 포커스가 닿은 날짜까지 옅은 띠와 일수가 따라오고,
@@ -404,7 +404,8 @@
     onSize(val, () => fitText());   // 놓인 자리가 좁아지거나 일수의 자릿수가 바뀌어 글자 자리가 줄면 표기를 다시 고릅니다
 
     // 갤러리(data-vzb-loop): 화면에 보이는 동안 달력을 연 채로 두고, 손을 대기 전과 손을 뗀 지 6초 뒤부터 고르기를 차례로 보여 줍니다.
-    // 시작일을 누르고 → 끝일까지 띠가 따라오다 누르고 → 빠른 선택 → 이전 달 → 마지막 빠른 선택 → 다음 달.
+    // 닫힌 단추에서 시작해 달력을 열고 → (연 달이 시작일의 달과 다르면) 다음 달 → 시작일을 누르고 → 끝일까지 띠가 따라오다 누르고 →
+    // 빠른 선택 → 이전 달 → 마지막 빠른 선택 → 닫기. 갤러리는 닫힌 단추를 타일 가운데에 두고, 열면 달력과 함께 위로 올라가게 그립니다(사이트 CSS).
     if (loop) {
       let seen = true, k = 0, walkT = 0;
       if ('IntersectionObserver' in window) new IntersectionObserver((es) => { seen = es[es.length - 1].isIntersecting; }).observe(card);
@@ -412,6 +413,8 @@
       const dayB = (n) => (cur && (cur.list.find((x) => x.n === n) || {}).b) || null;
       const s0 = clamp(anchor - 13), s1 = clamp(anchor - 2);
       const steps = [];
+      // 달력은 끝일이 든 달로 열리므로, 시작일이 다른 달에 있으면 그 달로 넘기는 것부터 보여 줍니다(같은 달이면 한 박자 쉽니다).
+      steps.push(() => { const to = monthOf(s0); if (cur && cur.month !== to) { const dir = Math.sign(to - cur.month); press(dir > 0 ? nextB : prevB); nav(dir); } });
       if (!one && s1 > s0) {
         steps.push(() => { goMonth(s0); press(dayB(s0)); fday = s0; pick(s0); });
         steps.push(() => {
@@ -429,9 +432,7 @@
       if (pre.length > 1) steps.push(() => { press(chips[1]); usePreset(1); });
       steps.push(() => { press(prevB); nav(-1); });
       if (pre.length) steps.push(() => { const i = pre.length - 1; press(chips[i]); usePreset(i); });
-      steps.push(() => { press(nextB); nav(1); });
-      if (steps.length > 1 && cur && cur.month !== monthOf(s0) && !one && s1 > s0) k = steps.length - 1;   // 연 달이 시작일의 달과 다르면 다음 달로 넘기는 것부터 보여 줍니다
-      requestAnimationFrame(() => setOpen(true));
+      steps.push(() => setOpen(false));   // 닫았다가 다음 박자에 다시 엽니다
       const timer = setInterval(() => {
         if (!card.isConnected) { clearInterval(timer); clearInterval(walkT); return; }
         if (!seen || performance.now() < idle) return;

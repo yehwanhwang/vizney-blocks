@@ -5,7 +5,7 @@
    칸이 좁으면 10px · 11px로 줄입니다. 글자에는 카드 바탕색 테두리를 둘러 점이나 막대 가까이에서도 읽히게 합니다.
    말풍선은 옅은 회색(--vzb-track) 바탕에 이름 · 끝 값(18px, 굵게) · 증감(좋고 나쁨의 글자색)을 적습니다. 움직임은 스크립트가 그립니다. */
 .vzb-card[data-vzb="waterfall-walk"] { min-height: calc(var(--vzb-unit) * 2); }
-.vzb-card[data-vzb="waterfall-walk"] .vzb-hd { position: relative; padding-right: 36px; }   /* 오른쪽 위 다시 보기 단추 자리 */
+.vzb-card[data-vzb="waterfall-walk"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
 .vzb-ww.vzb-foot { padding-top: 8px; }
 .vzb-ww-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-ww-base { stroke: var(--vzb-grid); stroke-width: 1; }
@@ -33,8 +33,10 @@
 .vzb-ww-svg.is-tight .vzb-ww-big { font-size: 16px; }
 .vzb-ww-col, .vzb-ww-conns { transition: opacity 0.12s; }
 .vzb-ww-svg.is-hover .vzb-ww-col:not(.is-on), .vzb-ww-svg.is-hover .vzb-ww-conns { opacity: 0.3; }
-.vzb-ww-btn { position: absolute; top: -2px; right: 0; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
+.vzb-ww-lab { transition: opacity 0.12s; }
+.vzb-ww-svg.is-hover .vzb-ww-col.is-on .vzb-ww-lab { opacity: 0; }   /* 짚은 막대의 이름 · 값 · 말풍선은 툴팁이 대신 보여 줍니다 */
+.vzb-ww-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
 .vzb-ww-btn:hover { background: var(--vzb-other); }
 .vzb-ww-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
-.vzb-ww-ic { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-ww-ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .vzb-ww-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }

@@ -23,7 +23,7 @@
 </head>
 <body>
 <main style="--w:640px">
-<!-- Vizney Blocks v0.63 · 워터폴 차트 · Waterfall Walk (waterfall-walk)
+<!-- Vizney Blocks v0.64 · 워터폴 차트 · Waterfall Walk (waterfall-walk)
      https://blocks.vizney.com/ko/cards/waterfall-walk.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -188,6 +188,9 @@
 .vzb-tip-row span { color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-note { margin-top: 3px; color: rgba(255, 255, 255, 0.72); }
 .vzb-tip-note + .vzb-tip-note { margin-top: 0; }
+/* 툴팁의 증감: 툴팁 바탕이 어두우므로 좋음 · 나쁨 색을 흰색에 조금 섞어 밝게 씁니다(어두운 바탕 툴팁에서도 대비 4.5:1 이상). */
+.vzb-tip .is-good { color: color-mix(in srgb, var(--vzb-good) 82%, #fff); font-weight: 700; }
+.vzb-tip .is-bad { color: color-mix(in srgb, var(--vzb-bad) 68%, #fff); font-weight: 700; }
 .vzb-fs { --vzb-c: var(--vzb-primary-soft); }
 .vzb-key.is-tick { width: 2px; height: 12px; border-radius: 1px; }
 /* Waterfall Walk: 높이 2단위. 머리(제목 · 부제) 아래를 그래프가 모두 씁니다. 큰 숫자 줄은 없고, 끝 값은 끝 막대의 말풍선이 알립니다.
@@ -197,7 +200,7 @@
    칸이 좁으면 10px · 11px로 줄입니다. 글자에는 카드 바탕색 테두리를 둘러 점이나 막대 가까이에서도 읽히게 합니다.
    말풍선은 옅은 회색(--vzb-track) 바탕에 이름 · 끝 값(18px, 굵게) · 증감(좋고 나쁨의 글자색)을 적습니다. 움직임은 스크립트가 그립니다. */
 .vzb-card[data-vzb="waterfall-walk"] { min-height: calc(var(--vzb-unit) * 2); }
-.vzb-card[data-vzb="waterfall-walk"] .vzb-hd { position: relative; padding-right: 36px; }   /* 오른쪽 위 다시 보기 단추 자리 */
+.vzb-card[data-vzb="waterfall-walk"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
 .vzb-ww.vzb-foot { padding-top: 8px; }
 .vzb-ww-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-ww-base { stroke: var(--vzb-grid); stroke-width: 1; }
@@ -225,10 +228,12 @@
 .vzb-ww-svg.is-tight .vzb-ww-big { font-size: 16px; }
 .vzb-ww-col, .vzb-ww-conns { transition: opacity 0.12s; }
 .vzb-ww-svg.is-hover .vzb-ww-col:not(.is-on), .vzb-ww-svg.is-hover .vzb-ww-conns { opacity: 0.3; }
-.vzb-ww-btn { position: absolute; top: -2px; right: 0; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
+.vzb-ww-lab { transition: opacity 0.12s; }
+.vzb-ww-svg.is-hover .vzb-ww-col.is-on .vzb-ww-lab { opacity: 0; }   /* 짚은 막대의 이름 · 값 · 말풍선은 툴팁이 대신 보여 줍니다 */
+.vzb-ww-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
 .vzb-ww-btn:hover { background: var(--vzb-other); }
 .vzb-ww-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
-.vzb-ww-ic { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-ww-ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .vzb-ww-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
 </style>
 <div class="vzb-card" data-vzb="waterfall-walk">
@@ -463,17 +468,19 @@
     tip.classList.add('is-on');
     const w = tip.offsetWidth, h = tip.offsetHeight, W = window.innerWidth, H = window.innerHeight;
     if (side) {
-      // side가 'left'이면 기준선 왼쪽을 먼저, 그 밖에는 오른쪽을 먼저 씁니다. 자리가 모자라면 반대쪽으로 넘깁니다.
+      // side가 'left'이면 짚은 자리의 왼쪽을 먼저, 그 밖에는 오른쪽을 먼저 씁니다. 자리가 모자라면 반대쪽으로 넘기고, 높이는 짚은 자리에 가운데를 맞춥니다.
+      // 짚은 표시의 위(머리의 대표 수치나 레이블)를 덮지 않아야 하는 차트가 씁니다.
       const right = x + 14 + w <= W - 8, left = x - w - 14 >= 8;
       tip.style.left = `${(side === 'left' ? left || !right : !right) ? Math.max(8, x - w - 14) : x + 14}px`;
-      tip.style.top = `${Math.min(Math.max(8, y), H - h - 8)}px`;
+      tip.style.top = `${Math.min(Math.max(8, y - h / 2), H - h - 8)}px`;
       return;
     }
     tip.style.left = `${Math.min(Math.max(8, x - w / 2), W - w - 8)}px`;
     tip.style.top = `${y - h - 12 < 8 ? y + 16 : y - h - 12}px`;
   }
   function hideTip() { if (tip) tip.classList.remove('is-on'); }
-  // 툴팁 내용: { value, note } 또는 { rows: [{ tone, value, name }], note }. 값이 먼저, 이름은 뒤에 옅게 적습니다.
+  // 툴팁 내용: { value, tone, note } 또는 { rows: [{ tone, value, name }], note }. 값이 먼저, 이름은 뒤에 옅게 적습니다.
+  // 증감은 차트와 같은 뜻의 색으로 적습니다: tone이 'good'이면 초록, 'bad'면 빨강. note의 줄도 { text, tone }으로 색을 줄 수 있습니다.
   function tipBody(spec, label) {
     const body = el('span', 'vzb-tip-body');
     let text = label;
@@ -487,13 +494,14 @@
       });
       body.append(grid);
     } else {
-      body.append(el('span', 'vzb-tip-value', spec.value));
+      body.append(el('span', `vzb-tip-value${spec.tone ? ` is-${spec.tone}` : ''}`, spec.value));
       text += ` ${spec.value}`;
     }
     // note는 한 줄 글 또는 줄마다 나눈 배열입니다.
     (Array.isArray(spec.note) ? spec.note : [spec.note]).filter(Boolean).forEach((line) => {
-      body.append(el('span', 'vzb-tip-note', line));
-      text += `, ${line}`;
+      const o = typeof line === 'object' ? line : { text: line };
+      body.append(el('span', `vzb-tip-note${o.tone ? ` is-${o.tone}` : ''}`, o.text));
+      text += `, ${o.text}`;
     });
     return { node: body, text };
   }
@@ -885,9 +893,11 @@
         const c = cols[k], r = plot.getBoundingClientRect();
         svg.classList.add('is-hover');
         cols.forEach((x) => x.g.classList.toggle('is-on', x === c));
+        // 툴팁의 증감은 막대와 같은 색으로 적고(좋음 초록 · 나쁨 빨강), 짚은 막대의 레이블은 툴팁이 떠 있는 동안 숨겨 같은 숫자가 두 번 보이지 않게 합니다(CSS).
+        const dv = c.to - v0, ntone = want === 0 || !dv ? null : Math.sign(dv) === want ? 'good' : 'bad';
         const note = c.kind === 'step' ? (c.v == null ? null : tx(d, '누계 %1 → %2', show(f, c.from), show(f, c.to)))
-          : !c.k ? null : d.compare === 'share' ? (v0 > 0 ? tx(d, '%1의 %2', first.name, pct(c.to)) : null) : `${signed(f, c.to - v0)} · ${tx(d, '%s 대비', first.name)}`;
-        const tb = tipBody({ value: valText(c), note }, c.name);
+          : !c.k ? null : d.compare === 'share' ? (v0 > 0 ? tx(d, '%1의 %2', first.name, pct(c.to)) : null) : { text: `${signed(f, dv)} · ${tx(d, '%s 대비', first.name)}`, tone: ntone };
+        const tb = tipBody({ value: valText(c), tone: c.tone === 'good' || c.tone === 'bad' ? c.tone : null, note }, c.name);
         return { x: r.left + c.cx, y: r.top + Math.min(c.yA, c.yB) - 6, label: c.name, value: tb.node, text: tb.text };
       },
       () => { svg.classList.remove('is-hover'); cols.forEach((x) => x.g.classList.remove('is-on')); },

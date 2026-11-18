@@ -189,8 +189,9 @@
         const note = [`${label} ${limShow}`];
         if (it.v != null) {
           const gap = show(f, Math.abs(it.v - lim)), share = lim > 0 ? num((it.v / lim) * 100, 0) : null;
-          if (share == null) note.push(tx(d, '%s 초과|한도', gap));
-          else note.push(it.v > lim ? tx(d, '%1 초과 · %2의 %3%', gap, inText, share) : it.v < lim ? tx(d, '%1 남음 · %2의 %3%', gap, inText, share) : tx(d, '%1의 %2', inText, `${share}%`));
+          // 한도를 넘친 줄은 막대의 넘친 부분과 같은 빨강으로 적습니다.
+          if (share == null) note.push({ text: tx(d, '%s 초과|한도', gap), tone: it.v > lim ? 'bad' : null });
+          else note.push(it.v > lim ? { text: tx(d, '%1 초과 · %2의 %3%', gap, inText, share), tone: 'bad' } : it.v < lim ? tx(d, '%1 남음 · %2의 %3%', gap, inText, share) : tx(d, '%1의 %2', inText, `${share}%`));
         }
         const tb = tipBody({ value: it.v == null ? tx(d, '데이터 없음') : show(f, it.v), note }, it.name);
         return { x: r.left + it.cx, y: r.top + Math.min(it.yv, yl) - 6, label: it.name, value: tb.node, text: tb.text };

@@ -3,7 +3,7 @@
   // 누르면 모두 고르거나 이미 모두 골랐으면 모두 풉니다. value는 처음 고른 항목이고 비우면 모두입니다.
   // 값이 바뀌면 카드에서 vzb-change 이벤트(bubbles, detail: { name, value: 고른 항목을 options 순서대로 })를 보내고, data-vzb-value에도 적습니다.
   // 칩은 누르면 살짝 눌렸다 튀어 오르고, 고르면 체크가 그려지며 칩이 넓어집니다(filter-chips.css).
-  // 칩이 두 줄을 넘으면 한 줄로 두고 가로로 밀어 봅니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 손을 대기 전까지 고르기를 차례로 보여 줍니다.
+  // 칩이 세 줄을 넘으면 한 줄로 두고 가로로 밀어 봅니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 손을 대기 전까지 고르기를 차례로 보여 줍니다.
   mount('filter-chips', (card, d, f) => {
     const opts = [...new Set((Array.isArray(d.options) ? d.options : []).filter((o) => o != null && o !== '').map(String))];
     if (!opts.length) throw new Error(tx(d, 'options를 확인하세요.'));
@@ -52,12 +52,12 @@
       say.textContent = tx(d, '%1개 중 %2개 고름', opts.length, sel.size);
       card.dispatchEvent(new CustomEvent('vzb-change', { bubbles: true, detail: { name: d.name || '', value } }));
     }
-    // 두 줄을 넘으면 한 줄로 두고 가로로 밉니다. 모든 칩에 체크가 그려졌을 때(가장 넓을 때)로 재므로, 고를 때마다 줄 모양이 바뀌지 않습니다.
+    // 세 줄을 넘으면 한 줄로 두고 가로로 밉니다(칩이 40px라 좁은 자리에서도 세 줄까지는 한눈에 들어옵니다). 모든 칩에 체크가 그려졌을 때(가장 넓을 때)로 재므로, 고를 때마다 줄 모양이 바뀌지 않습니다.
     // 가로로 밀 때는 오른쪽 끝을 흐리게 해 칩이 더 있음을 알리고, 끝까지 밀면 흐림을 거둡니다.
     const fit = () => {
       list.classList.remove('is-scroll');
       list.classList.add('is-measure');
-      const first = list.firstElementChild, over = !!first && list.scrollHeight > first.offsetHeight * 2 + 12;
+      const first = list.firstElementChild, over = !!first && list.scrollHeight > first.offsetHeight * 3 + 20;
       list.classList.remove('is-measure');
       list.classList.toggle('is-scroll', over);
       ends();

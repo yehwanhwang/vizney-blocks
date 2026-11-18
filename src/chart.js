@@ -13,17 +13,19 @@
     tip.classList.add('is-on');
     const w = tip.offsetWidth, h = tip.offsetHeight, W = window.innerWidth, H = window.innerHeight;
     if (side) {
-      // side가 'left'이면 기준선 왼쪽을 먼저, 그 밖에는 오른쪽을 먼저 씁니다. 자리가 모자라면 반대쪽으로 넘깁니다.
+      // side가 'left'이면 짚은 자리의 왼쪽을 먼저, 그 밖에는 오른쪽을 먼저 씁니다. 자리가 모자라면 반대쪽으로 넘기고, 높이는 짚은 자리에 가운데를 맞춥니다.
+      // 짚은 표시의 위(머리의 대표 수치나 레이블)를 덮지 않아야 하는 차트가 씁니다.
       const right = x + 14 + w <= W - 8, left = x - w - 14 >= 8;
       tip.style.left = `${(side === 'left' ? left || !right : !right) ? Math.max(8, x - w - 14) : x + 14}px`;
-      tip.style.top = `${Math.min(Math.max(8, y), H - h - 8)}px`;
+      tip.style.top = `${Math.min(Math.max(8, y - h / 2), H - h - 8)}px`;
       return;
     }
     tip.style.left = `${Math.min(Math.max(8, x - w / 2), W - w - 8)}px`;
     tip.style.top = `${y - h - 12 < 8 ? y + 16 : y - h - 12}px`;
   }
   function hideTip() { if (tip) tip.classList.remove('is-on'); }
-  // 툴팁 내용: { value, note } 또는 { rows: [{ tone, value, name }], note }. 값이 먼저, 이름은 뒤에 옅게 적습니다.
+  // 툴팁 내용: { value, tone, note } 또는 { rows: [{ tone, value, name }], note }. 값이 먼저, 이름은 뒤에 옅게 적습니다.
+  // 증감은 차트와 같은 뜻의 색으로 적습니다: tone이 'good'이면 초록, 'bad'면 빨강. note의 줄도 { text, tone }으로 색을 줄 수 있습니다.
   function tipBody(spec, label) {
     const body = el('span', 'vzb-tip-body');
     let text = label;
@@ -37,13 +39,14 @@
       });
       body.append(grid);
     } else {
-      body.append(el('span', 'vzb-tip-value', spec.value));
+      body.append(el('span', `vzb-tip-value${spec.tone ? ` is-${spec.tone}` : ''}`, spec.value));
       text += ` ${spec.value}`;
     }
     // note는 한 줄 글 또는 줄마다 나눈 배열입니다.
     (Array.isArray(spec.note) ? spec.note : [spec.note]).filter(Boolean).forEach((line) => {
-      body.append(el('span', 'vzb-tip-note', line));
-      text += `, ${line}`;
+      const o = typeof line === 'object' ? line : { text: line };
+      body.append(el('span', `vzb-tip-note${o.tone ? ` is-${o.tone}` : ''}`, o.text));
+      text += `, ${o.text}`;
     });
     return { node: body, text };
   }

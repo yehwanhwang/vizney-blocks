@@ -16,7 +16,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.67';
+const VERSION = 'v0.68';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -109,8 +109,8 @@ const SKILL_CMD = 'npx skills add yehwanhwang/vizney-blocks';
 // takes one. English is the main site: its pages, card code, llms.txt and tokens.css are at / and the Korean ones at /ko/.
 // The home page's description, also its meta description.
 const GDESC = {
-  ko: '한도를 넘긴 값, 뒤바뀐 순위, 달라진 비중처럼 움직여야 보이는 변화를 그리는 차트와, 대시보드에 필요한 컨트롤입니다. 카드 하나가 HTML 조각 하나라서, 복사해 붙이고 JSON 값만 바꾸면 됩니다.',
-  en: 'Charts for the changes you only see in motion, such as a limit crossed, a rank overtaken or a share that grew, and the controls a dashboard needs. Each card is one HTML snippet: paste it in and change only the JSON.',
+  ko: '움직임으로 더 잘 읽히는 차트와 대시보드 컨트롤입니다. 한도를 넘긴 값, 뒤바뀐 순위처럼 변화를 보여 주기도 하고, 짚을 곳에 눈이 가게 하기도 합니다. 카드 하나가 HTML 조각 하나라서, 복사해 붙이고 JSON 값만 바꾸면 됩니다.',
+  en: 'Charts and dashboard controls that read better in motion: some show a change, such as a limit crossed or a rank overtaken, and some draw the eye to where it matters. Each card is one HTML snippet: paste it in and change only the JSON.',
 };
 // Step 3 of "How to use": the shortest page script that redraws a chart from a control (the same pattern as CONNECT below).
 // The step cards are narrow (27 characters of code at 1280px), so the lines are broken by hand.
@@ -288,7 +288,7 @@ const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 // v0.52: the controls are drawn bare (no head, no frame) in the middle of the tile, like the units of a motion gallery.
 // v0.49: the gallery is built one block at a time. v0.56: the gallery is the whole list; a card that is not here does not exist.
 // Blocks that move (data-vzb-loop) replay on the first screen instead of stopping at the end.
-const GALLERY = ['bar-overflow', 'waffle-flip', 'bump-race', 'waterfall-walk', 'funnel-wave', 'date-picker', 'range-slider', 'filter-chips', 'download-button'];
+const GALLERY = ['bar-overflow', 'waffle-flip', 'bump-race', 'waterfall-walk', 'funnel-wave', 'date-picker', 'range-slider', 'filter-chips', 'select-menu', 'download-button'];
 const LOOP = new Set(GALLERY);
 // v0.53: tile widths follow the block. On the 3-column gallery a chart that reads along a long axis (13 months, a 5 × 20 waffle)
 // takes 2 columns; a chart that reads better compact (a donut, a single figure) and every control take 1. The tiles are laid out
@@ -427,6 +427,10 @@ const FIELD_OVERRIDE = {
   'filter-chips': {
     ko: { label: '화면 낭독기가 읽는 칩 묶음의 이름(예: 채널). 화면에는 그리지 않는다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', options: '고를 항목의 이름들. 8개 안팎', value: '처음 고른 항목들. 비우면 모두', all: '전체 칩의 이름. 비우면 전체, 빈 글자면 전체 칩을 두지 않는다' },
     en: { label: 'the name screen readers read for the chips (e.g. Channel); not drawn on screen', name: 'detail.name of the vzb-change event sent when the value changes', options: 'the names of the items to pick, about 8', value: 'the items picked at first; empty picks all', all: 'the name of the All chip; empty means All, an empty string leaves the chip out' },
+  },
+  'select-menu': {
+    ko: { label: '화면 낭독기가 읽는 이름(예: 지역). 화면에는 그리지 않는다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', options: '고를 항목들. 이름 글자나 { "name", "count" }(count는 그 항목의 데이터 양, 줄마다 막대로 보인다). 수십 개까지', value: '처음 고른 항목들. 비우면 모두(mode가 one이면 이름 하나)', all: '모두 골랐을 때 단추에 적는 말. 비우면 전체', noun: '화면 낭독기가 count 뒤에 읽는 말(예: 건)', mode: '하나만 고를 때만 "one"', align: '화면 오른쪽 끝에 둘 때 "end"' },
+    en: { label: 'the name screen readers read (e.g. Country); not drawn on screen', name: 'detail.name of the vzb-change event sent when the value changes', options: 'the items to pick, as names or { "name", "count" } (count is how much data the item holds, shown as a bar on its row); up to a few dozen', value: 'the items picked at first; empty picks all (one name when mode is one)', all: 'what the button reads when everything is picked; All when empty', noun: 'the word screen readers read after count (e.g. orders)', mode: '"one" only to pick a single item', align: '"end" when it sits at the right end of the screen' },
   },
   'download-button': {
     ko: { name: 'vzb-download 이벤트의 detail.name', target: '내려받을 카드의 data-vzb(예: bar-overflow). 페이지에서 처음 만나는 그 카드', filename: '파일 이름. 확장자는 형식에 따라 붙는다(예: monthly-ad-spend)', formats: '받을 형식들: csv · json · png. 비우면 셋 다', label: '화면 낭독기가 읽는 단추 이름(예: 월별 광고비 내려받기). 비우면 내려받기', align: 'start(비우면) · end. end면 아이콘을 놓인 자리의 오른쪽 끝에 두고 왼쪽으로 펼친다' },

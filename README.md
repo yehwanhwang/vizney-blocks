@@ -1,6 +1,6 @@
 # Vizney Blocks
 
-움직임으로 읽는 차트와 대시보드 컨트롤을 담은, 복사해 붙여 쓰는 HTML 카드 모음입니다. 한도를 넘긴 값, 뒤바뀐 순위, 달라진 비중처럼 움직여야 보이는 변화를 그리는 차트와, 그 차트를 거르고 내려받는 컨트롤을 [Vizney 차트 가이드](https://kr.vizney.com/chart-guide/)의 판단 규칙으로 만들었습니다.
+움직임으로 읽는 차트와 대시보드 컨트롤을 담은, 복사해 붙여 쓰는 HTML 카드 모음입니다. 움직임으로 더 잘 읽히게 만든 차트와(한도를 넘긴 값, 뒤바뀐 순위처럼 변화를 보여 주거나 짚을 곳에 눈이 가게 합니다), 그 차트를 거르고 내려받는 컨트롤을 [Vizney 차트 가이드](https://kr.vizney.com/chart-guide/)의 판단 규칙으로 만들었습니다.
 
 Copy-paste HTML cards: charts you read through their motion, and the dashboard controls that go with them. No install, no framework: each card is one self-contained HTML snippet. The gallery, the card pages, llms.txt and the skill are in English (at /) and Korean (at /ko/); this README is in Korean.
 
@@ -39,11 +39,12 @@ Copy-paste HTML cards: charts you read through their motion, and the dashboard c
 | [Date Picker](https://blocks.vizney.com/ko/cards/date-picker.html) | 컨트롤 | 주문일이나 기준일처럼 날짜로 화면을 거를 때. 날짜 둘을 고르는 동안 기간과 일수가 따라오고, 고르면 띠가 시작일에서 끝일까지 그어집니다. 날짜를 직접 치거나 연월 제목을 눌러 먼 달 · 해로 바로 갈 수 있습니다 |
 | [Range Slider](https://blocks.vizney.com/ko/cards/range-slider.html) | 컨트롤 | 주문 금액이나 수량처럼 이어지는 값으로 화면을 거를 때. 끄는 동안 범위에 드는 분포가 레일 위에 뜨고, 값을 눌러 금액을 직접 칠 수 있습니다 |
 | [Filter Chips](https://blocks.vizney.com/ko/cards/filter-chips.html) | 컨트롤 | 채널이나 지역처럼 몇 개 안 되는 이름으로 화면을 거를 때. 전체 칩이 지금 몇 개를 골랐는지 보여 줍니다 |
+| [Select Menu](https://blocks.vizney.com/ko/cards/select-menu.html) | 컨트롤 | 국가 · 지역 · 매장처럼 이름이 수십 개인 필터. 검색하면 맞는 항목만 남고(한글 초성 검색), 항목마다 데이터 양을 막대로 보여 줍니다 |
 | [Download Button](https://blocks.vizney.com/ko/cards/download-button.html) | 컨트롤 | 화면에 있는 차트 카드의 지금 데이터를 CSV · JSON · PNG로 받을 때 |
 
 카드마다의 규칙과 필드는 [llms.txt](https://blocks.vizney.com/ko/llms.txt)의 그 카드 줄에 있습니다.
 
-v0.56에서 이전 방향의 카드와 차트 페이지를 모두 지웠습니다. 지금 있는 아홉 장이 전부이고, 카드는 하나씩 다시 더해 갑니다. 갤러리를 다시 채우는 동안에는 카드 이름이 바뀌면 id와 주소도 함께 바뀌고, 예전 주소는 남기지 않습니다(없는 주소는 첫 화면으로 안내하는 404 화면이 받습니다). 지운 내용은 [releases/v0.56.md](releases/v0.56.md)에 있습니다.
+v0.56에서 이전 방향의 카드와 차트 페이지를 모두 지웠습니다. 지금 있는 열 장이 전부이고, 카드는 하나씩 다시 더해 갑니다. 갤러리를 다시 채우는 동안에는 카드 이름이 바뀌면 id와 주소도 함께 바뀌고, 예전 주소는 남기지 않습니다(없는 주소는 첫 화면으로 안내하는 404 화면이 받습니다). 지운 내용은 [releases/v0.56.md](releases/v0.56.md)에 있습니다.
 
 ## 컨트롤과 차트 잇기
 

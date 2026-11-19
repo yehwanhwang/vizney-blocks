@@ -1,0 +1,76 @@
+/* Select Menu: 카드 틀 없이 단추만 그립니다. 단추는 Date Picker와 같은 알약(높이 40px · 모서리 20px · 300px, 놓인 자리가 더 좁으면 그 폭)으로,
+   트랙 회색 바탕에 목록 아이콘 · 고른 것(14px, 왼쪽 맞춤, 넘치면 '+남은 수') · 고른 수(여럿 고를 때, 굴러가는 숫자) · 펼침 표시를 둡니다.
+   열려 있는 동안은 글자색으로 채웁니다. 펼친 목록은 카드(카드 바탕 · 테두리 · 그림자)로 단추 아래 8px에 떠오르고, 맨 위에 검색칸(36px),
+   여럿 고를 때는 모두 고르기 · 모두 풀기와 고른 수(12px), 그 아래 항목 줄(36px, 14px)이 6줄까지 보이고 더 있으면 안에서 밉니다.
+   고른 줄은 네모 칸을 글자색으로 채우고 체크를 긋습니다. count가 있으면 줄 오른쪽에 막대(44px 폭 안에서 가장 많은 항목 대비)와 숫자(12px)를 두고,
+   목록이 펼쳐질 때 막대가 0에서 자랍니다. 검색어와 맞는 글자는 굵어지며 아래에 띠가 왼쪽에서 그어지고, 맞지 않는 줄은 접히며 사라집니다. */
+/* 컨트롤은 카드 머리(제목 · 부제)와 카드 틀(바탕 · 테두리 · 그림자 · 안쪽 여백) 없이 조작부만 그립니다. 차트 위 필터 줄이나 머리글처럼
+   원하는 자리에 그대로 놓는 부품이기 때문입니다. 폭은 놓인 자리를 채우고, 높이는 조작부 자체의 높이입니다.
+   바탕을 비워 두므로 theme은 놓을 자리의 바탕에 맞춰 고릅니다(어두운 바탕이면 "dark"). */
+.vzb-card[data-vzb="select-menu"] { min-height: 0; padding: 0; background: none; border: 0; border-radius: 0; box-shadow: none; }
+.vzb-sm { display: flex; min-width: 0; }
+.vzb-sm.is-end { justify-content: flex-end; }
+.vzb-sm-anchor { position: relative; flex: none; width: 300px; max-width: 100%; }
+.vzb-sm-btn { display: flex; align-items: center; gap: 8px; box-sizing: border-box; width: 100%; height: 40px; padding: 0 12px 0 14px; border: 0; border-radius: 20px; background: var(--vzb-track); color: var(--vzb-ink); font: 600 14px/1 var(--vzb-font); white-space: nowrap; overflow: hidden; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.vzb-sm-btn > * { color: var(--vzb-ink); }
+.vzb-sm-btn:hover { background: var(--vzb-other); }
+.vzb-sm.is-open .vzb-sm-btn { background: var(--vzb-ink); color: var(--vzb-card); }
+.vzb-sm.is-open .vzb-sm-btn > * { color: var(--vzb-card); }
+.vzb-sm-btn:active { transform: scale(0.97); transition-duration: 0.08s; }
+.vzb-sm-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
+.vzb-sm-ic { flex: none; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
+.vzb-sm-ic circle { fill: currentColor; stroke: none; }
+.vzb-sm-val { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; text-align: left; }
+.vzb-sm.is-none .vzb-sm-tx { color: var(--vzb-muted); }
+.vzb-sm.is-open.is-none .vzb-sm-tx { color: color-mix(in srgb, var(--vzb-card) 70%, transparent); }
+.vzb-sm-n { flex: none; display: inline-flex; align-items: baseline; padding: 3px 7px; border-radius: 10px; background: color-mix(in srgb, var(--vzb-ink) 10%, transparent); font-size: 12px; font-weight: 700; line-height: 1.2em; }
+.vzb-sm.is-open .vzb-sm-n { background: color-mix(in srgb, var(--vzb-card) 22%, transparent); }
+.vzb-sm-chev { flex: none; width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.vzb-sm.is-open .vzb-sm-chev { transform: rotate(180deg); }
+.vzb-sm-pop { position: absolute; left: 0; top: calc(100% + 8px); z-index: 3; box-sizing: border-box; width: 100%; padding: 10px 6px 6px; border: 1px solid var(--vzb-edge); border-radius: 16px; background: var(--vzb-card); box-shadow: 0 12px 32px rgba(27, 27, 27, 0.18); color: var(--vzb-ink); opacity: 0; visibility: hidden; transform: translateY(-6px) scale(0.97); transform-origin: 50% 0; transition: opacity 0.12s, transform 0.14s ease-out, visibility 0s 0.14s; }
+.vzb-sm.is-up .vzb-sm-pop { top: auto; bottom: calc(100% + 8px); transform: translateY(6px) scale(0.97); transform-origin: 50% 100%; }
+.vzb-sm.is-open .vzb-sm-pop { opacity: 1; visibility: visible; transform: none; transition: opacity 0.16s, transform 0.34s cubic-bezier(0.34, 1.4, 0.64, 1), visibility 0s; }
+.vzb-sm-search { position: relative; display: flex; align-items: center; margin: 0 4px 6px; }
+.vzb-sm-sic { position: absolute; left: 10px; width: 16px; height: 16px; fill: none; stroke: var(--vzb-muted); stroke-width: 1.6; stroke-linecap: round; pointer-events: none; }
+.vzb-sm-in { flex: 1 1 auto; min-width: 0; box-sizing: border-box; height: 36px; padding: 0 34px 0 34px; border: 1px solid var(--vzb-edge); border-radius: 10px; background: var(--vzb-card); color: var(--vzb-ink); font: 500 14px/1 var(--vzb-font); outline: none; transition: border-color 0.14s, box-shadow 0.14s; }
+.vzb-sm-in::placeholder { color: var(--vzb-muted); }
+.vzb-sm-in:hover { border-color: color-mix(in srgb, var(--vzb-ink) 30%, transparent); }
+.vzb-sm-in:focus { border-color: var(--vzb-ink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--vzb-ink) 14%, transparent); }
+.vzb-sm-wipe { position: absolute; right: 6px; display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink-2); cursor: pointer; opacity: 0; transform: scale(0.6); pointer-events: none; transition: opacity 0.14s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.vzb-sm-search.has-q .vzb-sm-wipe { opacity: 1; transform: none; pointer-events: auto; }
+.vzb-sm-wipe.is-press, .vzb-sm-wipe:active { transform: scale(0.82); }
+.vzb-sm-wipe svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+.vzb-sm-bar { display: flex; align-items: center; gap: 2px; height: 28px; margin: 0 4px 4px; }
+.vzb-sm-act { height: 28px; padding: 0 8px; border: 0; border-radius: 8px; background: none; color: var(--vzb-ink); font: 600 12px/1 var(--vzb-font); cursor: pointer; transition: background-color 0.14s, opacity 0.14s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.vzb-sm-act:hover { background: var(--vzb-track); }
+.vzb-sm-act:active { transform: scale(0.94); }
+.vzb-sm-act:disabled { opacity: 0.35; cursor: default; background: none; transform: none; }
+.vzb-sm-act:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 1px; }
+.vzb-sm-tally { margin-left: auto; padding-right: 6px; font-size: 12px; color: var(--vzb-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.vzb-sm-list { position: relative; max-height: 216px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.vzb-sm-opt { display: flex; align-items: center; gap: 10px; box-sizing: border-box; height: 36px; padding: 0 10px; border-radius: 10px; font-size: 14px; color: var(--vzb-ink); cursor: pointer; overflow: hidden; transition: height 0.22s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.14s, background-color 0.12s, visibility 0s; }
+.vzb-sm-opt.is-active { background: var(--vzb-track); }
+.vzb-sm-opt.is-gone { height: 0; opacity: 0; visibility: hidden; transition: height 0.2s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.1s, visibility 0s 0.2s; }   /* 검색어와 맞지 않는 줄은 접히며 사라집니다 */
+.vzb-sm-opt.is-press { background: var(--vzb-other); }
+.vzb-sm-box { flex: none; display: grid; place-items: center; width: 18px; height: 18px; box-sizing: border-box; border: 1.5px solid color-mix(in srgb, var(--vzb-ink) 38%, transparent); border-radius: 5px; color: var(--vzb-card); transition: background-color 0.16s, border-color 0.16s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.vzb-sm-opt[aria-selected="true"] .vzb-sm-box { background: var(--vzb-ink); border-color: var(--vzb-ink); }
+.vzb-sm-opt:active .vzb-sm-box, .vzb-sm-opt.is-press .vzb-sm-box { transform: scale(0.86); }
+.vzb-sm-ck { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-sm-ck path { stroke-dasharray: 13; stroke-dashoffset: 13; transition: stroke-dashoffset 0.2s ease-out; }
+.vzb-sm-opt[aria-selected="true"] .vzb-sm-ck path { stroke-dashoffset: 0; transition-delay: 0.06s; }
+/* 하나만 고를 때(mode: one)는 네모 칸 대신, 고른 줄의 왼쪽 자리에 체크만 긋습니다 */
+.vzb-sm-list:not([aria-multiselectable]) .vzb-sm-box { border-color: transparent; background: none; color: var(--vzb-ink); }
+.vzb-sm-list:not([aria-multiselectable]) .vzb-sm-opt[aria-selected="true"] .vzb-sm-box { background: none; border-color: transparent; }
+.vzb-sm-list:not([aria-multiselectable]) .vzb-sm-opt[aria-selected="true"] { font-weight: 700; }
+.vzb-sm-nm { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vzb-sm-hit { color: inherit; font-weight: 700; background: linear-gradient(color-mix(in srgb, var(--vzb-ink) 22%, transparent), color-mix(in srgb, var(--vzb-ink) 22%, transparent)) 0 100% / 100% 3px no-repeat; border-radius: 1px; animation: vzb-sm-hit 0.24s cubic-bezier(0.23, 1, 0.32, 1); }
+@keyframes vzb-sm-hit { from { background-size: 0 3px; } }
+.vzb-sm-q { flex: none; display: flex; align-items: center; gap: 8px; }
+.vzb-sm-qb { position: relative; width: 44px; height: 6px; border-radius: 3px; background: var(--vzb-track); overflow: hidden; }
+.vzb-sm-qb::after { content: ''; position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 3px; background: color-mix(in srgb, var(--vzb-ink) 32%, transparent); transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1), background-color 0.16s; }
+.vzb-sm.is-open .vzb-sm-qb::after { width: var(--vzb-w); transition-delay: 0.08s; }   /* 펼칠 때 막대가 0에서 자랍니다 */
+.vzb-sm-opt[aria-selected="true"] .vzb-sm-qb::after { background: var(--vzb-ink); }
+.vzb-sm-qn { min-width: 38px; text-align: right; font-size: 12px; color: var(--vzb-muted); font-variant-numeric: tabular-nums; }
+.vzb-sm-opt[aria-selected="true"] .vzb-sm-qn { color: var(--vzb-ink-2); }
+.vzb-sm-empty { margin: 0; padding: 12px 10px 14px; font-size: 14px; color: var(--vzb-muted); text-align: center; }
+.vzb-sm-empty[hidden] { display: none; }

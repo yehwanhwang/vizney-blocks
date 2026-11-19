@@ -1,6 +1,6 @@
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/vz-sans-400.woff?v=9eb1a8f2c1) format('woff');}
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/vz-sans-500.woff?v=9eb1a8f2c1) format('woff');}
-@font-face{font-family:'VZ Sans';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/vz-sans-700.woff?v=9eb1a8f2c1) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/vz-sans-400.woff?v=e5b9d692a3) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/vz-sans-500.woff?v=e5b9d692a3) format('woff');}
+@font-face{font-family:'VZ Sans';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/vz-sans-700.woff?v=e5b9d692a3) format('woff');}
 /* Vizney Blocks site: the Vizney common header (the blog's header, kr.vizney.com · www.vizney.com: the blog is the
    reference and Blocks follows it), then a white page that opens like a blog category page. Text and frame are ink and grays;
    the one UI accent is the Vizney yellow #ffcc00 of the blog's post images (primary buttons, focus, link underlines).
@@ -163,6 +163,10 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 .gt.is-bare [data-mount]:has(.vzb-dp) { transition: padding-bottom 0.42s cubic-bezier(0.34, 1.15, 0.64, 1); }
 .gt.is-bare [data-mount]:has(.vzb-dp.is-open) { padding-bottom: var(--gt-dp-pad, 0px); }   /* 열리면 달력 높이만큼 아래를 비워 단추가 위로 올라갑니다 */
 .gt.is-bare .vzb-dp.is-up .vzb-dp-pop { top: calc(100% + 8px); bottom: auto; transform-origin: 50% 0; }
+.gt.is-bare .vzb-sm { justify-content: center; }   /* Select Menu도 Date Picker처럼, 열리면 목록 높이만큼 아래를 비워 단추가 위로 올라갑니다 */
+.gt.is-bare [data-mount]:has(.vzb-sm) { transition: padding-bottom 0.42s cubic-bezier(0.34, 1.15, 0.64, 1); }
+.gt.is-bare [data-mount]:has(.vzb-sm.is-open) { padding-bottom: var(--gt-dp-pad, 0px); }
+.gt.is-bare .vzb-sm.is-up .vzb-sm-pop { top: calc(100% + 8px); bottom: auto; transform-origin: 50% 0; }
 .gt-pv { display: grid; }
 .gt-meta { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 10px 0 0 4px; }   /* 카드 이름과, 그 오른쪽 끝의 바탕 전환 단추 */
 .gt-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 700; color: var(--ink); text-decoration: none; }

@@ -127,6 +127,16 @@
     "Before downloading, the card sends a `vzb-download` event (`detail: { name, target, format, filename, rows }`). If the page calls `preventDefault()` the card makes no file, so a screen that fetches the source data from a server can use the same button.",
     "When the file is saved, the arrow drops into the tray and turns into a check, and the format and the number of rows (for a PNG, its size) roll up next to the button and fade after 1.8 s. When there is nothing to download, the button shakes and says \"No data\"."
    ]
+  },
+  "select-menu": {
+   "when": "A control that opens a list to search and pick from when there are too many items to lay out as chips. Use it for filters with dozens of names, such as countries, regions, stores or products. At rest it is one button with what is picked; press it and a search field and the list rise below it. With about eight items, Filter Chips, which show everything at a glance, are the better fit.",
+   "rules": [
+    "List the items in `options` as names or as `{ \"name\": \"Germany\", \"count\": 1740 }`, and the first picks in `value` (empty picks all). With `count`, each row shows how much data the item holds as a small bar (against the largest item) and a number, and the bars grow from zero as the list opens. You see where the data sits before you pick, so you are less likely to pick only items with almost no data and get an empty chart. `noun` is the word screen readers read after the number.",
+    "The button reads `all` (All when empty) when everything is picked, 'None picked' when nothing is, and otherwise the picked names in `options` order, shortened to '+the rest' when they do not fit. The badge on the right rolls to the number picked, so you never forget a filter is on. For a parameter that takes one item, set `\"mode\": \"one\"` and write one name in `value`: there is no badge or select-all row, and picking closes the list.",
+    "Typing in the search field keeps only the matching items (the rest fold away), and the matching letters turn bold with an underline that draws in. Case does not matter, and Korean names also match by initial consonants (ㄱ finds 경기, 강원, 경남…). A long list is hard to scan by eye. Select all and Clear act on the matches while you search. The list shows up to six rows and scrolls inside for more.",
+    "Each change sends a `vzb-change` event. `detail.name` is `name` and `detail.value` is the picked items in `options` order (one name when `mode` is one). The current value is also in the card's `data-vzb-value`. The button and the list always share one width (300px, or the slot when it is narrower); the list floats over the content beside it instead of pushing it away, and opens upward when there is no room below. Set `\"align\": \"end\"` at the right end of the screen.",
+    "Everything works from the keyboard. Enter, Space or the down arrow on the button opens the list with the focus in the search field; the up and down arrows (Page Up/Down for five rows) move between items and Enter picks. Esc clears the search, or closes the list when the search is empty. A picked row fills its box in the text color and draws a check, so it does not compete with the data colors of the charts."
+   ]
   }
  }
 }

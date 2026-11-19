@@ -1,0 +1,86 @@
+{
+  "lang": "en",
+  "label": "Country",
+  "name": "country",
+  "all": "All countries",
+  "noun": "orders",
+  "options": [
+    {
+      "name": "United States",
+      "count": 4820
+    },
+    {
+      "name": "United Kingdom",
+      "count": 1960
+    },
+    {
+      "name": "Germany",
+      "count": 1740
+    },
+    {
+      "name": "Japan",
+      "count": 1610
+    },
+    {
+      "name": "France",
+      "count": 1280
+    },
+    {
+      "name": "Canada",
+      "count": 1150
+    },
+    {
+      "name": "Australia",
+      "count": 980
+    },
+    {
+      "name": "South Korea",
+      "count": 870
+    },
+    {
+      "name": "Netherlands",
+      "count": 640
+    },
+    {
+      "name": "Spain",
+      "count": 590
+    },
+    {
+      "name": "Italy",
+      "count": 560
+    },
+    {
+      "name": "Brazil",
+      "count": 510
+    },
+    {
+      "name": "Sweden",
+      "count": 430
+    },
+    {
+      "name": "Singapore",
+      "count": 390
+    },
+    {
+      "name": "Mexico",
+      "count": 350
+    },
+    {
+      "name": "Switzerland",
+      "count": 320
+    },
+    {
+      "name": "India",
+      "count": 300
+    },
+    {
+      "name": "Poland",
+      "count": 260
+    }
+  ],
+  "value": [
+    "United States",
+    "Germany",
+    "Japan"
+  ]
+}

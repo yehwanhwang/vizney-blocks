@@ -16,7 +16,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.67';
+const VERSION = 'v0.68';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -109,8 +109,8 @@ const SKILL_CMD = 'npx skills add yehwanhwang/vizney-blocks';
 // takes one. English is the main site: its pages, card code, llms.txt and tokens.css are at / and the Korean ones at /ko/.
 // The home page's description, also its meta description.
 const GDESC = {
-  ko: '한도를 넘긴 값, 뒤바뀐 순위, 달라진 비중처럼 움직여야 보이는 변화를 그리는 차트와, 대시보드에 필요한 컨트롤입니다. 카드 하나가 HTML 조각 하나라서, 복사해 붙이고 JSON 값만 바꾸면 됩니다.',
-  en: 'Charts for the changes you only see in motion, such as a limit crossed, a rank overtaken or a share that grew, and the controls a dashboard needs. Each card is one HTML snippet: paste it in and change only the JSON.',
+  ko: '움직임으로 더 잘 읽히는 차트와 대시보드 컨트롤입니다. 한도를 넘긴 값, 뒤바뀐 순위처럼 변화를 보여 주기도 하고, 짚을 곳에 눈이 가게 하기도 합니다. 카드 하나가 HTML 조각 하나라서, 복사해 붙이고 JSON 값만 바꾸면 됩니다.',
+  en: 'Charts and dashboard controls that read better in motion: some show a change, such as a limit crossed or a rank overtaken, and some draw the eye to where it matters. Each card is one HTML snippet: paste it in and change only the JSON.',
 };
 // Step 3 of "How to use": the shortest page script that redraws a chart from a control (the same pattern as CONNECT below).
 // The step cards are narrow (27 characters of code at 1280px), so the lines are broken by hand.

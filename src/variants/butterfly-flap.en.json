@@ -1,109 +1,43 @@
 {
-  "title": "Members by Age",
-  "subtitle": "Members by age band, 2011 – 2026",
+  "title": "Orders by Category",
+  "subtitle": "Orders from women and men members, October 2026",
   "lang": "en",
   "format": "count",
-  "better": "neutral",
-  "labels": [
-    "2011",
-    "2016",
-    "2021",
-    "2026"
-  ],
+  "unit": "orders",
   "groups": [
     "Women",
     "Men"
   ],
   "items": [
     {
-      "name": "60+",
-      "left": [
-        100,
-        300,
-        700,
-        1400
-      ],
-      "right": [
-        100,
-        200,
-        600,
-        1100
-      ]
+      "name": "Beauty",
+      "left": 5400,
+      "right": 1200
     },
     {
-      "name": "50s",
-      "left": [
-        400,
-        900,
-        1700,
-        2800
-      ],
-      "right": [
-        300,
-        800,
-        1500,
-        2400
-      ]
+      "name": "Fashion",
+      "left": 6900,
+      "right": 3300
     },
     {
-      "name": "40s",
-      "left": [
-        1100,
-        2000,
-        3400,
-        4600
-      ],
-      "right": [
-        900,
-        1700,
-        2900,
-        4000
-      ]
+      "name": "Home",
+      "left": 3800,
+      "right": 2400
     },
     {
-      "name": "30s",
-      "left": [
-        2600,
-        4300,
-        6000,
-        6400
-      ],
-      "right": [
-        2300,
-        3800,
-        5300,
-        5700
-      ]
+      "name": "Food",
+      "left": 3000,
+      "right": 2800
     },
     {
-      "name": "20s",
-      "left": [
-        6200,
-        6400,
-        5300,
-        4300
-      ],
-      "right": [
-        5600,
-        5700,
-        4800,
-        3900
-      ]
+      "name": "Electronics",
+      "left": 2600,
+      "right": 4800
     },
     {
-      "name": "Teens",
-      "left": [
-        3400,
-        2900,
-        2200,
-        1500
-      ],
-      "right": [
-        3100,
-        2600,
-        2000,
-        1300
-      ]
+      "name": "Sports",
+      "left": 1600,
+      "right": 5500
     }
   ]
 }

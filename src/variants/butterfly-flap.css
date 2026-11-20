@@ -1,66 +1,35 @@
-/* Butterfly Flap: 높이 2단위. 머리 아래에 두 그룹의 이름과 합계 줄, 그 아래 그래프가 남은 높이를 채우고, 기간이 셋 이상이면 맨 아래에 구간 막대(34px)를 둡니다.
-   가운데 열에 항목 이름(14px)을, 그 양옆에 값(14px)을 두고 양쪽으로 막대를 뻗습니다. 왼쪽 막대는 첫째 데이터 색, 오른쪽 막대는 둘째 데이터 색이고, 바깥 끝만 4px 둥급니다. 막대 두께는 줄 간격의 72%입니다.
-   값은 옅은 글자색으로 적고, 짚은 막대의 값은 굵게 글자색으로 둡니다. 짚은 줄에는 옅은 띠를 깝니다.
-   잔상: 떠나온 막대는 회색 면으로 남았다가 사라지고, 방금 떠나온 기간의 끝자리에는 세로 눈금(1.5px, 옅은 글자색, 막대보다 위아래로 2px 김)이 남습니다.
-   눈금 아래에 바탕색 틈(4.5px, 막대 두께만큼)을 깔아 막대 안에서도 눈금이 보입니다.
-   위쪽 줄: 왼쪽 끝에 왼쪽 그룹, 오른쪽 끝에 오른쪽 그룹(견본 · 이름 · 합계, 단위는 12px), 가운데에 눈금 견본과 그 기간을 적습니다. 한 줄에 들어가지 않으면 눈금의 기간을 아래 줄로 내립니다.
-   두 기간이면 머리 오른쪽 위에 기간 단추(32px)를, 세 기간 이상이면 Bump Race와 같은 구간 막대와 재생 단추를 둡니다.
-   막대와 잔상의 움직임은 스크립트가 그립니다. */
+/* Butterfly Flap: 높이 2단위. 머리 아래에 두 그룹의 이름과 합계 줄, 그 아래 그래프가 남은 높이를 채웁니다. 머리 오른쪽 위에 다시 보기 단추(32px)를 둡니다.
+   가운데 열에 항목 이름(14px)을, 그 양옆에 값(14px)을 두고 양쪽으로 막대를 뻗습니다. 왼쪽 막대는 첫째 데이터 색, 오른쪽 막대는 둘째 데이터 색이고,
+   바깥 끝만 4px 둥급니다. 막대 두께는 줄 간격의 72%입니다.
+   적은 쪽 막대 끝에서 많은 쪽의 길이까지 회색 면(기타 항목의 회색)을 2px 띄워 잇습니다. 회색은 데이터 색과 겨루지 않으면서 막대와 구분되는 한 단계입니다.
+   짚은 줄에는 옅은 띠를 깔고 이름과 값을 굵게 글자색으로 둡니다.
+   위쪽 줄: 왼쪽 끝에 왼쪽 그룹, 오른쪽 끝에 오른쪽 그룹(견본 · 이름 · 합계, 단위는 12px), 가운데에 회색 견본과 그 뜻을 적습니다.
+   한 줄에 들어가지 않으면 회색 면의 뜻을 아래 줄로 내립니다. 회색 면의 뜻은 회색 면이 생긴 뒤에 나타납니다.
+   날개가 접혔다 펼쳐지는 움직임은 스크립트가 그립니다. */
 .vzb-card[data-vzb="butterfly-flap"] { min-height: calc(var(--vzb-unit) * 2); }
-.vzb-card[data-vzb="butterfly-flap"] .vzb-hd { position: relative; }
+.vzb-card[data-vzb="butterfly-flap"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
+.vzb-bf-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
+.vzb-bf-btn:hover { background: var(--vzb-other); }
+.vzb-bf-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
+.vzb-bf-ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .vzb-bf.vzb-foot { padding-top: 14px; }
-.vzb-bf-keys { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; column-gap: 24px; row-gap: 2px; margin-bottom: 10px; font-size: 14px; line-height: 20px; color: var(--vzb-ink-2); }
+.vzb-bf-keys { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; column-gap: 24px; row-gap: 2px; margin-bottom: 12px; font-size: 14px; line-height: 20px; color: var(--vzb-ink-2); }
 .vzb-bf-keys.is-wrap { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .vzb-bf-keys.is-wrap .vzb-bf-gkey { grid-row: 2; grid-column: 1 / -1; }
 .vzb-bf-key { display: inline-flex; align-items: center; gap: 6px; min-width: 0; white-space: nowrap; }
 .vzb-bf-key.is-right { grid-column: -2; justify-self: end; }
 .vzb-bf-tot { font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }
 .vzb-bf-u { margin-left: 2px; font-size: 12px; font-weight: 400; color: var(--vzb-muted); }
-.vzb-bf-u:empty { display: none; }
-.vzb-bf-gkey { display: inline-flex; align-items: center; justify-self: center; gap: 6px; white-space: nowrap; font-variant-numeric: tabular-nums; transition: opacity 0.2s; }
+.vzb-bf-gkey { display: inline-flex; align-items: center; justify-self: center; gap: 6px; white-space: nowrap; transition: opacity 0.3s; }
 .vzb-bf-gkey.is-off { opacity: 0; }
-.vzb-bf-gsw { flex: none; width: 0; height: 14px; border-left: 1.5px solid var(--vzb-ink-2); }
-.vzb-bf-svg, .vzb-bf-ssvg { display: block; overflow: visible; font-family: var(--vzb-font); }
+.vzb-bf-gsw { flex: none; width: 10px; height: 10px; border-radius: 3px; background: var(--vzb-other); }
+.vzb-bf-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-bf-band { fill: var(--vzb-track); }
 .vzb-bf-bar.is-l { fill: var(--vzb-primary); }
 .vzb-bf-bar.is-r { fill: var(--vzb-secondary); }
-.vzb-bf-gh { fill: var(--vzb-other); }
-.vzb-bf-tk0 { stroke: var(--vzb-card); stroke-width: 4.5; }
-.vzb-bf-svg.is-tight .vzb-bf-tk0 { stroke-width: 3.5; }
-.vzb-bf-tk1 { stroke: var(--vzb-ink-2); stroke-width: 1.5; }
-.vzb-bf-tk.is-on .vzb-bf-tk1 { stroke: var(--vzb-ink); }
+.vzb-bf-tail { fill: var(--vzb-other); }
 .vzb-bf-nm { font-size: 14px; fill: var(--vzb-ink-2); }
 .vzb-bf-val { font-size: 14px; font-weight: 500; fill: var(--vzb-ink-2); font-variant-numeric: tabular-nums; }
-.vzb-bf-val.is-on { font-weight: 700; fill: var(--vzb-ink); }
+.vzb-bf-nm.is-on, .vzb-bf-val.is-on { font-weight: 700; fill: var(--vzb-ink); }
 .vzb-bf-plot { cursor: default; }
-.vzb-bf-per { position: absolute; top: -4px; right: 0; display: inline-flex; padding: 2px; border-radius: 16px; background: var(--vzb-track); }
-.vzb-bf-pill { position: absolute; top: 2px; bottom: 2px; left: 0; width: 0; border-radius: 14px; background: var(--vzb-ink); pointer-events: none; }
-.vzb-bf-per.is-ready .vzb-bf-pill { transition: transform 0.38s cubic-bezier(0.3, 1.4, 0.5, 1), width 0.38s cubic-bezier(0.3, 1.4, 0.5, 1); }
-.vzb-bf-opt { position: relative; height: 28px; padding: 0 12px; border: 0; border-radius: 14px; background: none; color: var(--vzb-ink-2); font: 500 14px/28px var(--vzb-font); font-variant-numeric: tabular-nums; white-space: nowrap; cursor: pointer; transition: color 0.2s; }
-.vzb-bf-opt:hover { color: var(--vzb-ink); }
-.vzb-bf-opt.is-on { color: var(--vzb-card); }
-.vzb-bf-opt:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
-.vzb-bf-time { display: flex; align-items: flex-start; gap: 8px; margin-top: 16px; }
-.vzb-bf-ctl { flex: none; display: flex; align-items: center; gap: 2px; margin-top: -4px; }
-.vzb-bf-btn { display: grid; place-items: center; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--vzb-ink-2); cursor: pointer; touch-action: manipulation; }
-.vzb-bf-btn:hover { background: var(--vzb-track); color: var(--vzb-ink); }
-.vzb-bf-main { width: 28px; height: 28px; background: var(--vzb-track); color: var(--vzb-ink); }
-.vzb-bf-main:hover { background: var(--vzb-other); }
-.vzb-bf-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
-.vzb-bf-ic { width: 16px; height: 16px; }
-.vzb-bf-play { fill: currentColor; stroke: currentColor; stroke-width: 1.2; stroke-linejoin: round; }
-.vzb-bf-pause { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
-.vzb-bf-btn.is-on .vzb-bf-play, .vzb-bf-btn:not(.is-on) .vzb-bf-pause { display: none; }
-.vzb-bf-scrub { position: relative; flex: 1 1 auto; min-width: 0; height: 34px; border-radius: 4px; outline: none; cursor: pointer; touch-action: pan-y; -webkit-user-select: none; user-select: none; }
-.vzb-bf-scrub.is-drag { cursor: grabbing; }
-.vzb-bf-track { stroke: var(--vzb-other); stroke-width: 2; stroke-linecap: round; }
-.vzb-bf-fill { stroke: var(--vzb-ink); stroke-width: 2; stroke-linecap: round; }
-.vzb-bf-tick { fill: var(--vzb-other); }
-.vzb-bf-tick.is-past { fill: var(--vzb-ink); }
-.vzb-bf-thumb { fill: var(--vzb-ink); }
-.vzb-bf-halo { fill: var(--vzb-ink); fill-opacity: 0; transition: fill-opacity 0.16s; }
-.vzb-bf-scrub.is-drag .vzb-bf-halo { fill-opacity: 0.16; }   /* 잡고 끄는 동안 손잡이 둘레가 옅게 번집니다 */
-.vzb-bf-scrub:focus-visible .vzb-bf-thumb { stroke: var(--vzb-primary); stroke-width: 2; }
-.vzb-bf-now { font-size: 14px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
-.vzb-bf-end { font-size: 12px; fill: var(--vzb-muted); transition: opacity 0.12s; }
 .vzb-bf-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }

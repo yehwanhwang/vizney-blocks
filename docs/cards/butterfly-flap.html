@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Butterfly Flap · Vizney Blocks</title>
-<meta name="description" content="Butterfly Chart · Butterfly Flap. A butterfly chart, with the items (age bands and so on) in a center column and the values of two groups as bars on either side, that leaves a tick where each bar ended in the period just left, so it shows at once which rows grew or shrank and by how much. Use it to compare the age structure of members or customers by gender, or the make-up of two regions or two products item by item, and to show which way that structure shifts over time. When only the split between the two groups matters, use a 100% stacked bar chart; when there are many items and the differences must be read precisely, use a grouped bar chart.">
+<meta name="description" content="Butterfly Chart · Butterfly Flap. A butterfly chart, with the items in a center column and the values of two contrasting groups (men and women, online and offline, and so on) as bars on either side on one scale, that shows for each item which side has more and by how much with a gray extension. The gray runs from the end of the shorter bar to the length of the longer one, so the outline of the wings becomes symmetric, like a decalcomania print. Use it to compare the category make-up of two genders or channels, or to show where two groups part ways. When only the split between the two groups matters, use a 100% stacked bar chart; when only the size of each difference matters, use a bar chart of the differences.">
 <link rel="canonical" href="https://blocks.vizney.com/cards/butterfly-flap.html">
 <link rel="alternate" hreflang="en" href="https://blocks.vizney.com/cards/butterfly-flap.html">
 <link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/ko/cards/butterfly-flap.html">
@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Vizney Blocks">
 <meta property="og:locale" content="en_US">
 <meta property="og:title" content="Butterfly Flap · Vizney Blocks">
-<meta property="og:description" content="Butterfly Chart · Butterfly Flap. A butterfly chart, with the items (age bands and so on) in a center column and the values of two groups as bars on either side, that leaves a tick where each bar ended in the period just left, so it shows at once which rows grew or shrank and by how much. Use it to compare the age structure of members or customers by gender, or the make-up of two regions or two products item by item, and to show which way that structure shifts over time. When only the split between the two groups matters, use a 100% stacked bar chart; when there are many items and the differences must be read precisely, use a grouped bar chart.">
+<meta property="og:description" content="Butterfly Chart · Butterfly Flap. A butterfly chart, with the items in a center column and the values of two contrasting groups (men and women, online and offline, and so on) as bars on either side on one scale, that shows for each item which side has more and by how much with a gray extension. The gray runs from the end of the shorter bar to the length of the longer one, so the outline of the wings becomes symmetric, like a decalcomania print. Use it to compare the category make-up of two genders or channels, or to show where two groups part ways. When only the split between the two groups matters, use a 100% stacked bar chart; when only the size of each difference matters, use a bar chart of the differences.">
 <meta property="og:url" content="https://blocks.vizney.com/cards/butterfly-flap.html">
 <meta property="og:image" content="https://blocks.vizney.com/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -201,114 +201,58 @@
 .vzb-tip .is-bad { color: color-mix(in srgb, var(--vzb-bad) 68%, #fff); font-weight: 700; }
 .vzb-fs { --vzb-c: var(--vzb-primary-soft); }
 .vzb-key.is-tick { width: 2px; height: 12px; border-radius: 1px; }
-/* Butterfly Flap: 높이 2단위. 머리 아래에 두 그룹의 이름과 합계 줄, 그 아래 그래프가 남은 높이를 채우고, 기간이 셋 이상이면 맨 아래에 구간 막대(34px)를 둡니다.
-   가운데 열에 항목 이름(14px)을, 그 양옆에 값(14px)을 두고 양쪽으로 막대를 뻗습니다. 왼쪽 막대는 첫째 데이터 색, 오른쪽 막대는 둘째 데이터 색이고, 바깥 끝만 4px 둥급니다. 막대 두께는 줄 간격의 72%입니다.
-   값은 옅은 글자색으로 적고, 짚은 막대의 값은 굵게 글자색으로 둡니다. 짚은 줄에는 옅은 띠를 깝니다.
-   잔상: 떠나온 막대는 회색 면으로 남았다가 사라지고, 방금 떠나온 기간의 끝자리에는 세로 눈금(1.5px, 옅은 글자색, 막대보다 위아래로 2px 김)이 남습니다.
-   눈금 아래에 바탕색 틈(4.5px, 막대 두께만큼)을 깔아 막대 안에서도 눈금이 보입니다.
-   위쪽 줄: 왼쪽 끝에 왼쪽 그룹, 오른쪽 끝에 오른쪽 그룹(견본 · 이름 · 합계, 단위는 12px), 가운데에 눈금 견본과 그 기간을 적습니다. 한 줄에 들어가지 않으면 눈금의 기간을 아래 줄로 내립니다.
-   두 기간이면 머리 오른쪽 위에 기간 단추(32px)를, 세 기간 이상이면 Bump Race와 같은 구간 막대와 재생 단추를 둡니다.
-   막대와 잔상의 움직임은 스크립트가 그립니다. */
+/* Butterfly Flap: 높이 2단위. 머리 아래에 두 그룹의 이름과 합계 줄, 그 아래 그래프가 남은 높이를 채웁니다. 머리 오른쪽 위에 다시 보기 단추(32px)를 둡니다.
+   가운데 열에 항목 이름(14px)을, 그 양옆에 값(14px)을 두고 양쪽으로 막대를 뻗습니다. 왼쪽 막대는 첫째 데이터 색, 오른쪽 막대는 둘째 데이터 색이고,
+   바깥 끝만 4px 둥급니다. 막대 두께는 줄 간격의 72%입니다.
+   적은 쪽 막대 끝에서 많은 쪽의 길이까지 회색 면(기타 항목의 회색)을 2px 띄워 잇습니다. 회색은 데이터 색과 겨루지 않으면서 막대와 구분되는 한 단계입니다.
+   짚은 줄에는 옅은 띠를 깔고 이름과 값을 굵게 글자색으로 둡니다.
+   위쪽 줄: 왼쪽 끝에 왼쪽 그룹, 오른쪽 끝에 오른쪽 그룹(견본 · 이름 · 합계, 단위는 12px), 가운데에 회색 견본과 그 뜻을 적습니다.
+   한 줄에 들어가지 않으면 회색 면의 뜻을 아래 줄로 내립니다. 회색 면의 뜻은 회색 면이 생긴 뒤에 나타납니다.
+   날개가 접혔다 펼쳐지는 움직임은 스크립트가 그립니다. */
 .vzb-card[data-vzb="butterfly-flap"] { min-height: calc(var(--vzb-unit) * 2); }
-.vzb-card[data-vzb="butterfly-flap"] .vzb-hd { position: relative; }
+.vzb-card[data-vzb="butterfly-flap"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
+.vzb-bf-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
+.vzb-bf-btn:hover { background: var(--vzb-other); }
+.vzb-bf-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
+.vzb-bf-ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .vzb-bf.vzb-foot { padding-top: 14px; }
-.vzb-bf-keys { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; column-gap: 24px; row-gap: 2px; margin-bottom: 10px; font-size: 14px; line-height: 20px; color: var(--vzb-ink-2); }
+.vzb-bf-keys { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; column-gap: 24px; row-gap: 2px; margin-bottom: 12px; font-size: 14px; line-height: 20px; color: var(--vzb-ink-2); }
 .vzb-bf-keys.is-wrap { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .vzb-bf-keys.is-wrap .vzb-bf-gkey { grid-row: 2; grid-column: 1 / -1; }
 .vzb-bf-key { display: inline-flex; align-items: center; gap: 6px; min-width: 0; white-space: nowrap; }
 .vzb-bf-key.is-right { grid-column: -2; justify-self: end; }
 .vzb-bf-tot { font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }
 .vzb-bf-u { margin-left: 2px; font-size: 12px; font-weight: 400; color: var(--vzb-muted); }
-.vzb-bf-u:empty { display: none; }
-.vzb-bf-gkey { display: inline-flex; align-items: center; justify-self: center; gap: 6px; white-space: nowrap; font-variant-numeric: tabular-nums; transition: opacity 0.2s; }
+.vzb-bf-gkey { display: inline-flex; align-items: center; justify-self: center; gap: 6px; white-space: nowrap; transition: opacity 0.3s; }
 .vzb-bf-gkey.is-off { opacity: 0; }
-.vzb-bf-gsw { flex: none; width: 0; height: 14px; border-left: 1.5px solid var(--vzb-ink-2); }
-.vzb-bf-svg, .vzb-bf-ssvg { display: block; overflow: visible; font-family: var(--vzb-font); }
+.vzb-bf-gsw { flex: none; width: 10px; height: 10px; border-radius: 3px; background: var(--vzb-other); }
+.vzb-bf-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-bf-band { fill: var(--vzb-track); }
 .vzb-bf-bar.is-l { fill: var(--vzb-primary); }
 .vzb-bf-bar.is-r { fill: var(--vzb-secondary); }
-.vzb-bf-gh { fill: var(--vzb-other); }
-.vzb-bf-tk0 { stroke: var(--vzb-card); stroke-width: 4.5; }
-.vzb-bf-svg.is-tight .vzb-bf-tk0 { stroke-width: 3.5; }
-.vzb-bf-tk1 { stroke: var(--vzb-ink-2); stroke-width: 1.5; }
-.vzb-bf-tk.is-on .vzb-bf-tk1 { stroke: var(--vzb-ink); }
+.vzb-bf-tail { fill: var(--vzb-other); }
 .vzb-bf-nm { font-size: 14px; fill: var(--vzb-ink-2); }
 .vzb-bf-val { font-size: 14px; font-weight: 500; fill: var(--vzb-ink-2); font-variant-numeric: tabular-nums; }
-.vzb-bf-val.is-on { font-weight: 700; fill: var(--vzb-ink); }
+.vzb-bf-nm.is-on, .vzb-bf-val.is-on { font-weight: 700; fill: var(--vzb-ink); }
 .vzb-bf-plot { cursor: default; }
-.vzb-bf-per { position: absolute; top: -4px; right: 0; display: inline-flex; padding: 2px; border-radius: 16px; background: var(--vzb-track); }
-.vzb-bf-pill { position: absolute; top: 2px; bottom: 2px; left: 0; width: 0; border-radius: 14px; background: var(--vzb-ink); pointer-events: none; }
-.vzb-bf-per.is-ready .vzb-bf-pill { transition: transform 0.38s cubic-bezier(0.3, 1.4, 0.5, 1), width 0.38s cubic-bezier(0.3, 1.4, 0.5, 1); }
-.vzb-bf-opt { position: relative; height: 28px; padding: 0 12px; border: 0; border-radius: 14px; background: none; color: var(--vzb-ink-2); font: 500 14px/28px var(--vzb-font); font-variant-numeric: tabular-nums; white-space: nowrap; cursor: pointer; transition: color 0.2s; }
-.vzb-bf-opt:hover { color: var(--vzb-ink); }
-.vzb-bf-opt.is-on { color: var(--vzb-card); }
-.vzb-bf-opt:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
-.vzb-bf-time { display: flex; align-items: flex-start; gap: 8px; margin-top: 16px; }
-.vzb-bf-ctl { flex: none; display: flex; align-items: center; gap: 2px; margin-top: -4px; }
-.vzb-bf-btn { display: grid; place-items: center; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--vzb-ink-2); cursor: pointer; touch-action: manipulation; }
-.vzb-bf-btn:hover { background: var(--vzb-track); color: var(--vzb-ink); }
-.vzb-bf-main { width: 28px; height: 28px; background: var(--vzb-track); color: var(--vzb-ink); }
-.vzb-bf-main:hover { background: var(--vzb-other); }
-.vzb-bf-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
-.vzb-bf-ic { width: 16px; height: 16px; }
-.vzb-bf-play { fill: currentColor; stroke: currentColor; stroke-width: 1.2; stroke-linejoin: round; }
-.vzb-bf-pause { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
-.vzb-bf-btn.is-on .vzb-bf-play, .vzb-bf-btn:not(.is-on) .vzb-bf-pause { display: none; }
-.vzb-bf-scrub { position: relative; flex: 1 1 auto; min-width: 0; height: 34px; border-radius: 4px; outline: none; cursor: pointer; touch-action: pan-y; -webkit-user-select: none; user-select: none; }
-.vzb-bf-scrub.is-drag { cursor: grabbing; }
-.vzb-bf-track { stroke: var(--vzb-other); stroke-width: 2; stroke-linecap: round; }
-.vzb-bf-fill { stroke: var(--vzb-ink); stroke-width: 2; stroke-linecap: round; }
-.vzb-bf-tick { fill: var(--vzb-other); }
-.vzb-bf-tick.is-past { fill: var(--vzb-ink); }
-.vzb-bf-thumb { fill: var(--vzb-ink); }
-.vzb-bf-halo { fill: var(--vzb-ink); fill-opacity: 0; transition: fill-opacity 0.16s; }
-.vzb-bf-scrub.is-drag .vzb-bf-halo { fill-opacity: 0.16; }   /* 잡고 끄는 동안 손잡이 둘레가 옅게 번집니다 */
-.vzb-bf-scrub:focus-visible .vzb-bf-thumb { stroke: var(--vzb-primary); stroke-width: 2; }
-.vzb-bf-now { font-size: 14px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
-.vzb-bf-end { font-size: 12px; fill: var(--vzb-muted); transition: opacity 0.12s; }
 .vzb-bf-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
 </style>
 <div class="vzb-card" data-vzb="butterfly-flap">
 <script type="application/json">
 {
-  "title": "Members by Age",
-  "subtitle": "Members by age band, 2011 – 2026",
+  "title": "Orders by Category",
+  "subtitle": "Orders from women and men members, October 2026",
   "lang": "en",
   "format": "count",
-  "better": "neutral",
-  "labels": ["2011", "2016", "2021", "2026"],
+  "unit": "orders",
   "groups": ["Women", "Men"],
   "items": [
-    {
-      "name": "60+",
-      "left": [100, 300, 700, 1400],
-      "right": [100, 200, 600, 1100]
-    },
-    {
-      "name": "50s",
-      "left": [400, 900, 1700, 2800],
-      "right": [300, 800, 1500, 2400]
-    },
-    {
-      "name": "40s",
-      "left": [1100, 2000, 3400, 4600],
-      "right": [900, 1700, 2900, 4000]
-    },
-    {
-      "name": "30s",
-      "left": [2600, 4300, 6000, 6400],
-      "right": [2300, 3800, 5300, 5700]
-    },
-    {
-      "name": "20s",
-      "left": [6200, 6400, 5300, 4300],
-      "right": [5600, 5700, 4800, 3900]
-    },
-    {
-      "name": "Teens",
-      "left": [3400, 2900, 2200, 1500],
-      "right": [3100, 2600, 2000, 1300]
-    }
+    { "name": "Beauty", "left": 5400, "right": 1200 },
+    { "name": "Fashion", "left": 6900, "right": 3300 },
+    { "name": "Home", "left": 3800, "right": 2400 },
+    { "name": "Food", "left": 3000, "right": 2800 },
+    { "name": "Electronics", "left": 2600, "right": 4800 },
+    { "name": "Sports", "left": 1600, "right": 5500 }
   ]
 }
 </script>
@@ -342,8 +286,8 @@
     '최근 7일': 'Last 7 days', '최근 30일': 'Last 30 days', '이번 달': 'This month', '지난달': 'Last month', '이번 분기': 'This quarter', '올해': 'This year', '빠른 선택': 'Quick picks',
     '일간': 'days', '일간|1': 'day', '%s 고름': '%s picked', '이전 달': 'Previous month', '다음 달': 'Next month', 'value의 날짜를 YYYY-MM-DD로 적으세요.': 'Write the dates in value as YYYY-MM-DD.',
     'items에 단계를 두 개 이상 적으세요.': 'Write two or more stages in items.', '첫 단계의 값은 0보다 커야 합니다.': 'The first stage needs a value above 0.', '단계': 'Stage', '앞 단계에서': 'From the previous stage', '%1에서 %2 넘어옴': '%2 moved on from %1', '퍼널의 시작': 'Start of the funnel', '시작 값': 'Starting value', '눌러서 값 입력': 'Click to type a value',
-    'labels에 기간을 1개 이상 적으세요.': 'List at least 1 period in labels.', 'groups에 왼쪽과 오른쪽 그룹의 이름 2개를 적으세요.': 'List the names of the left and right groups in groups.', 'items에 항목을 2~10개 적으세요.': 'List 2 to 10 items in items.', 'labels와 left · right를 확인하세요.': 'Check labels, left and right.', '합계': 'Total', '%1 가운데 %2': '%2 of %1', '%1 위치': '%1 level',
-    '%1, %2. %3 %4, %5 %6. 화살표로 막대를 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1, %2. %3 %4, %5 %6. Use the arrows to move between bars. Every value is in the table that follows.', '검색': 'Search', '%s 검색': 'Search %s', '검색어 지우기': 'Clear search', '모두 고르기': 'Select all', '모두 풀기': 'Clear', '고른 항목 없음': 'None picked', '"%s"와 맞는 항목이 없습니다.': 'No match for "%s"', '%s개 찾음': '%s found',  '시작일': 'Start date', '끝일': 'End date', '날짜': 'Date', '연도와 달 고르기': 'choose month and year', '날짜로 돌아가기': 'back to the days', '이전 해': 'Previous year', '다음 해': 'Next year', '이전 열두 해': 'Previous 12 years', '다음 열두 해': 'Next 12 years', '날짜를 YYYY-MM-DD로, 고를 수 있는 날짜 안에서 적으세요.': 'Type a date as YYYY-MM-DD, within the dates you can pick.', 
+    'groups에 왼쪽과 오른쪽 그룹의 이름 2개를 적으세요.': 'List the names of the left and right groups in groups.', 'items에 항목을 2~10개 적으세요.': 'List 2 to 10 items in items.', 'items의 left와 right에 0 이상의 값을 적으세요.': 'Put a value of 0 or more in left and right of each item.', '합계': 'Total', '같음': 'Even', '반대쪽과의 차이': 'Gap to the other side', '%1의 %2배': '%2× %1', '%1 합계의 %2 · %3 합계의 %4': '%2 of all %1 · %4 of all %3',
+    '%1. %2 %3, %4 %5. 위아래 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2 %3, %4 %5. Use the up and down arrows to move between items. Every value is in the table that follows.', '검색': 'Search', '%s 검색': 'Search %s', '검색어 지우기': 'Clear search', '모두 고르기': 'Select all', '모두 풀기': 'Clear', '고른 항목 없음': 'None picked', '"%s"와 맞는 항목이 없습니다.': 'No match for "%s"', '%s개 찾음': '%s found',  '시작일': 'Start date', '끝일': 'End date', '날짜': 'Date', '연도와 달 고르기': 'choose month and year', '날짜로 돌아가기': 'back to the days', '이전 해': 'Previous year', '다음 해': 'Next year', '이전 열두 해': 'Previous 12 years', '다음 열두 해': 'Next 12 years', '날짜를 YYYY-MM-DD로, 고를 수 있는 날짜 안에서 적으세요.': 'Type a date as YYYY-MM-DD, within the dates you can pick.', 
     '%1. %2 %3에서 %4 %5까지, 첫 단계 대비 %6. 좌우 화살표로 단계를 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. From %2 %3 to %4 %5, %6 of the first stage. Use the left and right arrows to move between the stages. Every value is in the table that follows.',
     '카드 데이터(JSON)를 읽지 못했습니다: %s': 'Could not read the card data (JSON): %s', '카드를 그리지 못했습니다: %s': 'Could not draw the card: %s',
   };
@@ -652,531 +596,266 @@
     return { show: go, at: () => idx, end };
   }
 
-  // Butterfly Flap: 가운데 열에 항목 이름(연령대 등)을 두고, 왼쪽 그룹(첫째 데이터 색)과 오른쪽 그룹(둘째 데이터 색)의 막대를 양쪽으로 뻗는 버터플라이 차트입니다.
-  // 두 날개는 모든 기간에 같은 눈금이라, 기간을 옮겨도 막대 길이를 그대로 견줄 수 있습니다. 값은 가운데 열 양옆, 막대가 시작하는 자리에 적어 막대 끝을 비워 둡니다(끝에는 눈금이 옵니다).
-  // 기간을 옮기면 두 날개가 거울처럼 함께 새 길이로 가고, 막대 끝이 용수철처럼 살짝 넘쳤다가 잦아듭니다(몇 px 안). 많이 바뀐 막대일수록 크게 떨려 눈이 그 줄로 갑니다.
-  // 막대를 접거나 줄여 그리지 않으므로, 움직이는 동안에도 길이는 값을 따라갑니다.
-  // 잔상: 떠나온 막대가 회색 면으로 남았다가 사라지고, 방금 떠나온 기간의 끝자리에 세로 눈금 하나가 남습니다. 막대가 눈금을 넘으면 늘어난 것이고, 못 미치면 줄어든 것입니다.
-  // 기간이 두 개면 머리 오른쪽 위의 기간 단추로 오가고, 세 개 이상이면 아래 구간 막대와 되감기 · 재생/일시정지 · 빨리 감기 단추로 옮깁니다.
-  // 위쪽 줄에 두 그룹의 이름과 합계(그려진 막대를 세어 함께 바뀝니다), 가운데에 눈금이 어느 기간의 자리인지 적습니다. 막대 옆의 값은 굴리지 않고 한 번에 바꿉니다.
-  // 움직임: 화면에 보이면 첫 기간에서 잠시 멈췄다가 끝까지 한 번 재생하고 멈춥니다. 그래프에 마우스를 올리거나 키보드로 포커스하면 다음 기간으로 넘기지 않습니다.
-  // 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 고른 기간(data-vzb-period, 없으면 마지막)과 눈금의 기간(data-vzb-from, 없으면 그 앞 기간)을 바로 그립니다.
-  // 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고 처음 기간으로 돌아가 다시 재생합니다. 손을 대면 되풀이를 멈춥니다.
+  // Butterfly Flap: 가운데 열에 항목 이름을 두고, 왼쪽 그룹(첫째 데이터 색)과 오른쪽 그룹(둘째 데이터 색)의 막대를 양쪽으로 뻗어 항목마다 두 그룹을 견주는 버터플라이 차트입니다
+  // (예: 여성 · 남성 회원의 카테고리별 주문 수). 두 날개는 같은 눈금이고, 값은 가운데 열 양옆에 줄 맞춰 적습니다.
+  // 데칼코마니: 항목마다 적은 쪽 막대 끝에서 많은 쪽의 길이까지 회색 면을 이어 그립니다(반대쪽과의 차이). 그래서 날개의 바깥 윤곽은 좌우 대칭이 되고,
+  // 회색이 있는 쪽이 그 항목에서 적은 쪽, 회색의 길이가 두 그룹의 차이입니다. 막대와 회색 사이는 카드 바탕색 2px로 끊습니다.
+  // 움직임: 화면에 보이면 접혀 있던 두 날개가 좌우로 펼쳐지고(값 그대로의 막대), 한 번 접었다가 다시 펼칩니다. 접어서 맞닿은 날개는 서로의 길이를 옮겨 받아,
+  // 다시 펼칠 때 회색 면이 함께 펼쳐집니다. 날개는 한 장의 판처럼 경첩(값 칸의 바깥 가장자리)을 축으로 화면 앞쪽으로 들리며 접히고, 두 날개는 거울처럼 함께 움직입니다.
+  // 판 위의 막대는 같은 비율로 짧아지므로 접히는 동안에도 막대끼리의 길이 비는 그대로입니다. 값과 이름은 움직이지 않습니다.
+  // 카드가 화면에 보이면 한 번 움직이고, 다시 보기 단추로 되풀이합니다. 마우스를 올리거나 키보드로 포커스하면 움직임을 잠시 멈춥니다.
+  // 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 마지막 장면(펼친 날개와 회색 면)을 바로 그립니다.
+  // 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고, 날개를 접었다가 처음부터 다시 펼칩니다.
   mount('butterfly-flap', (card, d, f) => {
     // 걸러서 남은 항목이 없을 때(items가 빈 배열)는 오류가 아니라 빈 화면입니다.
-    const none = () => { head(card, d, f, null); card.append(el('p', 'vzb-bf-none', tx(d, '표시할 항목이 없습니다.'))); };
-    if (Array.isArray(d.items) && !d.items.length) { none(); return; }
-    const labels = Array.isArray(d.labels) ? d.labels.map(String) : [], n = labels.length, last = n - 1;
+    if (Array.isArray(d.items) && !d.items.length) {
+      head(card, d, f, null);
+      card.append(el('p', 'vzb-bf-none', tx(d, '표시할 항목이 없습니다.')));
+      return;
+    }
     const groups = Array.isArray(d.groups) ? d.groups.map(String) : [];
-    const list = Array.isArray(d.items) ? d.items.filter((it) => it && it.name != null && it.name !== '') : [];
-    if (n < 1) throw new Error(tx(d, 'labels에 기간을 1개 이상 적으세요.'));
     if (groups.length !== 2) throw new Error(tx(d, 'groups에 왼쪽과 오른쪽 그룹의 이름 2개를 적으세요.'));
+    const list = Array.isArray(d.items) ? d.items.filter((it) => it && it.name != null && it.name !== '') : [];
     if (list.length < 2 || list.length > 10) throw new Error(tx(d, 'items에 항목을 2~10개 적으세요.'));
-    const ok = (a) => Array.isArray(a) && a.length === n && a.every((v) => v == null || (fin(v) && v >= 0));
-    if (list.some((it) => !ok(it.left) || !ok(it.right))) throw new Error(tx(d, 'labels와 left · right를 확인하세요.'));
-    const items = list.map((it) => ({ name: String(it.name), vals: [it.left, it.right].map((a) => a.map((v) => (fin(v) ? +v : null))), x: [0, 0], vel: [0, 0], a0: [0, 0], zeta: [1, 1], gx: [0, 0] }));
+    const okv = (v) => v == null || (fin(v) && v >= 0);
+    if (list.some((it) => !okv(it.left) || !okv(it.right))) throw new Error(tx(d, 'items의 left와 right에 0 이상의 값을 적으세요.'));
+    const items = list.map((it) => ({ name: String(it.name), v: [it.left, it.right].map((x) => (fin(x) ? +x : null)) }));
     const N = items.length;
-    let vmax = 0;
-    items.forEach((it) => it.vals.forEach((a) => a.forEach((v) => { if (v != null && v > vmax) vmax = v; })));
-    if (!(vmax > 0)) { none(); return; }
-    const whole = items.every((it) => it.vals.every((a) => a.every((v) => v == null || Number.isInteger(v))));
-    const val = (it, s, t) => (t >= 0 ? it.vals[s][t] : null);
-    const sum = (s, t) => items.reduce((a, it) => a + (val(it, s, t) || 0), 0);
-    const round = (v) => (whole ? Math.round(v) : Math.round(v * 10) / 10);
-    const bare = (v) => f.parts(v)[0];   // 막대 옆의 값은 숫자만, 단위는 위쪽 줄과 툴팁에 적습니다
+    const vmax = Math.max(0, ...items.flatMap((it) => it.v.filter((x) => x != null))) || 1;
+    const tot = [0, 1].map((s) => items.reduce((a, it) => a + (it.v[s] || 0), 0));
+    // 항목마다 두 그룹의 차이: lead는 많은 쪽(0 왼쪽, 1 오른쪽), 같으면 -1, 한쪽 값이 없으면 null입니다.
+    items.forEach((it) => {
+      const [a, b] = it.v;
+      it.lead = a == null || b == null ? null : a > b ? 0 : b > a ? 1 : -1;
+      it.gap = it.lead == null ? 0 : Math.abs(a - b);
+    });
+    const anyGap = items.some((it) => it.lead != null && it.lead >= 0);
+    const bare = (v) => f.parts(v)[0];   // 가운데 열 옆의 값은 숫자만, 단위는 위쪽 줄과 툴팁에 적습니다
+    const pct1 = (r) => `${num(r * 100, 1)}%`;
     const fx = (v) => v.toFixed(1);
-    const pctText = (v) => `${num(v, 1)}%`;
+    const gapText = (it) => (it.lead == null ? '–' : it.lead < 0 ? tx(d, '같음') : `${groups[it.lead]} ${signed(f, it.gap)}`);
 
+    const live = card.hasAttribute('data-vzb-live');   // 데이터가 바뀌어 다시 그린 카드: 처음부터 재생하지 않고 마지막 장면을 그립니다
     head(card, d, f, null);
     const hd = card.querySelector('.vzb-hd');
-    // 기간 단추(두 기간): 머리 오른쪽 위의 라디오 묶음입니다. 고른 기간에는 글자색 알약이 미끄러져 옮겨 갑니다.
-    let per = null, pill = null, opts = [];
-    if (n === 2) {
-      per = el('div', 'vzb-bf-per');
-      per.setAttribute('role', 'radiogroup');
-      per.setAttribute('aria-label', tx(d, '기간'));
-      pill = el('span', 'vzb-bf-pill');
-      pill.setAttribute('aria-hidden', 'true');
-      per.append(pill);
-      opts = labels.map((name, t) => {
-        const b = el('button', 'vzb-bf-opt', name);
-        b.type = 'button';
-        b.setAttribute('role', 'radio');
-        b.addEventListener('click', () => pickAt(t));
-        per.append(b);
-        return b;
-      });
-      per.addEventListener('keydown', (e) => {
-        const k = e.key, step = k === 'ArrowRight' || k === 'ArrowDown' ? 1 : k === 'ArrowLeft' || k === 'ArrowUp' ? -1 : 0;
-        const t = k === 'Home' ? 0 : k === 'End' ? last : step ? (cur + step + n) % n : -1;
-        if (t < 0) return;
-        e.preventDefault();
-        pickAt(t);
-        opts[t].focus();
-      });
-      hd.append(per);
-    }
-    // 위쪽 줄: 왼쪽 그룹(이름 · 합계) · 눈금의 기간 · 오른쪽 그룹. 두 그룹은 날개와 같은 쪽 끝에 둡니다.
+    const btn = el('button', 'vzb-bf-btn');
+    btn.type = 'button';
+    btn.setAttribute('aria-label', tx(d, '처음부터 다시'));
+    const ic = svgEl('svg', { class: 'vzb-bf-ic', viewBox: '0 0 16 16', 'aria-hidden': 'true' });
+    ic.append(svgEl('path', { d: 'M3.7 9a4.4 4.4 0 1 0 1.2-4.2' }), svgEl('path', { d: 'M4.6 2.6v2.6h2.6' }));
+    btn.append(ic);
+    hd.append(btn);   // 다시 보기 단추는 머리의 오른쪽 위
+    // 위쪽 줄: 왼쪽 끝에 왼쪽 그룹, 오른쪽 끝에 오른쪽 그룹(견본 · 이름 · 합계), 가운데에 회색 면의 뜻. 범례를 대신합니다.
     const keys = el('div', 'vzb-bf-keys');
-    const tots = [0, 1].map((s) => {
-      const k = el('span', `vzb-bf-key ${s ? 'is-right' : 'is-left'}`), b = el('b', 'vzb-bf-tot'), nb = el('span'), ub = el('span', 'vzb-bf-u');
-      b.append(nb, ub);
+    const gk = [0, 1].map((s) => {
+      const k = el('span', `vzb-bf-key ${s ? 'is-right' : 'is-left'}`), b = el('b', 'vzb-bf-tot'), [a, u] = f.parts(tot[s]);
+      b.append(el('span', null, a));
+      if (u) b.append(el('span', 'vzb-bf-u', u));
       k.append(el('i', `vzb-key is-box vzb-t${s + 1}`), el('span', null, groups[s]), b);
-      return { k, b, nb, ub };
+      return k;
     });
-    const gkey = el('span', 'vzb-bf-gkey'), gname = el('span');
-    gkey.append(el('i', 'vzb-bf-gsw'), gname);
-    keys.append(tots[0].k, gkey, tots[1].k);
+    const gkey = el('span', 'vzb-bf-gkey is-off');
+    gkey.append(el('i', 'vzb-bf-gsw'), el('span', null, tx(d, '반대쪽과의 차이')));
+    keys.append(gk[0], gkey, gk[1]);
     const foot = el('div', 'vzb-foot vzb-fill vzb-bf');
     const plot = el('div', 'vzb-plot vzb-bf-plot');
     plot.tabIndex = 0;
     plot.setAttribute('role', 'img');
+    plot.setAttribute('aria-label', tx(d, '%1. %2 %3, %4 %5. 위아래 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.',
+      d.title || '', groups[0], show(f, tot[0]), groups[1], show(f, tot[1])));
     const svg = svgEl('svg', { class: 'vzb-bf-svg', 'aria-hidden': 'true' });
     plot.append(svg);
     foot.append(keys, plot);
-    // 구간 막대와 재생 단추(세 기간 이상): Bump Race와 같은 모양과 조작입니다.
-    let scrub = null, ssvg = null, ctl = null, btn = null, rew = null, ff = null;
-    if (n > 2) {
-      ctl = el('div', 'vzb-bf-ctl');
-      const mk = (cls, paths) => {
-        const b = el('button', `vzb-bf-btn ${cls}`);
-        b.type = 'button';
-        const ic = svgEl('svg', { class: 'vzb-bf-ic', viewBox: '0 0 16 16', 'aria-hidden': 'true' });
-        paths.forEach(([c, dd]) => ic.append(svgEl('path', { class: c, d: dd })));
-        b.append(ic);
-        ctl.append(b);
-        return b;
-      };
-      rew = mk('vzb-bf-rew', [['vzb-bf-play', 'M8 4.4v7.2L3.2 8zM13.6 4.4v7.2L8.8 8z']]);
-      btn = mk('vzb-bf-main', [['vzb-bf-play', 'M5.6 3.9v8.2l6.6-4.1z'], ['vzb-bf-pause', 'M5.4 4v8M10.6 4v8']]);
-      ff = mk('vzb-bf-ff', [['vzb-bf-play', 'M2.4 4.4v7.2L7.2 8zM8 4.4v7.2L12.8 8z']]);
-      rew.setAttribute('aria-label', tx(d, '되감기'));
-      ff.setAttribute('aria-label', tx(d, '빨리 감기'));
-      scrub = el('div', 'vzb-bf-scrub');
-      scrub.tabIndex = 0;
-      scrub.setAttribute('role', 'slider');
-      scrub.setAttribute('aria-label', tx(d, '기간'));
-      scrub.setAttribute('aria-valuemin', '0');
-      scrub.setAttribute('aria-valuemax', String(last));
-      ssvg = svgEl('svg', { class: 'vzb-bf-ssvg', 'aria-hidden': 'true' });
-      scrub.append(ssvg);
-      const bar = el('div', 'vzb-bf-time');
-      bar.append(scrub, ctl);
-      foot.append(bar);
-    }
     card.append(foot);
-    // 화면 낭독기용 표: 항목마다 기간별 두 그룹의 값, 맨 아래에 합계
-    const sr = el('div', 'vzb-sr'), table = el('table'), hr = el('tr');
-    hr.append(el('th', null, tx(d, '항목')), ...labels.map((l) => el('th', null, l)));
-    table.append(el('caption', null, d.title || ''), hr);
-    const cell = (s, v) => `${groups[s]} ${v == null ? '–' : show(f, v)}`;
-    items.concat({ name: tx(d, '합계'), total: true }).forEach((it) => {
+    // 화면 낭독기용 표: 항목 · 두 그룹의 값 · 차이, 맨 아래에 합계
+    const sr = el('div', 'vzb-sr'), table = el('table'), hr0 = el('tr');
+    hr0.append(...[tx(d, '항목'), groups[0], groups[1], tx(d, '차이')].map((k) => el('th', null, k)));
+    table.append(el('caption', null, d.title || ''), hr0);
+    items.forEach((it) => {
       const tr = el('tr');
-      tr.append(el('th', null, it.name), ...labels.map((_, t) => el('td', null, [0, 1].map((s) => cell(s, it.total ? sum(s, t) : val(it, s, t))).join(', '))));
+      tr.append(el('th', null, it.name), ...it.v.map((v) => el('td', null, v == null ? '–' : show(f, v))), el('td', null, gapText(it)));
       table.append(tr);
     });
-    const say = el('div', 'vzb-sr');   // 기간을 옮기면 읽어 줍니다
-    say.setAttribute('aria-live', 'polite');
+    const trT = el('tr');
+    trT.append(el('th', null, tx(d, '합계')), ...tot.map((v) => el('td', null, show(f, v))), el('td', null, ''));
+    table.append(trT);
     sr.append(table);
-    card.append(sr, say);
+    card.append(sr);
 
-    // 그림: 짚은 줄의 띠 → 잔상(회색 면) → 막대 → 눈금(바탕색 틈 위에 선) → 가운데 이름 → 값 순서로 쌓습니다.
-    // 잔상은 막대 아래에 있어 줄어든 만큼만 보이고, 눈금은 막대 위에 있어 늘어난 막대 안에서도 보입니다.
+    // 그림(아래부터): 짚은 줄의 띠 · 회색 면 · 막대 · 이름과 값
     const band = svgEl('rect', { class: 'vzb-bf-band', rx: 4 });
-    const gGhost = svgEl('g', {}), gBars = svgEl('g', {}), gTicks = svgEl('g', {}), gNames = svgEl('g', {}), gVals = svgEl('g', {});
+    const gTail = svgEl('g', {}), gBar = svgEl('g', {}), gTxt = svgEl('g', {});
     items.forEach((it) => {
-      it.gh = [0, 1].map(() => svgEl('path', { class: 'vzb-bf-gh' }));
       it.bar = [0, 1].map((s) => svgEl('path', { class: `vzb-bf-bar ${s ? 'is-r' : 'is-l'}` }));
-      it.tk = [0, 1].map(() => { const g = svgEl('g', { class: 'vzb-bf-tk' }); g.append(svgEl('line', { class: 'vzb-bf-tk0' }), svgEl('line', { class: 'vzb-bf-tk1' })); return g; });
+      it.tail = [0, 1].map(() => svgEl('path', { class: 'vzb-bf-tail' }));
       it.nm = svgText(0, 0, it.name, 'vzb-bf-nm', 'middle');
-      it.lab = [0, 1].map((s) => svgText(0, 0, '', 'vzb-bf-val', s ? 'end' : 'start'));   // 값은 제 막대가 시작하는 쪽에 붙입니다
-      gGhost.append(...it.gh);
-      gBars.append(...it.bar);
-      gTicks.append(...it.tk);
-      gNames.append(it.nm);
-      gVals.append(...it.lab);
+      it.lab = [0, 1].map((s) => svgText(0, 0, it.v[s] == null ? '–' : bare(it.v[s]), 'vzb-bf-val', s ? 'end' : 'start'));   // 값은 제 막대가 시작하는 쪽에 붙입니다
+      gTail.append(...it.tail);
+      gBar.append(...it.bar);
+      gTxt.append(it.nm, ...it.lab);
     });
-    svg.append(band, gGhost, gBars, gTicks, gNames, gVals);
-    let track, fill, ticks = [], halo, thumb, endA, endB, now;
-    if (scrub) {
-      track = svgEl('line', { class: 'vzb-bf-track' });
-      fill = svgEl('line', { class: 'vzb-bf-fill' });
-      ticks = labels.map(() => svgEl('circle', { class: 'vzb-bf-tick', r: 1.5 }));
-      halo = svgEl('circle', { class: 'vzb-bf-halo', r: 11 });
-      thumb = svgEl('circle', { class: 'vzb-bf-thumb', r: 6 });
-      endA = svgText(0, 30, labels[0], 'vzb-bf-end', 'start');
-      endB = svgText(0, 30, labels[last], 'vzb-bf-end', 'end');
-      now = svgText(0, 30, '', 'vzb-bf-now', 'middle');
-      ssvg.append(track, fill, ...ticks, halo, thumb, endA, endB, now);
-    }
+    svg.append(band, gTail, gBar, gTxt);
 
+    // 가운데 열과 값 칸의 폭(짚으면 굵어지므로 굵은 글자로 잽니다). 글꼴이 늦게 실리면 실린 뒤 다시 잽니다(아래 fonts.ready).
     const fam = getComputedStyle(card).fontFamily;
-    // 가운데 열과 값의 폭: 글꼴이 늦게 실리면 처음에는 대체 글꼴로 재게 되므로, 글꼴이 실린 뒤 다시 잽니다(아래 fonts.ready).
-    let nameW = 0, valW = 0, nowW = 0, totW = 0, perW = 0;
+    let nameW = 0, valW = 0;
     const measure = () => {
-      // 합계 칸은 가장 긴 합계의 폭으로 잡아, 재생하는 동안 숫자가 바뀌어도 위쪽 줄이 흔들리지 않게 합니다.
-      totW = Math.max(...[0, 1].flatMap((s) => labels.map((_, t) => { const [a, u] = f.parts(sum(s, t)); return textW(a, 700, fam, 14) + (u ? 2 + textW(u, 400, fam, 12) : 0); })));
-      nameW = Math.max(...items.map((it) => textW(it.name, 400, fam, 14)));
-      valW = Math.max(...items.flatMap((it) => it.vals.flat().filter((v) => v != null).map((v) => textW(bare(v), 700, fam, 14))));   // 짚으면 굵게
-      nowW = Math.max(...labels.map((l) => textW(l, 700, fam, 14)));
-      perW = Math.max(...labels.map((l) => textW(tx(d, '%1 위치', l), 400, fam, 14)));
+      nameW = Math.max(...items.map((it) => textW(it.name, 700, fam, 14)));
+      valW = Math.max(...items.flatMap((it) => it.lab.map((l) => textW(l.textContent, 700, fam, 14))));
     };
     measure();
-    let W = 0, H = 0, hl = 0, hr2 = 0, cx = 0, span = 0, pitch = 0, hh = 0;
+    // 가운데 열은 가장 긴 이름, 그 양옆 12px 밖에 값 칸(가장 긴 값의 폭), 값 칸에서 8px 밖이 경첩입니다. 날개는 경첩에서 카드 끝까지 뻗습니다.
+    // 막대 두께는 줄 간격의 72%(최대 32px)입니다.
+    let W = 0, H = 0, cx = 0, hl = 0, hr = 0, span = 1, pitch = 1, hh = 1, ym = 0, PD = 1;
+    const PK = 5.5;   // 원근: 보는 눈이 가장 긴 날개 길이의 5.5배 떨어져 있습니다
     const sc = (v) => (v > 0 ? (v / vmax) * span : 0);
     const rowY = (r) => pitch * (r + 0.5);
-    // 막대: 경첩(가운데 열의 가장자리)에서 len만큼 뻗고, 바깥 끝만 4px 둥급니다.
-    function barPath(hx, dir, yc, len) {
-      if (len <= 0.5) return '';
-      const ox = hx + dir * len, r = Math.min(4, len, hh), t = yc - hh, b = yc + hh;
-      return `M${fx(hx)},${fx(t)}L${fx(ox - dir * r)},${fx(t)}Q${fx(ox)},${fx(t)} ${fx(ox)},${fx(t + r)}L${fx(ox)},${fx(b - r)}Q${fx(ox)},${fx(b)} ${fx(ox - dir * r)},${fx(b)}L${fx(hx)},${fx(b)}Z`;
-    }
-    let sx = () => 0, sw = 0;
     function layout(w, h) {
       W = w; H = h;
       svg.setAttribute('width', w);
       svg.setAttribute('height', h);
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-      // 가운데 열은 가장 긴 이름, 그 양옆 10px 밖에 값 칸(가장 긴 값의 폭), 값 칸에서 6px 밖이 경첩입니다. 날개는 경첩에서 남은 폭만큼 뻗습니다(넘칠 자리 4px은 남깁니다).
       cx = w / 2;
-      const body = nameW / 2 + 10 + valW + 6;
+      const body = nameW / 2 + 12 + valW + 8;
       hl = cx - body;
-      hr2 = cx + body;
-      span = Math.max(12, w / 2 - body - 4);
-      svg.classList.toggle('is-tight', span < 100);   // 날개가 짧으면 눈금 둘레의 틈을 좁힙니다
+      hr = cx + body;
+      span = Math.max(12, w / 2 - body - 2);
       pitch = h / N;
-      hh = Math.max(3, Math.min(14, pitch * 0.36));   // 막대 두께는 줄 간격의 72%(최대 28px)
+      hh = Math.max(3, Math.min(16, pitch * 0.36));
+      ym = h / 2;
+      PD = span * PK;
       items.forEach((it, r) => {
-        it.nm.setAttribute('x', fx(cx)); it.nm.setAttribute('y', fx(rowY(r) + 5));
-        it.lab.forEach((lab, z) => { lab.setAttribute('x', fx(z ? hr2 - 6 : hl + 6)); lab.setAttribute('y', fx(rowY(r) + 5)); });
+        const y = fx(rowY(r) + 5);
+        it.nm.setAttribute('x', fx(cx));
+        it.lab[0].setAttribute('x', fx(hl + 8));
+        it.lab[1].setAttribute('x', fx(hr - 8));
+        [it.nm, ...it.lab].forEach((n2) => n2.setAttribute('y', y));
       });
-      // 위쪽 줄이 한 줄에 들어가지 않으면 눈금의 기간을 두 그룹 아래 줄로 내립니다.
-      tots.forEach((o) => { o.b.style.minWidth = `${Math.ceil(totW)}px`; });
-      gname.style.minWidth = `${Math.ceil(perW)}px`;   // 눈금의 기간도 가장 긴 글자의 폭으로
+      band.setAttribute('x', 0);
+      band.setAttribute('width', fx(w));
+      band.setAttribute('height', fx(Math.max(0, pitch - 2)));
+      // 위쪽 줄이 한 줄에 들어가지 않으면 회색 면의 뜻을 두 그룹 아래 줄로 내립니다.
       keys.classList.remove('is-wrap');
-      const need = [...keys.children].reduce((a, c) => a + c.scrollWidth, 0) + 48;   // 사이마다 24px은 남깁니다
+      const need = [...keys.children].reduce((a, c) => a + c.scrollWidth, 0) + 48;
       keys.classList.toggle('is-wrap', need > keys.clientWidth);
-      if (per) hd.style.paddingRight = `${per.offsetWidth + 12}px`;   // 제목은 기간 단추 왼쪽까지
-      if (scrub) {
-        sw = scrub.clientWidth;
-        ssvg.setAttribute('width', sw);
-        ssvg.setAttribute('height', 34);
-        ssvg.setAttribute('viewBox', `0 0 ${sw} 34`);
-        const L = 6, R = Math.max(L + 10, sw - 6);
-        sx = (t) => L + (t * (R - L)) / last;
-        [track, fill].forEach((l) => { l.setAttribute('y1', 9); l.setAttribute('y2', 9); });
-        track.setAttribute('x1', fx(sx(0)));
-        track.setAttribute('x2', fx(sx(last)));
-        fill.setAttribute('x1', fx(sx(0)));
-        ticks.forEach((c, t) => { c.setAttribute('cx', fx(sx(t))); c.setAttribute('cy', 9); });
-        endA.setAttribute('x', 0);
-        endB.setAttribute('x', fx(sw));
-      }
-      placePill();
       render();
     }
 
-    // 상태: cur는 고른 기간, from은 방금 떠나온 기간(눈금, 없으면 -1)입니다.
-    // 막대마다 용수철 하나가 그려진 값(x)을 고른 기간의 값으로 끌고 갑니다. 옮기는 도중에 다시 옮겨도 그려진 자리와 속도에서 이어 가므로 막대가 튀지 않습니다.
-    const live = card.hasAttribute('data-vzb-live'), loop = !!card.closest('[data-vzb-loop]');
-    const kept = labels.indexOf(card.getAttribute('data-vzb-period')), keptFrom = labels.indexOf(card.getAttribute('data-vzb-from'));
-    let cur = live ? (kept >= 0 ? kept : last) : 0;
-    let from = live ? (keptFrom >= 0 && keptFrom !== cur ? keptFrom : cur - 1) : -1;
-    const OMEGA = 11, GFADE = 800, TKIN = 220;
-    let tp = cur, gT = GFADE, busy = false, hot = -1;
-    items.forEach((it) => [0, 1].forEach((s) => { it.x[s] = it.a0[s] = val(it, s, cur) || 0; }));
-    // 넘치는 양: 옮겨 갈 거리(px)가 길수록 크지만 7px을 넘지 않습니다(40px에 3.5px, 100px에 5px). 용수철의 감쇠를 그 양에 맞춥니다.
-    function aim() {
-      items.forEach((it) => [0, 1].forEach((s) => {
-        const dist = Math.abs(sc(val(it, s, cur) || 0) - sc(it.x[s])), fr = 7 / (dist + 40), ln = Math.log(fr);
-        it.zeta[s] = -ln / Math.sqrt(Math.PI * Math.PI + ln * ln);
-        it.a0[s] = it.gx[s] = it.x[s];
-      }));
-      gT = 0;
-      busy = true;
+    // 날개의 판: 경첩에서 r만큼, 높이 y에 있는 점은 날개가 th만큼 들렸을 때 화면 앞으로 r·sin(th)만큼 나와 g배로 커 보이고, 경첩 쪽으로 r·cos(th)·g에 놓입니다.
+    // 그래서 들린 날개의 끝은 경첩 쪽으로 다가오며 위아래로 조금 벌어져, 한 장의 판이 앞으로 접히는 것처럼 보입니다.
+    const at = (hx, dir, r, y, th) => { const g = PD / (PD - r * Math.sin(th)); return [hx + dir * r * Math.cos(th) * g, ym + (y - ym) * g]; };
+    // 판 위의 막대 한 조각(경첩에서 r0부터 r1까지): 바깥 끝만 4px 둥급니다.
+    function slab(hx, dir, r0, r1, yc, th) {
+      if (r1 - r0 < 0.5) return '';
+      const A = at(hx, dir, r0, yc - hh, th), B = at(hx, dir, r1, yc - hh, th), C = at(hx, dir, r1, yc + hh, th), D = at(hx, dir, r0, yc + hh, th);
+      const ab = Math.hypot(B[0] - A[0], B[1] - A[1]);
+      if (ab < 0.3) return '';
+      const rr = Math.min(4, ab / 2, (C[1] - B[1]) / 2), k = rr / ab;
+      const b0 = [B[0] + (A[0] - B[0]) * k, B[1] + (A[1] - B[1]) * k], c0 = [C[0] + (D[0] - C[0]) * k, C[1] + (D[1] - C[1]) * k];
+      return `M${fx(A[0])},${fx(A[1])}L${fx(b0[0])},${fx(b0[1])}Q${fx(B[0])},${fx(B[1])} ${fx(B[0])},${fx(B[1] + rr)}`
+        + `L${fx(C[0])},${fx(C[1] - rr)}Q${fx(C[0])},${fx(C[1])} ${fx(c0[0])},${fx(c0[1])}L${fx(D[0])},${fx(D[1])}Z`;
     }
-    function step(dt) {
-      let rem = dt / 1000, any = false;
-      while (rem > 1e-6) {
-        const h = Math.min(0.004, rem);
-        rem -= h;
-        items.forEach((it) => [0, 1].forEach((s) => {
-          const to = val(it, s, cur) || 0;
-          it.vel[s] += (-OMEGA * OMEGA * (it.x[s] - to) - 2 * it.zeta[s] * OMEGA * it.vel[s]) * h;
-          it.x[s] += it.vel[s] * h;
-        }));
-      }
-      const px = span / vmax;
-      items.forEach((it) => [0, 1].forEach((s) => {
-        const to = val(it, s, cur) || 0;
-        if (Math.abs(it.x[s] - to) * px < 0.05 && Math.abs(it.vel[s]) * px < 2) { it.x[s] = to; it.vel[s] = 0; } else any = true;
-      }));
-      gT = Math.min(GFADE, gT + dt);
-      busy = any || gT < GFADE;
-    }
-    const ghostOn = () => from >= 0 && from !== cur;
+    // 상태: th는 날개가 들린 각(0이면 펼침, A_MAX면 접힘), pressed는 한 번 접었다 펼쳐 회색 면이 생겼는지입니다.
+    const A_MAX = 1.5;   // 접힘은 86°: 날개가 아주 사라지지 않고 경첩 옆에 가는 띠로 남습니다
+    let th = A_MAX, pressed = false, hot = -1;
     function render() {
       if (!W) return;
-      const tot = [0, 0], ghost = ghostOn();
-      const ga = 1 - (gT / GFADE) ** 2, ta = Math.min(1, gT / TKIN);
       items.forEach((it, r) => {
         const yc = rowY(r);
         [0, 1].forEach((s) => {
-          const to = val(it, s, cur) || 0, lo = Math.min(it.a0[s], to), hi = Math.max(it.a0[s], to);
-          tot[s] += Math.max(lo, Math.min(hi, it.x[s]));   // 합계는 넘친 양을 빼고 셉니다
-          const dir = s ? 1 : -1, hx = s ? hr2 : hl, ext = sc(Math.max(0, it.x[s]));
-          it.bar[s].setAttribute('d', barPath(hx, dir, yc, ext));
-          // 잔상: 떠나올 때 그려져 있던 막대가 회색 면으로 남았다가 사라집니다.
-          const gh = it.gh[s], gon = ga > 0.004 && sc(it.gx[s]) > ext + 0.5;
-          gh.style.display = gon ? '' : 'none';
-          if (gon) { gh.setAttribute('d', barPath(hx, dir, yc, sc(it.gx[s]))); gh.style.opacity = ga.toFixed(3); }
-          // 눈금: 방금 떠나온 기간의 끝자리. 값이 그대로면(2px 안) 그리지 않습니다.
-          const pv = ghost ? val(it, s, from) : null, tl = sc(pv || 0), tk = it.tk[s], ton = pv != null && tl > 1 && Math.abs(tl - sc(to)) >= 2;
-          tk.style.display = ton ? '' : 'none';
-          if (ton) {
-            const x = fx(hx + dir * tl), [h0, l1] = tk.children;
-            h0.setAttribute('x1', x); h0.setAttribute('x2', x); h0.setAttribute('y1', fx(yc - hh)); h0.setAttribute('y2', fx(yc + hh));
-            l1.setAttribute('x1', x); l1.setAttribute('x2', x); l1.setAttribute('y1', fx(yc - hh - 2)); l1.setAttribute('y2', fx(yc + hh + 2));
-            tk.style.opacity = ta.toFixed(3);
-          }
-          const lab = it.lab[s], has = val(it, s, cur) != null;
-          lab.style.display = has ? '' : 'none';
-          const t = has ? bare(to) : '';   // 값은 굴리지 않고 새 값으로 한 번에 바꿉니다
-          if (lab.textContent !== t) lab.textContent = t;
+          const dir = s ? 1 : -1, hx = s ? hr : hl, v = it.v[s], o = it.v[1 - s], len = sc(v || 0);
+          it.bar[s].setAttribute('d', v == null ? '' : slab(hx, dir, 0, len, yc, th));
+          // 회색 면: 적은 쪽 막대 끝에서 2px 띄우고 많은 쪽의 길이까지
+          const r0 = len > 0.5 ? len + 2 : 0, r1 = sc(o || 0);
+          it.tail[s].setAttribute('d', pressed && v != null && o != null && o > v && r1 - r0 >= 2 ? slab(hx, dir, r0, r1, yc, th) : '');
         });
       });
-      // 위쪽 줄: 합계는 그려진 막대를 세어 함께 바뀝니다. 단위는 작게 씁니다.
-      tots.forEach((o, s) => {
-        const [a, b] = f.parts(round(tot[s]));
-        if (o.nb.textContent !== a) o.nb.textContent = a;
-        if (o.ub.textContent !== (b || '')) o.ub.textContent = b || '';
-      });
-      gkey.classList.toggle('is-off', !ghost);
-      const gt = ghost ? tx(d, '%1 위치', labels[from]) : '';
-      if (ghost && gname.textContent !== gt) gname.textContent = gt;
-      // 짚은 줄의 띠: 그 날개의 값 칸에서 날개 끝까지
+      gkey.classList.toggle('is-off', !(pressed && anyGap));
       band.style.display = hot < 0 ? 'none' : '';
-      if (hot >= 0) {
-        const s = hot & 1, bw = span + valW + 16;
-        band.setAttribute('x', fx(s ? hr2 - valW - 12 : hl + valW + 12 - bw));
-        band.setAttribute('y', fx(rowY(hot >> 1) - pitch / 2 + 1));
-        band.setAttribute('width', fx(bw));
-        band.setAttribute('height', fx(Math.max(0, pitch - 2)));
-      }
-      if (scrub) {
-        const hx = sx(tp);
-        fill.setAttribute('x2', fx(hx));
-        ticks.forEach((c, t) => c.classList.toggle('is-past', t <= tp + 1e-6));
-        thumb.setAttribute('cx', fx(hx));
-        thumb.setAttribute('cy', 9);
-        halo.setAttribute('cx', fx(hx));
-        halo.setAttribute('cy', 9);
-        if (now.textContent !== labels[cur]) now.textContent = labels[cur];
-        const nw = nowW / 2 + 2, nx = Math.max(nw - 2, Math.min(sw - nw, hx));
-        now.setAttribute('x', fx(nx));
-        const aw = textW(labels[0], 400, fam, 12), bw = textW(labels[last], 400, fam, 12);
-        endA.style.opacity = nx - nw < aw + 8 ? 0 : 1;
-        endB.style.opacity = nx + nw > sw - bw - 8 ? 0 : 1;
-      }
-    }
-    function describe() {
-      plot.setAttribute('aria-label', tx(d, '%1, %2. %3 %4, %5 %6. 화살표로 막대를 옮깁니다. 모든 값은 이어지는 표에 있습니다.',
-        d.title || '', labels[cur], groups[0], show(f, sum(0, cur)), groups[1], show(f, sum(1, cur))));
-      if (scrub) {
-        scrub.setAttribute('aria-valuenow', String(cur));
-        scrub.setAttribute('aria-valuetext', labels[cur]);
-      }
-      setPill(cur);
+      if (hot >= 0) band.setAttribute('y', fx(rowY(hot) - pitch / 2 + 1));
     }
 
-    // 재생: 기간 하나를 넘기고 STEP 동안 그 장면을 읽게 둡니다. 처음 첫 기간을 읽는 시간은 LEAD입니다.
-    // 막대와 손잡이는 늘 끝까지 움직이고, 마우스 · 포커스로 잠시 멈추면(holds) 다음 기간으로 넘기지 않습니다. 화면 밖에서는 모두 멈춥니다.
-    const STEP = 2000, LEAD = 900;
-    const holds = new Set();
-    let playing = false, wait = 0, rest = 0, scan = 0, scanT = 0, seen = false, inView = false, took = false, drag = null, raf = 0, stamp0 = 0;
-    const moving = () => busy || Math.abs(tp - cur) > 1e-3;
-    const on = () => (moving() || (!holds.size && (playing || rest > 0 || scan))) && inView && card.isConnected;
-    function setBtn() {
-      if (!btn) return;
-      btn.classList.toggle('is-on', playing);
-      btn.setAttribute('aria-label', playing ? tx(d, '일시정지') : tx(d, '재생'));
+    // 움직임의 시간표(밀리초): 펼침 → 잠시 멈춤 → 접음(맞닿아 서로의 길이를 옮겨 받음) → 다시 펼침(회색 면과 함께)
+    const T_OPEN = 760, T_HOLD = 520, T_FOLD = 340, T_OPEN2 = 760, CLOSE = 420, REST = 2800;
+    const T_PRESS = T_OPEN + T_HOLD + T_FOLD, END = T_PRESS + T_OPEN2;
+    const easeOut = (k) => 1 - (1 - k) ** 3, easeIn = (k) => k * k * k;
+    const easeInOut = (k) => (k < 0.5 ? 4 * k * k * k : 1 - (-2 * k + 2) ** 3 / 2);
+    function pose(t) {
+      if (t < T_OPEN) return A_MAX * (1 - easeOut(t / T_OPEN));
+      if (t < T_OPEN + T_HOLD) return 0;
+      if (t < T_PRESS) return A_MAX * easeInOut((t - T_OPEN - T_HOLD) / T_FOLD);
+      if (t < END) return A_MAX * (1 - easeOut((t - T_PRESS) / T_OPEN2));
+      return 0;
     }
-    // t 기간으로 옮깁니다. 지금 기간은 눈금으로 남고, 두 날개가 지금 그려진 자리에서 새 값으로 갑니다.
-    function go(t) {
-      t = Math.max(0, Math.min(last, t));
-      if (t === cur) return;
-      from = cur;
-      cur = t;
-      aim();
-      if (took) {
-        card.setAttribute('data-vzb-period', labels[cur]);
-        card.setAttribute('data-vzb-from', labels[from]);
-        say.textContent = `${labels[cur]}: ${groups[0]} ${show(f, sum(0, cur))}, ${groups[1]} ${show(f, sum(1, cur))}`;
+    // 재생: 화면에 보이고(inView) 마우스 · 포커스로 잠시 멈추지 않았을 때(holds)만 나아갑니다. 카드가 페이지에서 빠지면 멈춥니다.
+    const loop = !!card.closest('[data-vzb-loop]');
+    const holds = new Set();
+    let t = live ? END : 0, idle = 0, closing = 0, closeFrom = 0, playing = false, seen = false, inView = false, raf = 0, last = 0;
+    if (live) { th = 0; pressed = true; }
+    const busy = () => playing && !holds.size;
+    function advance(dt) {
+      if (closing > 0) {   // 다시 볼 때(갤러리는 쉬고 난 뒤): 펼친 날개를 지금 자리에서 접은 뒤, 처음부터 다시 펼칩니다
+        closing = Math.max(0, closing - dt);
+        th = closeFrom + (A_MAX - closeFrom) * easeIn(1 - closing / CLOSE);
+        if (!closing) { t = 0; pressed = false; th = A_MAX; }
+        return;
       }
-      describe();
-      kick();
+      if (idle > 0) { idle = Math.max(0, idle - dt); if (!idle) { closing = CLOSE; closeFrom = th; } return; }
+      t = Math.min(END, t + dt);
+      th = pose(t);
+      pressed = t >= T_PRESS;
+      if (t >= END) { if (loop) idle = REST; else playing = false; }
     }
     function tick(stamp) {
       raf = 0;
-      if (!on()) { stamp0 = 0; return; }
-      const dt = stamp0 ? Math.min(100, stamp - stamp0) : 16;
-      stamp0 = stamp;
-      if (busy) step(dt);
-      if (!drag) tp = Math.abs(cur - tp) < 1e-3 ? cur : tp + (cur - tp) * (1 - Math.exp(-dt / 70));   // 손잡이는 고른 기간으로 미끄러집니다
-      if (!holds.size) {
-        if (scan) {
-          scanT -= dt;
-          if (scanT <= 0) { scanT = 240; go(cur + scan); }   // 누르고 있으면 빠르게 한 기간씩
-        } else if (rest > 0) {
-          rest -= dt;
-          if (rest <= 0) { rest = 0; go(0); playing = true; wait = STEP; setBtn(); }   // 갤러리: 처음 기간으로 돌아가 다시 재생
-        } else if (playing) {
-          wait -= dt;
-          if (wait <= 0) {
-            go(cur + 1);
-            wait = STEP;
-            if (cur >= last) { playing = false; setBtn(); if (!took && loop) rest = STEP + 1800; }
-          }
-        }
-      }
+      if (!card.isConnected || !inView) { last = 0; return; }
+      const dt = last ? Math.min(64, stamp - last) : 16;
+      last = stamp;
+      if (busy()) advance(dt);
       render();
-      if (on()) raf = requestAnimationFrame(tick);
+      if (busy()) raf = requestAnimationFrame(tick); else last = 0;
     }
-    function kick() { if (!raf && on()) raf = requestAnimationFrame(tick); }
-    // 사용자가 고른 기간: 재생과 되풀이를 멈추고 그 기간으로 옮깁니다.
-    function pickAt(t) {
-      took = true;
-      rest = 0;
-      playing = false;
-      setBtn();
-      go(t);
-    }
+    function kick() { if (!raf && inView && card.isConnected && busy()) raf = requestAnimationFrame(tick); }
+    // 다시 보기: 날개가 펼쳐져 있으면 그 자리에서 접은 뒤 처음부터 펼칩니다(접힌 날개로 건너뛰지 않습니다).
     function play() {
-      took = true;
-      rest = 0;
-      if (playing) { playing = false; setBtn(); return; }
+      idle = 0;
       playing = true;
-      setBtn();
-      if (cur >= last) { go(0); wait = STEP; }   // 끝에 있으면 처음 기간으로 돌아가 재생합니다
-      else wait = 300;
+      last = 0;
+      if (th < A_MAX - 1e-3) { closing = CLOSE; closeFrom = th; } else { closing = 0; t = 0; th = A_MAX; pressed = false; }
+      render();
       kick();
     }
-    if (btn) btn.addEventListener('click', play);
-    // 되감기 · 빨리 감기: 누르면 한 기간, 누르고 있으면 계속. 키보드(Enter · Space)는 한 기간씩입니다.
-    [[rew, -1], [ff, 1]].forEach(([b, dir]) => {
-      if (!b) return;
-      let timer = 0;
-      const stop = () => { clearTimeout(timer); timer = 0; scan = 0; };
-      b.addEventListener('pointerdown', (e) => {
-        if (e.button) return;
-        b.setPointerCapture(e.pointerId);
-        pickAt(cur + dir);
-        timer = setTimeout(() => { timer = 0; scan = dir; scanT = 0; stamp0 = 0; kick(); }, 380);
-      });
-      b.addEventListener('pointerup', stop);
-      b.addEventListener('pointercancel', stop);
-      b.addEventListener('lostpointercapture', stop);
-      b.addEventListener('click', (e) => { if (e.detail === 0) pickAt(cur + dir); });
-    });
-    // 구간 막대: 누르면 그 기간으로, 끄는 동안은 손잡이가 손을 따라가고 가까운 기간으로 옮깁니다. 놓으면 손잡이가 그 기간에 자리를 잡습니다.
-    if (scrub) {
-      const qAt = (x0) => { const r = scrub.getBoundingClientRect(); return Math.max(0, Math.min(last, ((x0 - r.left - sx(0)) / Math.max(1, sx(last) - sx(0))) * last)); };
-      scrub.addEventListener('pointerdown', (e) => {
-        if (e.button) return;
-        drag = { id: e.pointerId };
-        scrub.setPointerCapture(e.pointerId);
-        scrub.classList.add('is-drag');
-        pickAt(Math.round(qAt(e.clientX)));
-      });
-      scrub.addEventListener('pointermove', (e) => {
-        if (!drag || e.pointerId !== drag.id) return;
-        tp = qAt(e.clientX);
-        const t = Math.round(tp);
-        if (t !== cur) go(t);
-        render();
-      });
-      const drop = (e) => {
-        if (!drag || e.pointerId !== drag.id) return;
-        drag = null;
-        scrub.classList.remove('is-drag');
-        kick();
-      };
-      scrub.addEventListener('pointerup', drop);
-      scrub.addEventListener('pointercancel', drop);
-      scrub.addEventListener('keydown', (e) => {
-        const t = { ArrowRight: cur + 1, ArrowUp: cur + 1, ArrowLeft: cur - 1, ArrowDown: cur - 1, PageUp: cur + 3, PageDown: cur - 3, Home: 0, End: last }[e.key];
-        if (t == null) return;
-        e.preventDefault();
-        pickAt(t);
-      });
-    }
-    // 기간 단추의 알약: 처음 자리는 움직이지 않고 놓은 뒤부터 미끄러집니다(is-ready).
-    function placePill() {
-      if (!per) return;
-      const b = opts[cur];
-      pill.style.width = `${b.offsetWidth}px`;
-      pill.style.transform = `translateX(${b.offsetLeft}px)`;
-      if (!per.classList.contains('is-ready') && b.offsetWidth) requestAnimationFrame(() => per.classList.add('is-ready'));
-    }
-    function setPill(t) {
-      if (!per) return;
-      opts.forEach((b, q) => { b.setAttribute('aria-checked', String(q === t)); b.tabIndex = q === t ? 0 : -1; b.classList.toggle('is-on', q === t); });
-      placePill();
-    }
+    btn.addEventListener('click', play);
     plot.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') holds.add('hover'); });
     plot.addEventListener('pointerleave', () => { holds.delete('hover'); kick(); });
     plot.addEventListener('focus', () => { if (plot.matches(':focus-visible')) holds.add('focus'); });   // 키보드로 들어왔을 때만 멈춥니다
     plot.addEventListener('blur', () => { holds.delete('focus'); kick(); });
-    // 툴팁: 막대를 짚으면 그 줄에 옅은 띠를 깔고 그 값을 굵게 둡니다(다른 막대는 그대로 둡니다). 툴팁은 그 값이 어디서 왔는지(눈금의 기간 → 지금 기간, 증감)와
-    // 그룹 안의 비중을 적고, 날개 바깥쪽에 띄워 막대와 합계를 덮지 않습니다. 바깥에 자리가 없으면 반대쪽 날개 위에 띄웁니다.
-    // 키보드는 그래프에 포커스한 뒤 위아래 화살표로 줄을, 좌우 화살표로 날개를 옮깁니다.
-    let api = null;
-    plot.addEventListener('keydown', (e) => {
-      const k = api ? api.at() : -1, mv = { ArrowUp: -2, ArrowDown: 2, ArrowLeft: k % 2 ? -1 : 0, ArrowRight: k % 2 ? 0 : 1 }[e.key];
-      if (mv == null) return;
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      if (k < 0) { api.show(e.key === 'ArrowRight' ? 1 : 0); return; }
-      const j = k + mv;
-      if (j >= 0 && j < N * 2) api.show(j);
-    });
-    api = interact(plot, N * 2,
-      (x0, y0) => {
-        const r = plot.getBoundingClientRect(), x = x0 - r.left, y = y0 - r.top;
-        const row = Math.max(0, Math.min(N - 1, Math.floor(y / pitch)));
-        return row * 2 + (x < cx ? 0 : 1);
-      },
+    // 짚는 자리: 항목(줄). 마우스는 그 줄을 짚고, 키보드는 위아래 화살표로 옮깁니다.
+    // 짚으면 그 줄에 옅은 띠를 깔고 이름과 두 값을 굵게 둡니다(값은 숨기지 않습니다). 툴팁은 두 값을 되풀이하지 않고,
+    // 어느 쪽이 얼마나 많은지(차이와 배수)와 두 값이 각 그룹 합계에서 차지하는 비중을 적습니다. 툴팁은 그 줄 위, 많은 쪽 날개 쪽에 둡니다.
+    interact(plot, N,
+      (x0, y0) => { const r = plot.getBoundingClientRect(); return Math.max(0, Math.min(N - 1, Math.floor(((y0 - r.top) * N) / (r.height || 1)))); },
       (k) => {
-        const row = k >> 1, s = k & 1, it = items[row], v = val(it, s, cur), pv = from >= 0 && from !== cur ? val(it, s, from) : null;
+        const it = items[k], r = plot.getBoundingClientRect(), k2 = r.width / (W || 1);
         hot = k;
-        items.forEach((x, q) => [0, 1].forEach((z) => { const hit = q === row && z === s; x.lab[z].classList.toggle('is-on', hit); x.tk[z].classList.toggle('is-on', hit); }));
+        svg.classList.add('is-hover');
+        items.forEach((x, q) => [x.nm, ...x.lab].forEach((n2) => n2.classList.toggle('is-on', q === k)));
         render();
-        const note = [], g = sum(s, cur);
-        let spec;
-        if (v != null && pv != null) {
-          const dl = delta(f, v, pv, d.better), sg = dl.dir > 0 ? '+' : dl.dir < 0 ? '-' : '';
-          note.push({ text: pv ? `${signed(f, v - pv)} (${sg}${dl.text})` : signed(f, v - pv), tone: dl.tone === 'flat' ? null : dl.tone });
-          spec = { flow: [{ value: show(f, pv), name: labels[from] }, { value: show(f, v), name: labels[cur] }] };
-        } else spec = { value: v == null ? '–' : show(f, v) };
-        if (v != null && g > 0) note.push(tx(d, '%1 가운데 %2', groups[s], pctText((v / g) * 100)));
-        spec.note = note;
-        const tb = tipBody(spec, `${groups[s]} · ${it.name}`);
-        // 툴팁 자리: 짚은 줄과 위아래 두 줄의 막대 · 눈금이 끝나는 곳 바깥. 화면에 그만한 자리(220px)가 없으면 반대쪽 날개의 경첩 옆에 둡니다.
-        const r = plot.getBoundingClientRect(), dir = s ? 1 : -1, hx = s ? hr2 : hl;
-        let out = 0;
-        for (let q = Math.max(0, row - 2); q <= Math.min(N - 1, row + 2); q++) out = Math.max(out, sc(val(items[q], s, cur) || 0), ghostOn() ? sc(val(items[q], s, from) || 0) : 0);
-        const xo = r.left + hx + dir * (out + 2), room = s ? window.innerWidth - xo >= 236 : xo >= 236;
-        return { x: room ? xo : r.left + (s ? hl : hr2), y: r.top + rowY(row), side: (room ? s : !s) ? 'right' : 'left', label: `${groups[s]} · ${it.name}`, value: tb.node, text: tb.text };
+        const note = [];
+        if (it.lead != null && it.lead >= 0 && it.v[1 - it.lead] > 0) note.push(tx(d, '%1의 %2배', groups[1 - it.lead], num(it.v[it.lead] / it.v[1 - it.lead], 1)));
+        if (it.lead != null && tot[0] > 0 && tot[1] > 0) note.push(tx(d, '%1 합계의 %2 · %3 합계의 %4', groups[0], pct1(it.v[0] / tot[0]), groups[1], pct1(it.v[1] / tot[1])));
+        const tb = tipBody({ value: gapText(it), big: true, note }, it.name);
+        const s = it.lead === 1 ? 1 : 0, m = Math.max(sc(it.v[0] || 0), sc(it.v[1] || 0));
+        const x = it.lead == null || it.lead < 0 ? cx : (s ? hr : hl) + (s ? 1 : -1) * Math.max(24, m / 2);
+        return { x: r.left + x * k2, y: r.top + (rowY(k) - pitch / 2 + 2) * k2, label: it.name, value: tb.node, text: tb.text };
       },
-      () => { hot = -1; items.forEach((x) => [0, 1].forEach((z) => { x.lab[z].classList.remove('is-on'); x.tk[z].classList.remove('is-on'); })); render(); },
+      () => { hot = -1; svg.classList.remove('is-hover'); items.forEach((x) => [x.nm, ...x.lab].forEach((n2) => n2.classList.remove('is-on'))); render(); },
       true);
 
-    setBtn();
-    describe();
     onSize(plot, layout);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { measure(); if (W) layout(W, H); });
-    // 화면에 처음 보일 때 첫 기간에서 잠시 멈췄다가 재생합니다. 화면 밖에 있는 동안은 멈춰 둡니다.
-    const start = () => { if (!seen) { seen = true; if (!live && n > 1 && !took) { playing = true; wait = LEAD; setBtn(); } } };
+    // 화면에 처음 보일 때 움직입니다. 화면 밖에 있는 동안은 멈춰 둡니다.
+    const start = () => { if (!seen) { seen = true; if (!live) play(); } };
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver((es) => {
         if (!card.isConnected) { io.disconnect(); return; }

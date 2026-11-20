@@ -101,7 +101,7 @@
     // 옮겨 가기(데이터가 바뀌어 다시 그릴 때): 막대의 값과 자리, 굵기, 눈금, 한도를 스프링(Move)으로 새 값에 보냅니다.
     // 값은 데이터 단위, 자리는 막대 칸 폭(PW)에 대한 비율이라 카드 폭이 달라져도 이어집니다.
     const [MK, MC] = M.pair('move'), FADE = M.ms('fade') || 1, fresh = new Set();
-    let from = before(card), moving = false, flash = BLINK, st = null, sl = null, sw = null, gone = [];
+    let from = before(card), moving = false, rush = false, flash = BLINK, st = null, sl = null, sw = null, gone = [];
     function layout(w, h) {
       W = w; H = h;
       svg.setAttribute('width', w);
@@ -186,6 +186,7 @@
         return g;
       });
       moving = true;
+      rush = !!prev.moving;
       flash = BLINK;
       t = 1e9;
     }
@@ -198,11 +199,12 @@
     // 스프링을 dt만큼 옮기고, 모두 제자리에 닿았으면 끝냅니다.
     // 눈금(가장 큰 값)이 바뀔 때는 값과 눈금을 한꺼번에 옮기지 않습니다. 함께 옮기면 값이 줄어든 막대가 화면에서는 커지는 순간이 생겨 거꾸로 읽히기 때문입니다.
     // 눈금이 좁아질 때는 값이 먼저 가고 눈금이 뒤따르며, 넓어져야 할 때는 눈금이 먼저 넓어진 뒤 값이 갑니다. 차이가 작으면(눈금의 2% 안) 함께 갑니다.
+    // 가던 중에 값이 또 바뀐 것이면(rush: 슬라이더를 끄는 동안처럼 이어지는 변화) 차례를 기다리지 않고 함께 갑니다. 기다리게 하면 끄는 내내 막대가 멈춰 있다가 손을 놓은 뒤에야 움직이기 때문입니다.
     function step(dt) {
       let busy = false, valErr = Math.abs(sl.x - lim);
       items.forEach((it) => { if (it.v != null) valErr = Math.max(valErr, Math.abs(it.sv.x - it.v)); });
       const widen = top > st.x, tol = top * 0.02;
-      const runScale = widen || valErr < tol, runVals = !widen || Math.abs(st.x - top) < tol;
+      const runScale = rush || widen || valErr < tol, runVals = rush || !widen || Math.abs(st.x - top) < tol;
       // 차례를 기다리는 스프링은 제자리에서 속도만 잦아듭니다.
       const go = (sp, to, span, run) => {
         springTo(sp, run ? to : sp.x, MK, MC, dt);
@@ -276,7 +278,7 @@
       if (!W) return from;
       const mv = moving;
       return {
-        inView, top: mv ? st.x : top, topV: mv ? st.v : 0, lim: mv ? sl.x : lim, limV: mv ? sl.v : 0, bw: mv ? sw.x : bw,
+        inView, moving: mv, top: mv ? st.x : top, topV: mv ? st.v : 0, lim: mv ? sl.x : lim, limV: mv ? sl.v : 0, bw: mv ? sw.x : bw,
         items: items.filter((it) => it.v != null).map((it) => ({
           key: it.key, name: it.name, nameOn: it.nm.getAttribute('opacity') === '1',
           v: mv ? Math.max(0, it.sv.x) : it.v * clamp(MOVE.at(t - it.start)), vv: mv ? it.sv.v : 0,

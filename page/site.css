@@ -160,11 +160,13 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 .gt.is-bare [data-mount]:has(.vzb-sl.is-on) { padding-top: var(--gt-sl-pad, 0px); }
 .gt-box:has(.vzb-dp.is-open, .vzb-sm.is-open) { z-index: 3; }   /* 펼친 달력 · 목록이 옆 요소에 가리지 않게 올립니다 */
 .gt.is-bare .vzb-dp { justify-content: center; }   /* 닫힌 단추는 타일 가운데에, 열면 아래로 펼쳐지는 달력(같은 폭)과 한 덩어리로 가운데에 둡니다(타일 안에서는 늘 아래로 엽니다) */
-.gt.is-bare [data-mount]:has(.vzb-dp) { transition: padding-bottom 0.42s cubic-bezier(0.34, 1.15, 0.64, 1); }
+.gt.is-bare [data-mount]:has(.vzb-dp) { transition: padding-bottom 0.3s cubic-bezier(0.23, 1, 0.32, 1) 0.18s; }   /* 닫을 때는 달력이 다 사라진 뒤에 단추가 가운데로 내려옵니다 */
+.gt.is-bare [data-mount]:has(.vzb-dp.is-open), .gt.is-bare [data-mount]:has(.vzb-sm.is-open) { transition-delay: 0s; }   /* 펼칠 때는 단추가 먼저 넘침 없이 올라갑니다 */
+.gt.is-bare .vzb-dp.is-open .vzb-dp-pop, .gt.is-bare .vzb-sm.is-open .vzb-sm-pop { transition-delay: 0.26s; }   /* 단추가 다 올라간 뒤에 달력 · 목록이 열립니다. 올라가는 동안 열리면 달력이 타일 아래 줄(이름)에 잠깐 걸칩니다 */
 .gt.is-bare [data-mount]:has(.vzb-dp.is-open) { padding-bottom: var(--gt-dp-pad, 0px); }   /* 열리면 달력 높이만큼 아래를 비워 단추가 위로 올라갑니다 */
 .gt.is-bare .vzb-dp.is-up .vzb-dp-pop { top: calc(100% + 8px); bottom: auto; transform-origin: 50% 0; }
 .gt.is-bare .vzb-sm { justify-content: center; }   /* Select Menu도 Date Picker처럼, 열리면 목록 높이만큼 아래를 비워 단추가 위로 올라갑니다 */
-.gt.is-bare [data-mount]:has(.vzb-sm) { transition: padding-bottom 0.42s cubic-bezier(0.34, 1.15, 0.64, 1); }
+.gt.is-bare [data-mount]:has(.vzb-sm) { transition: padding-bottom 0.3s cubic-bezier(0.23, 1, 0.32, 1) 0.18s; }
 .gt.is-bare [data-mount]:has(.vzb-sm.is-open) { padding-bottom: var(--gt-dp-pad, 0px); }
 .gt.is-bare .vzb-sm.is-up .vzb-sm-pop { top: calc(100% + 8px); bottom: auto; transform-origin: 50% 0; }
 .gt-pv { display: grid; }

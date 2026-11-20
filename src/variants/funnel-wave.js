@@ -189,7 +189,7 @@
 
     // 시간표(밀리초): 물이 흘러들기 시작하는 때 T0, 물의 앞머리가 왼쪽 끝에서 오른쪽 끝까지 가는 시간 FLOW(처음 20%는 빨라지고 그다음은 같은 빠르기),
     // 물이 닿은 단계의 값을 세는 시간 CNT, 알약이 떠오르는 시간 POP. 되풀이할 때는 끝에서 HOLD만큼 쉬고 DRAIN 동안 물이 빠집니다.
-    const T0 = 240, FLOW = Math.max(1500, Math.min(2300, 1300 + 160 * N)), CNT = 520, POP = 280, HOLD = 2600, DRAIN = 520;
+    const T0 = motion(card).ms('lead'), FLOW = Math.max(1500, Math.min(2300, 1300 + 160 * N)), CNT = 520, POP = 280, HOLD = motion(card).ms('rest'), DRAIN = 520;
     const ACC = 0.2, VK = 1 / (1 - ACC / 2);
     const frontP = (p) => (p < ACC ? (0.5 * VK * p * p) / ACC : VK * (p - ACC / 2));
     const frontAt = (tt) => W * Math.min(1, frontP(clamp((tt - T0) / FLOW)));

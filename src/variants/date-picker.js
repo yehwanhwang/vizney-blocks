@@ -217,7 +217,7 @@
     // 칠하기: 정한 기간(또는 고르는 중인 시작일 ~ 닿은 날짜)의 띠와 양 끝. sweep이면 띠의 앞머리가 시작일에서 끝일까지 한 줄로 달려가며(처음엔 빠르고
     // 끝에서 느려집니다) 띠를 긋고, 앞머리가 닿을 때 양 끝이 튀어 오릅니다. 칸마다 앞머리가 머무는 시간만큼 늦게 시작해 그만큼 동안 그어집니다.
     let cur = null, pend = null, hov = null, fday = hi, clearT = 0;
-    const POP = [{ transform: 'scale(0.72)' }, { transform: 'scale(1.1)', offset: 0.6 }, { transform: 'scale(1)' }];
+    const POP = [{ transform: 'scale(0.72)' }, { transform: 'scale(1)' }], POP_CSS = motion(card).css('pop');   // 고른 날짜가 튀어 오릅니다(Pop). 넘침은 스프링이 만듭니다
     function paint(mode) {
       if (!cur) return;
       const pv = pend != null, a = pv ? Math.min(pend, hov == null ? pend : hov) : lo, b = pv ? Math.max(pend, hov == null ? pend : hov) : hi;
@@ -244,7 +244,7 @@
         cl.toggle('is-cl', inR && x.n === cur.g0 && a < cur.g0);   // 띠가 달력 앞에서 이어 옴
         cl.toggle('is-cr', inR && x.n === cur.g1 && b > cur.g1);   // 띠가 달력 뒤로 이어 감
         cl.toggle('is-ring', ring);
-        if (pick && (!cl.contains('is-pick') || sweep) && !calm && x.b.animate) x.b.animate(POP, { duration: 360, delay: sweep && x.n === b ? when(span - 1) : 0, easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)', fill: 'backwards' });
+        if (pick && (!cl.contains('is-pick') || sweep) && !calm && x.b.animate) x.b.animate(POP, { duration: parseFloat(POP_CSS[0]) * 1000, delay: sweep && x.n === b ? when(span - 1) : 0, easing: POP_CSS[1], fill: 'backwards' });
         cl.toggle('is-pick', pick);
         x.cell.setAttribute('aria-selected', String(inR || pick));
         x.b.tabIndex = x.inM && x.n === focusN ? 0 : -1;
@@ -284,7 +284,7 @@
       requestAnimationFrame(() => nx.g.classList.remove('is-still'));
       if (old) {
         if (dir && nx.g.animate) {
-          const w = view.offsetWidth + 16, ease = 'cubic-bezier(0.22, 1, 0.36, 1)';
+          const w = view.offsetWidth + 16, ease = 'ease-out';
           old.g.classList.add('is-gone');
           old.g.animate([{ transform: 'none' }, { transform: `translateX(${-dir * w}px)` }], { duration: 380, easing: ease, fill: 'forwards' }).onfinish = () => old.g.remove();
           nx.g.animate([{ transform: `translateX(${dir * w}px)` }, { transform: 'none' }], { duration: 380, easing: ease });
@@ -317,7 +317,7 @@
         alt.hidden = true;
         alt.replaceChildren();
         heading(0);
-        if (was !== 'day' && view.animate) view.animate([{ opacity: 0, transform: 'scale(1.06)' }, { opacity: 1, transform: 'none' }], { duration: 240, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' });
+        if (was !== 'day' && view.animate) view.animate([{ opacity: 0, transform: 'scale(1.06)' }, { opacity: 1, transform: 'none' }], { duration: 240, easing: 'ease-out' });
         if (keys) focusOn(clamp(Math.min(Math.max(fday, cur.first), cur.last)));
         return;
       }
@@ -359,7 +359,7 @@
       alt.replaceChildren(g);
       alt.hidden = false;
       heading(dir);
-      if (g.animate) g.animate(dir ? [{ opacity: 0, transform: `translateX(${dir * 24}px)` }, { opacity: 1, transform: 'none' }] : [{ opacity: 0, transform: was === 'day' || (was === 'year' && next === 'month') ? 'scale(0.94)' : 'scale(1.06)' }, { opacity: 1, transform: 'none' }], { duration: 240, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' });
+      if (g.animate) g.animate(dir ? [{ opacity: 0, transform: `translateX(${dir * 24}px)` }, { opacity: 1, transform: 'none' }] : [{ opacity: 0, transform: was === 'day' || (was === 'year' && next === 'month') ? 'scale(0.94)' : 'scale(1.06)' }, { opacity: 1, transform: 'none' }], { duration: 240, easing: 'ease-out' });
       if (keys && home) home.focus();
     }
     const goMonth = (n) => { const mo = monthOf(n); if (!cur || mo !== cur.month) turn(mo, cur ? Math.sign(mo - cur.month) : 0); };
@@ -382,7 +382,7 @@
       if (!one) { roll(cntNum, num(n, 0)); cntUnit.textContent = en ? ` ${unitOf(n)}` : unitOf(n); }
       fitText();   // 일수의 자릿수가 바뀌면 글자 자리도 바뀌므로 일수를 먼저 적습니다
       syncIn();
-      if (anim && val.animate) val.animate([{ opacity: 0.4, transform: 'translateY(5px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });   // 투명에서 시작하지 않아 어느 순간에도 글자가 읽힙니다
+      if (anim && val.animate) val.animate([{ opacity: 0.4, transform: 'translateY(5px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'ease-out' });   // 투명에서 시작하지 않아 어느 순간에도 글자가 읽힙니다
     }
     // 입력칸: 정한 기간을 YYYY-MM-DD로 적어 둡니다(치고 있는 칸은 건드리지 않습니다).
     function syncIn(force) {

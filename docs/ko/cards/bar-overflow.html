@@ -23,7 +23,7 @@
 </head>
 <body>
 <main style="--w:640px">
-<!-- Vizney Blocks v0.69 · 막대 차트 · Bar Overflow (bar-overflow)
+<!-- Vizney Blocks v0.70 · 막대 차트 · Bar Overflow (bar-overflow)
      https://blocks.vizney.com/ko/cards/bar-overflow.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -64,6 +64,25 @@
   --vzb-radius: 18px;   /* 카드 모서리 */
   --vzb-unit: 168px;   /* 높이 1단위. 차트 카드의 높이는 1 · 1.5 · 2단위 가운데 하나입니다 */
   --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* 카드 그림자 */
+  /* 움직임. 무엇이 움직이느냐에 따라 값이 정해집니다. 스프링은 '세기 잦아듦' 두 숫자로 적습니다(세기가 클수록 빠르고, 잦아듦이 작을수록 더 튑니다).
+     손이 닿는 것: Follow · Settle · Pop · Fade · Press. 값을 나타내는 것: Move(넘치지 않습니다. 높이나 자리가 곧 값이라, 튀면 잠깐 틀린 값을 보입니다).
+     리듬: Lead · Seq · Rest. 카드 밖의 요소(KPI 타일, 표, 탭)도 같은 값으로 움직이면 화면이 한 손으로 만든 것처럼 보입니다. */
+  --vzb-follow: 1000 63;   /* Follow: 끄는 동안 손에 붙어 따라갑니다(슬라이더 손잡이). 넘침 없음 */
+  --vzb-settle: 340 26;   /* Settle: 놓이거나 열리거나 넓어질 때 자리를 잡습니다(달력 · 목록 · 메뉴 · 굴러가는 숫자). 넘침 4% */
+  --vzb-pop: 520 21;   /* Pop: 눌렸다 놓인 단추, 고른 날짜와 칩, 떠오르는 말풍선. 값이 아니므로 튑니다. 넘침 20% */
+  --vzb-move: 200 28.3;   /* Move: 막대 높이처럼 값을 나타내는 것이 제자리로 갑니다. 넘침 없음(잦아듦 = 2√세기) */
+  --vzb-fade: 0.14s;   /* Fade: 투명도와 색이 바뀌는 시간. 나타날 때와 사라질 때 같습니다 */
+  --vzb-press: 0.08s;   /* Press: 눌리는 순간 들어가는 시간. 놓으면 Pop으로 돌아옵니다 */
+  --vzb-lead: 400ms;   /* Lead: 차트 카드가 화면에 들어와 움직이기 전의 뜸 */
+  --vzb-seq: 1200ms;   /* Seq: 항목이 차례로 움직일 때의 전체 시간. 항목 수로 나눠 간격을 정합니다 */
+  --vzb-rest: 2600ms;   /* Rest: 되풀이하는 카드(갤러리)가 다시 시작하기 전의 쉼 */
+  /* 아래 여섯은 위 스프링에서 계산한 CSS 전환의 시간(-t)과 곡선(-e)입니다. 직접 고치지 않습니다. 위 값을 바꾸면 카드가 다시 계산해 씁니다. */
+  --vzb-settle-t: 0.39s;
+  --vzb-settle-e: linear(0, 0.023, 0.081, 0.164, 0.26, 0.362, 0.463, 0.56, 0.65, 0.731, 0.801, 0.861, 0.91, 0.95, 0.981, 1.005, 1.022, 1.033, 1.04, 1.043, 1.044, 1.042, 1.039, 1.036, 1.031, 1.027, 1.022, 1.018, 1.014, 1.011, 1.008, 1.005, 1);
+  --vzb-pop-t: 0.52s;
+  --vzb-pop-e: linear(0, 0.061, 0.212, 0.41, 0.619, 0.811, 0.969, 1.085, 1.158, 1.192, 1.193, 1.172, 1.138, 1.097, 1.057, 1.022, 0.995, 0.976, 0.965, 0.962, 0.963, 0.969, 0.977, 0.985, 0.992, 0.998, 1.003, 1.006, 1.007, 1.007, 1.007, 1.005, 1);
+  --vzb-move-t: 0.54s;
+  --vzb-move-e: linear(0, 0.024, 0.083, 0.161, 0.248, 0.335, 0.419, 0.498, 0.569, 0.633, 0.689, 0.737, 0.78, 0.816, 0.846, 0.872, 0.894, 0.913, 0.928, 0.941, 0.951, 0.96, 0.967, 0.973, 0.978, 0.982, 0.985, 0.988, 0.99, 0.992, 0.994, 0.995, 1);
 }
 
 /* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 하나에 흰색과 회색을 더해 Vizney 검정 · 흰색 · 노랑으로 그립니다.
@@ -159,7 +178,7 @@
   font: 400 14px/20px var(--vzb-font);
   white-space: nowrap;
   opacity: 0;
-  transition: opacity 0.12s;
+  transition: opacity var(--vzb-fade);
 }
 .vzb-tip.is-on { opacity: 1; }
 .vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
@@ -218,7 +237,7 @@
 .vzb-bb-name { font-size: 12px; fill: var(--vzb-muted); }
 .vzb-bb-ex { font-size: 14px; font-weight: 700; fill: var(--vzb-bad-ink); font-variant-numeric: tabular-nums; }
 .vzb-bb-col.is-over .vzb-bb-name { font-weight: 700; fill: var(--vzb-ink); }
-.vzb-bb-col { transition: opacity 0.12s; }
+.vzb-bb-col { transition: opacity var(--vzb-fade); }
 .vzb-bb-svg.is-hover .vzb-bb-col:not(.is-on) { opacity: 0.3; }
 .vzb-bb-ctl { display: flex; align-items: center; gap: 10px; min-height: 28px; margin-top: 8px; }
 .vzb-card[data-vzb="bar-overflow"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
@@ -393,6 +412,47 @@
     }
     card.append(fig);
   }
+  // 움직임 값(tokens.css의 --vzb-follow … --vzb-rest). 스프링은 '세기 잦아듦' 두 숫자이고, 시간은 초(s)나 밀리초(ms)입니다.
+  // 역할: Follow(끄는 동안 손에 붙음) · Settle(놓이거나 열릴 때 자리를 잡음) · Pop(눌렸다 튀어 오름) · Move(값의 자리로 감, 넘치지 않음) ·
+  // Fade(투명도와 색) · Press(눌리는 순간) · Lead(시작 전의 뜸) · Seq(차례의 전체 시간) · Rest(되풀이 전의 쉼). 읽지 못한 값은 아래 기본값을 씁니다.
+  const MOTION = { follow: '1000 63', settle: '340 26', pop: '520 21', move: '200 28.3', fade: '0.14s', press: '0.08s', lead: '400ms', seq: '1200ms', rest: '2600ms' };
+  // 스프링이 0에서 1로 갈 때의 자리(t는 초). 잦아듦이 2√세기에 닿으면 넘치지 않고 곧장 갑니다.
+  function springAt(k, c) {
+    const w = Math.sqrt(k), z = c / (2 * w);
+    if (z < 0.999) { const wd = w * Math.sqrt(1 - z * z); return (t) => 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + ((z * w) / wd) * Math.sin(wd * t)); }
+    return (t) => 1 - (1 + w * t) * Math.exp(-w * t);
+  }
+  // 스프링을 CSS 전환으로 옮긴 [시간, 곡선]: 목표의 0.5% 안에 든 때까지를 시간으로 잡고, 그 사이를 33점으로 잇습니다.
+  function springCss(k, c) {
+    const f = springAt(k, c), pts = [];
+    let d = 0;
+    for (let t = 0; t <= 3; t += 0.005) if (Math.abs(f(t) - 1) > 0.005) d = t;
+    d = Math.round((d + 0.01) * 100) / 100;
+    for (let i = 0; i <= 32; i++) pts.push(i === 0 ? 0 : i === 32 ? 1 : +f((d * i) / 32).toFixed(3));
+    return [`${d}s`, `linear(${pts.join(', ')})`];
+  }
+  // motion(card): 그 카드에 적용되는 움직임 값. pair(이름)은 스프링의 [세기, 잦아듦], ms(이름)은 밀리초,
+  // curve(이름)은 { at(지난 밀리초) → 0에서 1까지의 자리, dur: 다 가는 데 걸리는 밀리초 }, css(이름)은 CSS 전환의 [시간, 곡선]입니다.
+  function motion(card) {
+    const cs = getComputedStyle(card), raw = (n) => cs.getPropertyValue(`--vzb-${n}`).trim().replace(/\s+/g, ' ');
+    const two = (v) => { const p = v.split(' ').map(Number); return p.length === 2 && p[0] > 0 && p[1] > 0 ? p : null; };
+    const pair = (n) => two(raw(n)) || two(MOTION[n]);
+    const time = (v) => { const x = parseFloat(v); return isFinite(x) && x >= 0 && /s$/.test(v) ? (/ms$/.test(v) ? x : x * 1000) : null; };
+    const ms = (n) => { const v = time(raw(n)); return v == null ? time(MOTION[n]) : v; };
+    const css = (n) => springCss(...pair(n));
+    const curve = (n) => { const f = springAt(...pair(n)); return { at: (t) => (t <= 0 ? 0 : f(t / 1000)), dur: parseFloat(css(n)[0]) * 1000 }; };
+    return { pair, ms, css, curve };
+  }
+  // 스프링 값을 :root나 카드에서 바꿔 적었으면, CSS 전환이 쓰는 시간과 곡선(--vzb-…-t · -e)을 그 값으로 다시 계산해 카드에 적습니다.
+  function tune(card) {
+    const m = motion(card);
+    for (const n of ['settle', 'pop', 'move']) {
+      if (m.pair(n).join(' ') === MOTION[n]) continue;
+      const [t, e] = m.css(n);
+      card.style.setProperty(`--vzb-${n}-t`, t);
+      card.style.setProperty(`--vzb-${n}-e`, e);
+    }
+  }
   // 같은 종류의 카드를 모두 찾아 그립니다. 코드를 두 번 붙여 넣어도 카드는 한 번만 그립니다.
   // 데이터가 바뀌면 다시 그립니다: 페이지의 스크립트가 카드 안 JSON(<script type="application/json">)의 글자를 바꾸면 그 카드만
   // 새 요소로 갈아 끼워 새로 그립니다(필터 · 기간 컨트롤과 잇는 길). 갈아 끼운 카드에는 data-vzb-live가 붙어, 움직이는 카드는
@@ -427,6 +487,7 @@
         if (d.title) card.setAttribute('aria-label', d.title);
         // 어두운 바탕: JSON에 "theme": "dark"를 적으면 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다(tokens.css의 .vzb-dark).
         card.classList.toggle('vzb-dark', d.theme === 'dark');
+        tune(card);
         try { draw(card, d, format(d)); } catch (e) {
           card.append(el('p', 'vzb-error', tx(d, '카드를 그리지 못했습니다: %s', e.message)));
         }
@@ -666,8 +727,9 @@
       return `M${fx(x)},${fx(yBottom)}V${fx(yTop + r)}A${r},${r} 0 0 1 ${fx(x + r)},${fx(yTop)}H${fx(x + w - r)}A${r},${r} 0 0 1 ${fx(x + w)},${fx(yTop + r)}V${fx(yBottom)}Z`;
     };
     // 시간표(밀리초): 한도선만 보이는 처음 · 막대 사이 간격 · 한 막대가 차는 시간 · 다 찬 뒤 쉬는 시간 · 깜빡임 한 번 · 깜빡이는 횟수
-    const T0 = 300, STAG = Math.max(60, Math.min(140, 1500 / N)), DUR = 460, WAIT = 260, BLINK = 440, TIMES = 3, GAP = 1.5, NAMEH = 22;
-    const easeOut = (k) => 1 - (1 - k) ** 3;
+    // 처음의 뜸(Lead) · 차례의 전체 시간(Seq) · 되풀이 전의 쉼(Rest)과, 막대가 값으로 가는 움직임(Move: 넘치지 않음)은 움직임 값에서 읽습니다.
+    const M = motion(card), MOVE = M.curve('move');
+    const T0 = M.ms('lead'), STAG = Math.max(60, Math.min(140, M.ms('seq') / N)), DUR = MOVE.dur, WAIT = 260, BLINK = 440, TIMES = 3, GAP = 1.5, NAMEH = 22;
     let W = 0, H = 0, PW = 0, y0 = 0, s = 1, bw = 0, slot = 1, yl = 0, t = 0, FULL = 0, TOTAL = 0;
     function layout(w, h) {
       W = w; H = h;
@@ -743,7 +805,7 @@
       const alert = t >= FULL + WAIT;
       items.forEach((it) => {
         if (it.v == null) { it.fill.setAttribute('d', ''); it.red.setAttribute('d', ''); it.ex.setAttribute('opacity', 0); return; }
-        const k = clamp((t - it.start) / DUR), e = easeOut(k), yv = y0 - it.v * s * e;
+        const e = clamp(MOVE.at(t - it.start)), yv = y0 - it.v * s * e;
         // 한도에 닿은 막대는 한도선 아래에서 각지게 끊고, 넘친 만큼은 선 위에서 빨강으로 잇습니다.
         const hit = it.v >= lim && yv <= yl + GAP;
         it.fill.setAttribute('d', col(it.x, hit ? yl + GAP : yv, bw, y0, !hit));
@@ -769,7 +831,7 @@
       if (rest > 0) { rest -= dt; if (rest <= 0) t = 0; }
       else {
         t = Math.min(TOTAL, t + dt);
-        if (t >= TOTAL) { if (loop) rest = 2600; else playing = false; }
+        if (t >= TOTAL) { if (loop) rest = M.ms('rest'); else playing = false; }
       }
       render();
       if (on()) raf = requestAnimationFrame(tick);

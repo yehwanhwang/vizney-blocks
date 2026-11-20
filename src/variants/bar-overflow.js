@@ -83,8 +83,9 @@
       return `M${fx(x)},${fx(yBottom)}V${fx(yTop + r)}A${r},${r} 0 0 1 ${fx(x + r)},${fx(yTop)}H${fx(x + w - r)}A${r},${r} 0 0 1 ${fx(x + w)},${fx(yTop + r)}V${fx(yBottom)}Z`;
     };
     // 시간표(밀리초): 한도선만 보이는 처음 · 막대 사이 간격 · 한 막대가 차는 시간 · 다 찬 뒤 쉬는 시간 · 깜빡임 한 번 · 깜빡이는 횟수
-    const T0 = 300, STAG = Math.max(60, Math.min(140, 1500 / N)), DUR = 460, WAIT = 260, BLINK = 440, TIMES = 3, GAP = 1.5, NAMEH = 22;
-    const easeOut = (k) => 1 - (1 - k) ** 3;
+    // 처음의 뜸(Lead) · 차례의 전체 시간(Seq) · 되풀이 전의 쉼(Rest)과, 막대가 값으로 가는 움직임(Move: 넘치지 않음)은 움직임 값에서 읽습니다.
+    const M = motion(card), MOVE = M.curve('move');
+    const T0 = M.ms('lead'), STAG = Math.max(60, Math.min(140, M.ms('seq') / N)), DUR = MOVE.dur, WAIT = 260, BLINK = 440, TIMES = 3, GAP = 1.5, NAMEH = 22;
     let W = 0, H = 0, PW = 0, y0 = 0, s = 1, bw = 0, slot = 1, yl = 0, t = 0, FULL = 0, TOTAL = 0;
     function layout(w, h) {
       W = w; H = h;
@@ -160,7 +161,7 @@
       const alert = t >= FULL + WAIT;
       items.forEach((it) => {
         if (it.v == null) { it.fill.setAttribute('d', ''); it.red.setAttribute('d', ''); it.ex.setAttribute('opacity', 0); return; }
-        const k = clamp((t - it.start) / DUR), e = easeOut(k), yv = y0 - it.v * s * e;
+        const e = clamp(MOVE.at(t - it.start)), yv = y0 - it.v * s * e;
         // 한도에 닿은 막대는 한도선 아래에서 각지게 끊고, 넘친 만큼은 선 위에서 빨강으로 잇습니다.
         const hit = it.v >= lim && yv <= yl + GAP;
         it.fill.setAttribute('d', col(it.x, hit ? yl + GAP : yv, bw, y0, !hit));
@@ -186,7 +187,7 @@
       if (rest > 0) { rest -= dt; if (rest <= 0) t = 0; }
       else {
         t = Math.min(TOTAL, t + dt);
-        if (t >= TOTAL) { if (loop) rest = 2600; else playing = false; }
+        if (t >= TOTAL) { if (loop) rest = M.ms('rest'); else playing = false; }
       }
       render();
       if (on()) raf = requestAnimationFrame(tick);

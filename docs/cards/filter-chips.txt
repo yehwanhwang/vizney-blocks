@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.69 · Controls · Filter Chips (filter-chips)
+<!-- Vizney Blocks v0.70 · Controls · Filter Chips (filter-chips)
      https://blocks.vizney.com/cards/filter-chips.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -39,6 +39,27 @@
   --vzb-radius: 18px;   /* card corners */
   --vzb-unit: 168px;   /* 1 height unit; a chart card is 1, 1.5 or 2 units tall */
   --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* card shadow */
+  /* Motion. What moves decides the value. A spring is two numbers, 'stiffness damping' (stiffer is faster; less damping bounces more).
+     Things you touch: Follow · Settle · Pop · Fade · Press. Things that carry a value: Move (never overshoots: a height or a position
+     is the value, so a bounce shows a wrong value for a moment). Rhythm: Lead · Seq · Rest. Move what sits around the cards
+     (KPI tiles, tables, tabs) with the same values and the screen reads as made by one hand. */
+  --vzb-follow: 1000 63;   /* Follow: sticks to the pointer while held (the slider thumb). No overshoot */
+  --vzb-settle: 340 26;   /* Settle: lands when let go, opened or widened (calendar, list, menu, rolling digits). 4% overshoot */
+  --vzb-pop: 520 21;   /* Pop: a released button, a picked day or chip, a surfacing label. Not a value, so it bounces. 20% overshoot */
+  --vzb-move: 200 28.3;   /* Move: what carries a value, such as a bar height, goes to its place. No overshoot (damping = 2√stiffness) */
+  --vzb-fade: 0.14s;   /* Fade: the time opacity and color take, the same in and out */
+  --vzb-press: 0.08s;   /* Press: the time to sink when pressed. Released, it comes back with Pop */
+  --vzb-lead: 400ms;   /* Lead: the wait before a chart card starts once it is in view */
+  --vzb-seq: 1200ms;   /* Seq: the whole time items take to move in turn, shared out among them */
+  --vzb-rest: 2600ms;   /* Rest: the pause before a looping card (the gallery) starts again */
+  /* The six below are the CSS transition time (-t) and curve (-e) worked out from the springs above. Do not edit them: change the
+     springs and the cards work them out again. */
+  --vzb-settle-t: 0.39s;
+  --vzb-settle-e: linear(0, 0.023, 0.081, 0.164, 0.26, 0.362, 0.463, 0.56, 0.65, 0.731, 0.801, 0.861, 0.91, 0.95, 0.981, 1.005, 1.022, 1.033, 1.04, 1.043, 1.044, 1.042, 1.039, 1.036, 1.031, 1.027, 1.022, 1.018, 1.014, 1.011, 1.008, 1.005, 1);
+  --vzb-pop-t: 0.52s;
+  --vzb-pop-e: linear(0, 0.061, 0.212, 0.41, 0.619, 0.811, 0.969, 1.085, 1.158, 1.192, 1.193, 1.172, 1.138, 1.097, 1.057, 1.022, 0.995, 0.976, 0.965, 0.962, 0.963, 0.969, 0.977, 0.985, 0.992, 0.998, 1.003, 1.006, 1.007, 1.007, 1.007, 1.005, 1);
+  --vzb-move-t: 0.54s;
+  --vzb-move-e: linear(0, 0.024, 0.083, 0.161, 0.248, 0.335, 0.419, 0.498, 0.569, 0.633, 0.689, 0.737, 0.78, 0.816, 0.846, 0.872, 0.894, 0.913, 0.928, 0.941, 0.951, 0.96, 0.967, 0.973, 0.978, 0.982, 0.985, 0.988, 0.99, 0.992, 0.994, 0.995, 1);
 }
 
 /* Dark ("theme": "dark"): the same variables, changed inside the card only. One yellow plus white and gray draws in Vizney black, white and yellow.
@@ -116,7 +137,7 @@
 /* 굴러가는 숫자: 숫자 칸의 높이는 글자 높이(1.2em)이고, 칸 안의 0–9 띠가 위아래로 굴러 새 값에 섭니다. */
 .vzb-rl { display: inline-flex; vertical-align: bottom; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .vzb-rl-col { display: inline-block; height: 1.2em; overflow: hidden; }
-.vzb-rl-strip { display: flex; flex-direction: column; transition: transform 0.38s cubic-bezier(0.34, 1.32, 0.64, 1); }
+.vzb-rl-strip { display: flex; flex-direction: column; transition: transform var(--vzb-settle-t) var(--vzb-settle-e); }
 .vzb-rl-strip > span, .vzb-rl-ch { display: block; height: 1.2em; line-height: 1.2em; }
 /* Filter Chips: 카드 틀 없이 칩만 그립니다. 칩은 높이 40px, 모서리 20px, 14px 글자이고 사이는 8px입니다(컨트롤 크기 기준: 글자가 있는 조작부는 높이 40px · 글자 14px, 아이콘만 있는 단추는 44px). 고른 칩은 글자색(밝은 바탕 검정, 어두운 바탕 흰색)으로
    채우고 카드 바탕색으로 체크와 이름을 적습니다. 고르지 않은 칩은 트랙 회색입니다. 세 줄을 넘으면 한 줄로 두고 가로로 밉니다(is-scroll).
@@ -129,13 +150,13 @@
 .vzb-ch-list.is-scroll { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; -webkit-mask-image: linear-gradient(to right, #fff calc(100% - 32px), transparent); mask-image: linear-gradient(to right, #fff calc(100% - 32px), transparent); }
 .vzb-ch-list.is-scroll.is-end { -webkit-mask-image: none; mask-image: none; }
 .vzb-ch-list.is-scroll::-webkit-scrollbar { display: none; }
-.vzb-ch-chip { flex: none; display: inline-flex; align-items: center; height: 40px; padding: 0 16px; border: 0; border-radius: 20px; background: var(--vzb-track); color: var(--vzb-ink-2); font: 500 14px/1 var(--vzb-font); white-space: nowrap; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color 0.2s, color 0.2s, transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.vzb-ch-chip { flex: none; display: inline-flex; align-items: center; height: 40px; padding: 0 16px; border: 0; border-radius: 20px; background: var(--vzb-track); color: var(--vzb-ink-2); font: 500 14px/1 var(--vzb-font); white-space: nowrap; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color var(--vzb-fade), color var(--vzb-fade), transform var(--vzb-pop-t) var(--vzb-pop-e); }
 .vzb-ch-chip:hover { background: var(--vzb-other); }
 .vzb-ch-chip[aria-pressed="true"] { background: var(--vzb-ink); color: var(--vzb-card); }
-.vzb-ch-chip:active, .vzb-ch-chip.is-press { transform: scale(0.92); transition-duration: 0.2s, 0.2s, 0.08s; }
+.vzb-ch-chip:active, .vzb-ch-chip.is-press { transform: scale(0.92); transition-duration: var(--vzb-fade), var(--vzb-fade), var(--vzb-press); }
 .vzb-ch-chip:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
-.vzb-ch-ck { flex: none; width: 0; height: 11px; margin-right: 0; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: width 0.3s cubic-bezier(0.34, 1.4, 0.64, 1), margin 0.3s cubic-bezier(0.34, 1.4, 0.64, 1); }
-.vzb-ch-ck path { stroke-dasharray: 13; stroke-dashoffset: 13; transition: stroke-dashoffset 0.2s ease-out; }
+.vzb-ch-ck { flex: none; width: 0; height: 11px; margin-right: 0; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: width var(--vzb-settle-t) var(--vzb-settle-e), margin var(--vzb-settle-t) var(--vzb-settle-e); }
+.vzb-ch-ck path { stroke-dasharray: 13; stroke-dashoffset: 13; transition: stroke-dashoffset var(--vzb-fade) ease-out; }
 .vzb-ch-chip[aria-pressed="true"] .vzb-ch-ck, .vzb-ch-list.is-measure .vzb-ch-ck { width: 11px; margin-right: 6px; }
 .vzb-ch-list.is-measure .vzb-ch-ck { transition: none; }
 .vzb-ch-chip[aria-pressed="true"] .vzb-ch-ck path { stroke-dashoffset: 0; transition-delay: 0.12s; }
@@ -303,6 +324,47 @@
     }
     card.append(fig);
   }
+  // 움직임 값(tokens.css의 --vzb-follow … --vzb-rest). 스프링은 '세기 잦아듦' 두 숫자이고, 시간은 초(s)나 밀리초(ms)입니다.
+  // 역할: Follow(끄는 동안 손에 붙음) · Settle(놓이거나 열릴 때 자리를 잡음) · Pop(눌렸다 튀어 오름) · Move(값의 자리로 감, 넘치지 않음) ·
+  // Fade(투명도와 색) · Press(눌리는 순간) · Lead(시작 전의 뜸) · Seq(차례의 전체 시간) · Rest(되풀이 전의 쉼). 읽지 못한 값은 아래 기본값을 씁니다.
+  const MOTION = { follow: '1000 63', settle: '340 26', pop: '520 21', move: '200 28.3', fade: '0.14s', press: '0.08s', lead: '400ms', seq: '1200ms', rest: '2600ms' };
+  // 스프링이 0에서 1로 갈 때의 자리(t는 초). 잦아듦이 2√세기에 닿으면 넘치지 않고 곧장 갑니다.
+  function springAt(k, c) {
+    const w = Math.sqrt(k), z = c / (2 * w);
+    if (z < 0.999) { const wd = w * Math.sqrt(1 - z * z); return (t) => 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + ((z * w) / wd) * Math.sin(wd * t)); }
+    return (t) => 1 - (1 + w * t) * Math.exp(-w * t);
+  }
+  // 스프링을 CSS 전환으로 옮긴 [시간, 곡선]: 목표의 0.5% 안에 든 때까지를 시간으로 잡고, 그 사이를 33점으로 잇습니다.
+  function springCss(k, c) {
+    const f = springAt(k, c), pts = [];
+    let d = 0;
+    for (let t = 0; t <= 3; t += 0.005) if (Math.abs(f(t) - 1) > 0.005) d = t;
+    d = Math.round((d + 0.01) * 100) / 100;
+    for (let i = 0; i <= 32; i++) pts.push(i === 0 ? 0 : i === 32 ? 1 : +f((d * i) / 32).toFixed(3));
+    return [`${d}s`, `linear(${pts.join(', ')})`];
+  }
+  // motion(card): 그 카드에 적용되는 움직임 값. pair(이름)은 스프링의 [세기, 잦아듦], ms(이름)은 밀리초,
+  // curve(이름)은 { at(지난 밀리초) → 0에서 1까지의 자리, dur: 다 가는 데 걸리는 밀리초 }, css(이름)은 CSS 전환의 [시간, 곡선]입니다.
+  function motion(card) {
+    const cs = getComputedStyle(card), raw = (n) => cs.getPropertyValue(`--vzb-${n}`).trim().replace(/\s+/g, ' ');
+    const two = (v) => { const p = v.split(' ').map(Number); return p.length === 2 && p[0] > 0 && p[1] > 0 ? p : null; };
+    const pair = (n) => two(raw(n)) || two(MOTION[n]);
+    const time = (v) => { const x = parseFloat(v); return isFinite(x) && x >= 0 && /s$/.test(v) ? (/ms$/.test(v) ? x : x * 1000) : null; };
+    const ms = (n) => { const v = time(raw(n)); return v == null ? time(MOTION[n]) : v; };
+    const css = (n) => springCss(...pair(n));
+    const curve = (n) => { const f = springAt(...pair(n)); return { at: (t) => (t <= 0 ? 0 : f(t / 1000)), dur: parseFloat(css(n)[0]) * 1000 }; };
+    return { pair, ms, css, curve };
+  }
+  // 스프링 값을 :root나 카드에서 바꿔 적었으면, CSS 전환이 쓰는 시간과 곡선(--vzb-…-t · -e)을 그 값으로 다시 계산해 카드에 적습니다.
+  function tune(card) {
+    const m = motion(card);
+    for (const n of ['settle', 'pop', 'move']) {
+      if (m.pair(n).join(' ') === MOTION[n]) continue;
+      const [t, e] = m.css(n);
+      card.style.setProperty(`--vzb-${n}-t`, t);
+      card.style.setProperty(`--vzb-${n}-e`, e);
+    }
+  }
   // 같은 종류의 카드를 모두 찾아 그립니다. 코드를 두 번 붙여 넣어도 카드는 한 번만 그립니다.
   // 데이터가 바뀌면 다시 그립니다: 페이지의 스크립트가 카드 안 JSON(<script type="application/json">)의 글자를 바꾸면 그 카드만
   // 새 요소로 갈아 끼워 새로 그립니다(필터 · 기간 컨트롤과 잇는 길). 갈아 끼운 카드에는 data-vzb-live가 붙어, 움직이는 카드는
@@ -337,6 +399,7 @@
         if (d.title) card.setAttribute('aria-label', d.title);
         // 어두운 바탕: JSON에 "theme": "dark"를 적으면 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다(tokens.css의 .vzb-dark).
         card.classList.toggle('vzb-dark', d.theme === 'dark');
+        tune(card);
         try { draw(card, d, format(d)); } catch (e) {
           card.append(el('p', 'vzb-error', tx(d, '카드를 그리지 못했습니다: %s', e.message)));
         }

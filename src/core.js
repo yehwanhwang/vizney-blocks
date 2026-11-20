@@ -144,6 +144,47 @@
     }
     card.append(fig);
   }
+  // 움직임 값(tokens.css의 --vzb-follow … --vzb-rest). 스프링은 '세기 잦아듦' 두 숫자이고, 시간은 초(s)나 밀리초(ms)입니다.
+  // 역할: Follow(끄는 동안 손에 붙음) · Settle(놓이거나 열릴 때 자리를 잡음) · Pop(눌렸다 튀어 오름) · Move(값의 자리로 감, 넘치지 않음) ·
+  // Fade(투명도와 색) · Press(눌리는 순간) · Lead(시작 전의 뜸) · Seq(차례의 전체 시간) · Rest(되풀이 전의 쉼). 읽지 못한 값은 아래 기본값을 씁니다.
+  const MOTION = { follow: '1000 63', settle: '340 26', pop: '520 21', move: '200 28.3', fade: '0.14s', press: '0.08s', lead: '400ms', seq: '1200ms', rest: '2600ms' };
+  // 스프링이 0에서 1로 갈 때의 자리(t는 초). 잦아듦이 2√세기에 닿으면 넘치지 않고 곧장 갑니다.
+  function springAt(k, c) {
+    const w = Math.sqrt(k), z = c / (2 * w);
+    if (z < 0.999) { const wd = w * Math.sqrt(1 - z * z); return (t) => 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + ((z * w) / wd) * Math.sin(wd * t)); }
+    return (t) => 1 - (1 + w * t) * Math.exp(-w * t);
+  }
+  // 스프링을 CSS 전환으로 옮긴 [시간, 곡선]: 목표의 0.5% 안에 든 때까지를 시간으로 잡고, 그 사이를 33점으로 잇습니다.
+  function springCss(k, c) {
+    const f = springAt(k, c), pts = [];
+    let d = 0;
+    for (let t = 0; t <= 3; t += 0.005) if (Math.abs(f(t) - 1) > 0.005) d = t;
+    d = Math.round((d + 0.01) * 100) / 100;
+    for (let i = 0; i <= 32; i++) pts.push(i === 0 ? 0 : i === 32 ? 1 : +f((d * i) / 32).toFixed(3));
+    return [`${d}s`, `linear(${pts.join(', ')})`];
+  }
+  // motion(card): 그 카드에 적용되는 움직임 값. pair(이름)은 스프링의 [세기, 잦아듦], ms(이름)은 밀리초,
+  // curve(이름)은 { at(지난 밀리초) → 0에서 1까지의 자리, dur: 다 가는 데 걸리는 밀리초 }, css(이름)은 CSS 전환의 [시간, 곡선]입니다.
+  function motion(card) {
+    const cs = getComputedStyle(card), raw = (n) => cs.getPropertyValue(`--vzb-${n}`).trim().replace(/\s+/g, ' ');
+    const two = (v) => { const p = v.split(' ').map(Number); return p.length === 2 && p[0] > 0 && p[1] > 0 ? p : null; };
+    const pair = (n) => two(raw(n)) || two(MOTION[n]);
+    const time = (v) => { const x = parseFloat(v); return isFinite(x) && x >= 0 && /s$/.test(v) ? (/ms$/.test(v) ? x : x * 1000) : null; };
+    const ms = (n) => { const v = time(raw(n)); return v == null ? time(MOTION[n]) : v; };
+    const css = (n) => springCss(...pair(n));
+    const curve = (n) => { const f = springAt(...pair(n)); return { at: (t) => (t <= 0 ? 0 : f(t / 1000)), dur: parseFloat(css(n)[0]) * 1000 }; };
+    return { pair, ms, css, curve };
+  }
+  // 스프링 값을 :root나 카드에서 바꿔 적었으면, CSS 전환이 쓰는 시간과 곡선(--vzb-…-t · -e)을 그 값으로 다시 계산해 카드에 적습니다.
+  function tune(card) {
+    const m = motion(card);
+    for (const n of ['settle', 'pop', 'move']) {
+      if (m.pair(n).join(' ') === MOTION[n]) continue;
+      const [t, e] = m.css(n);
+      card.style.setProperty(`--vzb-${n}-t`, t);
+      card.style.setProperty(`--vzb-${n}-e`, e);
+    }
+  }
   // 같은 종류의 카드를 모두 찾아 그립니다. 코드를 두 번 붙여 넣어도 카드는 한 번만 그립니다.
   // 데이터가 바뀌면 다시 그립니다: 페이지의 스크립트가 카드 안 JSON(<script type="application/json">)의 글자를 바꾸면 그 카드만
   // 새 요소로 갈아 끼워 새로 그립니다(필터 · 기간 컨트롤과 잇는 길). 갈아 끼운 카드에는 data-vzb-live가 붙어, 움직이는 카드는
@@ -178,6 +219,7 @@
         if (d.title) card.setAttribute('aria-label', d.title);
         // 어두운 바탕: JSON에 "theme": "dark"를 적으면 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다(tokens.css의 .vzb-dark).
         card.classList.toggle('vzb-dark', d.theme === 'dark');
+        tune(card);
         try { draw(card, d, format(d)); } catch (e) {
           card.append(el('p', 'vzb-error', tx(d, '카드를 그리지 못했습니다: %s', e.message)));
         }

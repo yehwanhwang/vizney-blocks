@@ -15,7 +15,7 @@
 .vzb-bb-name { font-size: 12px; fill: var(--vzb-muted); }
 .vzb-bb-ex { font-size: 14px; font-weight: 700; fill: var(--vzb-bad-ink); font-variant-numeric: tabular-nums; }
 .vzb-bb-col.is-over .vzb-bb-name { font-weight: 700; fill: var(--vzb-ink); }
-.vzb-bb-col { transition: opacity 0.12s; }
+.vzb-bb-col { transition: opacity var(--vzb-fade); }
 .vzb-bb-svg.is-hover .vzb-bb-col:not(.is-on) { opacity: 0.3; }
 .vzb-bb-ctl { display: flex; align-items: center; gap: 10px; min-height: 28px; margin-top: 8px; }
 .vzb-card[data-vzb="bar-overflow"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */

@@ -16,6 +16,10 @@
 //      EN entry is used, so "lang": "en" leaves no Korean behind. The won notations (조 · 억 · 만 · 원) are the only bare Korean.
 //  10. 영어: every card has its English example (src/variants/<id>.en.json, with "lang": "en") and its English wording
 //      (meta.en.json: when and rules of the same count; every chart type: name, and intro and guide where the Korean has them).
+//  11. 움직임: motion values only from tokens.css (v0.70). In card CSS a transition takes its times and curves from the --vzb-*
+//      motion tokens (0s and keywords are fine), and no cubic-bezier() or linear() is written by hand in CSS or in a card script;
+//      keyframe animations and delays set on their own (transition-delay) are choreography and may keep their own times. The CSS times and curves in tokens.css (--vzb-*-t · -e) are the ones
+//      core.js works out from the springs, and the defaults in core.js (MOTION) are the token values.
 import { readdirSync, existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -169,6 +173,31 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
         const id = file.match(/variants\/(.+)\.js$/)?.[1];
         if (id && KNOWN[id]) warn(`${file}: 툴팁을 마우스로만 연다 (알려진 예외: ${KNOWN[id]})`);
         else fail(file, '툴팁을 포인터로만 열지 않는다. interact()나 keydown으로 키보드에서도 같은 값을 보여준다');
+      }
+    }
+  }
+  // 11. motion: times and curves only from the motion tokens
+  for (const [file, text] of files) {
+    const body = text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+    if (file.endsWith('.css')) {
+      for (const m of body.matchAll(/(?<![\w-])(transition(?:-duration)?|animation)\s*:\s*([^;{}]+)/g)) {
+        const bare = m[2].replace(/calc\((?:[^()]|\([^()]*\))*\)/g, '').replace(/var\([^()]*\)/g, '');
+        if (/cubic-bezier\(|linear\(/.test(bare)) fail(file, `${m[1]}에 손으로 적은 곡선이 있다(${m[2].trim().slice(0, 60)}). 곡선은 움직임 토큰(--vzb-settle-e · --vzb-pop-e · --vzb-move-e)이나 ease-in · ease-out으로 쓴다`);
+        if (m[1] !== 'animation' && /(?<![\w.-])(?!0m?s\b)\d*\.?\d+m?s\b/.test(bare)) fail(file, `${m[1]}에 손으로 적은 시간이 있다(${m[2].trim().slice(0, 60)}). 시간은 움직임 토큰(--vzb-fade · --vzb-press · --vzb-*-t)으로 쓴다`);
+      }
+    } else if (file !== 'src/core.js' && /cubic-bezier\(|linear\(/.test(body)) fail(file, '스크립트에 손으로 적은 곡선(cubic-bezier · linear)이 있다. motion(card)의 css() · curve()나 ease-out을 쓴다');
+  }
+  {
+    const core = src('src/core.js'), fn = (name) => { const i = core.indexOf(`  function ${name}(`), j = core.indexOf('\n  }\n', i); return i < 0 || j < 0 ? '' : core.slice(i, j + 4); };
+    const val = (name) => (tokens.match(new RegExp(`--vzb-${name}:\\s*([^;]+);`)) || [])[1]?.trim();
+    const defs = core.match(/const MOTION = \{([^}]*)\}/);
+    if (!fn('springAt') || !fn('springCss') || !defs) fail('src/core.js', '움직임 값의 기본값(MOTION)과 springAt · springCss가 있어야 한다');
+    else {
+      const springCss = new Function(`${fn('springAt')}\n${fn('springCss')}\nreturn springCss;`)();
+      for (const m of defs[1].matchAll(/(\w+):\s*'([^']*)'/g)) if (val(m[1]) !== m[2]) fail('src/core.js', `MOTION.${m[1]}('${m[2]}')이 tokens.css의 --vzb-${m[1]}(${val(m[1])})과 다르다`);
+      for (const n of ['settle', 'pop', 'move']) {
+        const [t, e] = springCss(...(val(n) || '').split(/\s+/).map(Number));
+        if (val(`${n}-t`) !== t || val(`${n}-e`) !== e) fail('src/tokens.css', `--vzb-${n}-t · -e가 --vzb-${n}(${val(n)})에서 계산한 값과 다르다. ${t} · ${e.slice(0, 40)}…`);
       }
     }
   }

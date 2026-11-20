@@ -602,8 +602,9 @@
   // 데칼코마니: 항목마다 적은 쪽 막대 끝에서 많은 쪽의 길이까지 회색 면을 이어 그립니다(반대쪽과의 차이). 그래서 날개의 바깥 윤곽은 좌우 대칭이 되고,
   // 회색이 있는 쪽이 그 항목에서 적은 쪽, 회색의 길이가 두 그룹의 차이입니다. 막대와 회색 사이는 카드 바탕색 2px로 끊고, 적은 쪽의 값은 제 막대 끝, 회색 면 위에 놓입니다.
   // 움직임: 화면에 보이면 접혀 있던 두 날개가 좌우로 펼쳐지고(값 그대로의 막대), 한 번 접어 잠깐 맞닿았다가 다시 펼칩니다. 맞닿은 날개는 서로의 길이를 옮겨 받아,
-  // 다시 펼칠 때 회색 면이 함께 펼쳐집니다. 날개는 한 장의 판처럼 경첩(값 칸의 바깥 가장자리)을 축으로 화면 앞쪽으로 들리며 접히고, 두 날개는 거울처럼 함께 움직입니다.
-  // 판 위의 막대는 같은 비율로 짧아지므로 접히는 동안에도 막대끼리의 길이 비는 그대로입니다. 펼칠 때는 살짝 더 벌어졌다가 제자리로 잦아듭니다.
+  // 다시 펼칠 때 회색 면이 함께 펼쳐집니다. 날개는 경첩(이름 열의 가장자리)을 축으로 화면 앞쪽으로 들리며 접히고, 두 날개는 거울처럼 함께 움직입니다.
+  // 날갯짓처럼 부드럽게: 움직임은 멈춤과 출발이 느린 진자 같은 곡선을 따르고, 날개는 뿌리가 먼저 움직이고 끝이 조금 늦게 따라오며 휘어집니다. 펼칠 때는 살짝 더 벌어졌다가 제자리로 잦아듭니다.
+  // 움직이는 동안 막대는 원근으로 짧아 보이고, 멈춘 장면의 길이는 값 그대로입니다.
   // 값은 날개에 붙어 함께 움직이며 접힐수록 옅어지고, 이름은 움직이지 않습니다.
   // 카드가 화면에 보이면 한 번 움직이고, 다시 보기 단추로 되풀이합니다. 마우스를 올리거나 키보드로 포커스하면 움직임을 잠시 멈춥니다.
   // 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 마지막 장면(펼친 날개와 회색 면)을 바로 그립니다.
@@ -738,39 +739,74 @@
       render();
     }
 
-    // 날개의 판: 경첩에서 r만큼, 높이 y에 있는 점은 날개가 th만큼 들렸을 때 화면 앞으로 r·sin(th)만큼 나와 g배로 커 보이고, 경첩 쪽으로 r·cos(th)·g에 놓입니다.
-    // 그래서 들린 날개의 끝은 경첩 쪽으로 다가오며 위아래로 조금 벌어져, 한 장의 판이 앞으로 접히는 것처럼 보입니다.
-    const at = (hx, dir, r, y, th) => { const g = PD / (PD - r * Math.sin(th)); return [hx + dir * r * Math.cos(th) * g, ym + (y - ym) * g]; };
-    // 판 위의 막대 한 조각(경첩에서 r0부터 r1까지): 바깥 끝만 4px 둥급니다.
-    function slab(hx, dir, r0, r1, yc, th) {
-      if (r1 - r0 < 0.5) return '';
-      const A = at(hx, dir, r0, yc - hh, th), B = at(hx, dir, r1, yc - hh, th), C = at(hx, dir, r1, yc + hh, th), D = at(hx, dir, r0, yc + hh, th);
-      const ab = Math.hypot(B[0] - A[0], B[1] - A[1]);
-      if (ab < 0.3) return '';
-      const rr = Math.min(4, ab / 2, (C[1] - B[1]) / 2), k = rr / ab;
-      const b0 = [B[0] + (A[0] - B[0]) * k, B[1] + (A[1] - B[1]) * k], c0 = [C[0] + (D[0] - C[0]) * k, C[1] + (D[1] - C[1]) * k];
-      return `M${fx(A[0])},${fx(A[1])}L${fx(b0[0])},${fx(b0[1])}Q${fx(B[0])},${fx(B[1])} ${fx(B[0])},${fx(B[1] + rr)}`
-        + `L${fx(C[0])},${fx(C[1] - rr)}Q${fx(C[0])},${fx(C[1])} ${fx(c0[0])},${fx(c0[1])}L${fx(D[0])},${fx(D[1])}Z`;
-    }
-    // 상태: th는 날개가 들린 각(0이면 펼침, A_MAX면 접힘), pressed는 한 번 접었다 펼쳐 회색 면이 생겼는지입니다.
+    // 날개의 모양: 날개는 뻣뻣한 판이 아니라 뿌리(경첩)가 먼저 움직이고 끝이 조금 늦게 따라오는 부드러운 날개입니다(끝이 LAG만큼 늦습니다).
+    // 날개를 S마디로 나눠 마디마다 들린 각(TH)을 구하고, 경첩에서부터 이어 붙여 마디 끝의 가로 자리(X)와 화면 앞으로 나온 깊이(Z)를 셉니다.
+    // 깊이 z에 있는 점은 g = PD / (PD - z)배로 커 보여, 들린 날개의 끝은 경첩 쪽으로 다가오며 위아래로 조금 벌어집니다.
     const A_MAX = 1.42;   // 접힘은 81°: 날개가 아주 사라지지 않고 경첩 옆에 짧은 띠(길이의 15%쯤)로 남습니다
-    let th = A_MAX, pressed = false, hot = -1;
+    const S = 24, LAG = 130;
+    const TH = new Float64Array(S + 1), X = new Float64Array(S + 1), Z = new Float64Array(S + 1);
+    let flat = true;
+    function shape() {
+      const ds = span / S;
+      flat = true;
+      for (let i = 0; i <= S; i++) { TH[i] = A_MAX * curve(tau - (LAG * i) / S); if (Math.abs(TH[i]) > 1e-4) flat = false; }
+      X[0] = 0; Z[0] = 0;
+      for (let i = 1; i <= S; i++) { const a = (TH[i - 1] + TH[i]) / 2; X[i] = X[i - 1] + ds * Math.cos(a); Z[i] = Z[i - 1] + ds * Math.sin(a); }
+    }
+    // 경첩에서 r만큼 떨어진 점의 자리(날개 끝 밖은 끝 마디의 방향으로 잇습니다)
+    function proj(hx, dir, r, y) {
+      const ds = span / S, q = r / ds, i = Math.max(0, Math.min(S - 1, Math.floor(q))), k = q - i, over = r > span ? r - span : 0;
+      const x = over ? X[S] + over * Math.cos(TH[S]) : X[i] + (X[i + 1] - X[i]) * k, z = over ? Z[S] + over * Math.sin(TH[S]) : Z[i] + (Z[i + 1] - Z[i]) * k;
+      const g = PD / (PD - z);
+      return [hx + dir * x * g, ym + (y - ym) * g];
+    }
+    const angleAt = (r) => TH[Math.max(0, Math.min(S, Math.round((r / span) * S)))];
+    // 날개 위의 막대 한 조각(경첩에서 r0부터 r1까지): 날개가 휘어 있으면 마디마다 꺾어 그리고, 바깥 끝만 4px 둥급니다.
+    const pts = (a) => a.map((q) => `${fx(q[0])},${fx(q[1])}`).join('L');
+    function slab(hx, dir, r0, r1, yc) {
+      if (r1 - r0 < 0.5) return '';
+      const rr = Math.min(4, (r1 - r0) / 2, hh), rs = [r0], ds = span / S;
+      if (!flat) for (let i = Math.floor(r0 / ds) + 1; i * ds < r1 - rr - 0.5; i++) rs.push(i * ds);
+      rs.push(r1 - rr);
+      const top = rs.map((r) => proj(hx, dir, r, yc - hh)), bot = rs.map((r) => proj(hx, dir, r, yc + hh)).reverse();
+      const B = proj(hx, dir, r1, yc - hh), C = proj(hx, dir, r1, yc + hh);
+      if (Math.abs(B[0] - top[0][0]) < 0.3) return '';
+      const rv = Math.min(rr, (C[1] - B[1]) / 2);
+      return `M${pts(top)}Q${fx(B[0])},${fx(B[1])} ${fx(B[0])},${fx(B[1] + rv)}L${fx(C[0])},${fx(C[1] - rv)}Q${fx(C[0])},${fx(C[1])} ${pts(bot)}Z`;
+    }
+    // 움직임의 시간표: [밀리초, 접힌 정도(1 접힘, 0 펼침, 음수는 펼친 자리보다 조금 더 벌어짐)]. 점 사이는 코사인 곡선으로 이어, 점마다 속도가 0이 되는 진자 같은 움직임입니다.
+    // 펼침(살짝 더 벌어졌다 돌아옴) → 숨 고르기 → 접음(맞닿는 순간 서로의 길이를 옮겨 받음) → 다시 펼침(회색 면과 함께, 살짝 더 벌어졌다 잦아듦)
+    const KEYS = [[0, 1], [680, -0.06], [960, 0], [1180, 0], [1800, 1], [2520, -0.07], [2840, 0.015], [3080, 0]];
+    const T_FOLDED = 1800, END = 3080, CLOSE = 560, REST = 2800;
+    const blend = (a, b, k) => a + ((b - a) * (1 - Math.cos(Math.PI * k))) / 2;
+    function pose(t) {
+      if (t <= 0) return 1;
+      if (t >= END) return 0;
+      let i = 1;
+      while (KEYS[i][0] < t) i++;
+      return blend(KEYS[i - 1][1], KEYS[i][1], (t - KEYS[i - 1][0]) / (KEYS[i][0] - KEYS[i - 1][0]));
+    }
+    // 상태: mode가 'play'면 시간표를, 'close'면 다시 보기 전에 날개를 접는 움직임(c0에서 접힘까지)을 따릅니다. tau는 그 움직임의 시각,
+    // pressed는 한 번 접었다 펼쳐 회색 면이 생겼는지입니다.
+    let mode = 'play', tau = live ? END + LAG : 0, c0 = 0, pressed = live, hot = -1;
+    const curve = (x) => (mode === 'play' ? pose(x) : x <= 0 ? c0 : x >= CLOSE ? 1 : blend(c0, 1, x / CLOSE));
     function render() {
       if (!W) return;
+      shape();
       items.forEach((it, r) => {
         const yc = rowY(r);
         [0, 1].forEach((s) => {
           const dir = s ? 1 : -1, hx = s ? hr : hl, v = it.v[s], o = it.v[1 - s], len = sc(v || 0);
-          it.bar[s].setAttribute('d', v == null ? '' : slab(hx, dir, 0, len, yc, th));
+          it.bar[s].setAttribute('d', v == null ? '' : slab(hx, dir, 0, len, yc));
           // 회색 면: 적은 쪽 막대 끝에서 2px 띄우고 많은 쪽의 길이까지
           const r0 = len > 0.5 ? len + 2 : 0, r1 = sc(o || 0);
           const tail = pressed && v != null && o != null && o > v && r1 - r0 >= 2;
-          it.tail[s].setAttribute('d', tail ? slab(hx, dir, r0, r1, yc, th) : '');
-          // 값: 제 막대 끝에서 6px 밖(회색 면이 16px보다 짧으면 그 바깥)에 두고, 날개의 판을 따라 움직입니다. 날개가 접힐수록 옅어집니다.
-          const off = tail && r1 - len < 16 ? r1 - len + 6 : 6, P = at(hx, dir, len + off, yc, th), lab = it.lab[s];
+          it.tail[s].setAttribute('d', tail ? slab(hx, dir, r0, r1, yc) : '');
+          // 값: 제 막대 끝에서 6px 밖(회색 면이 16px보다 짧으면 그 바깥)에 두고, 날개를 따라 움직입니다. 그 자리의 날개가 접힐수록 옅어집니다.
+          const off = tail && r1 - len < 16 ? r1 - len + 6 : 6, P = proj(hx, dir, len + off, yc), lab = it.lab[s];
           lab.setAttribute('x', fx(P[0]));
           lab.setAttribute('y', fx(P[1] + 5));
-          lab.style.opacity = Math.max(0, Math.min(1, (Math.cos(th) - 0.3) / 0.45)).toFixed(3);
+          lab.style.opacity = Math.max(0, Math.min(1, (Math.cos(angleAt(len + off)) - 0.3) / 0.45)).toFixed(3);
         });
       });
       gkey.classList.toggle('is-off', !(pressed && anyGap));
@@ -778,39 +814,18 @@
       if (hot >= 0) band.setAttribute('y', fx(rowY(hot) - pitch / 2 + 1));
     }
 
-    // 움직임의 시간표(밀리초): 펼침 → 잠시 멈춤 → 접음 → 맞닿은 채 잠깐(서로의 길이를 옮겨 받음) → 다시 펼침(회색 면과 함께)
-    const T_OPEN = 820, T_HOLD = 460, T_FOLD = 450, T_STAY = 110, T_OPEN2 = 820, CLOSE = 450, REST = 2800;
-    const T_FOLDED = T_OPEN + T_HOLD + T_FOLD, T_PRESS = T_FOLDED + T_STAY, END = T_PRESS + T_OPEN2;
-    const easeIn = (k) => k * k * k;
-    const easeInOut = (k) => (k < 0.5 ? 4 * k * k * k : 1 - (-2 * k + 2) ** 3 / 2);
-    // 펼침: 용수철처럼 살짝 더 벌어졌다가(펼친 자리보다 7°쯤 뒤로) 제자리로 잦아듭니다. 그때 막대는 1%쯤 짧아졌다 돌아옵니다.
-    const spring = (k) => (k >= 1 ? 1 : 1 - Math.exp(-6.5 * k) * (Math.cos(9.5 * k) + (6.5 / 9.5) * Math.sin(9.5 * k)));
-    function pose(t) {
-      if (t < T_OPEN) return A_MAX * (1 - spring(t / T_OPEN));
-      if (t < T_OPEN + T_HOLD) return 0;
-      if (t < T_FOLDED) return A_MAX * easeInOut((t - T_OPEN - T_HOLD) / T_FOLD);
-      if (t < T_PRESS) return A_MAX;
-      if (t < END) return A_MAX * (1 - spring((t - T_PRESS) / T_OPEN2));
-      return 0;
-    }
     // 재생: 화면에 보이고(inView) 마우스 · 포커스로 잠시 멈추지 않았을 때(holds)만 나아갑니다. 카드가 페이지에서 빠지면 멈춥니다.
     const loop = !!card.closest('[data-vzb-loop]');
     const holds = new Set();
-    let t = live ? END : 0, idle = 0, closing = 0, closeFrom = 0, playing = false, seen = false, inView = false, raf = 0, last = 0;
-    if (live) { th = 0; pressed = true; }
+    let idle = 0, playing = false, seen = false, inView = false, raf = 0, last = 0;
     const busy = () => playing && !holds.size;
+    const fold = () => { c0 = curve(tau); mode = 'close'; tau = 0; };   // 지금 자리에서 접기 시작합니다
     function advance(dt) {
-      if (closing > 0) {   // 다시 볼 때(갤러리는 쉬고 난 뒤): 펼친 날개를 지금 자리에서 접은 뒤, 처음부터 다시 펼칩니다
-        closing = Math.max(0, closing - dt);
-        th = closeFrom + (A_MAX - closeFrom) * easeIn(1 - closing / CLOSE);
-        if (!closing) { t = 0; pressed = false; th = A_MAX; }
-        return;
-      }
-      if (idle > 0) { idle = Math.max(0, idle - dt); if (!idle) { closing = CLOSE; closeFrom = th; } return; }
-      t = Math.min(END, t + dt);
-      th = pose(t);
-      pressed = t >= T_FOLDED;
-      if (t >= END) { if (loop) idle = REST; else playing = false; }
+      if (idle > 0) { idle = Math.max(0, idle - dt); if (!idle) fold(); return; }   // 갤러리: 쉬고 난 뒤 날개를 접고, 처음부터 다시 펼칩니다
+      tau += dt;
+      if (mode === 'close') { if (tau >= CLOSE + LAG) { mode = 'play'; tau = 0; pressed = false; } return; }
+      pressed = tau >= T_FOLDED + LAG / 2;   // 날개가 다 접혔을 때 회색 면이 생깁니다
+      if (tau >= END + LAG) { tau = END + LAG; if (loop) idle = REST; else playing = false; }
     }
     function tick(stamp) {
       raf = 0;
@@ -827,7 +842,7 @@
       idle = 0;
       playing = true;
       last = 0;
-      if (th < A_MAX - 1e-3) { closing = CLOSE; closeFrom = th; } else { closing = 0; t = 0; th = A_MAX; pressed = false; }
+      if (mode === 'play' && tau > 0) fold();
       render();
       kick();
     }

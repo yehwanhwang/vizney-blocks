@@ -9,13 +9,13 @@
 .vzb-ch-list.is-scroll { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; -webkit-mask-image: linear-gradient(to right, #fff calc(100% - 32px), transparent); mask-image: linear-gradient(to right, #fff calc(100% - 32px), transparent); }
 .vzb-ch-list.is-scroll.is-end { -webkit-mask-image: none; mask-image: none; }
 .vzb-ch-list.is-scroll::-webkit-scrollbar { display: none; }
-.vzb-ch-chip { flex: none; display: inline-flex; align-items: center; height: 40px; padding: 0 16px; border: 0; border-radius: 20px; background: var(--vzb-track); color: var(--vzb-ink-2); font: 500 14px/1 var(--vzb-font); white-space: nowrap; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color 0.2s, color 0.2s, transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.vzb-ch-chip { flex: none; display: inline-flex; align-items: center; height: 40px; padding: 0 16px; border: 0; border-radius: 20px; background: var(--vzb-track); color: var(--vzb-ink-2); font: 500 14px/1 var(--vzb-font); white-space: nowrap; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color var(--vzb-fade), color var(--vzb-fade), transform var(--vzb-pop-t) var(--vzb-pop-e); }
 .vzb-ch-chip:hover { background: var(--vzb-other); }
 .vzb-ch-chip[aria-pressed="true"] { background: var(--vzb-ink); color: var(--vzb-card); }
-.vzb-ch-chip:active, .vzb-ch-chip.is-press { transform: scale(0.92); transition-duration: 0.2s, 0.2s, 0.08s; }
+.vzb-ch-chip:active, .vzb-ch-chip.is-press { transform: scale(0.92); transition-duration: var(--vzb-fade), var(--vzb-fade), var(--vzb-press); }
 .vzb-ch-chip:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
-.vzb-ch-ck { flex: none; width: 0; height: 11px; margin-right: 0; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: width 0.3s cubic-bezier(0.34, 1.4, 0.64, 1), margin 0.3s cubic-bezier(0.34, 1.4, 0.64, 1); }
-.vzb-ch-ck path { stroke-dasharray: 13; stroke-dashoffset: 13; transition: stroke-dashoffset 0.2s ease-out; }
+.vzb-ch-ck { flex: none; width: 0; height: 11px; margin-right: 0; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: width var(--vzb-settle-t) var(--vzb-settle-e), margin var(--vzb-settle-t) var(--vzb-settle-e); }
+.vzb-ch-ck path { stroke-dasharray: 13; stroke-dashoffset: 13; transition: stroke-dashoffset var(--vzb-fade) ease-out; }
 .vzb-ch-chip[aria-pressed="true"] .vzb-ch-ck, .vzb-ch-list.is-measure .vzb-ch-ck { width: 11px; margin-right: 6px; }
 .vzb-ch-list.is-measure .vzb-ch-ck { transition: none; }
 .vzb-ch-chip[aria-pressed="true"] .vzb-ch-ck path { stroke-dashoffset: 0; transition-delay: 0.12s; }

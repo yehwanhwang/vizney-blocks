@@ -123,8 +123,8 @@
     };
     // 시간표(밀리초): 첫 막대를 읽는 시간 T0, 한 항목의 간격 STEP, 점이 다음 칸으로 걸어가는 시간 WALK, 막대가 움직이기 시작할 때까지 LAG,
     // 막대가 오르내리는 시간 GROW, 합계 막대가 바닥까지 차는 시간 POUR, 말풍선이 튀어나오는 시간 POP
-    const T0 = 500, STEP = N > 1 ? Math.max(380, Math.min(540, 2900 / (N - 1))) : 0, WALK = Math.round(STEP * 0.5), LAG = Math.round(WALK * 0.85), GROW = Math.round(STEP * 0.68), POUR = 520, POP = 260;
-    const easeOut = (k) => 1 - (1 - k) ** 3, easeBack = (k) => 1 + 2.2 * (k - 1) ** 3 + 1.2 * (k - 1) ** 2, easeInOut = (k) => (k < 0.5 ? 4 * k ** 3 : 1 - (-2 * k + 2) ** 3 / 2);
+    const M = motion(card), T0 = M.ms('lead'), STEP = N > 1 ? Math.max(380, Math.min(540, 2900 / (N - 1))) : 0, WALK = Math.round(STEP * 0.5), LAG = Math.round(WALK * 0.85), GROW = Math.round(STEP * 0.68), POUR = 520, POPC = M.curve('pop'), POP = POPC.dur;
+    const easeOut = (k) => 1 - (1 - k) ** 3, easeInOut = (k) => (k < 0.5 ? 4 * k ** 3 : 1 - (-2 * k + 2) ** 3 / 2);
     cols.forEach((c) => {
       c.at = c.k ? T0 + (c.k - 1) * STEP : -1e9;   // 앞 막대에서 이 칸으로 점이 걸어오기 시작하는 때
       c.dur = c.kind === 'total' ? POUR : GROW;
@@ -269,9 +269,9 @@
         c.path.setAttribute('d', !c.bar ? '' : c.kind === 'total' ? barPath(c.x, c.yB + (c.yA - c.yB) * e, c.yB, bw) : barPath(c.x, c.yA, tip, bw));
         // 글자는 막대 끝에 붙어 함께 움직이고, 증감 값은 지금 보이는 만큼을 셉니다. 점이 다 걸어올 즈음 나타납니다.
         // 끝 막대의 말풍선은 막대가 다 찰 즈음 꼬리 끝에서부터 튀어나옵니다.
-        const pop = c === end ? clamp((t - c.done + 100) / POP) : 1;
-        c.lab.setAttribute('transform', `translate(${fx(c.cx + c.dx)},${fx(tip + c.dy)})${pop < 1 ? ` scale(${Math.max(0.01, easeBack(pop)).toFixed(3)})` : ''}`);
-        c.lab.setAttribute('opacity', c.labOn ? fx(c === end ? clamp(pop * 3) : c.k ? clamp((t - c.at - LAG + 80) / 160) : 1) : 0);
+        const pop = c === end ? clamp((t - c.done + 100) / POP) : 1;   // 말풍선은 Pop 스프링으로 튀어나옵니다(값이 아닌 이름표라 넘쳐도 됩니다)
+        c.lab.setAttribute('transform', `translate(${fx(c.cx + c.dx)},${fx(tip + c.dy)})${pop < 1 ? ` scale(${Math.max(0.01, POPC.at(t - c.done + 100)).toFixed(3)})` : ''}`);
+        c.lab.setAttribute('opacity', c.labOn ? fx(c === end ? clamp((t - c.done + 100) / 90) : c.k ? clamp((t - c.at - LAG + 80) / 160) : 1) : 0);
         const now = c.kind === 'step' && c.v ? part(c.v, e) : 0;   // 0에서 시작할 때도 부호를 붙여, 늘 항목인지 줄 항목인지 먼저 알립니다
         const say = c.kind === 'step' && c.v ? (now ? signed(f, now) : `${c.v > 0 ? '+' : '-'}${show(f, 0)}`) : c.said;
         if (say !== c.said) { c.said = say; c.val.textContent = say; }
@@ -296,7 +296,7 @@
       if (rest > 0) { rest -= dt; if (rest <= 0) t = 0; }
       else {
         t = Math.min(TOTAL, t + dt);
-        if (t >= TOTAL) { if (loop) rest = 2600; else playing = false; }
+        if (t >= TOTAL) { if (loop) rest = M.ms('rest'); else playing = false; }
       }
       render();
       if (on()) raf = requestAnimationFrame(tick);

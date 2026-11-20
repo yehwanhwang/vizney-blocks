@@ -19,7 +19,7 @@
   font: 400 14px/20px var(--vzb-font);
   white-space: nowrap;
   opacity: 0;
-  transition: opacity 0.12s;
+  transition: opacity var(--vzb-fade);
 }
 .vzb-tip.is-on { opacity: 1; }
 .vzb-tip-label { color: rgba(255, 255, 255, 0.72); }

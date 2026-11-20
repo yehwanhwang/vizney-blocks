@@ -220,7 +220,7 @@
 
     // 재생: 화면에 보이고(inView) 마우스 · 포커스로 잠시 멈추지 않았을 때(holds)만 흐릅니다. 카드가 페이지에서 빠지면 멈춥니다.
     // 기간 하나를 넘기는 시간 STEP, 처음 첫 기간을 읽는 시간 LEAD. 구간 막대로 옮길 때는 짧게 미끄러집니다(seek).
-    const STEP = 520, LEAD = 700;
+    const STEP = 520, LEAD = motion(card).ms('lead');
     const live = card.hasAttribute('data-vzb-live'), loop = !!card.closest('[data-vzb-loop]');
     const kept = labels.indexOf(card.getAttribute('data-vzb-period'));
     const holds = new Set();

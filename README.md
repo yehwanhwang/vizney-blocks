@@ -23,7 +23,7 @@ Copy-paste HTML cards: charts you read through their motion, and the dashboard c
 </div>
 ```
 
-색과 글꼴은 내 페이지 `:root`의 `--vzb-*` 변수로 바꿉니다. 변수 목록과 쓰임은 [tokens.css](https://blocks.vizney.com/ko/tokens.css)에 있습니다.
+색과 글꼴, 움직임은 내 페이지 `:root`의 `--vzb-*` 변수로 바꿉니다. 변수 목록과 쓰임은 [tokens.css](https://blocks.vizney.com/ko/tokens.css)에 있습니다. 움직임은 역할마다 값이 하나씩 있습니다(끄는 동안 붙는 Follow, 놓이거나 열릴 때의 Settle, 눌렸다 튀는 Pop, 투명도와 색의 Fade, 값이 제자리로 가는 Move, 시작 전의 뜸 Lead 등). 카드 둘레에 직접 만드는 요소도 같은 변수로 움직이면 화면 전체가 같은 손으로 움직입니다.
 
 ## 카드
 
@@ -97,13 +97,13 @@ pip install fonttools
 SPOQA_DIR=/path/to/spoqa-han-sans/Original/SpoqaHanSansNeo node build.mjs
 ```
 
-빌드는 맨 앞에서 `guard.mjs`를 돌려 카드가 규칙을 지키는지 검사합니다(카드 id는 카드 이름을 소문자와 하이픈으로 적은 것, 외부 리소스 없음, 색은 `tokens.css`의 변수만, 차트 카드의 높이 1 · 1.5 · 2단위와 컨트롤의 조작부 높이, 선택자와 변수는 `vzb` 접두, 툴팁은 키보드로도, 예시 JSON의 길이와 계산 필드, meta.json과 파일의 짝, 카드 안 문구는 모두 `tx()`를 거쳐 영어가 있을 것, 쓰지 않는 영어 문구가 없을 것, 영어 예시 데이터와 영어 규칙이 카드마다 있을 것). 어긋나면 사유를 적고 멈춥니다. 글꼴 없이 검사만 하려면 `node build.mjs --check`를 씁니다.
+빌드는 맨 앞에서 `guard.mjs`를 돌려 카드가 규칙을 지키는지 검사합니다(카드 id는 카드 이름을 소문자와 하이픈으로 적은 것, 외부 리소스 없음, 색은 `tokens.css`의 변수만, 전환의 시간과 곡선은 `tokens.css`의 움직임 변수만, 차트 카드의 높이 1 · 1.5 · 2단위와 컨트롤의 조작부 높이, 선택자와 변수는 `vzb` 접두, 툴팁은 키보드로도, 예시 JSON의 길이와 계산 필드, meta.json과 파일의 짝, 카드 안 문구는 모두 `tx()`를 거쳐 영어가 있을 것, 쓰지 않는 영어 문구가 없을 것, 영어 예시 데이터와 영어 규칙이 카드마다 있을 것). 어긋나면 사유를 적고 멈춥니다. 글꼴 없이 검사만 하려면 `node build.mjs --check`를 씁니다.
 
-- `src/`: 카드 공통 부품(`core.js`와 `base.css`, `chart.js` · `slider.js` · `roll.js`와 같은 이름의 `.css`), 색과 글꼴 변수(`tokens.css`: 밝은 바탕 값과 어두운 바탕 `.vzb-dark` 값), 카드별 코드와 예시 데이터(`src/variants/<id>.js` · `.css` · `.json` · `.en.json`), 카드의 종류 · 쓰임 · 규칙(`src/variants/meta.json`), 스킬 예시(`src/skill/examples/`).
+- `src/`: 카드 공통 부품(`core.js`와 `base.css`, `chart.js` · `slider.js` · `roll.js`와 같은 이름의 `.css`), 색 · 글꼴 · 움직임 변수(`tokens.css`: 밝은 바탕 값과 어두운 바탕 `.vzb-dark` 값, 움직임 역할의 스프링과 시간), 카드별 코드와 예시 데이터(`src/variants/<id>.js` · `.css` · `.json` · `.en.json`), 카드의 종류 · 쓰임 · 규칙(`src/variants/meta.json`), 스킬 예시(`src/skill/examples/`).
 - 영어: 한국어가 원본이고 영어는 덧씌웁니다. 카드 안 문구(툴팁 · 낭독 문구 등)는 `src/core.js`의 `EN` 표와 `tx()`로 바뀌고, 사이트 문구는 `build.mjs`의 `WORDS`, 카드의 쓰임과 규칙은 `src/variants/meta.en.json`, 예시 데이터는 `<id>.en.json`(`"lang": "en"` 포함), 토큰 설명은 `src/tokens.en.css`(선언은 `tokens.css`와 같아야 합니다)에 있습니다. 카드를 더할 때는 이 넷을 함께 적어야 가드를 지납니다.
 - `build.mjs`: 빌드 스크립트. `VERSION`, 공통 규칙(`RULES`), 컨트롤과 차트를 잇는 법(`CONNECT`), 스킬 원본, 첫 화면 갤러리 목록(`GALLERY`), 블록별 타일 폭(`SPAN`), 갤러리에서 되풀이할 카드(`LOOP`)가 들어 있습니다.
 - `page/`: 사이트 화면(`site.css`, `site.js`), 머리글과 공유 이미지에 쓰는 로고(`vizney-logo.png`), 파비콘. 머리글은 Vizney 공통 헤더로, Vizney 블로그(kr.vizney.com · www.vizney.com) 헤더를 값 그대로 옮긴 것입니다(Vizney Styles도 같은 값을 씁니다). 블로그가 기준이므로 블로그가 바뀔 때만 값을 고칩니다. 카드 찾기는 돋보기나 ⌘K로 엽니다. UI 강조색은 블로그 포스트 이미지의 노랑(#ffcc00) 하나만 씁니다.
-- `tools/`: 부분 글꼴 만들기(`font.py`), 글꼴 라이선스, 공유 이미지(영어 `og.png`, 한국어 `og-ko.png`). 공유 이미지는 Vizney 블로그 포스트 대표 이미지 서식(Figma 원본 1200 × 660)을 따르되 바탕은 검정으로, 오른쪽에는 실제 카드 두 장(Filter Chips와 Bar Overflow)을 둡니다. 빌드한 뒤 `docs/`를 띄워 두고 `node tools/og.mjs`(Playwright 필요)로 다시 만들고 한 번 더 빌드합니다.
+- `tools/`: 부분 글꼴 만들기(`font.py`), 스프링에서 CSS 전환의 시간과 곡선 계산하기(`motion.mjs`), 글꼴 라이선스, 공유 이미지(영어 `og.png`, 한국어 `og-ko.png`). 공유 이미지는 Vizney 블로그 포스트 대표 이미지 서식(Figma 원본 1200 × 660)을 따르되 바탕은 검정으로, 오른쪽에는 실제 카드 두 장(Filter Chips와 Bar Overflow)을 둡니다. 빌드한 뒤 `docs/`를 띄워 두고 `node tools/og.mjs`(Playwright 필요)로 다시 만들고 한 번 더 빌드합니다.
 - `docs/`: 빌드 결과. 첫 화면(`/`, `/ko/`), 카드 페이지와 코드(`/cards/`, `/ko/cards/`), `llms.txt`, `tokens.css`, 404 화면이 들어 있습니다. GitHub Pages가 이 폴더를 blocks.vizney.com으로 내보냅니다.
 - `skills/vizney-blocks/`: 빌드 결과. 코딩 에이전트용 스킬(입구인 영어판 `SKILL.md`, 한국어로 일할 때 따르는 `SKILL.ko.md`, 예시 `examples/`)과 OpenDesign 플러그인 파일(`open-design.json`, `icon.svg`, `preview/index.html`)입니다. `docs/`처럼 직접 고치지 않습니다.
 - `releases/`: 버전별 릴리스 노트. `VERSION`을 올린 커밋이 main에 들어오면 `.github/workflows/release.yml`이 GitHub 릴리스를 만듭니다.

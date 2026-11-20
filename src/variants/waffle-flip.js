@@ -129,7 +129,8 @@
     const ROWS = 5, COLS = 20, fx = (v) => v.toFixed(1), clamp = (v) => Math.max(0, Math.min(1, v));
     const fam = getComputedStyle(card).fontFamily;
     // 시간표(밀리초): 처음 앞 기간을 읽는 시간 · 칸 사이 간격(바뀐 칸이 많으면 짧게) · 한 칸이 뒤집히는 시간 · 괄호가 그어지는 시간
-    const T0 = 700, K = flips.length, STAG = Math.max(28, Math.min(110, 1100 / Math.max(1, K))), FLIP = 300, OUT = 260;
+    const M = motion(card);   // 처음의 뜸(Lead) · 차례의 전체 시간(Seq) · 되풀이 전의 쉼(Rest)은 움직임 값에서 읽습니다
+    const T0 = M.ms('lead'), K = flips.length, STAG = Math.max(28, Math.min(110, M.ms('seq') / Math.max(1, K))), FLIP = 300, OUT = 260;
     const order = new Map(flips.map((i, j) => [i, j]));
     const easeIn = (k) => k * k, spring = (k) => 1 + 2.2 * (k - 1) ** 3 + 1.2 * (k - 1) ** 2;
     // 지금 장면: from 기간에서 to 기간으로 가는 중(lead 동안은 from을 보이고, 그 뒤 바뀐 칸이 차례로 뒤집힘). 같으면 그 기간에 멈춰 있습니다.
@@ -237,7 +238,7 @@
       if (rest > 0) { rest -= dt; if (rest <= 0) go(to === last ? 0 : last, 0); }   // 갤러리: 잠시 쉬고 다른 기간으로
       else {
         t = Math.min(total(), t + dt);
-        if (t >= total()) { from = to; t = 0; if (loop && !took) rest = 2600; else playing = false; }
+        if (t >= total()) { from = to; t = 0; if (loop && !took) rest = M.ms('rest'); else playing = false; }
       }
       render();
       if (on()) raf = requestAnimationFrame(tick);

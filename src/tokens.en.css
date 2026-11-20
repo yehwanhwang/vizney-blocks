@@ -34,6 +34,27 @@
   --vzb-radius: 18px;   /* card corners */
   --vzb-unit: 168px;   /* 1 height unit; a chart card is 1, 1.5 or 2 units tall */
   --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* card shadow */
+  /* Motion. What moves decides the value. A spring is two numbers, 'stiffness damping' (stiffer is faster; less damping bounces more).
+     Things you touch: Follow · Settle · Pop · Fade · Press. Things that carry a value: Move (never overshoots: a height or a position
+     is the value, so a bounce shows a wrong value for a moment). Rhythm: Lead · Seq · Rest. Move what sits around the cards
+     (KPI tiles, tables, tabs) with the same values and the screen reads as made by one hand. */
+  --vzb-follow: 1000 63;   /* Follow: sticks to the pointer while held (the slider thumb). No overshoot */
+  --vzb-settle: 340 26;   /* Settle: lands when let go, opened or widened (calendar, list, menu, rolling digits). 4% overshoot */
+  --vzb-pop: 520 21;   /* Pop: a released button, a picked day or chip, a surfacing label. Not a value, so it bounces. 20% overshoot */
+  --vzb-move: 200 28.3;   /* Move: what carries a value, such as a bar height, goes to its place. No overshoot (damping = 2√stiffness) */
+  --vzb-fade: 0.14s;   /* Fade: the time opacity and color take, the same in and out */
+  --vzb-press: 0.08s;   /* Press: the time to sink when pressed. Released, it comes back with Pop */
+  --vzb-lead: 400ms;   /* Lead: the wait before a chart card starts once it is in view */
+  --vzb-seq: 1200ms;   /* Seq: the whole time items take to move in turn, shared out among them */
+  --vzb-rest: 2600ms;   /* Rest: the pause before a looping card (the gallery) starts again */
+  /* The six below are the CSS transition time (-t) and curve (-e) worked out from the springs above. Do not edit them: change the
+     springs and the cards work them out again. */
+  --vzb-settle-t: 0.39s;
+  --vzb-settle-e: linear(0, 0.023, 0.081, 0.164, 0.26, 0.362, 0.463, 0.56, 0.65, 0.731, 0.801, 0.861, 0.91, 0.95, 0.981, 1.005, 1.022, 1.033, 1.04, 1.043, 1.044, 1.042, 1.039, 1.036, 1.031, 1.027, 1.022, 1.018, 1.014, 1.011, 1.008, 1.005, 1);
+  --vzb-pop-t: 0.52s;
+  --vzb-pop-e: linear(0, 0.061, 0.212, 0.41, 0.619, 0.811, 0.969, 1.085, 1.158, 1.192, 1.193, 1.172, 1.138, 1.097, 1.057, 1.022, 0.995, 0.976, 0.965, 0.962, 0.963, 0.969, 0.977, 0.985, 0.992, 0.998, 1.003, 1.006, 1.007, 1.007, 1.007, 1.005, 1);
+  --vzb-move-t: 0.54s;
+  --vzb-move-e: linear(0, 0.024, 0.083, 0.161, 0.248, 0.335, 0.419, 0.498, 0.569, 0.633, 0.689, 0.737, 0.78, 0.816, 0.846, 0.872, 0.894, 0.913, 0.928, 0.941, 0.951, 0.96, 0.967, 0.973, 0.978, 0.982, 0.985, 0.988, 0.99, 0.992, 0.994, 0.995, 1);
 }
 
 /* Dark ("theme": "dark"): the same variables, changed inside the card only. One yellow plus white and gray draws in Vizney black, white and yellow.

@@ -93,7 +93,7 @@
       const from = mover === A ? lo : hi;
       changed.sort((p, q) => Math.abs(p[2] - (from / n) * bars.length) - Math.abs(q[2] - (from / n) * bars.length))
         .forEach(([bar, on], k) => bar.animate(on ? [{ transform: 'scaleY(1)' }, { transform: 'scaleY(1.22)' }, { transform: 'scaleY(1)' }] : [{ transform: 'scaleY(1)' }, { transform: 'scaleY(0.82)' }, { transform: 'scaleY(1)' }],
-          { duration: on ? 340 : 260, delay: Math.min(220, k * 24), easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)' }));
+          { duration: on ? 340 : 260, delay: Math.min(220, k * 24), easing: 'ease-out' }));
     }
     // 분포 창 보이기: 조작하는 동안 켜고, 손을 떼거나 키를 멈추면 조금 뒤 끕니다.
     let popT = 0;
@@ -141,9 +141,10 @@
 
     // 손잡이의 가로 자리(px)는 용수철 둘이 따라갑니다. k는 세기, c는 잦아드는 힘입니다.
     const spring = (k, c) => ({ x: 0, v: 0, t: 0, k, c });
-    const sa = spring(340, 26), sb = spring(340, 26), both = [sa, sb];
-    const held = (s) => { s.k = 1000; s.c = 63; };   // 끄는 동안: 넘치지 않고 손가락에 붙습니다
-    const freed = (s) => { s.k = 340; s.c = 26; };    // 놓은 뒤 · 키보드: 살짝 넘쳤다 자리를 잡습니다
+    const FOLLOW = motion(card).pair('follow'), SETTLE = motion(card).pair('settle');
+    const sa = spring(...SETTLE), sb = spring(...SETTLE), both = [sa, sb];
+    const held = (s) => { [s.k, s.c] = FOLLOW; };    // 끄는 동안(Follow): 넘치지 않고 손가락에 붙습니다
+    const freed = (s) => { [s.k, s.c] = SETTLE; };   // 놓은 뒤 · 키보드(Settle): 살짝 넘쳤다 자리를 잡습니다
     let W = 0, drag = null, raf = 0, last = 0, idle = 0;
     const pos = (i) => R + (i / n) * Math.max(1, W - 2 * R);
     const at = (x) => Math.round(((x - R) / Math.max(1, W - 2 * R)) * n);

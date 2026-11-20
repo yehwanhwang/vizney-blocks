@@ -12,14 +12,14 @@
 .vzb-card[data-vzb="funnel-wave"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
 .vzb-fw.vzb-foot { padding-top: 8px; }
 .vzb-fw-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
-.vzb-fw-band { fill: var(--vzb-track); opacity: 0; transition: opacity 0.12s; }
+.vzb-fw-band { fill: var(--vzb-track); opacity: 0; transition: opacity var(--vzb-fade); }
 .vzb-fw-svg.is-hover .vzb-fw-band { opacity: 1; }
 .vzb-fw-div { stroke: var(--vzb-card); stroke-width: 2; }   /* 칸 사이: 카드 바탕색 2px로 물과 표면 선을 끊어 단계를 나눕니다 */
 .vzb-fw-water { fill: color-mix(in srgb, var(--vzb-primary) var(--vzb-fw-p, 100%), #fff); }
 .vzb-fw-line { fill: none; stroke: var(--vzb-primary); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
-.vzb-fw-pill rect { fill: var(--vzb-card); stroke: var(--vzb-primary); stroke-width: 1.5; transition: fill 0.2s cubic-bezier(0.23, 1, 0.32, 1); }
-.vzb-fw-pt { font-size: 14px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; transition: fill 0.2s cubic-bezier(0.23, 1, 0.32, 1); }
-.vzb-fw-pin { transform-box: fill-box; transform-origin: center; transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1); }
+.vzb-fw-pill rect { fill: var(--vzb-card); stroke: var(--vzb-primary); stroke-width: 1.5; transition: fill var(--vzb-fade); }
+.vzb-fw-pt { font-size: 14px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; transition: fill var(--vzb-fade); }
+.vzb-fw-pin { transform-box: fill-box; transform-origin: center; transition: transform var(--vzb-settle-t) var(--vzb-settle-e); }
 .vzb-fw-pill.is-on .vzb-fw-pin { transform: scale(1.12); }
 .vzb-fw-pill.is-on rect { fill: var(--vzb-primary); }
 .vzb-fw-pill.is-on .vzb-fw-pt { fill: var(--vzb-card); }   /* 채운 알약의 글자: 밝은 바탕은 파랑 위 흰 글자, 어두운 바탕은 노랑 위 검정 글자 */
@@ -27,7 +27,7 @@
 .vzb-fw-u { font-size: 12px; font-weight: 400; fill: var(--vzb-muted); }
 .vzb-fw-name { font-size: 14px; fill: var(--vzb-muted); }
 .vzb-fw-svg.is-tight .vzb-fw-cnt, .vzb-fw-svg.is-tight .vzb-fw-name { font-size: 12px; }
-.vzb-fw-lab > text, .vzb-fw-pill > * { transition: opacity 0.12s; }
+.vzb-fw-lab > text, .vzb-fw-pill > * { transition: opacity var(--vzb-fade); }
 .vzb-fw-svg.is-hover .vzb-fw-lab:not(.is-on) > text, .vzb-fw-svg.is-hover .vzb-fw-pill:not(.is-on) > * { opacity: 0.35; }
 .vzb-fw-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
 .vzb-fw-btn:hover { background: var(--vzb-other); }

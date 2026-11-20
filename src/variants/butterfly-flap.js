@@ -5,6 +5,7 @@
   // 움직임: 화면에 보이면 접혀 있던 두 날개가 좌우로 펼쳐지고(값 그대로의 막대), 한 번 접어 잠깐 맞닿았다가 다시 펼칩니다. 맞닿은 날개는 서로의 길이를 옮겨 받아,
   // 다시 펼칠 때 회색 면이 함께 펼쳐집니다. 날개는 경첩(이름 열의 가장자리)을 축으로 화면 앞쪽으로 들리며 접히고, 두 날개는 거울처럼 함께 움직입니다.
   // 날갯짓처럼 부드럽게: 움직임은 멈춤과 출발이 느린 진자 같은 곡선을 따르고, 날개는 뿌리가 먼저 움직이고 끝이 조금 늦게 따라오며 휘어집니다. 펼칠 때는 살짝 더 벌어졌다가 제자리로 잦아듭니다.
+  // 줄마다 조금씩 늦게 움직여 위에서 아래로 물결이 지나가고(파도타기), 같은 줄의 좌우 막대는 늘 함께 움직입니다. 회색 면도 줄마다 차례로 생깁니다.
   // 움직이는 동안 막대는 원근으로 짧아 보이고, 멈춘 장면의 길이는 값 그대로입니다.
   // 값은 날개에 붙어 함께 움직이며 접힐수록 옅어지고, 이름은 움직이지 않습니다.
   // 카드가 화면에 보이면 한 번 움직이고, 다시 보기 단추로 되풀이합니다. 마우스를 올리거나 키보드로 포커스하면 움직임을 잠시 멈춥니다.
@@ -142,15 +143,17 @@
 
     // 날개의 모양: 날개는 뻣뻣한 판이 아니라 뿌리(경첩)가 먼저 움직이고 끝이 조금 늦게 따라오는 부드러운 날개입니다(끝이 LAG만큼 늦습니다).
     // 날개를 S마디로 나눠 마디마다 들린 각(TH)을 구하고, 경첩에서부터 이어 붙여 마디 끝의 가로 자리(X)와 화면 앞으로 나온 깊이(Z)를 셉니다.
-    // 깊이 z에 있는 점은 g = PD / (PD - z)배로 커 보여, 들린 날개의 끝은 경첩 쪽으로 다가오며 위아래로 조금 벌어집니다.
+    // 깊이 z에 있는 점은 g = PD / (PD - z)배로 멀리 보여, 들린 날개의 끝은 경첩 쪽으로 다가옵니다.
     const A_MAX = 1.42;   // 접힘은 81°: 날개가 아주 사라지지 않고 경첩 옆에 짧은 띠(길이의 15%쯤)로 남습니다
     const S = 24, LAG = 130;
     const TH = new Float64Array(S + 1), X = new Float64Array(S + 1), Z = new Float64Array(S + 1);
     let flat = true;
-    function shape() {
-      const ds = span / S;
+    // 줄마다 조금씩 늦게 움직여(ROW) 위에서 아래로 물결이 지나갑니다. 맨 위와 맨 아래 줄의 차이는 0.25초를 넘지 않아 날개가 한 장으로 읽힙니다.
+    const ROW = Math.min(45, 250 / Math.max(1, N - 1)), WAVE = ROW * (N - 1);
+    function shape(row) {
+      const ds = span / S, t0 = tau - ROW * row;
       flat = true;
-      for (let i = 0; i <= S; i++) { TH[i] = A_MAX * curve(tau - (LAG * i) / S); if (Math.abs(TH[i]) > 1e-4) flat = false; }
+      for (let i = 0; i <= S; i++) { TH[i] = A_MAX * curve(t0 - (LAG * i) / S); if (Math.abs(TH[i]) > 1e-4) flat = false; }
       X[0] = 0; Z[0] = 0;
       for (let i = 1; i <= S; i++) { const a = (TH[i - 1] + TH[i]) / 2; X[i] = X[i - 1] + ds * Math.cos(a); Z[i] = Z[i - 1] + ds * Math.sin(a); }
     }
@@ -159,7 +162,7 @@
       const ds = span / S, q = r / ds, i = Math.max(0, Math.min(S - 1, Math.floor(q))), k = q - i, over = r > span ? r - span : 0;
       const x = over ? X[S] + over * Math.cos(TH[S]) : X[i] + (X[i + 1] - X[i]) * k, z = over ? Z[S] + over * Math.sin(TH[S]) : Z[i] + (Z[i + 1] - Z[i]) * k;
       const g = PD / (PD - z);
-      return [hx + dir * x * g, ym + (y - ym) * g];
+      return [hx + dir * x * g, y];   // 줄마다 제자리에서 가로로만 접힙니다(위아래로 벌어지면 줄마다 각이 달라 비뚤어져 보입니다)
     }
     const angleAt = (r) => TH[Math.max(0, Math.min(S, Math.round((r / span) * S)))];
     // 날개 위의 막대 한 조각(경첩에서 r0부터 r1까지): 날개가 휘어 있으면 마디마다 꺾어 그리고, 바깥 끝만 4px 둥급니다.
@@ -189,19 +192,19 @@
     }
     // 상태: mode가 'play'면 시간표를, 'close'면 다시 보기 전에 날개를 접는 움직임(c0에서 접힘까지)을 따릅니다. tau는 그 움직임의 시각,
     // pressed는 한 번 접었다 펼쳐 회색 면이 생겼는지입니다.
-    let mode = 'play', tau = live ? END + LAG : 0, c0 = 0, pressed = live, hot = -1;
+    let mode = 'play', tau = live ? 1e9 : 0, c0 = 0, pressed = live, hot = -1;
     const curve = (x) => (mode === 'play' ? pose(x) : x <= 0 ? c0 : x >= CLOSE ? 1 : blend(c0, 1, x / CLOSE));
     function render() {
       if (!W) return;
-      shape();
       items.forEach((it, r) => {
-        const yc = rowY(r);
+        const yc = rowY(r), on = pressed || (mode === 'play' && tau - ROW * r >= T_FOLDED + LAG / 2);   // 그 줄이 다 접혔을 때 회색 면이 생깁니다
+        shape(r);
         [0, 1].forEach((s) => {
           const dir = s ? 1 : -1, hx = s ? hr : hl, v = it.v[s], o = it.v[1 - s], len = sc(v || 0);
           it.bar[s].setAttribute('d', v == null ? '' : slab(hx, dir, 0, len, yc));
           // 회색 면: 적은 쪽 막대 끝에서 2px 띄우고 많은 쪽의 길이까지
           const r0 = len > 0.5 ? len + 2 : 0, r1 = sc(o || 0);
-          const tail = pressed && v != null && o != null && o > v && r1 - r0 >= 2;
+          const tail = on && v != null && o != null && o > v && r1 - r0 >= 2;
           it.tail[s].setAttribute('d', tail ? slab(hx, dir, r0, r1, yc) : '');
           // 값: 제 막대 끝에서 6px 밖(회색 면이 16px보다 짧으면 그 바깥)에 두고, 날개를 따라 움직입니다. 그 자리의 날개가 접힐수록 옅어집니다.
           const off = tail && r1 - len < 16 ? r1 - len + 6 : 6, P = proj(hx, dir, len + off, yc), lab = it.lab[s];
@@ -210,7 +213,7 @@
           lab.style.opacity = Math.max(0, Math.min(1, (Math.cos(angleAt(len + off)) - 0.3) / 0.45)).toFixed(3);
         });
       });
-      gkey.classList.toggle('is-off', !(pressed && anyGap));
+      gkey.classList.toggle('is-off', !((pressed || (mode === 'play' && tau >= T_FOLDED + LAG / 2)) && anyGap));
       band.style.display = hot < 0 ? 'none' : '';
       if (hot >= 0) band.setAttribute('y', fx(rowY(hot) - pitch / 2 + 1));
     }
@@ -220,13 +223,12 @@
     const holds = new Set();
     let idle = 0, playing = false, seen = false, inView = false, raf = 0, last = 0;
     const busy = () => playing && !holds.size;
-    const fold = () => { c0 = curve(tau); mode = 'close'; tau = 0; };   // 지금 자리에서 접기 시작합니다
+    const fold = () => { pressed = pressed || tau >= T_FOLDED + LAG / 2; c0 = curve(tau - WAVE / 2); mode = 'close'; tau = 0; };   // 지금 자리에서 접기 시작합니다
     function advance(dt) {
       if (idle > 0) { idle = Math.max(0, idle - dt); if (!idle) fold(); return; }   // 갤러리: 쉬고 난 뒤 날개를 접고, 처음부터 다시 펼칩니다
       tau += dt;
-      if (mode === 'close') { if (tau >= CLOSE + LAG) { mode = 'play'; tau = 0; pressed = false; } return; }
-      pressed = tau >= T_FOLDED + LAG / 2;   // 날개가 다 접혔을 때 회색 면이 생깁니다
-      if (tau >= END + LAG) { tau = END + LAG; if (loop) idle = REST; else playing = false; }
+      if (mode === 'close') { if (tau >= CLOSE + LAG + WAVE) { mode = 'play'; tau = 0; pressed = false; } return; }
+      if (tau >= END + LAG + WAVE) { pressed = true; if (loop) idle = REST; else playing = false; }
     }
     function tick(stamp) {
       raf = 0;

@@ -23,7 +23,7 @@
 </head>
 <body>
 <main style="--w:640px">
-<!-- Vizney Blocks v0.72 · 컨트롤 · Download Button (download-button)
+<!-- Vizney Blocks v0.73 · 컨트롤 · Download Button (download-button)
      https://blocks.vizney.com/ko/cards/download-button.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -411,10 +411,22 @@
       card.style.setProperty(`--vzb-${n}-e`, e);
     }
   }
+  // 스프링으로 목표에 다가가는 값: s = { x: 지금 자리, v: 속도 }를 dt(밀리초)만큼 옮깁니다. 가던 중에 목표가 바뀌어도 속도를 이어 갑니다.
+  function springTo(s, to, k, c, dt) {
+    let n = Math.max(1, Math.ceil(dt / 4));
+    const h = dt / 1000 / n;
+    while (n--) { s.v += (-k * (s.x - to) - c * s.v) * h; s.x += s.v * h; }
+  }
+  // 장면 잇기: 데이터가 바뀌어 카드를 갈아 끼울 때, 앞 카드가 화면에 그리고 있던 장면(값과 자리)을 새 카드에 넘깁니다.
+  // 카드는 keep(card, 장면을 돌려주는 함수)로 맡기고, 새 카드는 before(card)로 받아 그 장면에서 새 값으로 옮겨 갑니다.
+  const SCENE = new WeakMap(), FROM = new WeakMap();
+  const keep = (card, fn) => SCENE.set(card, fn);
+  const before = (card) => { const s = FROM.get(card); FROM.delete(card); return s || null; };
   // 같은 종류의 카드를 모두 찾아 그립니다. 코드를 두 번 붙여 넣어도 카드는 한 번만 그립니다.
   // 데이터가 바뀌면 다시 그립니다: 페이지의 스크립트가 카드 안 JSON(<script type="application/json">)의 글자를 바꾸면 그 카드만
   // 새 요소로 갈아 끼워 새로 그립니다(필터 · 기간 컨트롤과 잇는 길). 갈아 끼운 카드에는 data-vzb-live가 붙어, 움직이는 카드는
-  // 처음부터 다시 재생하지 않고 마지막 장면을 바로 그립니다. 예전 요소가 페이지에서 빠지므로 그 카드의 움직임도 함께 끝납니다.
+  // 처음부터 다시 재생하지 않습니다. 앞 카드가 장면을 맡겨 두었으면(keep) 그 장면에서 새 값으로 옮겨 가고, 아니면 마지막 장면을 바로 그립니다.
+  // 예전 요소가 페이지에서 빠지므로 그 카드의 움직임도 함께 끝납니다.
   function mount(type, draw) {
     const watch = (card, src) => {
       if (!src || !window.MutationObserver) return;
@@ -425,6 +437,8 @@
         next.removeAttribute('data-vzb-ready');
         next.setAttribute('data-vzb-live', '');
         next.append(src);
+        const scene = SCENE.get(card);
+        if (scene) { try { FROM.set(next, scene()); } catch (e) { /* 장면을 못 넘기면 마지막 장면을 바로 그립니다 */ } }
         card.replaceWith(next);
         run();
       });

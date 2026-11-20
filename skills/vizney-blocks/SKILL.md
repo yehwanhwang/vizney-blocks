@@ -1,6 +1,6 @@
 ---
 name: vizney-blocks
-description: "Add charts read through their motion and dashboard controls to an HTML page with Vizney Blocks (blocks.vizney.com) cards. Use it to draw one of the charts (Bar Overflow · Waffle Flip · Bump Race · Waterfall Walk · Funnel Wave) or add one of the controls (Date Picker · Range Slider · Filter Chips · Select Menu · Download Button), or when the user mentions Vizney Blocks. Keep the card code, change only its JSON data, and connect controls to charts with a short page script. 한국어 요청이나 한국어 화면에도 쓴다(한국어판 SKILL.ko.md)."
+description: "Add charts read through their motion and dashboard controls to an HTML page with Vizney Blocks (blocks.vizney.com) cards. Use it to draw one of the charts (Bar Overflow · Waffle Flip · Bump Race · Waterfall Walk · Funnel Wave · Butterfly Flap) or add one of the controls (Date Picker · Range Slider · Filter Chips · Select Menu · Download Button), or when the user mentions Vizney Blocks. Keep the card code, change only its JSON data, and connect controls to charts with a short page script. 한국어 요청이나 한국어 화면에도 쓴다(한국어판 SKILL.ko.md)."
 ---
 
 # Building screens with Vizney Blocks cards
@@ -11,7 +11,7 @@ Vizney Blocks is a set of copy-paste HTML cards: charts you read through their m
 
 ## Cards
 
-The cards are these 5 charts and 5 controls, and no others. When no card fits a request, do not bend one to it: build that part yourself and tell the user it is not a card.
+The cards are these 6 charts and 5 controls, and no others. When no card fits a request, do not bend one to it: build that part yourself and tell the user it is not a card.
 
 ### Charts
 
@@ -20,6 +20,7 @@ The cards are these 5 charts and 5 controls, and no others. When no card fits a 
 - Bump Race (`bump-race`) · Bump Chart — A card that ranks the items in every period, joins the ranks with S-curves, and plays through the periods one at a time so the moments the order changes are visible. Use it to show how products, channels or branches moved up and down over a year, above all how far one item climbed. Ranks hide the size of the differences, so when the gaps matter, use a line chart.
 - Waterfall Walk (`waterfall-walk`) · Waterfall Chart — A card that joins what raised and what cut a value between a starting point and an end point, as one bar per item. On play, dots appear one by one from the level where the last bar ended and walk to the next item, the bar then rises or falls from that level, and the name and value attached to its end travel with it. Use it to tell, in order, what moved a value between two points: how the members at the start of the year became the members at the end through sign-ups and cancellations, which drivers turned last year's operating profit into this year's, or how much of revenue is left as operating profit and net income after costs. Do not use it for a trend over periods.
 - Funnel Wave (`funnel-wave`) · Funnel Chart — A card for stages passed in a fixed order, like lead to won deal, that shows how much of the first stage is still left at each stage on the way to the end, counting the first stage as 100. Each stage is drawn as a water level for how many reached it, and on play the water flows in from the left, drops to the level of what is left at each boundary and runs to the end. Use it for sales stages, purchase conversion or sign-up steps when you report the share left of the start and the overall conversion. Do not use it to compare items that have no order.
+- Butterfly Flap (`butterfly-flap`) · Butterfly Chart — A butterfly chart, with the items (age bands and so on) in a center column and the values of two groups as bars on either side, whose two wings flap once when the period changes and leave the period just left behind as outlines. Use it to compare the age structure of members or customers by gender, or the make-up of two regions or two products item by item, and to show which way that structure shifts over time. When only the split between the two groups matters, use a 100% stacked bar chart; when there are many items and the differences must be read precisely, use a grouped bar chart.
 
 ### Controls
 
@@ -89,7 +90,7 @@ Controls and charts do not know each other. A short page script takes a control'
 - A control sends a `vzb-change` event from its card whenever its value changes (it bubbles, so listen on `document`). `detail` is `{ name, value }`, where `name` is the `name` in that control's JSON. Date Picker's `value` is `["start", "end"]` as date strings (YYYY-MM-DD, the end date included); Range Slider's `value` is `[from, to]` as numbers; Filter Chips' `value` is the picked items in the order of `options`. The current value is also on the card, as JSON in its `data-vzb-value` attribute.
 - A control sends nothing when it first draws. Write the control's `value` and the chart's JSON for the same starting condition.
 - A chart card redraws by itself when the text of its `<script type="application/json">` changes. The page keeps the full data; on an event it filters the data, builds the chart's JSON from the result and writes it back. The redrawn card does not play from the start: it draws its last frame at once and keeps the period and the item the viewer picked.
-- When the filter leaves nothing, give an empty array. Bar Overflow draws an empty state for `"labels": []`, and Waffle Flip, Bump Race, Waterfall Walk and Funnel Wave for `"items": []`, instead of an error.
+- When the filter leaves nothing, give an empty array. Bar Overflow draws an empty state for `"labels": []`, and Waffle Flip, Bump Race, Waterfall Walk, Funnel Wave and Butterfly Flap for `"items": []`, instead of an error.
 - With two cards of the same kind on a page, wrap each in an element with an id and address it through that id (`#spend` in the example).
 - Download Button downloads the current JSON of the first card on the page whose `data-vzb` is its `target`, so the file holds what the controls left on screen. Before that it sends a `vzb-download` event (`detail: { name, target, format, filename, rows }`); if the page calls `preventDefault()`, the card makes no file, so a screen that gets the source data from a server can use the same button.
 

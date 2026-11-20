@@ -1,10 +1,11 @@
 /* Butterfly Flap: 높이 2단위. 머리 아래에 두 그룹의 이름과 합계 줄, 그 아래 그래프가 남은 높이를 채우고, 기간이 셋 이상이면 맨 아래에 구간 막대(34px)를 둡니다.
-   가운데 열에 항목 이름(14px)을 두고 양쪽으로 막대를 뻗습니다. 왼쪽 막대는 첫째 데이터 색, 오른쪽 막대는 둘째 데이터 색이고, 바깥 끝만 4px 둥급니다.
-   막대 끝 밖에 값(14px, 옅은 글자색)을 적고, 짚은 막대의 값은 굵게 글자색으로 둡니다.
-   방금 떠나온 기간의 윤곽선은 막대보다 위아래로 2.5px 큰 테두리(1.25px, 옅은 글자색)를 경첩 쪽을 열어 그립니다. 바탕색 테(3.5px)를 깔아 늘어난 막대 위로 지나가는 끝 선도 보입니다.
-   위쪽 줄: 왼쪽 끝에 왼쪽 그룹, 오른쪽 끝에 오른쪽 그룹(견본 · 이름 · 합계, 단위는 12px), 가운데에 윤곽선 견본과 그 기간을 적습니다. 한 줄에 들어가지 않으면 윤곽선의 기간을 아래 줄로 내립니다.
+   가운데 열에 항목 이름(14px)을, 그 양옆에 값(14px)을 두고 양쪽으로 막대를 뻗습니다. 왼쪽 막대는 첫째 데이터 색, 오른쪽 막대는 둘째 데이터 색이고, 바깥 끝만 4px 둥급니다. 막대 두께는 줄 간격의 72%입니다.
+   값은 옅은 글자색으로 적고, 짚은 막대의 값은 굵게 글자색으로 둡니다. 짚은 줄에는 옅은 띠를 깝니다.
+   잔상: 떠나온 막대는 회색 면으로 남았다가 사라지고, 방금 떠나온 기간의 끝자리에는 세로 눈금(1.5px, 옅은 글자색, 막대보다 위아래로 2px 김)이 남습니다.
+   눈금 아래에 바탕색 틈(4.5px, 막대 두께만큼)을 깔아 막대 안에서도 눈금이 보입니다.
+   위쪽 줄: 왼쪽 끝에 왼쪽 그룹, 오른쪽 끝에 오른쪽 그룹(견본 · 이름 · 합계, 단위는 12px), 가운데에 눈금 견본과 그 기간을 적습니다. 한 줄에 들어가지 않으면 눈금의 기간을 아래 줄로 내립니다.
    두 기간이면 머리 오른쪽 위에 기간 단추(32px)를, 세 기간 이상이면 Bump Race와 같은 구간 막대와 재생 단추를 둡니다.
-   펄럭이는 움직임은 스크립트가 그립니다. */
+   막대와 잔상의 움직임은 스크립트가 그립니다. */
 .vzb-card[data-vzb="butterfly-flap"] { min-height: calc(var(--vzb-unit) * 2); }
 .vzb-card[data-vzb="butterfly-flap"] .vzb-hd { position: relative; }
 .vzb-bf.vzb-foot { padding-top: 14px; }
@@ -18,20 +19,19 @@
 .vzb-bf-u:empty { display: none; }
 .vzb-bf-gkey { display: inline-flex; align-items: center; justify-self: center; gap: 6px; white-space: nowrap; font-variant-numeric: tabular-nums; transition: opacity 0.2s; }
 .vzb-bf-gkey.is-off { opacity: 0; }
-.vzb-bf-gsw { flex: none; width: 12px; height: 12px; border: 1.25px solid var(--vzb-ink-2); border-radius: 3px; }
+.vzb-bf-gsw { flex: none; width: 0; height: 14px; border-left: 1.5px solid var(--vzb-ink-2); }
 .vzb-bf-svg, .vzb-bf-ssvg { display: block; overflow: visible; font-family: var(--vzb-font); }
+.vzb-bf-band { fill: var(--vzb-track); }
 .vzb-bf-bar.is-l { fill: var(--vzb-primary); }
 .vzb-bf-bar.is-r { fill: var(--vzb-secondary); }
-.vzb-bf-gh { transition: opacity 0.12s; }
-.vzb-bf-gh0 { fill: none; stroke: var(--vzb-card); stroke-width: 3.5; stroke-linejoin: round; }
-.vzb-bf-gh1 { fill: none; stroke: var(--vzb-ink-2); stroke-width: 1.25; stroke-linejoin: round; }
+.vzb-bf-gh { fill: var(--vzb-other); }
+.vzb-bf-tk0 { stroke: var(--vzb-card); stroke-width: 4.5; }
+.vzb-bf-svg.is-tight .vzb-bf-tk0 { stroke-width: 3.5; }
+.vzb-bf-tk1 { stroke: var(--vzb-ink-2); stroke-width: 1.5; }
+.vzb-bf-tk.is-on .vzb-bf-tk1 { stroke: var(--vzb-ink); }
 .vzb-bf-nm { font-size: 14px; fill: var(--vzb-ink-2); }
-.vzb-bf-val { font-size: 14px; font-weight: 500; fill: var(--vzb-ink-2); font-variant-numeric: tabular-nums; transition: opacity 0.12s; }
+.vzb-bf-val { font-size: 14px; font-weight: 500; fill: var(--vzb-ink-2); font-variant-numeric: tabular-nums; }
 .vzb-bf-val.is-on { font-weight: 700; fill: var(--vzb-ink); }
-/* 짚으면 그 막대만 제 색으로 남기고, 다른 막대는 회색 면으로 둡니다(어두운 바탕의 노랑을 옅게 하면 올리브색으로 탁해지므로 투명도를 쓰지 않습니다). */
-.vzb-bf-bar { transition: fill 0.12s; }
-.vzb-bf-svg.is-hover .vzb-bf-bar:not(.is-on) { fill: var(--vzb-other); }
-.vzb-bf-svg.is-hover .vzb-bf-gh:not(.is-on), .vzb-bf-svg.is-hover .vzb-bf-val:not(.is-on) { opacity: 0.3; }
 .vzb-bf-plot { cursor: default; }
 .vzb-bf-per { position: absolute; top: -4px; right: 0; display: inline-flex; padding: 2px; border-radius: 16px; background: var(--vzb-track); }
 .vzb-bf-pill { position: absolute; top: 2px; bottom: 2px; left: 0; width: 0; border-radius: 14px; background: var(--vzb-ink); pointer-events: none; }

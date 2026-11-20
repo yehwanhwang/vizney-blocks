@@ -1,15 +1,16 @@
   // Butterfly Flap: 가운데 열에 항목 이름을 두고, 왼쪽 그룹(첫째 데이터 색)과 오른쪽 그룹(둘째 데이터 색)의 막대를 양쪽으로 뻗어 항목마다 두 그룹을 견주는 버터플라이 차트입니다
   // (예: 여성 · 남성 회원의 카테고리별 주문 수). 두 날개는 같은 눈금이고, 가운데에는 이름만 두어 두 날개를 가까이 붙입니다(이름 열이 나비의 몸통). 값은 제 막대 끝에 적습니다.
-  // 데칼코마니: 항목마다 적은 쪽 막대 끝에서 많은 쪽의 길이까지 회색 면을 이어 그립니다(반대쪽과의 차이). 그래서 날개의 바깥 윤곽은 좌우 대칭이 되고,
-  // 회색이 있는 쪽이 그 항목에서 적은 쪽, 회색의 길이가 두 그룹의 차이입니다. 막대와 회색 사이는 카드 바탕색 2px로 끊고, 적은 쪽의 값은 제 막대 끝, 회색 면 위에 놓입니다.
-  // 움직임: 화면에 보이면 접혀 있던 두 날개가 좌우로 펼쳐지고(값 그대로의 막대), 한 번 접어 잠깐 맞닿았다가 다시 펼칩니다. 맞닿은 날개는 서로의 길이를 옮겨 받아,
-  // 다시 펼칠 때 회색 면이 함께 펼쳐집니다. 날개는 경첩(이름 열의 가장자리)을 축으로 화면 앞쪽으로 들리며 접히고, 두 날개는 거울처럼 함께 움직입니다.
+  // 색: 밝은 바탕은 왼쪽 분홍빨강 · 오른쪽 파랑, 어두운 바탕은 왼쪽 노랑 · 오른쪽 흰색입니다.
+  // 견주기: 항목을 짚으면 그 줄의 적은 쪽 막대 끝에서 많은 쪽의 길이까지, 반대쪽 막대의 색을 옅게 한 면을 이어 그립니다(반대쪽 막대를 접어 포갠 자국).
+  // 옅은 면의 길이가 두 그룹의 차이이고, 그 색이 많은 쪽입니다. 막대와 옅은 면 사이는 카드 바탕색 2px로 끊고, 적은 쪽의 값은 제 막대 끝, 옅은 면 위에 놓입니다.
+  // 움직임: 화면에 보이면 접혀 있던 두 날개가 좌우로 펼쳐지고(값 그대로의 막대), 한 번 접어 맞닿았다가 다시 펼칩니다. 맞닿은 날개는 서로의 색을 옮겨 받아,
+  // 다시 펼칠 때 모든 줄에 옅은 면이 잠깐 보였다가 사라집니다(짚으면 다시 보인다는 예고). 날개는 경첩(이름 열의 가장자리)을 축으로 접히고, 두 날개는 거울처럼 함께 움직입니다.
   // 날갯짓처럼 부드럽게: 움직임은 멈춤과 출발이 느린 진자 같은 곡선을 따르고, 날개는 뿌리가 먼저 움직이고 끝이 조금 늦게 따라오며 휘어집니다. 펼칠 때는 살짝 더 벌어졌다가 제자리로 잦아듭니다.
-  // 줄마다 조금씩 늦게 움직여 위에서 아래로 물결이 지나가고(파도타기), 같은 줄의 좌우 막대는 늘 함께 움직입니다. 회색 면도 줄마다 차례로 생깁니다.
+  // 줄마다 조금씩 늦게 움직여 위에서 아래로 물결이 지나가고(파도타기), 같은 줄의 좌우 막대는 늘 함께 움직입니다.
   // 움직이는 동안 막대는 원근으로 짧아 보이고, 멈춘 장면의 길이는 값 그대로입니다.
   // 값은 날개에 붙어 함께 움직이며 접힐수록 옅어지고, 이름은 움직이지 않습니다.
   // 카드가 화면에 보이면 한 번 움직이고, 다시 보기 단추로 되풀이합니다. 마우스를 올리거나 키보드로 포커스하면 움직임을 잠시 멈춥니다.
-  // 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 마지막 장면(펼친 날개와 회색 면)을 바로 그립니다.
+  // 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 마지막 장면(펼친 날개)을 바로 그립니다.
   // 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고, 날개를 접었다가 처음부터 다시 펼칩니다.
   mount('butterfly-flap', (card, d, f) => {
     // 걸러서 남은 항목이 없을 때(items가 빈 배열)는 오류가 아니라 빈 화면입니다.
@@ -34,7 +35,6 @@
       it.lead = a == null || b == null ? null : a > b ? 0 : b > a ? 1 : -1;
       it.gap = it.lead == null ? 0 : Math.abs(a - b);
     });
-    const anyGap = items.some((it) => it.lead != null && it.lead >= 0);
     const bare = (v) => f.parts(v)[0];   // 막대 끝의 값은 숫자만, 단위는 위쪽 줄과 툴팁에 적습니다
     const pct1 = (r) => `${num(r * 100, 1)}%`;
     const fx = (v) => v.toFixed(1);
@@ -50,18 +50,16 @@
     ic.append(svgEl('path', { d: 'M3.7 9a4.4 4.4 0 1 0 1.2-4.2' }), svgEl('path', { d: 'M4.6 2.6v2.6h2.6' }));
     btn.append(ic);
     hd.append(btn);   // 다시 보기 단추는 머리의 오른쪽 위
-    // 위쪽 줄: 왼쪽 끝에 왼쪽 그룹, 오른쪽 끝에 오른쪽 그룹(견본 · 이름 · 합계), 가운데에 회색 면의 뜻. 범례를 대신합니다.
+    // 위쪽 줄: 왼쪽 끝에 왼쪽 그룹, 오른쪽 끝에 오른쪽 그룹(견본 · 이름 · 합계). 범례를 대신합니다.
     const keys = el('div', 'vzb-bf-keys');
     const gk = [0, 1].map((s) => {
       const k = el('span', `vzb-bf-key ${s ? 'is-right' : 'is-left'}`), b = el('b', 'vzb-bf-tot'), [a, u] = f.parts(tot[s]);
       b.append(el('span', null, a));
       if (u) b.append(el('span', 'vzb-bf-u', u));
-      k.append(el('i', `vzb-key is-box vzb-t${s + 1}`), el('span', null, groups[s]), b);
+      k.append(el('i', `vzb-key is-box vzb-bf-k${s}`), el('span', null, groups[s]), b);
       return k;
     });
-    const gkey = el('span', 'vzb-bf-gkey is-off');
-    gkey.append(el('i', 'vzb-bf-gsw'), el('span', null, tx(d, '반대쪽과의 차이')));
-    keys.append(gk[0], gkey, gk[1]);
+    keys.append(gk[0], gk[1]);
     const foot = el('div', 'vzb-foot vzb-fill vzb-bf');
     const plot = el('div', 'vzb-plot vzb-bf-plot');
     plot.tabIndex = 0;
@@ -87,12 +85,12 @@
     sr.append(table);
     card.append(sr);
 
-    // 그림(아래부터): 짚은 줄의 띠 · 회색 면 · 막대 · 이름과 값(값은 회색 면 위에 놓일 수 있습니다)
+    // 그림(아래부터): 짚은 줄의 띠 · 옅은 면 · 막대 · 이름과 값(값은 옅은 면 위에 놓일 수 있습니다)
     const band = svgEl('rect', { class: 'vzb-bf-band', rx: 4 });
     const gTail = svgEl('g', {}), gBar = svgEl('g', {}), gTxt = svgEl('g', {});
     items.forEach((it) => {
       it.bar = [0, 1].map((s) => svgEl('path', { class: `vzb-bf-bar ${s ? 'is-r' : 'is-l'}` }));
-      it.tail = [0, 1].map(() => svgEl('path', { class: 'vzb-bf-tail' }));
+      it.tail = [0, 1].map((s) => svgEl('path', { class: `vzb-bf-tail ${s ? 'is-r' : 'is-l'}` }));
       it.nm = svgText(0, 0, it.name, 'vzb-bf-nm', 'middle');
       it.lab = [0, 1].map((s) => svgText(0, 0, it.v[s] == null ? '–' : bare(it.v[s]), 'vzb-bf-val', s ? 'start' : 'end'));   // 값은 제 막대의 바깥 끝에 붙입니다
       gTail.append(...it.tail);
@@ -134,10 +132,6 @@
       band.setAttribute('x', 0);
       band.setAttribute('width', fx(w));
       band.setAttribute('height', fx(Math.max(0, pitch - 2)));
-      // 위쪽 줄이 한 줄에 들어가지 않으면 회색 면의 뜻을 두 그룹 아래 줄로 내립니다.
-      keys.classList.remove('is-wrap');
-      const need = [...keys.children].reduce((a, c) => a + c.scrollWidth, 0) + 48;
-      keys.classList.toggle('is-wrap', need > keys.clientWidth);
       render();
     }
 
@@ -191,29 +185,34 @@
       return blend(KEYS[i - 1][1], KEYS[i][1], (t - KEYS[i - 1][0]) / (KEYS[i][0] - KEYS[i - 1][0]));
     }
     // 상태: mode가 'play'면 시간표를, 'close'면 다시 보기 전에 날개를 접는 움직임(c0에서 접힘까지)을 따릅니다. tau는 그 움직임의 시각,
-    // pressed는 한 번 접었다 펼쳐 회색 면이 생겼는지입니다.
-    let mode = 'play', tau = live ? 1e9 : 0, c0 = 0, pressed = live, hot = -1;
+    let mode = 'play', tau = live ? 1e9 : 0, c0 = 0, hot = -1;
+    // 옅은 면이 보이는 정도: 짚은 줄은 늘 보이고, 재생할 때는 그 줄이 접힌 순간부터 다시 펼친 뒤 LINGER 동안 보였다가 FADE에 걸쳐 사라집니다.
+    const LINGER = 1300, FADE = 500;
+    const ghost = (r) => {
+      if (r === hot) return 1;
+      if (mode !== 'play' || tau - ROW * r < T_FOLDED + LAG / 2) return 0;
+      return Math.max(0, Math.min(1, 1 - (tau - (END + LAG + WAVE + LINGER)) / FADE));
+    };
     const curve = (x) => (mode === 'play' ? pose(x) : x <= 0 ? c0 : x >= CLOSE ? 1 : blend(c0, 1, x / CLOSE));
     function render() {
       if (!W) return;
       items.forEach((it, r) => {
-        const yc = rowY(r), on = pressed || (mode === 'play' && tau - ROW * r >= T_FOLDED + LAG / 2);   // 그 줄이 다 접혔을 때 회색 면이 생깁니다
+        const yc = rowY(r), ga = ghost(r);
         shape(r);
         [0, 1].forEach((s) => {
           const dir = s ? 1 : -1, hx = s ? hr : hl, v = it.v[s], o = it.v[1 - s], len = sc(v || 0);
           it.bar[s].setAttribute('d', v == null ? '' : slab(hx, dir, 0, len, yc));
-          // 회색 면: 적은 쪽 막대 끝에서 2px 띄우고 많은 쪽의 길이까지
-          const r0 = len > 0.5 ? len + 2 : 0, r1 = sc(o || 0);
-          const tail = on && v != null && o != null && o > v && r1 - r0 >= 2;
-          it.tail[s].setAttribute('d', tail ? slab(hx, dir, r0, r1, yc) : '');
-          // 값: 제 막대 끝에서 6px 밖(회색 면이 16px보다 짧으면 그 바깥)에 두고, 날개를 따라 움직입니다. 그 자리의 날개가 접힐수록 옅어집니다.
-          const off = tail && r1 - len < 16 ? r1 - len + 6 : 6, P = proj(hx, dir, len + off, yc), lab = it.lab[s];
+          // 옅은 면: 적은 쪽 막대 끝에서 2px 띄우고 많은 쪽의 길이까지
+          const r0 = len > 0.5 ? len + 2 : 0, r1 = sc(o || 0), less = v != null && o != null && o > v && r1 - r0 >= 2;
+          it.tail[s].setAttribute('d', less && ga > 0 ? slab(hx, dir, r0, r1, yc) : '');
+          it.tail[s].style.opacity = ga.toFixed(3);
+          // 값: 제 막대 끝에서 6px 밖(옅은 면이 16px보다 짧으면 그 바깥)에 두고, 날개를 따라 움직입니다. 그 자리의 날개가 접힐수록 옅어집니다.
+          const off = less && r1 - len < 16 ? r1 - len + 6 : 6, P = proj(hx, dir, len + off, yc), lab = it.lab[s];
           lab.setAttribute('x', fx(P[0]));
           lab.setAttribute('y', fx(P[1] + 5));
           lab.style.opacity = Math.max(0, Math.min(1, (Math.cos(angleAt(len + off)) - 0.3) / 0.45)).toFixed(3);
         });
       });
-      gkey.classList.toggle('is-off', !((pressed || (mode === 'play' && tau >= T_FOLDED + LAG / 2)) && anyGap));
       band.style.display = hot < 0 ? 'none' : '';
       if (hot >= 0) band.setAttribute('y', fx(rowY(hot) - pitch / 2 + 1));
     }
@@ -223,12 +222,12 @@
     const holds = new Set();
     let idle = 0, playing = false, seen = false, inView = false, raf = 0, last = 0;
     const busy = () => playing && !holds.size;
-    const fold = () => { pressed = pressed || tau >= T_FOLDED + LAG / 2; c0 = curve(tau - WAVE / 2); mode = 'close'; tau = 0; };   // 지금 자리에서 접기 시작합니다
+    const fold = () => { c0 = curve(tau - WAVE / 2); mode = 'close'; tau = 0; };   // 지금 자리에서 접기 시작합니다
     function advance(dt) {
       if (idle > 0) { idle = Math.max(0, idle - dt); if (!idle) fold(); return; }   // 갤러리: 쉬고 난 뒤 날개를 접고, 처음부터 다시 펼칩니다
       tau += dt;
-      if (mode === 'close') { if (tau >= CLOSE + LAG + WAVE) { mode = 'play'; tau = 0; pressed = false; } return; }
-      if (tau >= END + LAG + WAVE) { pressed = true; if (loop) idle = REST; else playing = false; }
+      if (mode === 'close') { if (tau >= CLOSE + LAG + WAVE) { mode = 'play'; tau = 0; } return; }
+      if (tau >= END + LAG + WAVE + LINGER + FADE) { tau = 1e9; if (loop) idle = REST - LINGER; else playing = false; }
     }
     function tick(stamp) {
       raf = 0;
@@ -255,8 +254,8 @@
     plot.addEventListener('focus', () => { if (plot.matches(':focus-visible')) holds.add('focus'); });   // 키보드로 들어왔을 때만 멈춥니다
     plot.addEventListener('blur', () => { holds.delete('focus'); kick(); });
     // 짚는 자리: 항목(줄). 마우스는 그 줄을 짚고, 키보드는 위아래 화살표로 옮깁니다.
-    // 짚으면 그 줄에 옅은 띠를 깔고 이름과 두 값을 굵게, 그 줄의 회색 면을 한 단계 진하게 둡니다(값은 숨기지 않습니다). 툴팁은 두 값을 되풀이하지 않고,
-    // 어느 쪽이 얼마나 많은지(차이와 배수)와 두 값이 각 그룹 합계에서 차지하는 비중을 적습니다.
+    // 짚으면 그 줄에 옅은 띠를 깔고 이름과 두 값을 굵게 두며, 적은 쪽에 반대쪽 색의 옅은 면이 나타납니다(값은 숨기지 않습니다). 툴팁은 두 값을 되풀이하지 않고,
+    // 어느 쪽이 얼마나 많은지(차이와 배수)와, 두 그룹의 색 견본과 함께 각 그룹 합계에서 차지하는 비중을 적습니다.
     // 툴팁은 날개 바깥에 자리가 있으면 그 줄 옆에 두어 다른 줄의 값과 합계를 덮지 않고, 자리가 없으면 그 줄 위, 많은 쪽 날개 쪽에 둡니다.
     interact(plot, N,
       (x0, y0) => { const r = plot.getBoundingClientRect(); return Math.max(0, Math.min(N - 1, Math.floor(((y0 - r.top) * N) / (r.height || 1)))); },
@@ -264,12 +263,14 @@
         const it = items[k], r = plot.getBoundingClientRect(), k2 = r.width / (W || 1);
         hot = k;
         svg.classList.add('is-hover');
-        items.forEach((x, q) => [x.nm, ...x.lab, ...x.tail].forEach((n2) => n2.classList.toggle('is-on', q === k)));
+        items.forEach((x, q) => [x.nm, ...x.lab].forEach((n2) => n2.classList.toggle('is-on', q === k)));
         render();
         const note = [];
         if (it.lead != null && it.lead >= 0 && it.v[1 - it.lead] > 0) note.push(tx(d, '%1의 %2배', groups[1 - it.lead], num(it.v[it.lead] / it.v[1 - it.lead], 1)));
-        if (it.lead != null && tot[0] > 0 && tot[1] > 0) note.push(tx(d, '%1 합계의 %2 · %3 합계의 %4', groups[0], pct1(it.v[0] / tot[0]), groups[1], pct1(it.v[1] / tot[1])));
-        const tb = tipBody({ value: gapText(it), big: true, note }, it.name);
+        // 두 그룹의 색 견본과 함께, 이 항목이 각 그룹 합계에서 차지하는 비중을 적습니다(많은 쪽을 위에).
+        const rows = [0, 1].filter((z) => it.v[z] != null && tot[z] > 0).map((z) => ({ tone: `bf-k${z}`, box: true, value: pct1(it.v[z] / tot[z]), name: tx(d, '%s 합계에서', groups[z]) }));
+        if (it.lead === 1) rows.reverse();
+        const tb = tipBody({ value: gapText(it), big: true, rows, note }, it.name);
         const s = it.lead === 1 ? 1 : 0, m = Math.max(sc(it.v[0] || 0), sc(it.v[1] || 0));
         const x = it.lead == null || it.lead < 0 ? cx : (s ? hr : hl) + (s ? 1 : -1) * Math.max(24, m / 2);
         // 날개 바깥(값이 끝나는 곳 밖)에 툴팁이 들어갈 자리(250px)가 있으면 그 줄 옆에 둡니다. 많은 쪽을 먼저 쓰고, 없으면 반대쪽을 씁니다.
@@ -279,7 +280,7 @@
         if (roomL || roomR) return { x: right ? outR : outL, y: r.top + rowY(k) * k2, side: right ? 'right' : 'left', label: it.name, value: tb.node, text: tb.text };
         return { x: r.left + x * k2, y: r.top + (rowY(k) - pitch / 2 + 2) * k2, label: it.name, value: tb.node, text: tb.text };
       },
-      () => { hot = -1; svg.classList.remove('is-hover'); items.forEach((x) => [x.nm, ...x.lab, ...x.tail].forEach((n2) => n2.classList.remove('is-on'))); render(); },
+      () => { hot = -1; svg.classList.remove('is-hover'); items.forEach((x) => [x.nm, ...x.lab].forEach((n2) => n2.classList.remove('is-on'))); render(); },
       true);
 
     onSize(plot, layout);

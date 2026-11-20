@@ -120,8 +120,8 @@
   // Date Picker: 닫혀 있을 때는 단추만 타일 가운데에 두고, 달력이 열리면 달력 높이만큼 아래를 비워 단추가 달력과 함께 위로 올라가게 합니다(site.css).
   // Select Menu도 같습니다(목록이 열리면 단추가 위로 올라갑니다).
   // 열림은 카드의 .vzb-dp.is-open · .vzb-sm.is-open으로 알고, 비울 높이는 --gt-dp-pad에 적어 둡니다. 실제 화면에 붙인 카드는 제자리에서 열립니다.
-  // 비울 높이는 타일 칸의 높이(2단위)를 넘지 않게 자릅니다. 넘으면 타일이 길어져 같은 줄의 옆 타일까지 함께 길어지기 때문입니다.
-  // 그때는 단추가 타일 칸 맨 위까지 올라가고, 달력 · 목록의 남는 아래쪽은 타일 아래 줄(이름 · 복사 단추) 위로 겹쳐 뜹니다.
+  // 타일 칸(400px)은 단추와 펼친 달력 · 목록이 다 들어가는 높이라, 펼쳐도 타일 아래 줄(이름 · 복사 단추)을 덮지 않습니다.
+  // 그래도 비울 높이는 타일 칸의 높이를 넘지 않게 자릅니다. 넘으면 타일이 길어져 같은 줄의 옆 타일까지 함께 길어지기 때문입니다.
   function fitTile(tile) {
     const host = $('[data-mount]', tile);
     const fit = () => {
@@ -129,7 +129,7 @@
       if (pop) host.style.setProperty('--gt-sl-pad', `${pop.offsetHeight + 6}px`); else host.style.removeProperty('--gt-sl-pad');
       if (cal) {
         const box = host.closest('.gt-box'), btn = $('.vzb-dp-btn, .vzb-sm-btn', host);
-        const room = Math.max(0, (box ? box.clientHeight : 336) - (btn ? btn.offsetHeight : 40));
+        const room = Math.max(0, (box ? box.clientHeight : 400) - (btn ? btn.offsetHeight : 40));
         host.style.setProperty('--gt-dp-pad', `${Math.min(cal.offsetHeight + 8, room)}px`);
       } else host.style.removeProperty('--gt-dp-pad');
       if (menu) tile.style.setProperty('--gt-dl-shift', `${Math.max(0, menu.scrollWidth - menu.offsetHeight) / 2}px`);

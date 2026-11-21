@@ -23,7 +23,7 @@
 </head>
 <body>
 <main style="--w:640px">
-<!-- Vizney Blocks v0.74 · Bar Chart · Bar Overflow (bar-overflow)
+<!-- Vizney Blocks v0.75 · Bar Chart · Bar Overflow (bar-overflow)
      https://blocks.vizney.com/cards/bar-overflow.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -666,7 +666,9 @@
   // 마지막 막대가 다 차면 넘친 구간만 세 번 깜빡이고 멈춥니다. 막대가 차기 전에는 막대 자리를 미리 그리지 않습니다.
   // 카드가 화면에 보이면 한 번 움직이고, 다시 보기 단추로 되풀이합니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고 되풀이합니다.
   // 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 처음부터 재생하지 않고, 화면에 있던 막대가 그 자리와 높이에서 새 값으로 옮겨 갑니다(Move: 넘치지 않음).
-  // 같은 이름의 기간이 같은 막대입니다. 새로 생긴 기간은 바닥에서 자라고, 빠진 기간은 흐려지며 사라집니다. 눈금(가장 큰 값)과 한도가 바뀌면 함께 옮겨 갑니다.
+  // 같은 이름의 기간이 같은 막대입니다. 새로 생긴 기간은 바닥에서 자라고, 빠진 기간은 흐려지며 사라집니다.
+  // 눈금(가장 큰 값)이 함께 바뀌어도 막대의 높이와 한도선은 화면에서 있던 자리에서 새 자리로 곧장 한 번에 갑니다. 값을 먼저 옮기고 눈금을 나중에 옮기면
+  // 막대가 내려갔다가 다시 올라가 통통 튀어 보이기 때문입니다.
   // 옮겨 가는 동안 넘친 양과 아래 줄의 숫자는 화면의 막대를 그대로 세어 함께 바뀌고, 이번에 새로 한도를 넘은 막대만 다 옮겨 간 뒤 한 번 깜빡입니다.
   mount('bar-overflow', (card, d, f) => {
     // 걸러서 남은 기간이 없을 때(labels가 빈 배열)는 오류가 아니라 빈 화면입니다.
@@ -759,10 +761,12 @@
     const M = motion(card), MOVE = M.curve('move');
     const T0 = M.ms('lead'), STAG = Math.max(60, Math.min(140, M.ms('seq') / N)), DUR = MOVE.dur, WAIT = 260, BLINK = 440, TIMES = 3, GAP = 1.5, NAMEH = 22;
     let W = 0, H = 0, PW = 0, y0 = 0, s = 1, bw = 0, slot = 1, yl = 0, t = 0, FULL = 0, TOTAL = 0;
-    // 옮겨 가기(데이터가 바뀌어 다시 그릴 때): 막대의 값과 자리, 굵기, 눈금, 한도를 스프링(Move)으로 새 값에 보냅니다.
-    // 값은 데이터 단위, 자리는 막대 칸 폭(PW)에 대한 비율이라 카드 폭이 달라져도 이어집니다.
+    // 옮겨 가기(데이터가 바뀌어 다시 그릴 때): 막대의 높이(sh, px)와 한도선의 높이(sly, px), 막대의 자리(sx)와 굵기(sw)를 스프링(Move)으로 새 자리에 보냅니다.
+    // 높이는 화면의 자리(px)로 옮기므로, 눈금이 함께 바뀌어도 막대와 한도선은 있던 자리와 새 자리 사이를 한 방향으로만 움직입니다.
+    // 옮겨 가는 동안의 값은 그림에서 읽습니다: 한도선의 높이가 한도의 값(slv)이므로, 막대의 높이를 그 비율로 값으로 바꿉니다.
+    // 막대의 자리는 막대 칸 폭(PW)에 대한 비율이라 카드 폭이 달라져도 이어집니다.
     const [MK, MC] = M.pair('move'), FADE = M.ms('fade') || 1, fresh = new Set();
-    let from = before(card), moving = false, rush = false, flash = BLINK, st = null, sl = null, sw = null, gone = [];
+    let from = before(card), moving = false, flash = BLINK, sly = null, slv = null, sw = null, gone = [];
     function layout(w, h) {
       W = w; H = h;
       svg.setAttribute('width', w);
@@ -831,23 +835,23 @@
       items.forEach((it) => {
         const p = it.v == null ? null : old.get(it.key);
         if (p) old.delete(it.key);
-        it.sv = { x: p ? p.v : 0, v: p ? p.vv : 0 };
+        it.sh = { x: p ? p.h : 0, v: p ? p.hv : 0 };
         it.sx = { x: p ? p.x : it.cx / PW, v: p ? p.xv : 0 };
         it.exA = p ? p.exA : 0;
         if (it.over > 0 && (!p || !p.over || p.fresh)) fresh.add(it);
       });
-      st = { x: prev.top > 0 ? prev.top : top, v: prev.topV || 0 };
-      sl = { x: prev.top > 0 ? prev.lim : lim, v: prev.limV || 0 };
+      const had = prev.lpx > 0;
+      sly = { x: had ? prev.lpx : lim * s, v: had ? prev.lpxV || 0 : 0 };
+      slv = { x: had ? prev.lim : lim, v: had ? prev.limV || 0 : 0 };
       sw = { x: prev.bw > 0 ? prev.bw : bw, v: 0 };
       gone = [...old.values()].map((p) => {
-        const g = { v: p.v, x: p.x, a: p.a == null ? 1 : p.a, g: svgEl('g', { class: 'vzb-bb-col' }), fill: svgEl('path', { class: 'vzb-bb-fill' }), red: svgEl('path', { class: 'vzb-bb-over' }), nm: svgText(0, 0, p.name, 'vzb-bb-name', 'middle') };
+        const g = { h: p.h, x: p.x, a: p.a == null ? 1 : p.a, g: svgEl('g', { class: 'vzb-bb-col' }), fill: svgEl('path', { class: 'vzb-bb-fill' }), red: svgEl('path', { class: 'vzb-bb-over' }), nm: svgText(0, 0, p.name, 'vzb-bb-name', 'middle') };
         g.nm.setAttribute('opacity', p.nameOn ? 1 : 0);
         g.g.append(g.fill, g.red, g.nm);
         goneG.append(g.g);
         return g;
       });
       moving = true;
-      rush = !!prev.moving;
       flash = BLINK;
       t = 1e9;
     }
@@ -858,31 +862,25 @@
       flash = fresh.size ? 0 : BLINK;
     }
     // 스프링을 dt만큼 옮기고, 모두 제자리에 닿았으면 끝냅니다.
-    // 눈금(가장 큰 값)이 바뀔 때는 값과 눈금을 한꺼번에 옮기지 않습니다. 함께 옮기면 값이 줄어든 막대가 화면에서는 커지는 순간이 생겨 거꾸로 읽히기 때문입니다.
-    // 눈금이 좁아질 때는 값이 먼저 가고 눈금이 뒤따르며, 넓어져야 할 때는 눈금이 먼저 넓어진 뒤 값이 갑니다. 차이가 작으면(눈금의 2% 안) 함께 갑니다.
-    // 가던 중에 값이 또 바뀐 것이면(rush: 슬라이더를 끄는 동안처럼 이어지는 변화) 차례를 기다리지 않고 함께 갑니다. 기다리게 하면 끄는 내내 막대가 멈춰 있다가 손을 놓은 뒤에야 움직이기 때문입니다.
     function step(dt) {
-      let busy = false, valErr = Math.abs(sl.x - lim);
-      items.forEach((it) => { if (it.v != null) valErr = Math.max(valErr, Math.abs(it.sv.x - it.v)); });
-      const widen = top > st.x, tol = top * 0.02;
-      const runScale = rush || widen || valErr < tol, runVals = rush || !widen || Math.abs(st.x - top) < tol;
-      // 차례를 기다리는 스프링은 제자리에서 속도만 잦아듭니다.
-      const go = (sp, to, span, run) => {
-        springTo(sp, run ? to : sp.x, MK, MC, dt);
+      let busy = false;
+      const go = (sp, to, span) => {
+        springTo(sp, to, MK, MC, dt);
         if (Math.abs(sp.x - to) > span * 0.0006 || Math.abs(sp.v) > span * 0.01) busy = true; else { sp.x = to; sp.v = 0; }
       };
-      go(st, top, top, runScale);
-      go(sl, lim, top, runVals);
-      go(sw, bw, 30, true);
+      const hh = Math.max(1, y0);
+      go(sly, lim * s, hh);
+      go(slv, lim, top);
+      go(sw, bw, 30);
       items.forEach((it) => {
         if (it.v == null) return;
-        go(it.sv, it.v, top, runVals);
-        go(it.sx, it.cx / PW, 1, true);
+        go(it.sh, it.v * s, hh);
+        go(it.sx, it.cx / PW, 1);
       });
       gone.forEach((g) => { g.a = Math.max(0, g.a - dt / FADE); if (g.a > 0) busy = true; });
       const fadeBy = dt / FADE;
       items.forEach((it) => {
-        const to = it.exOn && it.sv && it.sv.x > sl.x ? 1 : 0;
+        const to = it.exOn && it.sh && it.sh.x > sly.x ? 1 : 0;
         if (it.exA !== to) { it.exA = to > it.exA ? Math.min(1, it.exA + fadeBy) : Math.max(0, it.exA - fadeBy); busy = true; }
       });
       if (!busy) settle();
@@ -890,7 +888,8 @@
     function render() {
       if (!W) return;
       const mv = moving;
-      const topC = mv ? st.x : top, sC = Math.max(1, y0 - 4) / (topC || 1), limC = mv ? sl.x : lim, ylC = y0 - limC * sC, bwC = mv ? sw.x : bw;
+      const ylC = mv ? y0 - sly.x : yl, bwC = mv ? sw.x : bw;
+      const unit = mv && sly.x > 0.5 ? slv.x / sly.x : 0;   // 옮겨 가는 동안 1px이 나타내는 값(한도선의 높이가 한도의 값)
       limLine.setAttribute('y1', fx(ylC));
       limLine.setAttribute('y2', fx(ylC));
       limName.setAttribute('y', fx(ylC - 4));
@@ -902,15 +901,14 @@
       const glow2 = mv || flash >= BLINK || holds.size ? 1 : wave(flash / BLINK);
       const alert = t >= FULL + WAIT;
       let cnt = 0, tot = 0;
-      // 막대 하나: 한도에 닿은 막대는 한도선 아래에서 각지게 끊고, 넘친 만큼은 선 위에서 빨강으로 잇습니다.
-      const bar = (o, cx, val, hit) => {
-        const x = cx - bwC / 2, yv = y0 - val * sC, cut = hit && yv <= ylC + GAP;
+      // 막대 하나(yv: 막대 끝의 자리): 한도에 닿은 막대는 한도선 아래에서 각지게 끊고, 넘친 만큼은 선 위에서 빨강으로 잇습니다.
+      const bar = (o, cx, yv, hit) => {
+        const x = cx - bwC / 2, cut = hit && yv <= ylC + GAP;
         o.fill.setAttribute('d', col(x, cut ? ylC + GAP : yv, bwC, y0, !cut));
         o.red.setAttribute('d', hit && yv < ylC - GAP ? col(x, yv, bwC, ylC - GAP, true) : '');
-        return yv;
       };
       gone.forEach((g) => {
-        bar(g, g.x * PW, g.v, g.v >= limC && limC > 0);
+        bar(g, g.x * PW, y0 - g.h, g.h >= sly.x && sly.x > 0);
         g.nm.setAttribute('x', fx(g.x * PW));
         g.nm.setAttribute('y', fx(y0 + 15));
         g.g.setAttribute('opacity', fx(g.a));
@@ -919,9 +917,9 @@
         const cx = mv ? it.sx.x * PW : it.cx;
         it.nm.setAttribute('x', fx(cx));
         if (it.v == null) { it.fill.setAttribute('d', ''); it.red.setAttribute('d', ''); it.ex.setAttribute('opacity', 0); return; }
-        const val = mv ? Math.max(0, it.sv.x) : it.v * clamp(MOVE.at(t - it.start));
-        const yv = bar(it, cx, val, mv ? val >= limC : it.v >= lim);
-        const overNow = mv ? Math.max(0, val - limC) : it.over;
+        const h = mv ? Math.max(0, it.sh.x) : it.v * clamp(MOVE.at(t - it.start)) * s, yv = y0 - h;
+        bar(it, cx, yv, mv ? h >= sly.x : it.v >= lim);
+        const overNow = mv ? Math.max(0, (h - sly.x) * unit) : it.over;
         if (mv && overNow > 0) { cnt++; tot += overNow; }
         it.red.setAttribute('opacity', fx(fresh.has(it) && !mv ? Math.min(glow, glow2) : glow));
         const exText = signed(f, overNow);
@@ -939,14 +937,14 @@
       if (!W) return from;
       const mv = moving;
       return {
-        inView, moving: mv, top: mv ? st.x : top, topV: mv ? st.v : 0, lim: mv ? sl.x : lim, limV: mv ? sl.v : 0, bw: mv ? sw.x : bw,
+        inView, lpx: mv ? sly.x : lim * s, lpxV: mv ? sly.v : 0, lim: mv ? slv.x : lim, limV: mv ? slv.v : 0, bw: mv ? sw.x : bw,
         items: items.filter((it) => it.v != null).map((it) => ({
           key: it.key, name: it.name, nameOn: it.nm.getAttribute('opacity') === '1',
-          v: mv ? Math.max(0, it.sv.x) : it.v * clamp(MOVE.at(t - it.start)), vv: mv ? it.sv.v : 0,
+          h: mv ? Math.max(0, it.sh.x) : it.v * clamp(MOVE.at(t - it.start)) * s, hv: mv ? it.sh.v : 0,
           x: mv ? it.sx.x : it.cx / PW, xv: mv ? it.sx.v : 0,
           exA: mv ? it.exA : it.exOn ? clamp((t - it.start - DUR) / 200) : 0,
           over: it.over > 0, fresh: fresh.has(it) && (mv || flash < BLINK),
-        })).concat(gone.map((g) => ({ key: `\n${g.x}`, name: g.nm.textContent, nameOn: g.nm.getAttribute('opacity') === '1', v: g.v, vv: 0, x: g.x, xv: 0, exA: 0, over: false, fresh: false, a: g.a }))),
+        })).concat(gone.map((g) => ({ key: `\n${g.x}`, name: g.nm.textContent, nameOn: g.nm.getAttribute('opacity') === '1', h: g.h, hv: 0, x: g.x, xv: 0, exA: 0, over: false, fresh: false, a: g.a }))),
       };
     });
 

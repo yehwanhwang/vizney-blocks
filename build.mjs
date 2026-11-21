@@ -16,7 +16,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.75';
+const VERSION = 'v0.76';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -288,12 +288,12 @@ const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 // v0.52: the controls are drawn bare (no head, no frame) in the middle of the tile, like the units of a motion gallery.
 // v0.49: the gallery is built one block at a time. v0.56: the gallery is the whole list; a card that is not here does not exist.
 // Blocks that move (data-vzb-loop) replay on the first screen instead of stopping at the end.
-const GALLERY = ['bar-overflow', 'waffle-flip', 'bump-race', 'waterfall-walk', 'funnel-wave', 'date-picker', 'range-slider', 'filter-chips', 'select-menu', 'download-button'];
+const GALLERY = ['bar-overflow', 'waffle-flip', 'bump-race', 'waterfall-walk', 'funnel-wave', 'butterfly-fold', 'date-picker', 'range-slider', 'filter-chips', 'select-menu', 'download-button'];
 const LOOP = new Set(GALLERY);
 // v0.53: tile widths follow the block. On the 3-column gallery a chart that reads along a long axis (13 months, a 5 × 20 waffle)
 // takes 2 columns; a chart that reads better compact (a donut, a single figure) and every control take 1. The tiles are laid out
 // so that rows alternate 2 + 1 and 1 + 2. A wide block left without a partner sits alone; narrow blocks left over go three to a row.
-const SPAN = { 'bar-overflow': 2, 'waffle-flip': 2, 'bump-race': 2, 'waterfall-walk': 2, 'funnel-wave': 2 };
+const SPAN = { 'bar-overflow': 2, 'waffle-flip': 2, 'bump-race': 2, 'waterfall-walk': 2, 'funnel-wave': 2, 'butterfly-fold': 2 };
 const wideOf = (id) => SPAN[id] === 2;
 const ORDER = (() => {
   const wide = GALLERY.filter(wideOf), narrow = GALLERY.filter((id) => !wideOf(id)), out = [];
@@ -415,6 +415,10 @@ const FIELD_OVERRIDE = {
   'funnel-wave': {
     ko: { title: '무엇의 퍼널인지(예: 영업 퍼널)', subtitle: '처음 · 끝 단계와 기간(예: 리드에서 계약까지, 2026년 3분기)', items: '단계 2~6개를 순서대로. 단계마다 name과 value(그 단계까지 온 수). 첫 단계 대비 비율 · 단계별 전환율 · 전체 전환율은 카드가 계산한다. 이름은 단계 칸 아래에 적으므로 짧게', unit: '값 뒤에 붙는 말(예: 건)' },
     en: { title: 'what the funnel is (e.g. Sales Funnel)', subtitle: 'the first and last stages and the period (e.g. From lead to won deal, Q3 2026)', items: '2 to 6 stages in order, each with name and value (how many reached that stage); the card computes the share of the first stage, the stage-to-stage conversion rates and the overall conversion. Names sit under the stage cells, so keep them short', unit: 'the word after the values (e.g. people)' },
+  },
+  'butterfly-fold': {
+    ko: { title: '무엇을 견주는지(예: 카테고리별 주문 수)', subtitle: '두 그룹과 기준(예: 여성 · 남성 회원의 주문, 2026년 10월)', groups: '[왼쪽 그룹, 오른쪽 그룹]의 이름(예: 여성, 남성)', items: '항목 2~10개를 위에서 아래 순서로. 항목마다 name과 left · right(두 그룹의 값, 0 이상, 값이 없으면 null). 견주기가 목적이면 차이(left - right)가 큰 순서로 둔다. 합계 · 차이 · 배수 · 비중은 카드가 계산한다', unit: '값 뒤에 붙는 말(예: 건)' },
+    en: { title: 'what is compared (e.g. Orders by Category)', subtitle: 'the two groups and the basis (e.g. Orders from women and men members, October 2026)', groups: 'the names of [the left group, the right group] (e.g. Women, Men)', items: '2 to 10 items, top to bottom, each with name, left and right (the two groups\' values, 0 or more, null for no value); to compare, order them by the difference (left - right), largest first; the card computes the totals, differences, ratios and shares', unit: 'the word after the values (e.g. orders)' },
   },
   'date-picker': {
     ko: { label: '화면 낭독기가 읽는 이름(예: 주문일). 화면에는 그리지 않는다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', min: '데이터가 있는 첫날(YYYY-MM-DD). 그 앞은 고를 수 없다. 비우면 제한 없음', max: '데이터가 있는 마지막 날(YYYY-MM-DD). "today"면 보는 사람의 오늘. 빠른 선택의 기준일이고, 비우면 오늘이 기준일', value: '처음 기간 ["시작", "끝"](YYYY-MM-DD, 끝일 포함). 비우면 기준일까지 30일', presets: '빠른 선택 칩: last7 · last30 · month · lastmonth · quarter · year · all 가운데 세 개 안팎', mode: '날짜 하나를 고를 때만 "day"(value도 날짜 하나)', align: '화면 오른쪽 끝에 둘 때 "end"' },
@@ -682,7 +686,7 @@ const CONNECT = {
       '컨트롤은 값이 바뀔 때마다 카드에서 `vzb-change` 이벤트를 보낸다(위로 전달되므로 `document`에서 받는다). `detail`은 `{ name, value }`이고 `name`은 그 컨트롤 JSON의 `name`이다. Date Picker의 `value`는 `["시작", "끝"]` 날짜 글자(YYYY-MM-DD, 끝일 포함), Range Slider의 `value`는 `[시작, 끝]` 숫자, Filter Chips의 `value`는 고른 항목을 `options` 순서대로 담은 배열이다. 지금 값은 카드의 `data-vzb-value` 속성에도 JSON으로 적혀 있다.',
       '컨트롤은 처음 그릴 때는 이벤트를 보내지 않는다. 컨트롤의 `value`와 차트의 JSON을 처음부터 같은 조건으로 적는다.',
       '차트 카드는 안의 `<script type="application/json">` 글자가 바뀌면 그 카드만 다시 그린다. 페이지가 거르기 전의 전체 데이터를 들고 있다가, 이벤트를 받으면 거른 결과로 차트의 JSON을 만들어 바꿔 적는다. 다시 그린 카드는 처음부터 재생하지 않고, 보는 사람이 고른 기간과 항목은 그대로 둔다. Bar Overflow는 화면에 있던 막대가 그 자리와 높이에서 새 값으로 옮겨 간다. 같은 이름의 기간이 같은 막대이므로 거를 때 `labels`의 이름은 바꾸지 않는다. Funnel Wave는 칸마다 물이 있던 높이에서 새 높이로 옮겨 가고, 알약의 비율과 칸 아래의 값이 물을 따라 바뀐다. 같은 자리의 같은 이름이 같은 단계이므로 거를 때 `items`의 단계와 순서는 그대로 두고 값만 바꾼다(단계의 수가 달라지면 옮겨 가지 않고 바로 그린다). Waterfall Walk는 막대마다 닿아 있던 높이에서 새 높이로 옮겨 가고, 잇는 점 · 막대 끝의 이름과 값 · 끝 막대의 말풍선이 따라간다. 이것도 같은 자리의 같은 이름이 같은 항목이므로 `items`의 항목과 순서는 그대로 두고 값만 바꾼다(항목의 수가 달라지면 바로 그린다). 다른 차트 카드는 마지막 장면을 바로 그린다.',
-      '걸러서 남은 것이 없으면 빈 배열을 준다. Bar Overflow는 `"labels": []`, Waffle Flip · Bump Race · Waterfall Walk · Funnel Wave는 `"items": []`이면 오류 대신 빈 화면을 그린다.',
+      '걸러서 남은 것이 없으면 빈 배열을 준다. Bar Overflow는 `"labels": []`, Waffle Flip · Bump Race · Waterfall Walk · Funnel Wave · Butterfly Fold는 `"items": []`이면 오류 대신 빈 화면을 그린다.',
       '같은 종류의 카드를 두 장 쓰면 카드마다 id를 준 요소로 감싸고 그 id로 가려 쓴다(아래 예시의 `#spend`).',
       'Download Button은 `target`에 적은 종류(`data-vzb`)의 카드 가운데 페이지에서 처음 만나는 카드의 지금 JSON을 받는다. 그래서 컨트롤로 거른 뒤의 값이 그대로 내려간다. 받기 전에 `vzb-download` 이벤트(`detail: { name, target, format, filename, rows }`)를 보내고, 페이지가 `preventDefault()`를 부르면 파일을 만들지 않으므로 서버에서 원본을 받는 화면도 같은 단추를 쓸 수 있다.',
     ],
@@ -710,7 +714,7 @@ document.addEventListener('vzb-change', (e) => {
       'A control sends a `vzb-change` event from its card whenever its value changes (it bubbles, so listen on `document`). `detail` is `{ name, value }`, where `name` is the `name` in that control\'s JSON. Date Picker\'s `value` is `["start", "end"]` as date strings (YYYY-MM-DD, the end date included); Range Slider\'s `value` is `[from, to]` as numbers; Filter Chips\' `value` is the picked items in the order of `options`. The current value is also on the card, as JSON in its `data-vzb-value` attribute.',
       'A control sends nothing when it first draws. Write the control\'s `value` and the chart\'s JSON for the same starting condition.',
       'A chart card redraws by itself when the text of its `<script type="application/json">` changes. The page keeps the full data; on an event it filters the data, builds the chart\'s JSON from the result and writes it back. The redrawn card does not play from the start, and it keeps the period and the item the viewer picked. Bar Overflow moves the bars on screen from where they are to the new values; a period with the same name is the same bar, so keep the names in `labels` unchanged when you filter. Funnel Wave moves the water in each cell from where it stands to the new level, and the share on the pill and the value under the cell follow the water; a stage with the same name in the same place is the same stage, so keep the stages and their order in `items` and change only the values (when the number of stages changes, it draws at once). Waterfall Walk moves each bar from the level it reached to the new level, and the dots, the name and value at each bar end and the bubble of the last bar follow; here too an item with the same name in the same place is the same item, so keep the items and their order in `items` and change only the values (when the number of items changes, it draws at once). The other chart cards draw their last frame at once.',
-      'When the filter leaves nothing, give an empty array. Bar Overflow draws an empty state for `"labels": []`, and Waffle Flip, Bump Race, Waterfall Walk and Funnel Wave for `"items": []`, instead of an error.',
+      'When the filter leaves nothing, give an empty array. Bar Overflow draws an empty state for `"labels": []`, and Waffle Flip, Bump Race, Waterfall Walk, Funnel Wave and Butterfly Fold for `"items": []`, instead of an error.',
       'With two cards of the same kind on a page, wrap each in an element with an id and address it through that id (`#spend` in the example).',
       'Download Button downloads the current JSON of the first card on the page whose `data-vzb` is its `target`, so the file holds what the controls left on screen. Before that it sends a `vzb-download` event (`detail: { name, target, format, filename, rows }`); if the page calls `preventDefault()`, the card makes no file, so a screen that gets the source data from a server can use the same button.',
     ],

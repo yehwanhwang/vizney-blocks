@@ -1,0 +1,38 @@
+/* Butterfly Fold: 높이 2단위. 머리 아래에 두 그룹의 이름과 합계 줄, 그 아래 그래프가 남은 높이를 채웁니다. 머리 오른쪽 위에 다시 보기 단추(32px)를 둡니다.
+   가운데 열에 항목 이름(14px)만 두고 양쪽으로 막대를 뻗으며, 값(14px)은 제 막대 끝 밖에 적습니다. 막대는 바깥 끝만 4px 둥글고, 두께는 줄 간격의 72%입니다.
+   색: 밝은 바탕은 왼쪽 분홍빨강(둘째 데이터 색) · 오른쪽 파랑(첫째 데이터 색), 어두운 바탕은 왼쪽 노랑(첫째) · 오른쪽 흰색(둘째)입니다.
+   점선: 적은 쪽 막대 끝에서 많은 쪽의 길이까지, 막대의 아래 가장자리 높이에 반대쪽 막대의 색으로 점선(1.5px, 4px 선 · 3px 틈)을 긋고 끝에 짧은 마감(실선)을 세웁니다. 짚은 줄에만 보입니다(재생 끝에 잠깐 모든 줄에 보였다 사라집니다).
+   짚은 줄에는 옅은 띠를 깔고 이름과 값을 굵게 글자색으로 둡니다. 툴팁의 견본도 같은 두 색입니다.
+   위쪽 줄: 왼쪽 끝에 왼쪽 그룹, 오른쪽 끝에 오른쪽 그룹(견본 · 이름 · 합계, 단위는 12px)을 적습니다.
+   날개가 접혔다 펼쳐지는 움직임은 스크립트가 그립니다. */
+.vzb-card[data-vzb="butterfly-fold"] { --vzb-bf-l: var(--vzb-secondary); --vzb-bf-r: var(--vzb-primary); }
+.vzb-card.vzb-dark[data-vzb="butterfly-fold"] { --vzb-bf-l: var(--vzb-primary); --vzb-bf-r: var(--vzb-secondary); }
+.vzb-bf-k0 { --vzb-c: var(--vzb-bf-l, var(--vzb-secondary)); }
+.vzb-bf-k1 { --vzb-c: var(--vzb-bf-r, var(--vzb-primary)); }
+.vzb-tip.vzb-dark .vzb-bf-k0 { --vzb-c: var(--vzb-primary); }
+.vzb-tip.vzb-dark .vzb-bf-k1 { --vzb-c: var(--vzb-secondary); }
+.vzb-card[data-vzb="butterfly-fold"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-card[data-vzb="butterfly-fold"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
+.vzb-bf-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
+.vzb-bf-btn:hover { background: var(--vzb-other); }
+.vzb-bf-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
+.vzb-bf-ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-bf.vzb-foot { padding-top: 14px; }
+.vzb-bf-keys { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; column-gap: 24px; row-gap: 2px; margin-bottom: 12px; font-size: 14px; line-height: 20px; color: var(--vzb-ink-2); }
+.vzb-bf-key { display: inline-flex; align-items: center; gap: 6px; min-width: 0; white-space: nowrap; }
+.vzb-bf-key.is-right { grid-column: -2; justify-self: end; }
+.vzb-bf-tot { font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-bf-u { margin-left: 2px; font-size: 12px; font-weight: 400; color: var(--vzb-muted); }
+.vzb-bf-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
+.vzb-bf-band { fill: var(--vzb-track); }
+.vzb-bf-bar.is-l { fill: var(--vzb-bf-l); }
+.vzb-bf-bar.is-r { fill: var(--vzb-bf-r); }
+.vzb-bf-tail, .vzb-bf-cap { fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-bf-tail { stroke-dasharray: 4 3; }
+.vzb-bf-tail.is-l, .vzb-bf-cap.is-l { stroke: var(--vzb-bf-r); }
+.vzb-bf-tail.is-r, .vzb-bf-cap.is-r { stroke: var(--vzb-bf-l); }
+.vzb-bf-nm { font-size: 14px; fill: var(--vzb-ink-2); }
+.vzb-bf-val { font-size: 14px; font-weight: 500; fill: var(--vzb-ink-2); font-variant-numeric: tabular-nums; }
+.vzb-bf-nm.is-on, .vzb-bf-val.is-on { font-weight: 700; fill: var(--vzb-ink); }
+.vzb-bf-plot { cursor: default; }
+.vzb-bf-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }

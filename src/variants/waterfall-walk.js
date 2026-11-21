@@ -15,7 +15,8 @@
   // 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 처음부터 걷지 않고, 막대마다 닿아 있던 높이에서 새 높이로 옮겨 갑니다(Move: 넘치지 않음).
   // 증감 막대는 앞 막대가 끝난 높이에 붙은 채 함께 움직이고, 잇는 점 · 막대 끝의 이름과 값 · 끝 막대의 말풍선이 따라가며, 값과 말풍선의 증감은 화면의 막대를 그대로 셉니다.
   // 같은 자리의 같은 이름이 같은 항목입니다. 항목의 수가 달라지면 옮겨 가지 않고 마지막 장면을 바로 그립니다.
-  // 눈금이 바뀔 때는 값과 눈금을 차례로 옮깁니다(좁아질 때는 값 먼저, 넓어져야 할 때는 눈금 먼저). 가던 중에 값이 또 바뀐 것이면 함께 옮깁니다.
+  // 눈금이 함께 바뀌어도 막대의 끝은 화면에서 있던 자리에서 새 자리로 곧장 한 번에 갑니다. 값을 먼저 옮기고 눈금을 나중에 옮기면
+  // 막대가 내려갔다가 다시 올라가 통통 튀어 보이기 때문입니다.
   // 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고 되풀이합니다.
   mount('waterfall-walk', (card, d, f) => {
     // 걸러서 남은 항목이 없을 때(items가 빈 배열)는 오류가 아니라 빈 화면입니다.
@@ -142,10 +143,11 @@
     });
     const DONE = last.done, TOTAL = DONE + (end ? POP : 0) + 60;
     let W = 0, H = 0, y = (v) => v, slot = 1, bw = 0, DOT = 1.5, t = 0;
-    // 옮겨 가기(데이터가 바뀌어 다시 그릴 때): 막대마다 닿은 높이(누계, st)와 눈금(0의 자리 sa · 값 1의 길이 ss)을 스프링(Move)으로 새 값에 보냅니다.
-    // 눈금은 y = A - 값 × S 입니다. SPAN은 값의 폭, LB는 말풍선과 글자의 치수(옮겨 가는 동안 글자가 바뀌면 다시 자리를 잡는 데 씁니다).
+    // 옮겨 가기(데이터가 바뀌어 다시 그릴 때): 막대마다 끝이 화면에서 닿은 자리(sy, px)와 0의 자리(sb, px)를 스프링(Move)으로 새 자리에 보냅니다.
+    // 눈금이 함께 바뀌어도 자리는 화면에서 곧장 가므로, 막대의 끝은 있던 자리와 새 자리 사이를 한 방향으로만 움직입니다.
+    // 글자에 적을 값(누계, sn)은 따로 같은 스프링으로 셉니다. 눈금은 y = A - 값 × S, SPAN은 값의 폭, LB는 말풍선과 글자의 치수입니다.
     const [MK, MC] = M.pair('move');
-    let from = before(card), moving = false, rush = false, sa = null, ss = null, A = 0, S = 1, SPAN = 1, LB = null, bubKey = null;
+    let from = before(card), moving = false, sb = null, A = 0, S = 1, SPAN = 1, LB = null, bubKey = null;
     function layout(w, h) {
       W = w; H = h;
       svg.setAttribute('width', w);
@@ -322,38 +324,33 @@
       c.bub.setAttribute('d', `M${fx(x0 + r)},${fx(top)}h${fx(bwid - 2 * r)}a${r},${r} 0 0 1 ${r},${r}v${fx(bh - 2 * r)}a${r},${r} 0 0 1 ${-r},${r}h${fx(-(bwid - 2 * r))}a${r},${r} 0 0 1 ${-r},${-r}v${fx(-(bh - 2 * r))}a${r},${r} 0 0 1 ${r},${-r}Z`
         + `M${fx(tx0 - 5)},${fx(edge)}L${fx(-c.dx)},${fx(tipY)}L${fx(tx0 + 5)},${fx(edge)}Z`);
     }
-    // 앞 장면에서 시작합니다. 같은 자리의 같은 이름은 닿아 있던 높이에서, 이름이 바뀐 자리는 앞 막대가 끝난 높이(합계는 바닥)에서 출발합니다.
+    // 앞 장면에서 시작합니다. 같은 자리의 같은 이름은 닿아 있던 자리와 값에서, 이름이 바뀐 자리는 앞 막대가 끝난 자리(합계는 바닥)에서 출발합니다.
     // 항목의 수가 달라졌으면 옮겨 가지 않습니다.
     function begin(prev) {
       if (!prev || !prev.inView || !Array.isArray(prev.items) || (prev.items.length && prev.items.length !== N)) return;
-      let lv = 0;
+      const y0 = prev.items.length ? prev.base : A;
+      let lv = 0, ly = y0;
       cols.forEach((c, k) => {
         const p = prev.items[k], same = !!p && p.name === c.name && p.kind === c.kind;
-        c.st = { x: same ? p.to : c.kind === 'total' ? 0 : lv, v: same ? p.tv : 0 };
-        lv = c.st.x;
+        c.sn = { x: same ? p.to : c.kind === 'total' ? 0 : lv, v: same ? p.tv : 0 };
+        c.sy = { x: same ? p.y : c.kind === 'total' ? y0 : ly, v: same ? p.yv : 0 };
+        lv = c.sn.x; ly = c.sy.x;
       });
-      sa = { x: prev.s > 0 ? prev.a : A, v: prev.s > 0 ? prev.av || 0 : 0 };
-      ss = { x: prev.s > 0 ? prev.s : S, v: prev.s > 0 ? prev.sv || 0 : 0 };
+      sb = { x: y0, v: prev.items.length ? prev.bv || 0 : 0 };
       moving = true;
-      rush = !!prev.moving;
       playing = false;
       t = 1e9;
     }
-    // 스프링을 dt만큼 옮깁니다. 눈금이 넓어져야 하면(값 1의 길이가 줄면) 눈금이 먼저, 좁아지거나 0의 자리만 옮겨 가면 값이 먼저 갑니다.
-    // 함께 옮기면 값이 줄어든 막대가 화면에서는 커지는 순간이 생기기 때문입니다. 차이가 작거나(2% 안) 가던 중에 값이 또 바뀐 것이면 함께 갑니다.
+    // 스프링을 dt만큼 옮기고, 모두 제자리에 닿았으면 끝냅니다.
     function stepMove(dt) {
-      let more = false, valErr = 0;
-      cols.forEach((c) => { valErr = Math.max(valErr, Math.abs(c.st.x - c.to)); });
-      const scaleErr = Math.max(Math.abs(ss.x - S) / S, Math.abs(sa.x - A) / Math.max(1, H));
-      const both = rush || scaleErr < 0.02, out = S < ss.x;
-      const runScale = both || out || valErr < SPAN * 0.02, runVals = both || !out;
-      const go = (sp, to, span, run) => {
-        springTo(sp, run ? to : sp.x, MK, MC, dt);
+      let more = false;
+      const go = (sp, to, span) => {
+        springTo(sp, to, MK, MC, dt);
         if (Math.abs(sp.x - to) > span * 0.0006 || Math.abs(sp.v) > span * 0.01) more = true; else { sp.x = to; sp.v = 0; }
       };
-      go(ss, S, S, runScale);
-      go(sa, A, Math.max(1, H), runScale);
-      cols.forEach((c) => go(c.st, c.to, SPAN, runVals));
+      const hh = Math.max(1, H);
+      go(sb, A, hh);
+      cols.forEach((c) => { go(c.sy, c.yB, hh); go(c.sn, c.to, SPAN); });
       if (!more) settle();
     }
     // 다 옮겨 갔습니다: 옮겨 가는 동안 바꿔 둔 색 · 글자 · 말풍선을 마지막 모양으로 되돌리고 다시 그립니다.
@@ -371,21 +368,21 @@
       }
       layout(W, H);
     }
-    // 옮겨 가는 동안의 한 장면: 눈금과 높이는 스프링의 값이고, 글자는 화면의 막대가 나타내는 값입니다.
+    // 옮겨 가는 동안의 한 장면: 막대의 끝과 0의 자리는 스프링의 자리(px)이고, 글자는 스프링이 세는 값입니다.
     function renderMove() {
-      const yv = (v) => sa.x - v * ss.x, rd = (v) => (whole ? Math.round(v) : v);
-      base.setAttribute('y1', fx(sa.x));
-      base.setAttribute('y2', fx(sa.x));
+      const rd = (v) => (whole ? Math.round(v) : v);
+      base.setAttribute('y1', fx(sb.x));
+      base.setAttribute('y2', fx(sb.x));
       cols.forEach((c) => {
-        const fromV = c.kind === 'total' ? 0 : cols[c.k - 1].st.x, toV = c.st.x, yA = yv(fromV), yB = yv(toV), dv = rd(toV - fromV);
+        const toV = c.sn.x, yA = c.kind === 'total' ? sb.x : cols[c.k - 1].sy.x, yB = c.sy.x, dv = rd(toV - (c.kind === 'total' ? 0 : cols[c.k - 1].sn.x));
         c.path.setAttribute('d', barPath(c.x, yA, yB, bw));
         // 증감의 부호가 바뀌는 동안에는 색과 글자의 자리도 화면의 막대를 따릅니다.
-        const below = c.kind === 'total' ? (toV < 0 || (toV === 0 && c.below)) : dv ? dv < 0 : c.below;
+        const below = Math.abs(yB - yA) < 0.5 ? c.below : yB > yA;
         if (c.kind === 'step') tone(c, !dv ? c.tone : want === 0 ? 'plain' : Math.sign(dv) === want ? 'good' : 'bad');
         if (c !== end && c.side !== below) side(c, below);
         c.lab.setAttribute('transform', `translate(${fx(c.cx + c.dx)},${fx(yB + (c === end || below === c.below ? c.dy : 0))})`);
         c.lab.setAttribute('opacity', c.labOn ? 1 : 0);
-        if (c === end) bubble(show(f, rd(toV)), chgOf(rd(toV), rd(cols[0].st.x)));
+        if (c === end) bubble(show(f, rd(toV)), chgOf(rd(toV), rd(cols[0].sn.x)));
         else {
           const say = c.kind === 'total' ? show(f, rd(toV)) : dv ? signed(f, dv) : c.v ? `${c.v > 0 ? '+' : '-'}${show(f, 0)}` : valText(c);
           if (say !== c.said) { c.said = say; c.val.textContent = say; }
@@ -398,12 +395,12 @@
       if (!W) return from;
       let lv = 0;
       return {
-        inView, moving, a: moving ? sa.x : A, av: moving ? sa.v : 0, s: moving ? ss.x : S, sv: moving ? ss.v : 0,
+        inView, base: moving ? sb.x : A, bv: moving ? sb.v : 0,
         items: cols.map((c) => {
-          if (moving) return { name: c.name, kind: c.kind, to: c.st.x, tv: c.st.v };
+          if (moving) return { name: c.name, kind: c.kind, to: c.sn.x, tv: c.sn.v, y: c.sy.x, yv: c.sy.v };
           const e = grown(c);
           lv = c.kind === 'total' ? (e > 0 ? c.to : lv) : lv + (c.to - c.from) * e;
-          return { name: c.name, kind: c.kind, to: lv, tv: 0 };
+          return { name: c.name, kind: c.kind, to: lv, tv: 0, y: A - lv * S, yv: 0 };
         }),
       };
     });

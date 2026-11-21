@@ -1,59 +1,82 @@
-<!-- Vizney Blocks v0.74 · Butterfly Chart · Butterfly Flap (butterfly-flap)
-     https://blocks.vizney.com/cards/butterfly-flap.html · © 2026 Vizney · MIT License
-     Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Butterfly Fold · Vizney Blocks</title>
+<meta name="description" content="버터플라이 차트 · Butterfly Fold. 가운데 열에 항목을 두고 대비되는 두 그룹(남성 · 여성, 온라인 · 오프라인 등)의 값을 같은 눈금의 양쪽 막대로 견주는 버터플라이 차트에서, 날갯짓처럼 접었다 펼치는 움직임과 함께 항목을 짚으면 반대쪽 막대를 포개어 어느 쪽이 얼마나 많은지 보여 주는 카드입니다. 성별 · 채널별로 카테고리 구성을 견주거나 두 그룹이 어느 항목에서 갈리는지 전할 때 씁니다. 두 그룹의 비중만 중요하면 100% 누적 막대 차트를, 항목마다 차이의 크기만 전하면 차이를 바로 그리는 막대 차트를 씁니다.">
+<link rel="canonical" href="https://blocks.vizney.com/ko/cards/butterfly-fold.html">
+<link rel="alternate" hreflang="ko" href="https://blocks.vizney.com/ko/cards/butterfly-fold.html">
+<link rel="alternate" hreflang="en" href="https://blocks.vizney.com/cards/butterfly-fold.html">
+<link rel="alternate" hreflang="x-default" href="https://blocks.vizney.com/cards/butterfly-fold.html">
+<link rel="icon" href="/favicon.png?v=15ae76869d" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=15ae76869d">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vizney Blocks">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="Butterfly Fold · Vizney Blocks">
+<meta property="og:description" content="버터플라이 차트 · Butterfly Fold. 가운데 열에 항목을 두고 대비되는 두 그룹(남성 · 여성, 온라인 · 오프라인 등)의 값을 같은 눈금의 양쪽 막대로 견주는 버터플라이 차트에서, 날갯짓처럼 접었다 펼치는 움직임과 함께 항목을 짚으면 반대쪽 막대를 포개어 어느 쪽이 얼마나 많은지 보여 주는 카드입니다. 성별 · 채널별로 카테고리 구성을 견주거나 두 그룹이 어느 항목에서 갈리는지 전할 때 씁니다. 두 그룹의 비중만 중요하면 100% 누적 막대 차트를, 항목마다 차이의 크기만 전하면 차이를 바로 그리는 막대 차트를 씁니다.">
+<meta property="og:url" content="https://blocks.vizney.com/ko/cards/butterfly-fold.html">
+<meta property="og:image" content="https://blocks.vizney.com/og-ko.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>body{margin:0;background:#eef0f4;font:14px/1.6 'Spoqa Han Sans Neo','Noto Sans KR',sans-serif;color:#4a4a4a}main{box-sizing:border-box;max-width:var(--w,640px);margin:0 auto;padding:40px 16px 24px}p{margin:16px 2px 0;font-size:13px}a{color:#1b1b1b}</style>
+</head>
+<body>
+<main style="--w:640px">
+<!-- Vizney Blocks v0.74 · 버터플라이 차트 · Butterfly Fold (butterfly-fold)
+     https://blocks.vizney.com/ko/cards/butterfly-fold.html · © 2026 Vizney · MIT License
+     <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
 <style>
-/* Vizney Blocks tokens: re-declare the same variables on your page's :root and they apply to every card.
-   The colors come from Vizney's Figma palette: blue (#007aff), pink-red (#ff2d55) and orange (#ff9500) for data, green (#34c759) and red (#ff3b30)
-   for good and bad, with lighter steps mixed from the same colors and the background. The text is Vizney black (#1b1b1b).
-   With "theme": "dark" in the JSON, the .vzb-dark values below draw the card on Vizney black with yellow as the first color and white as the second.
-   List: https://blocks.vizney.com/tokens.css */
+/* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
+   색은 Vizney의 Figma 팔레트에서 고릅니다. 데이터는 파랑(#007aff) · 분홍빨강(#ff2d55) · 주황(#ff9500), 좋고 나쁨은 초록(#34c759) · 빨강(#ff3b30)이고,
+   옅은 단계는 같은 색을 바탕에 섞어 만듭니다. 글자는 Vizney 검정(#1b1b1b)입니다.
+   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색, 흰색을 둘째 색으로 그립니다.
+   목록: https://blocks.vizney.com/ko/tokens.css */
 :where(:root) {
-  --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* every word on the card */
-  --vzb-card: #ffffff;   /* card background */
-  --vzb-edge: rgba(17, 24, 39, 0.05);   /* card border */
-  --vzb-ink: #1b1b1b;   /* title and headline figure */
-  --vzb-ink-2: #4a4a4a;   /* body text, the no-change badge */
-  --vzb-muted: #737373;   /* subtitle, units, axis ticks */
-  --vzb-grid: #ebebeb;   /* grid lines and the line under the head: a solid gray one step off the background */
-  --vzb-primary: #007aff;   /* first data color (blue): lines, bars, the largest item */
-  --vzb-primary-tint: #e6f2ff;   /* light blue background: the shade under a line, the radar area */
-  --vzb-primary-soft: #bfdeff;   /* bar-list bars that carry the name */
-  --vzb-secondary: #ff2d55;   /* second data color (pink-red) */
-  --vzb-tertiary: #ff9500;   /* third data color (orange) */
-  --vzb-primary-mid: #8cc3ff;     /* one step lighter, for wide areas (treemap cells) */
-  --vzb-secondary-mid: #ff7a93;   /* pink-red for wide areas */
-  --vzb-tertiary-mid: #ffb54d;   /* orange for wide areas */
-  --vzb-other-mid: #e3e3e3;   /* the Other group on wide areas */
-  --vzb-line-3: #ff9500;   /* third line color (orange) */
-  --vzb-base: #c4c4c4;   /* the baseline (last year's line, the radar baseline outline) */
-  --vzb-track: #f1f1f1;   /* track behind the gauge and attainment bars */
-  --vzb-other: #d9d9d9;   /* items folded into Other, items from the fourth on */
-  --vzb-good: #34c759;   /* fill of a good change (increases in a waterfall, met targets). Palette green; 2.2:1 on white, so never for text */
-  --vzb-good-tint: #ebf9ee;   /* background of a good-change badge (green 10%) */
-  --vzb-good-ink: #2a8040;   /* text of a good change (badges): green with 41% black, 4.9:1 on white */
-  --vzb-bad: #ff3b30;   /* fill of a bad change or of the part over a limit. Palette red, 3.6:1 on white */
-  --vzb-bad-tint: #ffebea;   /* background of a bad-change badge (red 10%) */
-  --vzb-bad-ink: #cb342b;   /* text of a bad change and of errors: red with 23% black, 5.2:1 on white */
-  --vzb-tip: #1b1b1b;   /* tooltip background */
-  --vzb-radius: 18px;   /* card corners */
-  --vzb-unit: 168px;   /* 1 height unit; a chart card is 1, 1.5 or 2 units tall */
-  --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* card shadow */
-  /* Motion. What moves decides the value. A spring is two numbers, 'stiffness damping' (stiffer is faster; less damping bounces more).
-     Things you touch: Follow · Settle · Pop · Fade · Press. Things that carry a value: Move (never overshoots: a height or a position
-     is the value, so a bounce shows a wrong value for a moment). Rhythm: Lead · Seq · Rest. Move what sits around the cards
-     (KPI tiles, tables, tabs) with the same values and the screen reads as made by one hand. */
-  --vzb-follow: 1000 63;   /* Follow: sticks to the pointer while held (the slider thumb). No overshoot */
-  --vzb-settle: 340 26;   /* Settle: lands when let go, opened or widened (calendar, list, menu, rolling digits). 4% overshoot */
-  --vzb-pop: 520 21;   /* Pop: a released button, a picked day or chip, a surfacing label. Not a value, so it bounces. 20% overshoot */
-  --vzb-move: 200 28.3;   /* Move: what carries a value, such as a bar height, goes to its place. No overshoot (damping = 2√stiffness) */
-  --vzb-fade: 0.14s;   /* Fade: the time opacity and color take, the same in and out */
-  --vzb-press: 0.08s;   /* Press: the time to sink when pressed. Released, it comes back with Pop */
-  --vzb-lead: 400ms;   /* Lead: the wait before a chart card starts once it is in view */
-  --vzb-seq: 1200ms;   /* Seq: the whole time items take to move in turn, shared out among them */
-  --vzb-rest: 2600ms;   /* Rest: the pause before a looping card (the gallery) starts again */
-  /* The six below are the CSS transition time (-t) and curve (-e) worked out from the springs above. Do not edit them: change the
-     springs and the cards work them out again. */
+  --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* 카드의 모든 글자 */
+  --vzb-card: #ffffff;   /* 카드 바탕 */
+  --vzb-edge: rgba(17, 24, 39, 0.05);   /* 카드 테두리 */
+  --vzb-ink: #1b1b1b;   /* 제목과 대표 수치 */
+  --vzb-ink-2: #4a4a4a;   /* 본문 글자, 변화 없음 배지 */
+  --vzb-muted: #737373;   /* 부제, 단위, 축 눈금 */
+  --vzb-grid: #ebebeb;   /* 격자와 머리 아래 선. 바탕에서 한 단계 떨어진 회색 실선 */
+  --vzb-primary: #007aff;   /* 첫째 데이터 색(파랑). 선, 막대, 가장 큰 항목 */
+  --vzb-primary-tint: #e6f2ff;   /* 파랑의 옅은 바탕. 선 아래 음영, 레이더 면 */
+  --vzb-primary-soft: #bfdeff;   /* 이름을 얹는 바 리스트 막대 */
+  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
+  --vzb-tertiary: #ff9500;   /* 셋째 데이터 색(주황) */
+  --vzb-primary-mid: #8cc3ff;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
+  --vzb-secondary-mid: #ff7a93;   /* 분홍빨강의 넓은 면 */
+  --vzb-tertiary-mid: #ffb54d;   /* 주황의 넓은 면 */
+  --vzb-other-mid: #e3e3e3;   /* 기타 묶음의 넓은 면 */
+  --vzb-line-3: #ff9500;   /* 선의 셋째 색(주황) */
+  --vzb-base: #c4c4c4;   /* 비교 기준(작년 선, 레이더의 기준 면 테두리) */
+  --vzb-track: #f1f1f1;   /* 게이지 · 달성률 막대의 바탕 */
+  --vzb-other: #d9d9d9;   /* 기타로 묶은 항목, 넷째부터의 항목 */
+  --vzb-good: #34c759;   /* 좋은 증감의 면(워터폴의 늘린 요인, 달성 막대). 팔레트 초록. 흰 바탕 대비 2.2:1로 옅어 글자에는 쓰지 않습니다 */
+  --vzb-good-tint: #ebf9ee;   /* 좋은 증감 배지의 바탕(초록 10%) */
+  --vzb-good-ink: #2a8040;   /* 좋은 증감의 글자(배지). 초록에 검정 41%를 섞어 흰 바탕 대비 4.9:1 */
+  --vzb-bad: #ff3b30;   /* 나쁜 증감, 한도 초과의 면. 팔레트 빨강. 흰 바탕 대비 3.6:1 */
+  --vzb-bad-tint: #ffebea;   /* 나쁜 증감 배지의 바탕(빨강 10%) */
+  --vzb-bad-ink: #cb342b;   /* 나쁜 증감과 오류 문구의 글자. 빨강에 검정 23%를 섞어 흰 바탕 대비 5.2:1 */
+  --vzb-tip: #1b1b1b;   /* 툴팁 바탕 */
+  --vzb-radius: 18px;   /* 카드 모서리 */
+  --vzb-unit: 168px;   /* 높이 1단위. 차트 카드의 높이는 1 · 1.5 · 2단위 가운데 하나입니다 */
+  --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* 카드 그림자 */
+  /* 움직임. 무엇이 움직이느냐에 따라 값이 정해집니다. 스프링은 '세기 잦아듦' 두 숫자로 적습니다(세기가 클수록 빠르고, 잦아듦이 작을수록 더 튑니다).
+     손이 닿는 것: Follow · Settle · Pop · Fade · Press. 값을 나타내는 것: Move(넘치지 않습니다. 높이나 자리가 곧 값이라, 튀면 잠깐 틀린 값을 보입니다).
+     리듬: Lead · Seq · Rest. 카드 밖의 요소(KPI 타일, 표, 탭)도 같은 값으로 움직이면 화면이 한 손으로 만든 것처럼 보입니다. */
+  --vzb-follow: 1000 63;   /* Follow: 끄는 동안 손에 붙어 따라갑니다(슬라이더 손잡이). 넘침 없음 */
+  --vzb-settle: 340 26;   /* Settle: 놓이거나 열리거나 넓어질 때 자리를 잡습니다(달력 · 목록 · 메뉴 · 굴러가는 숫자). 넘침 4% */
+  --vzb-pop: 520 21;   /* Pop: 눌렸다 놓인 단추, 고른 날짜와 칩, 떠오르는 말풍선. 값이 아니므로 튑니다. 넘침 20% */
+  --vzb-move: 200 28.3;   /* Move: 막대 높이처럼 값을 나타내는 것이 제자리로 갑니다. 넘침 없음(잦아듦 = 2√세기) */
+  --vzb-fade: 0.14s;   /* Fade: 투명도와 색이 바뀌는 시간. 나타날 때와 사라질 때 같습니다 */
+  --vzb-press: 0.08s;   /* Press: 눌리는 순간 들어가는 시간. 놓으면 Pop으로 돌아옵니다 */
+  --vzb-lead: 400ms;   /* Lead: 차트 카드가 화면에 들어와 움직이기 전의 뜸 */
+  --vzb-seq: 1200ms;   /* Seq: 항목이 차례로 움직일 때의 전체 시간. 항목 수로 나눠 간격을 정합니다 */
+  --vzb-rest: 2600ms;   /* Rest: 되풀이하는 카드(갤러리)가 다시 시작하기 전의 쉼 */
+  /* 아래 여섯은 위 스프링에서 계산한 CSS 전환의 시간(-t)과 곡선(-e)입니다. 직접 고치지 않습니다. 위 값을 바꾸면 카드가 다시 계산해 씁니다. */
   --vzb-settle-t: 0.39s;
   --vzb-settle-e: linear(0, 0.023, 0.081, 0.164, 0.26, 0.362, 0.463, 0.56, 0.65, 0.731, 0.801, 0.861, 0.91, 0.95, 0.981, 1.005, 1.022, 1.033, 1.04, 1.043, 1.044, 1.042, 1.039, 1.036, 1.031, 1.027, 1.022, 1.018, 1.014, 1.011, 1.008, 1.005, 1);
   --vzb-pop-t: 0.52s;
@@ -62,37 +85,37 @@
   --vzb-move-e: linear(0, 0.024, 0.083, 0.161, 0.248, 0.335, 0.419, 0.498, 0.569, 0.633, 0.689, 0.737, 0.78, 0.816, 0.846, 0.872, 0.894, 0.913, 0.928, 0.941, 0.951, 0.96, 0.967, 0.973, 0.978, 0.982, 0.985, 0.988, 0.99, 0.992, 0.994, 0.995, 1);
 }
 
-/* Dark ("theme": "dark"): the same variables, changed inside the card only. One yellow plus white and gray draws in Vizney black, white and yellow.
-   Yellow, white and gray pass a color vision simulation (closest pair ΔE 14.9) and a contrast check against the card.
-   Good and bad are the same green (#34c759) and red (#ff3b30) as on white, and on black they serve as text too (7.8:1 and 4.9:1). */
+/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 하나에 흰색과 회색을 더해 Vizney 검정 · 흰색 · 노랑으로 그립니다.
+   노랑 · 흰색 · 회색은 색각 시뮬레이션(가장 가까운 쌍 ΔE 14.9)과 바탕 대비 검사를 통과합니다.
+   좋고 나쁨은 밝은 바탕과 같은 초록(#34c759) · 빨강(#ff3b30)이고, 검정 바탕에서는 글자에도 그대로 씁니다(대비 7.8:1 · 4.9:1). */
 .vzb-dark {
-  --vzb-card: #1b1b1b;   /* card background (Vizney black) */
-  --vzb-edge: rgba(255, 255, 255, 0.08);   /* card border */
-  --vzb-ink: #f5f5f5;   /* title and headline figure */
-  --vzb-ink-2: #cfcfcf;   /* body text */
-  --vzb-muted: #9b9b9b;   /* subtitle, units, axis ticks */
-  --vzb-grid: #2f2f2f;   /* grid lines and the rule under the head */
-  --vzb-primary: #ffcc00;   /* first data color (Vizney yellow) */
-  --vzb-primary-tint: #362f18;   /* dim yellow background */
-  --vzb-primary-soft: #5f5013;   /* bar-list bars that carry the name */
-  --vzb-secondary: #f5f5f5;   /* second data color (white) */
-  --vzb-tertiary: #9b9b9b;   /* third data color (gray) */
-  --vzb-primary-mid: #826b0f;   /* wide areas, one step darker so light text sits on them */
-  --vzb-secondary-mid: #5c5c5c;   /* white for wide areas, gray so white text reads on it */
-  --vzb-tertiary-mid: #424242;   /* gray for wide areas */
-  --vzb-other-mid: #3a3a3a;   /* the Other group for wide areas */
-  --vzb-line-3: #9b9b9b;   /* third line color (gray) */
-  --vzb-base: #6b6b6b;   /* comparison baseline */
-  --vzb-track: #2c2c2c;   /* gauge and attainment-bar track */
-  --vzb-other: #4d4d4d;   /* items folded into Other */
-  --vzb-good: #34c759;   /* good change (palette green) */
-  --vzb-good-tint: #1f3725;   /* good badge background (green 16%) */
-  --vzb-good-ink: #34c759;   /* text of a good change */
-  --vzb-bad: #ff3b30;   /* bad change, over the limit (palette red) */
-  --vzb-bad-tint: #2d1e1d;   /* bad badge background (red 8%, as much as keeps 4.5:1 for the text) */
-  --vzb-bad-ink: #ff3b30;   /* text of a bad change and of errors */
-  --vzb-tip: #3a3a3a;   /* tooltip background */
-  --vzb-shadow: none;   /* card shadow */
+  --vzb-card: #1b1b1b;   /* 카드 바탕(Vizney 검정) */
+  --vzb-edge: rgba(255, 255, 255, 0.08);   /* 카드 테두리 */
+  --vzb-ink: #f5f5f5;   /* 제목과 대표 수치 */
+  --vzb-ink-2: #cfcfcf;   /* 본문 글자 */
+  --vzb-muted: #9b9b9b;   /* 부제, 단위, 축 눈금 */
+  --vzb-grid: #2f2f2f;   /* 격자와 머리 아래 선 */
+  --vzb-primary: #ffcc00;   /* 첫째 데이터 색(Vizney 노랑) */
+  --vzb-primary-tint: #362f18;   /* 노랑의 옅은 바탕 */
+  --vzb-primary-soft: #5f5013;   /* 이름을 얹는 바 리스트 막대 */
+  --vzb-secondary: #f5f5f5;   /* 둘째 데이터 색(흰색) */
+  --vzb-tertiary: #9b9b9b;   /* 셋째 데이터 색(회색) */
+  --vzb-primary-mid: #826b0f;   /* 넓은 면. 밝은 글자가 올라가도록 한 단계 어둡게 */
+  --vzb-secondary-mid: #5c5c5c;   /* 흰색의 넓은 면. 흰 글자가 올라가도록 회색으로 */
+  --vzb-tertiary-mid: #424242;   /* 회색의 넓은 면 */
+  --vzb-other-mid: #3a3a3a;   /* 기타 묶음의 넓은 면 */
+  --vzb-line-3: #9b9b9b;   /* 선의 셋째 색(회색) */
+  --vzb-base: #6b6b6b;   /* 비교 기준 */
+  --vzb-track: #2c2c2c;   /* 게이지 · 달성률 막대의 바탕 */
+  --vzb-other: #4d4d4d;   /* 기타로 묶은 항목 */
+  --vzb-good: #34c759;   /* 좋은 증감(팔레트 초록) */
+  --vzb-good-tint: #1f3725;   /* 좋은 증감 배지의 바탕(초록 16%) */
+  --vzb-good-ink: #34c759;   /* 좋은 증감의 글자 */
+  --vzb-bad: #ff3b30;   /* 나쁜 증감, 한도 초과(팔레트 빨강) */
+  --vzb-bad-tint: #2d1e1d;   /* 나쁜 증감 배지의 바탕(빨강 8%, 글자 대비 4.5:1을 지키는 만큼) */
+  --vzb-bad-ink: #ff3b30;   /* 나쁜 증감과 오류 문구의 글자 */
+  --vzb-tip: #3a3a3a;   /* 툴팁 바탕 */
+  --vzb-shadow: none;   /* 카드 그림자 */
 }
 /* 카드: 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위 가운데 하나입니다(단위 --vzb-unit, 카드마다 자기 CSS에서 정합니다). */
 .vzb-card {
@@ -197,21 +220,21 @@
 .vzb-tip .is-bad { color: color-mix(in srgb, var(--vzb-bad) 68%, #fff); font-weight: 700; }
 .vzb-fs { --vzb-c: var(--vzb-primary-soft); }
 .vzb-key.is-tick { width: 2px; height: 12px; border-radius: 1px; }
-/* Butterfly Flap: 높이 2단위. 머리 아래에 두 그룹의 이름과 합계 줄, 그 아래 그래프가 남은 높이를 채웁니다. 머리 오른쪽 위에 다시 보기 단추(32px)를 둡니다.
+/* Butterfly Fold: 높이 2단위. 머리 아래에 두 그룹의 이름과 합계 줄, 그 아래 그래프가 남은 높이를 채웁니다. 머리 오른쪽 위에 다시 보기 단추(32px)를 둡니다.
    가운데 열에 항목 이름(14px)만 두고 양쪽으로 막대를 뻗으며, 값(14px)은 제 막대 끝 밖에 적습니다. 막대는 바깥 끝만 4px 둥글고, 두께는 줄 간격의 72%입니다.
    색: 밝은 바탕은 왼쪽 분홍빨강(둘째 데이터 색) · 오른쪽 파랑(첫째 데이터 색), 어두운 바탕은 왼쪽 노랑(첫째) · 오른쪽 흰색(둘째)입니다.
-   점선 테두리: 적은 쪽 막대 끝에서 많은 쪽의 길이까지, 반대쪽 막대의 색으로 점선(1.5px, 4px 선 · 3px 틈)만 긋고 면은 채우지 않습니다. 짚은 줄에만 보이고(재생 끝에 잠깐 모든 줄에 보였다 사라집니다), 그 안에 값이 놓입니다.
+   점선: 적은 쪽 막대 끝에서 많은 쪽의 길이까지, 막대의 아래 가장자리 높이에 반대쪽 막대의 색으로 점선(1.5px, 4px 선 · 3px 틈)을 긋고 끝에 짧은 마감(실선)을 세웁니다. 짚은 줄에만 보입니다(재생 끝에 잠깐 모든 줄에 보였다 사라집니다).
    짚은 줄에는 옅은 띠를 깔고 이름과 값을 굵게 글자색으로 둡니다. 툴팁의 견본도 같은 두 색입니다.
    위쪽 줄: 왼쪽 끝에 왼쪽 그룹, 오른쪽 끝에 오른쪽 그룹(견본 · 이름 · 합계, 단위는 12px)을 적습니다.
    날개가 접혔다 펼쳐지는 움직임은 스크립트가 그립니다. */
-.vzb-card[data-vzb="butterfly-flap"] { --vzb-bf-l: var(--vzb-secondary); --vzb-bf-r: var(--vzb-primary); }
-.vzb-card.vzb-dark[data-vzb="butterfly-flap"] { --vzb-bf-l: var(--vzb-primary); --vzb-bf-r: var(--vzb-secondary); }
+.vzb-card[data-vzb="butterfly-fold"] { --vzb-bf-l: var(--vzb-secondary); --vzb-bf-r: var(--vzb-primary); }
+.vzb-card.vzb-dark[data-vzb="butterfly-fold"] { --vzb-bf-l: var(--vzb-primary); --vzb-bf-r: var(--vzb-secondary); }
 .vzb-bf-k0 { --vzb-c: var(--vzb-bf-l, var(--vzb-secondary)); }
 .vzb-bf-k1 { --vzb-c: var(--vzb-bf-r, var(--vzb-primary)); }
 .vzb-tip.vzb-dark .vzb-bf-k0 { --vzb-c: var(--vzb-primary); }
 .vzb-tip.vzb-dark .vzb-bf-k1 { --vzb-c: var(--vzb-secondary); }
-.vzb-card[data-vzb="butterfly-flap"] { min-height: calc(var(--vzb-unit) * 2); }
-.vzb-card[data-vzb="butterfly-flap"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
+.vzb-card[data-vzb="butterfly-fold"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-card[data-vzb="butterfly-fold"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
 .vzb-bf-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
 .vzb-bf-btn:hover { background: var(--vzb-other); }
 .vzb-bf-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
@@ -226,31 +249,31 @@
 .vzb-bf-band { fill: var(--vzb-track); }
 .vzb-bf-bar.is-l { fill: var(--vzb-bf-l); }
 .vzb-bf-bar.is-r { fill: var(--vzb-bf-r); }
-.vzb-bf-tail { fill: none; stroke-width: 1.5; stroke-dasharray: 4 3; stroke-linejoin: round; }
-.vzb-bf-tail.is-l { stroke: var(--vzb-bf-r); }
-.vzb-bf-tail.is-r { stroke: var(--vzb-bf-l); }
+.vzb-bf-tail, .vzb-bf-cap { fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-bf-tail { stroke-dasharray: 4 3; }
+.vzb-bf-tail.is-l, .vzb-bf-cap.is-l { stroke: var(--vzb-bf-r); }
+.vzb-bf-tail.is-r, .vzb-bf-cap.is-r { stroke: var(--vzb-bf-l); }
 .vzb-bf-nm { font-size: 14px; fill: var(--vzb-ink-2); }
 .vzb-bf-val { font-size: 14px; font-weight: 500; fill: var(--vzb-ink-2); font-variant-numeric: tabular-nums; }
 .vzb-bf-nm.is-on, .vzb-bf-val.is-on { font-weight: 700; fill: var(--vzb-ink); }
 .vzb-bf-plot { cursor: default; }
 .vzb-bf-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
 </style>
-<div class="vzb-card" data-vzb="butterfly-flap">
+<div class="vzb-card" data-vzb="butterfly-fold">
 <script type="application/json">
 {
-  "title": "Orders by Category",
-  "subtitle": "Orders from women and men members, October 2026",
-  "lang": "en",
+  "title": "카테고리별 주문 수",
+  "subtitle": "여성 · 남성 회원의 주문, 2026년 10월",
   "format": "count",
-  "unit": "orders",
-  "groups": ["Women", "Men"],
+  "unit": "건",
+  "groups": ["여성", "남성"],
   "items": [
-    { "name": "Beauty", "left": 5400, "right": 1200 },
-    { "name": "Fashion", "left": 6900, "right": 3300 },
-    { "name": "Home", "left": 3800, "right": 2400 },
-    { "name": "Food", "left": 3000, "right": 2800 },
-    { "name": "Electronics", "left": 2600, "right": 4800 },
-    { "name": "Sports", "left": 1600, "right": 5500 }
+    { "name": "뷰티", "left": 5400, "right": 1200 },
+    { "name": "패션", "left": 6900, "right": 3300 },
+    { "name": "리빙", "left": 3800, "right": 2400 },
+    { "name": "식품", "left": 3000, "right": 2800 },
+    { "name": "가전", "left": 2600, "right": 4800 },
+    { "name": "스포츠", "left": 1600, "right": 5500 }
   ]
 }
 </script>
@@ -650,13 +673,13 @@
     return { show: go, at: () => idx, end };
   }
 
-  // Butterfly Flap: 가운데 열에 항목 이름을 두고, 왼쪽 그룹(첫째 데이터 색)과 오른쪽 그룹(둘째 데이터 색)의 막대를 양쪽으로 뻗어 항목마다 두 그룹을 견주는 버터플라이 차트입니다
+  // Butterfly Fold: 가운데 열에 항목 이름을 두고, 왼쪽 그룹(첫째 데이터 색)과 오른쪽 그룹(둘째 데이터 색)의 막대를 양쪽으로 뻗어 항목마다 두 그룹을 견주는 버터플라이 차트입니다
   // (예: 여성 · 남성 회원의 카테고리별 주문 수). 두 날개는 같은 눈금이고, 가운데에는 이름만 두어 두 날개를 가까이 붙입니다(이름 열이 나비의 몸통). 값은 제 막대 끝에 적습니다.
   // 색: 밝은 바탕은 왼쪽 분홍빨강 · 오른쪽 파랑, 어두운 바탕은 왼쪽 노랑 · 오른쪽 흰색입니다.
-  // 견주기: 항목을 짚으면 그 줄의 적은 쪽 막대 끝에서 많은 쪽의 길이까지, 반대쪽 막대의 색으로 점선 테두리를 그립니다(반대쪽 막대를 접어 포갠 자리, 면은 채우지 않습니다).
-  // 점선 테두리의 길이가 두 그룹의 차이이고, 그 색이 많은 쪽입니다. 적은 쪽의 값은 제 막대 끝, 점선 테두리 안에 놓입니다.
+  // 견주기: 항목을 짚으면 그 줄의 적은 쪽 막대 끝에서 많은 쪽의 길이까지, 반대쪽 막대의 색으로 점선을 긋고 끝에 짧은 마감을 세웁니다(간트 차트의 구간처럼, 반대쪽 막대를 접어 포갰을 때 닿는 데까지).
+  // 점선의 길이가 두 그룹의 차이이고, 그 색이 많은 쪽입니다. 점선은 막대의 아래 가장자리 높이에 그어 막대 끝의 값과 겹치지 않습니다.
   // 움직임: 화면에 보이면 접혀 있던 두 날개가 좌우로 펼쳐지고(값 그대로의 막대), 한 번 접어 맞닿았다가 다시 펼칩니다. 맞닿은 날개는 서로의 색을 옮겨 받아,
-  // 다시 펼칠 때 모든 줄에 점선 테두리가 잠깐 보였다가 사라집니다(짚으면 다시 보인다는 예고). 날개는 경첩(이름 열의 가장자리)을 축으로 접히고, 두 날개는 거울처럼 함께 움직입니다.
+  // 다시 펼칠 때 모든 줄에 점선이 잠깐 보였다가 사라집니다(짚으면 다시 보인다는 예고). 날개는 경첩(이름 열의 가장자리)을 축으로 접히고, 두 날개는 거울처럼 함께 움직입니다.
   // 날갯짓처럼 부드럽게: 움직임은 멈춤과 출발이 느린 진자 같은 곡선을 따르고, 날개는 뿌리가 먼저 움직이고 끝이 조금 늦게 따라오며 휘어집니다. 막대의 길이는 값이므로 펼친 자리를 지나치지 않습니다.
   // 줄마다 조금씩 늦게 움직여 위에서 아래로 물결이 지나가고(파도타기), 같은 줄의 좌우 막대는 늘 함께 움직입니다.
   // 움직이는 동안 막대는 원근으로 짧아 보이고, 멈춘 장면의 길이는 값 그대로입니다.
@@ -664,7 +687,7 @@
   // 카드가 화면에 보이면 한 번 움직이고, 다시 보기 단추로 되풀이합니다. 마우스를 올리거나 키보드로 포커스하면 움직임을 잠시 멈춥니다.
   // 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 마지막 장면(펼친 날개)을 바로 그립니다.
   // 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고, 날개를 접었다가 처음부터 다시 펼칩니다.
-  mount('butterfly-flap', (card, d, f) => {
+  mount('butterfly-fold', (card, d, f) => {
     // 걸러서 남은 항목이 없을 때(items가 빈 배열)는 오류가 아니라 빈 화면입니다.
     if (Array.isArray(d.items) && !d.items.length) {
       head(card, d, f, null);
@@ -737,15 +760,16 @@
     sr.append(table);
     card.append(sr);
 
-    // 그림(아래부터): 짚은 줄의 띠 · 점선 테두리 · 막대 · 이름과 값(값은 점선 테두리 안에 놓일 수 있습니다)
+    // 그림(아래부터): 짚은 줄의 띠 · 점선과 그 끝의 마감 · 막대 · 이름과 값
     const band = svgEl('rect', { class: 'vzb-bf-band', rx: 4 });
     const gTail = svgEl('g', {}), gBar = svgEl('g', {}), gTxt = svgEl('g', {});
     items.forEach((it) => {
       it.bar = [0, 1].map((s) => svgEl('path', { class: `vzb-bf-bar ${s ? 'is-r' : 'is-l'}` }));
       it.tail = [0, 1].map((s) => svgEl('path', { class: `vzb-bf-tail ${s ? 'is-r' : 'is-l'}` }));
+      it.cap = [0, 1].map((s) => svgEl('path', { class: `vzb-bf-cap ${s ? 'is-r' : 'is-l'}` }));
       it.nm = svgText(0, 0, it.name, 'vzb-bf-nm', 'middle');
       it.lab = [0, 1].map((s) => svgText(0, 0, it.v[s] == null ? '–' : bare(it.v[s]), 'vzb-bf-val', s ? 'start' : 'end'));   // 값은 제 막대의 바깥 끝에 붙입니다
-      gTail.append(...it.tail);
+      gTail.append(...it.tail, ...it.cap);
       gBar.append(...it.bar);
       gTxt.append(it.nm, ...it.lab);
     });
@@ -827,7 +851,7 @@
       return `M${pts(top)}Q${fx(B[0])},${fx(B[1])} ${fx(B[0])},${fx(B[1] + rv)}L${fx(C[0])},${fx(C[1] - rv)}Q${fx(C[0])},${fx(C[1])} ${pts(bot)}Z`;
     }
     // 움직임의 시간표: [밀리초, 접힌 정도(1 접힘, 0 펼침)]. 점 사이는 코사인 곡선으로 이어, 점마다 속도가 0이 되는 진자 같은 움직임입니다. 펼친 자리를 지나치지 않습니다.
-    // 펼침 → 숨 고르기 → 접음(맞닿는 순간 서로의 자리를 옮겨 받음) → 다시 펼침(점선 테두리와 함께)
+    // 펼침 → 숨 고르기 → 접음(맞닿는 순간 서로의 자리를 옮겨 받음) → 다시 펼침(점선과 함께)
     const KEYS = [[0, 1], [700, 0], [1000, 0], [1620, 1], [2360, 0]];
     const T_FOLDED = 1620, END = 2360, CLOSE = 560;
     const blend = (a, b, k) => a + ((b - a) * (1 - Math.cos(Math.PI * k))) / 2;
@@ -840,7 +864,7 @@
     }
     // 상태: mode가 'play'면 시간표를, 'close'면 다시 보기 전에 날개를 접는 움직임(c0에서 접힘까지)을 따릅니다. tau는 그 움직임의 시각,
     let mode = 'play', tau = live ? 1e9 : -LEAD, c0 = 0, hot = -1;
-    // 점선 테두리가 보이는 정도: 짚은 줄은 늘 보이고, 재생할 때는 그 줄이 접힌 순간부터 다시 펼친 뒤 LINGER 동안 보였다가 Fade의 시간에 사라집니다.
+    // 점선이 보이는 정도: 짚은 줄은 늘 보이고, 재생할 때는 그 줄이 접힌 순간부터 다시 펼친 뒤 LINGER 동안 보였다가 Fade의 시간에 사라집니다.
     const LINGER = 1300;
     const ghost = (r) => {
       if (r === hot) return 1;
@@ -856,12 +880,16 @@
         [0, 1].forEach((s) => {
           const dir = s ? 1 : -1, hx = s ? hr : hl, v = it.v[s], o = it.v[1 - s], len = sc(v || 0);
           it.bar[s].setAttribute('d', v == null ? '' : slab(hx, dir, 0, len, yc));
-          // 점선 테두리: 적은 쪽 막대 끝에서 3px 띄우고 많은 쪽의 길이까지(선이 막대 두께 안에 들어오게 1px 안쪽으로 그립니다)
-          const r0 = len > 0.5 ? len + 3 : 1, r1 = sc(o || 0) - 1, less = v != null && o != null && o > v && r1 - r0 >= 3;
-          it.tail[s].setAttribute('d', less && ga > 0 ? slab(hx, dir, r0, r1, yc, 1) : '');
-          it.tail[s].style.opacity = ga.toFixed(3);
-          // 값: 제 막대 끝에서 6px 밖(점선 테두리가 16px보다 짧으면 그 바깥)에 두고, 날개를 따라 움직입니다. 그 자리의 날개가 접힐수록 옅어집니다.
-          const off = less && r1 - len < 16 ? r1 - len + 7 : 6, P = proj(hx, dir, len + off, yc), lab = it.lab[s];
+          // 점선: 적은 쪽 막대 끝에서 3px 띄우고 많은 쪽의 길이까지, 막대의 아래 가장자리 높이에 긋습니다. 끝에는 값의 글자에 닿지 않는 짧은 마감을 세웁니다.
+          const r0 = len > 0.5 ? len + 3 : 1, r1 = sc(o || 0), less = v != null && o != null && o > v && r1 - r0 >= 3 && ga > 0;
+          const ly = yc + hh0 - 1, tick = Math.max(3, Math.min(6, hh0 - 7)), ds = span / S, rs = [r0];
+          if (less && !flat) for (let i = Math.floor(r0 / ds) + 1; i * ds < r1 - 0.5; i++) rs.push(i * ds);
+          rs.push(r1);
+          it.tail[s].setAttribute('d', less ? `M${pts(rs.map((r) => proj(hx, dir, r, ly)))}` : '');
+          it.cap[s].setAttribute('d', less ? `M${pts([proj(hx, dir, r1, ly - tick), proj(hx, dir, r1, ly)])}` : '');
+          it.tail[s].style.opacity = it.cap[s].style.opacity = ga.toFixed(3);
+          // 값: 제 막대 끝에서 6px 밖에 두고, 날개를 따라 움직입니다. 그 자리의 날개가 접힐수록 옅어집니다.
+          const off = 6, P = proj(hx, dir, len + off, yc), lab = it.lab[s];
           lab.setAttribute('x', fx(P[0]));
           lab.setAttribute('y', fx(P[1] + 5));
           lab.style.opacity = Math.max(0, Math.min(1, (Math.cos(angleAt(len + off)) - 0.3) / 0.45)).toFixed(3);
@@ -908,7 +936,7 @@
     plot.addEventListener('focus', () => { if (plot.matches(':focus-visible')) holds.add('focus'); });   // 키보드로 들어왔을 때만 멈춥니다
     plot.addEventListener('blur', () => { holds.delete('focus'); kick(); });
     // 짚는 자리: 항목(줄). 마우스는 그 줄을 짚고, 키보드는 위아래 화살표로 옮깁니다.
-    // 짚으면 그 줄에 옅은 띠를 깔고 이름과 두 값을 굵게 두며, 적은 쪽에 반대쪽 색의 점선 테두리가 나타납니다(값은 숨기지 않습니다). 툴팁은 두 값을 되풀이하지 않고,
+    // 짚으면 그 줄에 옅은 띠를 깔고 이름과 두 값을 굵게 두며, 적은 쪽에 반대쪽 색의 점선이 나타납니다(값은 숨기지 않습니다). 툴팁은 두 값을 되풀이하지 않고,
     // 어느 쪽이 얼마나 많은지(차이와 배수)와, 두 그룹의 색 견본과 함께 각 그룹 합계에서 차지하는 비중을 적습니다.
     // 툴팁은 날개 바깥에 자리가 있으면 그 줄 옆에 두어 다른 줄의 값과 합계를 덮지 않고, 자리가 없으면 그 줄 위, 많은 쪽 날개 쪽에 둡니다.
     interact(plot, N,
@@ -953,3 +981,8 @@
   });
 })();
 </script>
+
+<p><a href="/ko/#butterfly-fold">Vizney Blocks</a> · <a href="butterfly-fold.txt">코드(텍스트)</a> · © 2026 Vizney · MIT License</p>
+</main>
+</body>
+</html>

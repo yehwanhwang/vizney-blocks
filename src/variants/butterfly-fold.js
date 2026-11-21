@@ -1,10 +1,10 @@
-  // Butterfly Flap: 가운데 열에 항목 이름을 두고, 왼쪽 그룹(첫째 데이터 색)과 오른쪽 그룹(둘째 데이터 색)의 막대를 양쪽으로 뻗어 항목마다 두 그룹을 견주는 버터플라이 차트입니다
+  // Butterfly Fold: 가운데 열에 항목 이름을 두고, 왼쪽 그룹(첫째 데이터 색)과 오른쪽 그룹(둘째 데이터 색)의 막대를 양쪽으로 뻗어 항목마다 두 그룹을 견주는 버터플라이 차트입니다
   // (예: 여성 · 남성 회원의 카테고리별 주문 수). 두 날개는 같은 눈금이고, 가운데에는 이름만 두어 두 날개를 가까이 붙입니다(이름 열이 나비의 몸통). 값은 제 막대 끝에 적습니다.
   // 색: 밝은 바탕은 왼쪽 분홍빨강 · 오른쪽 파랑, 어두운 바탕은 왼쪽 노랑 · 오른쪽 흰색입니다.
-  // 견주기: 항목을 짚으면 그 줄의 적은 쪽 막대 끝에서 많은 쪽의 길이까지, 반대쪽 막대의 색으로 점선 테두리를 그립니다(반대쪽 막대를 접어 포갠 자리, 면은 채우지 않습니다).
-  // 점선 테두리의 길이가 두 그룹의 차이이고, 그 색이 많은 쪽입니다. 적은 쪽의 값은 제 막대 끝, 점선 테두리 안에 놓입니다.
+  // 견주기: 항목을 짚으면 그 줄의 적은 쪽 막대 끝에서 많은 쪽의 길이까지, 반대쪽 막대의 색으로 점선을 긋고 끝에 짧은 마감을 세웁니다(간트 차트의 구간처럼, 반대쪽 막대를 접어 포갰을 때 닿는 데까지).
+  // 점선의 길이가 두 그룹의 차이이고, 그 색이 많은 쪽입니다. 점선은 막대의 아래 가장자리 높이에 그어 막대 끝의 값과 겹치지 않습니다.
   // 움직임: 화면에 보이면 접혀 있던 두 날개가 좌우로 펼쳐지고(값 그대로의 막대), 한 번 접어 맞닿았다가 다시 펼칩니다. 맞닿은 날개는 서로의 색을 옮겨 받아,
-  // 다시 펼칠 때 모든 줄에 점선 테두리가 잠깐 보였다가 사라집니다(짚으면 다시 보인다는 예고). 날개는 경첩(이름 열의 가장자리)을 축으로 접히고, 두 날개는 거울처럼 함께 움직입니다.
+  // 다시 펼칠 때 모든 줄에 점선이 잠깐 보였다가 사라집니다(짚으면 다시 보인다는 예고). 날개는 경첩(이름 열의 가장자리)을 축으로 접히고, 두 날개는 거울처럼 함께 움직입니다.
   // 날갯짓처럼 부드럽게: 움직임은 멈춤과 출발이 느린 진자 같은 곡선을 따르고, 날개는 뿌리가 먼저 움직이고 끝이 조금 늦게 따라오며 휘어집니다. 막대의 길이는 값이므로 펼친 자리를 지나치지 않습니다.
   // 줄마다 조금씩 늦게 움직여 위에서 아래로 물결이 지나가고(파도타기), 같은 줄의 좌우 막대는 늘 함께 움직입니다.
   // 움직이는 동안 막대는 원근으로 짧아 보이고, 멈춘 장면의 길이는 값 그대로입니다.
@@ -12,7 +12,7 @@
   // 카드가 화면에 보이면 한 번 움직이고, 다시 보기 단추로 되풀이합니다. 마우스를 올리거나 키보드로 포커스하면 움직임을 잠시 멈춥니다.
   // 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 마지막 장면(펼친 날개)을 바로 그립니다.
   // 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고, 날개를 접었다가 처음부터 다시 펼칩니다.
-  mount('butterfly-flap', (card, d, f) => {
+  mount('butterfly-fold', (card, d, f) => {
     // 걸러서 남은 항목이 없을 때(items가 빈 배열)는 오류가 아니라 빈 화면입니다.
     if (Array.isArray(d.items) && !d.items.length) {
       head(card, d, f, null);
@@ -85,15 +85,16 @@
     sr.append(table);
     card.append(sr);
 
-    // 그림(아래부터): 짚은 줄의 띠 · 점선 테두리 · 막대 · 이름과 값(값은 점선 테두리 안에 놓일 수 있습니다)
+    // 그림(아래부터): 짚은 줄의 띠 · 점선과 그 끝의 마감 · 막대 · 이름과 값
     const band = svgEl('rect', { class: 'vzb-bf-band', rx: 4 });
     const gTail = svgEl('g', {}), gBar = svgEl('g', {}), gTxt = svgEl('g', {});
     items.forEach((it) => {
       it.bar = [0, 1].map((s) => svgEl('path', { class: `vzb-bf-bar ${s ? 'is-r' : 'is-l'}` }));
       it.tail = [0, 1].map((s) => svgEl('path', { class: `vzb-bf-tail ${s ? 'is-r' : 'is-l'}` }));
+      it.cap = [0, 1].map((s) => svgEl('path', { class: `vzb-bf-cap ${s ? 'is-r' : 'is-l'}` }));
       it.nm = svgText(0, 0, it.name, 'vzb-bf-nm', 'middle');
       it.lab = [0, 1].map((s) => svgText(0, 0, it.v[s] == null ? '–' : bare(it.v[s]), 'vzb-bf-val', s ? 'start' : 'end'));   // 값은 제 막대의 바깥 끝에 붙입니다
-      gTail.append(...it.tail);
+      gTail.append(...it.tail, ...it.cap);
       gBar.append(...it.bar);
       gTxt.append(it.nm, ...it.lab);
     });
@@ -175,7 +176,7 @@
       return `M${pts(top)}Q${fx(B[0])},${fx(B[1])} ${fx(B[0])},${fx(B[1] + rv)}L${fx(C[0])},${fx(C[1] - rv)}Q${fx(C[0])},${fx(C[1])} ${pts(bot)}Z`;
     }
     // 움직임의 시간표: [밀리초, 접힌 정도(1 접힘, 0 펼침)]. 점 사이는 코사인 곡선으로 이어, 점마다 속도가 0이 되는 진자 같은 움직임입니다. 펼친 자리를 지나치지 않습니다.
-    // 펼침 → 숨 고르기 → 접음(맞닿는 순간 서로의 자리를 옮겨 받음) → 다시 펼침(점선 테두리와 함께)
+    // 펼침 → 숨 고르기 → 접음(맞닿는 순간 서로의 자리를 옮겨 받음) → 다시 펼침(점선과 함께)
     const KEYS = [[0, 1], [700, 0], [1000, 0], [1620, 1], [2360, 0]];
     const T_FOLDED = 1620, END = 2360, CLOSE = 560;
     const blend = (a, b, k) => a + ((b - a) * (1 - Math.cos(Math.PI * k))) / 2;
@@ -188,7 +189,7 @@
     }
     // 상태: mode가 'play'면 시간표를, 'close'면 다시 보기 전에 날개를 접는 움직임(c0에서 접힘까지)을 따릅니다. tau는 그 움직임의 시각,
     let mode = 'play', tau = live ? 1e9 : -LEAD, c0 = 0, hot = -1;
-    // 점선 테두리가 보이는 정도: 짚은 줄은 늘 보이고, 재생할 때는 그 줄이 접힌 순간부터 다시 펼친 뒤 LINGER 동안 보였다가 Fade의 시간에 사라집니다.
+    // 점선이 보이는 정도: 짚은 줄은 늘 보이고, 재생할 때는 그 줄이 접힌 순간부터 다시 펼친 뒤 LINGER 동안 보였다가 Fade의 시간에 사라집니다.
     const LINGER = 1300;
     const ghost = (r) => {
       if (r === hot) return 1;
@@ -204,12 +205,16 @@
         [0, 1].forEach((s) => {
           const dir = s ? 1 : -1, hx = s ? hr : hl, v = it.v[s], o = it.v[1 - s], len = sc(v || 0);
           it.bar[s].setAttribute('d', v == null ? '' : slab(hx, dir, 0, len, yc));
-          // 점선 테두리: 적은 쪽 막대 끝에서 3px 띄우고 많은 쪽의 길이까지(선이 막대 두께 안에 들어오게 1px 안쪽으로 그립니다)
-          const r0 = len > 0.5 ? len + 3 : 1, r1 = sc(o || 0) - 1, less = v != null && o != null && o > v && r1 - r0 >= 3;
-          it.tail[s].setAttribute('d', less && ga > 0 ? slab(hx, dir, r0, r1, yc, 1) : '');
-          it.tail[s].style.opacity = ga.toFixed(3);
-          // 값: 제 막대 끝에서 6px 밖(점선 테두리가 16px보다 짧으면 그 바깥)에 두고, 날개를 따라 움직입니다. 그 자리의 날개가 접힐수록 옅어집니다.
-          const off = less && r1 - len < 16 ? r1 - len + 7 : 6, P = proj(hx, dir, len + off, yc), lab = it.lab[s];
+          // 점선: 적은 쪽 막대 끝에서 3px 띄우고 많은 쪽의 길이까지, 막대의 아래 가장자리 높이에 긋습니다. 끝에는 값의 글자에 닿지 않는 짧은 마감을 세웁니다.
+          const r0 = len > 0.5 ? len + 3 : 1, r1 = sc(o || 0), less = v != null && o != null && o > v && r1 - r0 >= 3 && ga > 0;
+          const ly = yc + hh0 - 1, tick = Math.max(3, Math.min(6, hh0 - 7)), ds = span / S, rs = [r0];
+          if (less && !flat) for (let i = Math.floor(r0 / ds) + 1; i * ds < r1 - 0.5; i++) rs.push(i * ds);
+          rs.push(r1);
+          it.tail[s].setAttribute('d', less ? `M${pts(rs.map((r) => proj(hx, dir, r, ly)))}` : '');
+          it.cap[s].setAttribute('d', less ? `M${pts([proj(hx, dir, r1, ly - tick), proj(hx, dir, r1, ly)])}` : '');
+          it.tail[s].style.opacity = it.cap[s].style.opacity = ga.toFixed(3);
+          // 값: 제 막대 끝에서 6px 밖에 두고, 날개를 따라 움직입니다. 그 자리의 날개가 접힐수록 옅어집니다.
+          const off = 6, P = proj(hx, dir, len + off, yc), lab = it.lab[s];
           lab.setAttribute('x', fx(P[0]));
           lab.setAttribute('y', fx(P[1] + 5));
           lab.style.opacity = Math.max(0, Math.min(1, (Math.cos(angleAt(len + off)) - 0.3) / 0.45)).toFixed(3);
@@ -256,7 +261,7 @@
     plot.addEventListener('focus', () => { if (plot.matches(':focus-visible')) holds.add('focus'); });   // 키보드로 들어왔을 때만 멈춥니다
     plot.addEventListener('blur', () => { holds.delete('focus'); kick(); });
     // 짚는 자리: 항목(줄). 마우스는 그 줄을 짚고, 키보드는 위아래 화살표로 옮깁니다.
-    // 짚으면 그 줄에 옅은 띠를 깔고 이름과 두 값을 굵게 두며, 적은 쪽에 반대쪽 색의 점선 테두리가 나타납니다(값은 숨기지 않습니다). 툴팁은 두 값을 되풀이하지 않고,
+    // 짚으면 그 줄에 옅은 띠를 깔고 이름과 두 값을 굵게 두며, 적은 쪽에 반대쪽 색의 점선이 나타납니다(값은 숨기지 않습니다). 툴팁은 두 값을 되풀이하지 않고,
     // 어느 쪽이 얼마나 많은지(차이와 배수)와, 두 그룹의 색 견본과 함께 각 그룹 합계에서 차지하는 비중을 적습니다.
     // 툴팁은 날개 바깥에 자리가 있으면 그 줄 옆에 두어 다른 줄의 값과 합계를 덮지 않고, 자리가 없으면 그 줄 위, 많은 쪽 날개 쪽에 둡니다.
     interact(plot, N,

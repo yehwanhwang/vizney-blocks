@@ -20,6 +20,8 @@
 //      motion tokens (0s and keywords are fine), and no cubic-bezier() or linear() is written by hand in CSS or in a card script;
 //      keyframe animations and delays set on their own (transition-delay) are choreography and may keep their own times. The CSS times and curves in tokens.css (--vzb-*-t · -e) are the ones
 //      core.js works out from the springs, and the defaults in core.js (MOTION) are the token values.
+//  12. 문법: every script source (core.js, the shared parts and each card) parses (v0.74). The build pastes the sources into the
+//      card code as text, so without this a stray bracket ships a card that draws nothing.
 import { readdirSync, existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -200,6 +202,11 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
         if (val(`${n}-t`) !== t || val(`${n}-e`) !== e) fail('src/tokens.css', `--vzb-${n}-t · -e가 --vzb-${n}(${val(n)})에서 계산한 값과 다르다. ${t} · ${e.slice(0, 40)}…`);
       }
     }
+  }
+  // 12. syntax: every script source parses (parsed only, never run)
+  for (const [file, text] of files) {
+    if (!file.endsWith('.js')) continue;
+    try { new Function(text); } catch (e) { fail(file, `스크립트 문법 오류: ${e.message}`); }
   }
   const used = new Set(files.flatMap(([, t]) => [...t.matchAll(/var\(\s*(--vzb-[\w-]+)/g)].map((m) => m[1])));
   for (const name of used) if (!declared.has(name) && !setByCode.has(name)) fail('src', `var(${name})을 쓰지만 tokens.css에도, 카드 코드에도 선언이 없다`);

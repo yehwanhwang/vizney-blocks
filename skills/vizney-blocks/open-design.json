@@ -3,7 +3,7 @@
   "specVersion": "1.0.0",
   "name": "vizney-blocks",
   "title": "Vizney Blocks",
-  "version": "0.74.0",
+  "version": "0.75.0",
   "description": "Copy-paste HTML cards for dashboards: charts read through their motion and the controls that filter them, built on the Vizney chart guide. Keep the card code, change only its JSON, and connect controls to charts with a short page script.",
   "description_i18n": {
     "ko": "대시보드에 붙여 쓰는 HTML 카드. 움직임으로 읽는 차트와 그 차트를 거르는 컨트롤을 Vizney 차트 가이드의 판단으로 만들었습니다. 카드 코드는 그대로 두고 JSON만 바꾸며, 컨트롤과 차트는 짧은 페이지 스크립트로 잇습니다."

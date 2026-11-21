@@ -1,0 +1,43 @@
+{
+  "title": "Orders by Category",
+  "subtitle": "Orders from women and men members, October 2026",
+  "lang": "en",
+  "format": "count",
+  "unit": "orders",
+  "groups": [
+    "Women",
+    "Men"
+  ],
+  "items": [
+    {
+      "name": "Beauty",
+      "left": 5400,
+      "right": 1200
+    },
+    {
+      "name": "Fashion",
+      "left": 6900,
+      "right": 3300
+    },
+    {
+      "name": "Home",
+      "left": 3800,
+      "right": 2400
+    },
+    {
+      "name": "Food",
+      "left": 3000,
+      "right": 2800
+    },
+    {
+      "name": "Electronics",
+      "left": 2600,
+      "right": 4800
+    },
+    {
+      "name": "Sports",
+      "left": 1600,
+      "right": 5500
+    }
+  ]
+}

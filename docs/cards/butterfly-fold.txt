@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.78 · Butterfly Chart · Butterfly Fold (butterfly-fold)
+<!-- Vizney Blocks v0.79 · Butterfly Chart · Butterfly Fold (butterfly-fold)
      https://blocks.vizney.com/cards/butterfly-fold.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">

@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.79 · Butterfly Chart · Butterfly Fold (butterfly-fold)
+<!-- Vizney Blocks v0.80 · Butterfly Chart · Butterfly Fold (butterfly-fold)
      https://blocks.vizney.com/cards/butterfly-fold.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -663,7 +663,8 @@
   // 움직이는 동안 막대는 원근으로 짧아 보이고, 멈춘 장면의 길이는 값 그대로입니다.
   // 값은 날개에 붙어 함께 움직이며 접힐수록 옅어지고, 이름은 움직이지 않습니다.
   // 카드가 화면에 보이면 한 번 움직이고, 다시 보기 단추로 되풀이합니다. 마우스를 올리거나 키보드로 포커스하면 움직임을 잠시 멈춥니다.
-  // 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 마지막 장면(펼친 날개)을 바로 그립니다.
+  // 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 처음부터 접고 펴지 않고, 펼친 날개에서 막대가 있던 길이와 자리에서 새 길이와 자리로 옮겨 갑니다(같은 이름의 항목이 같은 줄).
+  // 새 항목은 경첩에서 자라고 빠진 항목은 흐려지며 사라집니다. 앞 카드가 접고 펴던 중이었거나 그룹 · 카드 크기가 달라지면 옮겨 가지 않고 펼친 날개를 바로 그립니다.
   // 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고, 날개를 접었다가 처음부터 다시 펼칩니다.
   mount('butterfly-fold', (card, d, f) => {
     // 걸러서 남은 항목이 없을 때(items가 빈 배열)는 오류가 아니라 빈 화면입니다.
@@ -705,10 +706,18 @@
     hd.append(btn);   // 다시 보기 단추는 머리의 오른쪽 위
     // 위쪽 줄: 왼쪽 끝에 왼쪽 그룹, 오른쪽 끝에 오른쪽 그룹(견본 · 이름 · 합계). 범례를 대신합니다.
     const keys = el('div', 'vzb-bf-keys');
-    const gk = [0, 1].map((s) => {
-      const k = el('span', `vzb-bf-key ${s ? 'is-right' : 'is-left'}`), b = el('b', 'vzb-bf-tot'), [a, u] = f.parts(tot[s]);
-      b.append(el('span', null, a));
+    // 합계의 글자: 만들 때와 옮겨 가는 동안 같은 모양으로 적습니다.
+    function setTot(b, v) {
+      const [a, u] = f.parts(v);
+      if (b.key === a + '|' + u) return;
+      b.key = a + '|' + u;
+      b.replaceChildren(el('span', null, a));
       if (u) b.append(el('span', 'vzb-bf-u', u));
+    }
+    const gk = [0, 1].map((s) => {
+      const k = el('span', `vzb-bf-key ${s ? 'is-right' : 'is-left'}`), b = el('b', 'vzb-bf-tot');
+      k.tot = b;
+      setTot(b, tot[s]);
       k.append(el('i', `vzb-key is-box vzb-bf-k${s}`), el('span', null, groups[s]), b);
       return k;
     });
@@ -741,7 +750,7 @@
     // 그림(아래부터): 짚은 줄의 띠 · 점선과 그 끝의 마감 · 막대 · 이름과 값
     const band = svgEl('rect', { class: 'vzb-bf-band', rx: 4 });
     const gTail = svgEl('g', {}), gBar = svgEl('g', {}), gTxt = svgEl('g', {});
-    items.forEach((it) => {
+    const draw = (it) => {
       it.bar = [0, 1].map((s) => svgEl('path', { class: `vzb-bf-bar ${s ? 'is-r' : 'is-l'}` }));
       it.tail = [0, 1].map((s) => svgEl('path', { class: `vzb-bf-tail ${s ? 'is-r' : 'is-l'}` }));
       it.cap = [0, 1].map((s) => svgEl('path', { class: `vzb-bf-cap ${s ? 'is-r' : 'is-l'}` }));
@@ -750,7 +759,8 @@
       gTail.append(...it.tail, ...it.cap);
       gBar.append(...it.bar);
       gTxt.append(it.nm, ...it.lab);
-    });
+    };
+    items.forEach(draw);
     svg.append(band, gTail, gBar, gTxt);
 
     // 가운데 열과 값의 폭(짚으면 굵어지므로 굵은 글자로 잽니다). 글꼴이 늦게 실리면 실린 뒤 다시 잽니다(아래 fonts.ready).
@@ -768,6 +778,10 @@
     const PK = 11;   // 원근: 보는 눈이 가장 긴 날개 길이의 11배 떨어져 있습니다(접힌 날개 끝이 위아래로 10%쯤만 벌어집니다)
     const sc = (v) => (v > 0 ? (v / vmax) * span : 0);
     const rowY = (r) => pitch * (r + 0.5);
+    // 옮겨 가기: 앞 카드가 맡긴 장면(scene)에서 시작해, 줄의 높이 · 막대의 길이(px) · 값 · 합계 · 가운데 열의 폭 · 막대 두께를 스프링(Move: 넘치지 않음)으로 옮깁니다.
+    // it.sy가 줄의 높이, it.sl[s]가 막대의 길이, it.sn[s]가 막대 끝에 적는 값이고, lost가 빠져서 흐려지는 항목입니다.
+    const [MK, MC] = motion(card).pair('move');
+    let scene = before(card), moving = false, lost = [], m0 = 0, sB = null, sH = null, sT = null, T_BODY = 0, T_HH = 0;
     function layout(w, h) {
       W = w; H = h;
       svg.setAttribute('width', w);
@@ -782,10 +796,13 @@
       hh0 = Math.max(3, Math.min(16, pitch * 0.36));
       ym = h / 2;
       PD = span * PK;
+      T_BODY = body; T_HH = hh0;
+      if (moving) settle();   // 옮겨 가는 중에 크기가 바뀌면 새 크기의 마지막 장면으로 둡니다
       items.forEach((it, r) => { it.nm.setAttribute('x', fx(cx)); it.nm.setAttribute('y', fx(rowY(r) + 5)); });
       band.setAttribute('x', 0);
       band.setAttribute('width', fx(w));
       band.setAttribute('height', fx(Math.max(0, pitch - 2)));
+      if (scene) { const prev = scene; scene = null; begin(prev); }
       render();
     }
 
@@ -852,14 +869,19 @@
     const curve = (x) => (mode === 'play' ? pose(x) : x <= 0 ? c0 : x >= CLOSE ? 1 : blend(c0, 1, x / CLOSE));
     function render() {
       if (!W) return;
-      items.forEach((it, r) => {
-        const yc = rowY(r), ga = ghost(r);
-        shape(r);
+      const fk = moving ? fadeK() : 1;
+      items.concat(lost).forEach((it, r) => {
+        const yc = it.sy ? it.sy.x : rowY(r), ga = it.lost ? 0 : ghost(r), fading = moving && (it.lost || it.o0 < 1), op = fading ? oOf(it, fk) : 1;
+        shape(it.lost ? 0 : r);
+        if (it.sy) it.nm.setAttribute('y', fx(yc + 5));
+        if (fading) it.nm.style.opacity = op.toFixed(3);
         [0, 1].forEach((s) => {
-          const dir = s ? 1 : -1, hx = s ? hr : hl, v = it.v[s], o = it.v[1 - s], len = sc(v || 0);
-          it.bar[s].setAttribute('d', v == null ? '' : slab(hx, dir, 0, len, yc));
+          const dir = s ? 1 : -1, hx = s ? hr : hl, v = it.v[s], o = it.v[1 - s], len = it.sl ? it.sl[s].x : sc(v || 0);
+          it.bar[s].setAttribute('d', v == null && !(it.sl && len > 0.5) ? '' : slab(hx, dir, 0, len, yc));
+          if (fading) it.bar[s].style.opacity = op.toFixed(3);
+          if (it.sn && it.sn[s]) { const tv = bare(whole(it.sn[s].x, it.v[s])); if (it.lab[s].textContent !== tv) it.lab[s].textContent = tv; }
           // 점선: 적은 쪽 막대 끝에서 3px 띄우고 많은 쪽의 길이까지, 막대의 아래 가장자리 높이에 긋습니다. 끝에는 값의 글자에 닿지 않는 짧은 마감을 세웁니다.
-          const r0 = len > 0.5 ? len + 3 : 1, r1 = sc(o || 0), less = v != null && o != null && o > v && r1 - r0 >= 3 && ga > 0;
+          const r0 = len > 0.5 ? len + 3 : 1, r1 = it.sl ? it.sl[1 - s].x : sc(o || 0), less = v != null && o != null && o > v && r1 - r0 >= 3 && ga > 0;
           const ly = yc + hh0 - 1, tick = Math.max(3, Math.min(6, hh0 - 7)), ds = span / S, rs = [r0];
           if (less && !flat) for (let i = Math.floor(r0 / ds) + 1; i * ds < r1 - 0.5; i++) rs.push(i * ds);
           rs.push(r1);
@@ -870,14 +892,118 @@
           const off = 6, P = proj(hx, dir, len + off, yc), lab = it.lab[s];
           lab.setAttribute('x', fx(P[0]));
           lab.setAttribute('y', fx(P[1] + 5));
-          lab.style.opacity = Math.max(0, Math.min(1, (Math.cos(angleAt(len + off)) - 0.3) / 0.45)).toFixed(3);
+          lab.style.opacity = (op * Math.max(0, Math.min(1, (Math.cos(angleAt(len + off)) - 0.3) / 0.45))).toFixed(3);
         });
       });
       band.style.display = hot < 0 ? 'none' : '';
       if (hot >= 0) band.setAttribute('y', fx(rowY(hot) - pitch / 2 + 1));
     }
 
+    // 앞 장면에서 시작합니다. 같은 이름의 항목이 같은 줄입니다. 앞 카드가 접고 펴던 중이었거나, 그룹이나 카드 크기가 다르면 옮겨 가지 않습니다.
+    const fadeK = () => Math.max(0, Math.min(1, (performance.now() - m0) / FADE));
+    const oOf = (it, k) => (it.lost ? it.o0 * (1 - k) : it.o0 + (1 - it.o0) * k);
+    const near = (a, b, e) => Math.abs(a - b) <= e;
+    const whole = (x, to) => (Number.isInteger(to) ? Math.round(x) : x);   // 정수로 가는 값은 가는 동안에도 정수로 적습니다
+    function begin(prev) {
+      if (!prev || !prev.inView || !prev.flat || prev.W !== W || prev.H !== H || !Array.isArray(prev.items)) return;
+      if (!Array.isArray(prev.groups) || prev.groups[0] !== groups[0] || prev.groups[1] !== groups[1]) return;
+      const now = performance.now(), old = new Map(prev.items.map((q) => [q.name, q]));
+      let any = false;
+      items.forEach((it, r) => {
+        const q = old.get(it.name);
+        old.delete(it.name);
+        it.o0 = q ? q.o : 0;
+        if (q) {
+          it.sy = { x: q.y, v: q.yv || 0 };
+          it.sl = [0, 1].map((s) => ({ x: q.len[s], v: q.lv[s] || 0 }));
+          it.sn = [0, 1].map((s) => (it.v[s] != null && q.val[s] != null ? { x: q.val[s], v: q.vv[s] || 0 } : null));
+        } else {   // 새 항목: 제 줄에서 경첩부터 자라며 나타납니다
+          it.sy = { x: rowY(r), v: 0 };
+          it.sl = [0, 1].map(() => ({ x: 0, v: 0 }));
+          it.sn = [0, 1].map((s) => (it.v[s] != null ? { x: 0, v: 0 } : null));
+        }
+        if (it.o0 < 1 || !near(it.sy.x, rowY(r), 0.1) || Math.abs(it.sy.v) > 1) any = true;
+        [0, 1].forEach((s) => {
+          if (!near(it.sl[s].x, sc(it.v[s] || 0), 0.1) || Math.abs(it.sl[s].v) > 1) any = true;
+          if (it.sn[s] && !near(it.sn[s].x, it.v[s], vmax * 1e-6)) any = true;
+        });
+      });
+      // 빠진 항목: 있던 자리와 길이 그대로 그려 두고 흐려지게 합니다.
+      old.forEach((q) => {
+        if (!(q.o > 0.01)) return;
+        const g = { name: q.name, lost: true, o0: q.o, v: [null, null], sy: { x: q.y, v: 0 }, sl: q.len.map((x) => ({ x, v: 0 })), sn: null };
+        draw(g);
+        g.lab.forEach((l, s) => { l.textContent = q.txt[s]; });
+        g.nm.setAttribute('x', fx(cx));
+        lost.push(g);
+        any = true;
+      });
+      if (!near(prev.body, T_BODY, 0.05) || !near(prev.hh, T_HH, 0.05) || tot.some((v, s) => !near(prev.tot[s], v, 1e-9))) any = true;
+      if (!any) { items.forEach((it) => { it.sy = it.sl = it.sn = null; it.o0 = 1; }); return; }
+      sB = { x: prev.body, v: prev.bv || 0 };
+      sH = { x: prev.hh, v: prev.hv || 0 };
+      sT = [0, 1].map((s) => ({ x: prev.tot[s], v: (prev.tv && prev.tv[s]) || 0 }));
+      moving = true;
+      m0 = now;
+      stepMove(Math.min(100, Math.max(0, now - (prev.at || now))));   // 끄는 동안처럼 그릴 틈 없이 갈아 끼워져도, 그 사이 흐른 시간만큼 나아갑니다
+      kick();
+    }
+    // 스프링을 dt만큼 옮기고, 모두 제자리에 닿고 다 나타나거나 사라졌으면 끝냅니다.
+    function stepMove(dt) {
+      let more = false;
+      const go = (sp, to, unit) => {
+        springTo(sp, to, MK, MC, dt);
+        if (Math.abs(sp.x - to) > unit * 0.0006 || Math.abs(sp.v) > unit * 0.01) more = true; else { sp.x = to; sp.v = 0; }
+      };
+      const px = Math.max(1, span), tmax = Math.max(1, tot[0], tot[1], sT[0].x, sT[1].x);
+      items.forEach((it, r) => {
+        if (!it.sy) return;
+        go(it.sy, rowY(r), px);
+        [0, 1].forEach((s) => { go(it.sl[s], sc(it.v[s] || 0), px); if (it.sn[s]) go(it.sn[s], it.v[s], vmax); });
+      });
+      go(sB, T_BODY, px);
+      go(sH, T_HH, px);
+      [0, 1].forEach((s) => { go(sT[s], tot[s], tmax); setTot(gk[s].tot, whole(sT[s].x, tot[s])); });
+      if (fadeK() < 1 && (lost.length || items.some((it) => it.o0 < 1))) more = true;
+      if (!more) { settle(); return; }
+      hl = cx - sB.x; hr = cx + sB.x; hh0 = sH.x;
+    }
+    // 다 옮겨 갔습니다: 옮겨 가는 동안 둔 것(높이 · 길이 · 값 · 투명도 · 사라지던 항목)을 걷어 내, 처음부터 그린 장면과 같게 합니다.
+    function settle() {
+      moving = false;
+      hl = cx - T_BODY; hr = cx + T_BODY; hh0 = T_HH;
+      const clear = (n2) => { n2.style.removeProperty('opacity'); if (!n2.getAttribute('style')) n2.removeAttribute('style'); };
+      items.forEach((it, r) => {
+        if (it.o0 < 1) [it.nm, ...it.bar].forEach(clear);
+        it.sy = it.sl = it.sn = null;
+        it.o0 = 1;
+        it.nm.setAttribute('y', fx(rowY(r) + 5));
+        it.lab.forEach((l, s) => { const tv = it.v[s] == null ? '–' : bare(it.v[s]); if (l.textContent !== tv) l.textContent = tv; });
+      });
+      lost.forEach((g) => [g.nm, ...g.bar, ...g.tail, ...g.cap, ...g.lab].forEach((n2) => n2.remove()));
+      lost = [];
+      if (sT) [0, 1].forEach((s) => setTot(gk[s].tot, tot[s]));
+      sB = sH = sT = null;
+    }
+    keep(card, () => {
+      if (!W) return scene;
+      const k = moving ? fadeK() : 1;
+      const one = (it, r) => ({
+        name: it.name, o: moving && (it.lost || it.o0 < 1) ? oOf(it, k) : 1, txt: it.lab.map((l) => l.textContent),
+        y: it.sy ? it.sy.x : rowY(r), yv: it.sy ? it.sy.v : 0,
+        len: [0, 1].map((s) => (it.sl ? it.sl[s].x : sc(it.v[s] || 0))), lv: [0, 1].map((s) => (it.sl ? it.sl[s].v : 0)),
+        val: [0, 1].map((s) => (it.sn && it.sn[s] ? it.sn[s].x : it.v[s])), vv: [0, 1].map((s) => (it.sn && it.sn[s] ? it.sn[s].v : 0)),
+      });
+      return {
+        at: performance.now(), inView, W, H, groups, flat: mode === 'play' && tau - WAVE >= END + LAG,
+        body: sB ? sB.x : T_BODY, bv: sB ? sB.v : 0, hh: sH ? sH.x : T_HH, hv: sH ? sH.v : 0,
+        tot: sT ? sT.map((q) => q.x) : tot, tv: sT ? sT.map((q) => q.v) : [0, 0],
+        items: items.map(one).concat(lost.map((g) => Object.assign(one(g, 0), { gone: true }))),
+      };
+    });
+
     // 재생: 화면에 보이고(inView) 마우스 · 포커스로 잠시 멈추지 않았을 때(holds)만 나아갑니다. 카드가 페이지에서 빠지면 멈춥니다.
+    // 옮겨 가기는 데이터가 바뀐 데 대한 답이라, 마우스가 올라가 있어도 끝까지 갑니다.
     const loop = !!card.closest('[data-vzb-loop]');
     const holds = new Set();
     let idle = 0, playing = false, seen = false, inView = false, raf = 0, last = 0;
@@ -894,16 +1020,18 @@
       if (!card.isConnected || !inView) { last = 0; return; }
       const dt = last ? Math.min(64, stamp - last) : 16;
       last = stamp;
+      if (moving) stepMove(dt);
       if (busy()) advance(dt);
       render();
-      if (busy()) raf = requestAnimationFrame(tick); else last = 0;
+      if (moving || busy()) raf = requestAnimationFrame(tick); else last = 0;
     }
-    function kick() { if (!raf && inView && card.isConnected && busy()) raf = requestAnimationFrame(tick); }
+    function kick() { if (!raf && inView && card.isConnected && (moving || busy())) raf = requestAnimationFrame(tick); }
     // 다시 보기: 날개가 펼쳐져 있으면 그 자리에서 접은 뒤 처음부터 펼칩니다(접힌 날개로 건너뛰지 않습니다).
     function play() {
       idle = 0;
       playing = true;
       last = 0;
+      if (moving) settle();   // 옮겨 가던 중에 다시 보기를 누르면 새 값의 장면에서 접습니다
       if (mode === 'play' && tau > 0) fold();
       render();
       kick();
@@ -943,6 +1071,7 @@
       () => { hot = -1; svg.classList.remove('is-hover'); items.forEach((x) => [x.nm, ...x.lab].forEach((n2) => n2.classList.remove('is-on'))); render(); },
       true);
 
+    if (scene) inView = !!scene.inView;   // 앞 카드가 화면에 보이고 있었으면 바로 움직입니다
     onSize(plot, layout);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { measure(); if (W) layout(W, H); });
     // 화면에 처음 보일 때 움직입니다. 화면 밖에 있는 동안은 멈춰 둡니다.
@@ -951,6 +1080,7 @@
       const io = new IntersectionObserver((es) => {
         if (!card.isConnected) { io.disconnect(); return; }
         inView = es[es.length - 1].isIntersecting;
+        if (!inView && moving) { settle(); render(); }   // 화면 밖에서는 다 옮겨 간 장면으로 둡니다
         if (inView) start();
         kick();
       }, { threshold: 0.3 });

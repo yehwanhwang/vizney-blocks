@@ -147,7 +147,7 @@
     // 옮겨 가기(데이터가 바뀌어 다시 그릴 때): 앞 카드가 넘긴 장면(칸마다 보이던 항목)에서 달라진 칸만 차례로 뒤집습니다. 칸마다 제 출발 시각(t0)을 가지며,
     // 가던 중에 값이 또 바뀌면 뒤집히던 칸은 하던 데서 이어 갑니다. 필터에 대한 답이라 차례의 시간은 짧게(모두 합쳐 0.45초 안) 둡니다.
     // 괄호(바뀐 %p)는 자리나 글자가 달라졌을 때만 칸이 다 뒤집힌 뒤 다시 긋고, 같으면 그대로 둡니다.
-    let scene = before(card), moving = false, m0 = 0, mt = 0, mtEnd = 0, braceKeep = true, quiet = false, pp0 = null;
+    let scene = before(card), moving = false, m0 = 0, mt = 0, mtEnd = 0, braceKeep = true, quiet = false, had = false, pp0 = null;
     // 증감 배지는 나타날 때 흐렸다 또렷해지는데, 이미 보이던 배지가 숫자만 바뀔 때는 그 등장 효과를 건너뜁니다(깜빡이지 않게).
     const calm = (n) => { if (n && n.getAnimations) n.getAnimations().forEach((a) => a.finish()); };
     const braceKey = (p) => (P > 1 && p === last && diff ? `${Math.min(focus.cells[0], focus.cells[last])}-${Math.max(focus.cells[0], focus.cells[last])}|${ppText(diff, 0)}` : '');
@@ -155,7 +155,7 @@
       if (!prev || !prev.inView || !Array.isArray(prev.cells) || prev.cells.length !== cells.length) return;
       if (!Array.isArray(prev.names) || prev.names.length !== items.length || prev.names.some((n, k) => n !== items[k].name)) return;
       // 시간은 실제 시계로 잽니다. 끄는 동안처럼 프레임마다 값이 바뀌면 카드가 그릴 틈 없이 갈아 끼워지는데, 그 사이 흐른 시간(lag)만큼 칸이 나아가 있어야 손을 따라옵니다.
-      quiet = !!prev.badge;
+      had = quiet = !!prev.badge;   // 배지가 보이고 있었는지: 아니었으면(처음 재생하던 중) 다 옮겨 간 뒤에 나타납니다
       pp0 = typeof prev.pp === 'number' ? prev.pp : null;
       const dst = cats[to], fresh = [], now = performance.now(), lag = Math.max(0, now - (prev.at || now));
       const fly = (r, src, D, k) => { r.mv = true; r.past = k >= 0.4; r.src = src; r.dst = D; r.t0 = -k * FLIP - lag; };
@@ -271,7 +271,7 @@
       brace.style.opacity = kb > 0 ? 1 : 0;
       braceText.style.opacity = atLast && diff ? (busy ? fx(clamp((clock - end - OUT * 0.5) / (OUT * 0.5))) : 1) : 0;
       if (bd) {
-        const show = atLast && done, full = focus.cells[last] - focus.cells[0];
+        const show = atLast && done && (!moving || had), full = focus.cells[last] - focus.cells[0];
         const pp = moving && pp0 != null && due ? Math.round(pp0 + (full - pp0) * (turned / due)) : full;
         if (bd.pp !== pp) { const nb = badge(pct, focus.cells[0] + pp, focus.cells[0], d.better); nb.classList.add('vzb-wf-in'); nb.pp = pp; bd.replaceWith(nb); bd = nb; if (moving) calm(nb); }
         bd.hidden = !show; vs.hidden = !show;
@@ -282,7 +282,7 @@
       if (!W) return scene;
       const c = moving ? performance.now() - m0 : 0;
       return {
-        at: performance.now(), inView, badge: !!bd && !bd.hidden, pp: bd ? bd.pp : null, names: items.map((it) => it.name), brace: moving && !braceKeep && c < mtEnd + OUT ? '' : braceKey(shownP()),
+        at: performance.now(), inView, badge: !!bd && !bd.hidden, pp: bd ? bd.pp : null, names: items.map((it) => it.name), brace: (moving && !braceKeep && c < mtEnd + OUT) || from !== to ? '' : braceKey(shownP()),   // 괄호가 아직 그어지지 않았으면 비워, 새 카드가 칸이 다 뒤집힌 뒤에 긋게 합니다
         cells: cells.map((r) => {
           if (!moving || !r.mv) return { cat: r.cat, k: 1 };
           const k = Math.min(1, (c - r.t0) / FLIP);   // 아직 차례가 오지 않은 칸은 0보다 작습니다

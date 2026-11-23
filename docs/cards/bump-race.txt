@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.78 · Bump Chart · Bump Race (bump-race)
+<!-- Vizney Blocks v0.79 · Bump Chart · Bump Race (bump-race)
      https://blocks.vizney.com/cards/bump-race.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
@@ -693,7 +693,9 @@
   // 되감기와 빨리 감기는 한 번 누르면 한 기간씩, 누르고 있으면 계속 빠르게 옮겨 가다가 놓은 자리에서 가까운 기간에 멈춥니다.
   // 순위는 카드가 values로 매깁니다(better가 down이면 작은 값이 1위). 같은 값은 앞 기간 순위, 그다음 적은 순서를 따르고, 값이 null인 기간은 선을 끊습니다.
   // 움직임: 화면에 보이면 첫 기간에서 잠시 멈췄다가 끝까지 한 번 재생하고 멈춥니다. 그래프에 마우스를 올리거나 키보드로 포커스하면 잠시 멈춥니다.
-  // 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 고른 기간(카드 요소의 data-vzb-period, 없으면 마지막)을 바로 그립니다.
+  // 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 처음부터 재생하지 않고 고른 기간(카드 요소의 data-vzb-period, 없으면 마지막)을 이어 가며,
+  // 화면에 있던 선이 새 순위 자리로 옮겨 갑니다(같은 이름의 항목이 같은 선). 새 항목은 제자리에서 나타나고 빠진 항목은 흐려지며 사라집니다.
+  // 기간(labels)이나 카드 크기가 달라지면 옮겨 가지 않고 바로 그립니다.
   // 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 끝에서 잠시 쉬고 처음으로 감았다가 다시 재생합니다. 손을 대면 되풀이를 멈춥니다.
   mount('bump-race', (card, d, f) => {
     // 걸러서 남은 항목이 없을 때(items가 빈 배열)는 오류가 아니라 빈 화면입니다.
@@ -777,7 +779,7 @@
 
     // 그림: 회색 선 → 짚을 항목의 선 → 선 끝 점 → 이름표 순서로 쌓아, 이름표가 늘 선 위에 오게 합니다.
     const gLines = svgEl('g', {}), gHeads = svgEl('g', {}), gLabs = svgEl('g', {});
-    items.forEach((it) => {
+    const draw = (it) => {
       const cls = it.focus ? ' is-focus' : '';
       it.line = svgEl('g', { class: `vzb-br-item${cls}` });
       it.path = svgEl('path', { class: 'vzb-br-line' });
@@ -791,7 +793,8 @@
       it.lab.append(it.labR, it.labN);
       gHeads.append(it.head);
       gLabs.append(it.lab);
-    });
+    };
+    items.forEach(draw);
     items.filter((it) => !it.focus).concat(focus).forEach((it) => gLines.append(it.line));
     svg.append(gLines, gHeads, gLabs);
     // 구간 막대의 그림: 레일 · 지나온 구간 · 기간 눈금 · 손잡이 · 처음과 끝 기간 이름 · 손잡이 아래 지금 기간
@@ -809,7 +812,15 @@
       nowW = Math.max(...labels.map((l) => textW(l, 700, fam, 14)));
     };
     measure();
-    let W = 0, H = 0, xs = [], Y = () => 0;
+    let W = 0, H = 0, xs = [], Y = () => 0, RT = 0;
+    const L = 6;
+    // 옮겨 가기: 앞 카드가 맡긴 장면(scene)에서 시작해, 점마다 화면의 높이(px)를 새 순위 자리로 스프링(Move: 넘치지 않음)으로 옮깁니다.
+    // it.sy[t]가 옮겨 가는 동안의 높이, sR이 이름표 열이 달라질 때의 오른쪽 끝, ghosts가 빠져서 흐려지는 항목입니다.
+    const [MK, MC] = motion(card).pair('move'), FADE = motion(card).ms('fade');
+    let scene = before(card), moving = false, sR = null, ghosts = [], m0 = 0;
+    const yy = (it, t) => (it.sy && it.sy[t] ? it.sy[t].x : Y(it.rk[t]));
+    // 보이기 · 감추기: 다시 보일 때 빈 style 속성을 남기지 않아, 이어서 재생한 카드와 바로 그린 카드의 그림이 글자 그대로 같습니다.
+    const vis = (n2, on) => { if (!on) n2.style.display = 'none'; else if (n2.style.display) { n2.style.removeProperty('display'); if (!n2.getAttribute('style')) n2.removeAttribute('style'); } };
     // 선 한 칸: 앞 기간 점에서 뒤 기간 점까지 가로로 나갔다 들어오는 S자 곡선(조절점은 가로 가운데)입니다.
     // 시간이 같은 속도로 흐르도록, 가로로 간 몫 s에 맞는 곡선의 매개변수 u를 뉴턴법으로 찾아 그 자리에서 곡선을 자릅니다.
     const uOf = (s) => { let u = s; for (let k = 0; k < 6; k++) { const g = 1.5 * u - 1.5 * u * u + u * u * u - s, dg = 1.5 - 3 * u + 3 * u * u; u = Math.max(0, Math.min(1, u - g / dg)); } return u; };
@@ -826,58 +837,145 @@
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
       // 오른쪽에는 이름표 자리를 남깁니다. 위아래는 점 반지름만큼 띄웁니다.
       // 오른쪽 자리는 이름표와 재생 단추 가운데 넓은 쪽만큼 남깁니다.
-      const L = 6, R = Math.max(L + 40, w - Math.max(nameW + 16, ctl.offsetWidth + 14)), top = 8, bottom = h - 8;
-      xs = labels.map((_, t) => L + (t * (R - L)) / last);
+      const top = 8, bottom = h - 8;
+      RT = Math.max(L + 40, w - Math.max(nameW + 16, ctl.offsetWidth + 14));
       Y = (r) => (N < 2 ? (top + bottom) / 2 : top + ((r - 1) * (bottom - top)) / (N - 1));
-      items.forEach((it) => it.dots.forEach((c, t) => { if (it.rk[t]) { c.setAttribute('cx', fx(xs[t])); c.setAttribute('cy', fx(Y(it.rk[t]))); } }));
       const sw = scrub.clientWidth;
       ssvg.setAttribute('width', sw);
       ssvg.setAttribute('height', 34);
       ssvg.setAttribute('viewBox', `0 0 ${sw} 34`);
       [track, fill].forEach((l) => { l.setAttribute('y1', 9); l.setAttribute('y2', 9); });
+      [endA, endB, now].forEach((s) => s.setAttribute('y', 30));
+      if (moving) settle();   // 옮겨 가는 중에 크기가 바뀌면 새 크기의 마지막 장면으로 둡니다
+      setX(RT);
+      if (scene) { const prev = scene; scene = null; begin(prev); }
+      render();
+    }
+    // 가로 자리: 오른쪽 끝 R에 맞춰 기간의 자리(xs)와 구간 막대의 레일 · 눈금 · 처음과 끝 이름을 놓고, 기간 점을 지금 높이에 둡니다.
+    function setX(R) {
+      xs = labels.map((_, t) => L + (t * (R - L)) / last);
+      items.concat(ghosts).forEach((it) => it.dots.forEach((c, t) => { if (it.rk[t]) { c.setAttribute('cx', fx(xs[t])); c.setAttribute('cy', fx(yy(it, t))); } }));
       track.setAttribute('x1', fx(xs[0]));
       track.setAttribute('x2', fx(xs[last]));
       fill.setAttribute('x1', fx(xs[0]));
       ticks.forEach((c, t) => { c.setAttribute('cx', fx(xs[t])); c.setAttribute('cy', 9); });
       endA.setAttribute('x', fx(Math.max(0, xs[0] - 6)));
       endB.setAttribute('x', fx(xs[last] + 6));
-      [endA, endB, now].forEach((s) => s.setAttribute('y', 30));
-      render();
     }
+    // 앞 장면에서 시작합니다. 같은 이름의 항목이 같은 선이고, 기간이나 카드 크기가 다르면 옮겨 가지 않습니다.
+    function begin(prev) {
+      if (!prev || !prev.inView || prev.W !== W || prev.H !== H || !Array.isArray(prev.items)) return;
+      if (!Array.isArray(prev.labels) || prev.labels.length !== n || prev.labels.some((l, t) => l !== labels[t])) return;
+      const now = performance.now(), hh = Math.max(1, H), old = new Map(prev.items.map((q) => [q.name, q]));
+      let any = false;
+      items.forEach((it) => {
+        const q = old.get(it.name);
+        old.delete(it.name);
+        it.o0 = q ? q.o : 0;   // 새 항목은 제자리에서 나타납니다
+        if (it.o0 < 1) any = true;
+        if (!q) return;
+        it.sy = it.rk.map((r, t) => (r && q.ys[t] != null ? { x: q.ys[t], v: q.vs[t] || 0 } : null));
+        if (it.sy.some((sp, t) => sp && (Math.abs(sp.x - Y(it.rk[t])) > hh * 0.0006 || Math.abs(sp.v) > hh * 0.01))) any = true;
+      });
+      // 빠진 항목: 있던 자리에 그대로 그려 두고 흐려지게 합니다.
+      old.forEach((q) => {
+        if (!(q.o > 0.01)) return;
+        const g = { name: q.name, focus: false, ghost: true, o0: q.o, rk: q.ys.map((y) => (y == null ? 0 : 1)), sy: q.ys.map((y) => (y == null ? null : { x: y, v: 0 })) };
+        draw(g);
+        if (q.focus) [g.line, g.head, g.lab].forEach((n2) => n2.classList.add('is-focus'));
+        g.labR.textContent = q.rt || '';
+        gLines.prepend(g.line);
+        ghosts.push(g);
+        any = true;
+      });
+      if (Math.abs(prev.R - RT) > 0.05 || Math.abs(prev.Rv || 0) > 1) { sR = { x: prev.R, v: prev.Rv || 0 }; any = true; }
+      // 기간의 자리도 이어 갑니다: 재생하던 중이면 그 자리에서 마저 재생하고, 아니면 고른 기간으로 갑니다.
+      const goal = p;
+      p = Math.max(0, Math.min(last, +prev.p || 0));
+      if (prev.playing) { playing = true; wait = 0; setBtn(); } else if (Math.abs(p - goal) > 1e-3) glide(goal, 200);
+      if (!any) { items.forEach((it) => { it.sy = null; }); return; }
+      moving = true;
+      m0 = now;
+      stepMove(Math.min(100, Math.max(0, now - (prev.at || now))));   // 끄는 동안처럼 그릴 틈 없이 갈아 끼워져도, 그 사이 흐른 시간만큼 나아갑니다
+      kick();
+    }
+    // 스프링을 dt만큼 옮기고, 모두 제자리에 닿고 다 나타나거나 사라졌으면 끝냅니다.
+    const fadeK = () => Math.max(0, Math.min(1, (performance.now() - m0) / FADE));
+    const oOf = (it, k) => (it.ghost ? it.o0 * (1 - k) : it.o0 + (1 - it.o0) * k);
+    function stepMove(dt) {
+      let more = false;
+      const hh = Math.max(1, H);
+      const go = (sp, to) => {
+        springTo(sp, to, MK, MC, dt);
+        if (Math.abs(sp.x - to) > hh * 0.0006 || Math.abs(sp.v) > hh * 0.01) more = true; else { sp.x = to; sp.v = 0; }
+      };
+      items.forEach((it) => { if (it.sy) it.sy.forEach((sp, t) => { if (sp) go(sp, Y(it.rk[t])); }); });
+      if (sR) go(sR, RT);
+      const k = fadeK();
+      if (k < 1 && (ghosts.length || items.some((it) => it.o0 < 1))) more = true;
+      items.concat(ghosts).forEach((it) => { if (it.ghost || it.o0 < 1) { const o = oOf(it, k).toFixed(3); [it.line, it.head, it.lab].forEach((n2) => { n2.style.opacity = o; }); } });
+      if (!more) settle(); else setX(sR ? sR.x : RT);
+    }
+    // 다 옮겨 갔습니다: 옮겨 가는 동안 둔 것(높이 · 투명도 · 사라지던 항목)을 걷어 내, 처음부터 그린 장면과 같게 합니다.
+    function settle() {
+      moving = false;
+      sR = null;
+      items.forEach((it) => {
+        it.sy = null;
+        if (it.o0 < 1) [it.line, it.head, it.lab].forEach((n2) => { n2.style.removeProperty('opacity'); if (!n2.getAttribute('style')) n2.removeAttribute('style'); });
+        it.o0 = 1;
+      });
+      ghosts.forEach((g) => { g.line.remove(); g.head.remove(); g.lab.remove(); });
+      ghosts = [];
+      setX(RT);
+    }
+    keep(card, () => {
+      if (!W) return scene;
+      const k = moving ? fadeK() : 1;
+      const one = (it) => ({
+        name: it.name, focus: !!it.focus, rt: it.labR.textContent, o: moving && (it.ghost || it.o0 < 1) ? oOf(it, k) : 1,
+        ys: it.rk.map((r, t) => (r ? yy(it, t) : null)), vs: it.rk.map((r, t) => (r && it.sy && it.sy[t] ? it.sy[t].v : 0)),
+      });
+      const real = items.map(one), gone = ghosts.map((g) => Object.assign(one(g), { gone: true }));
+      return { at: performance.now(), inView, W, H, p, playing, labels, R: sR ? sR.x : RT, Rv: sR ? sR.v : 0, items: real.concat(gone) };
+    });
     // 지금 자리(p, 0~마지막 기간)를 그립니다. p의 정수 부분이 지나온 기간, 소수 부분이 다음 기간까지 간 몫입니다.
     function render() {
       if (!W) return;
       const i0 = Math.min(Math.floor(p), last - 1), s = Math.max(0, Math.min(1, p - i0)), u = uOf(s), cur = Math.round(p);
       const hx = xs[i0] + (xs[i0 + 1] - xs[i0]) * s;
-      items.forEach((it) => {
+      // 옮겨 가는 동안 이름표의 순위는 화면의 높이 순서로 셉니다(선이 엇갈리는 순간에 순위가 바뀝니다).
+      let liveRk = null;
+      if (moving) { liveRk = new Map(); items.filter((it) => it.rk[cur]).sort((a, b) => yy(a, cur) - yy(b, cur) || a.rk[cur] - b.rk[cur]).forEach((it, k) => liveRk.set(it, k + 1)); }
+      items.concat(ghosts).forEach((it) => {
         let dpath = '', prev = -1, hy = null;
         for (let t = 0; t <= i0; t++) {
           const r = it.rk[t];
-          it.dots[t].style.display = r ? '' : 'none';
+          vis(it.dots[t], !!r);
           if (!r) { prev = -1; continue; }
-          dpath += prev >= 0 && prev === t - 1 ? cut(xs[t - 1], Y(it.rk[t - 1]), xs[t], Y(r), 1).d : `M${fx(xs[t])},${fx(Y(r))}`;
+          dpath += prev >= 0 && prev === t - 1 ? cut(xs[t - 1], yy(it, t - 1), xs[t], yy(it, t), 1).d : `M${fx(xs[t])},${fx(yy(it, t))}`;
           prev = t;
         }
-        for (let t = i0 + 1; t < n; t++) it.dots[t].style.display = t === i0 + 1 && s >= 1 && it.rk[t] ? '' : 'none';
+        for (let t = i0 + 1; t < n; t++) vis(it.dots[t], !!(t === i0 + 1 && s >= 1 && it.rk[t]));
         const ra = it.rk[i0], rb = it.rk[i0 + 1];
         if (ra && rb) {
-          const c = cut(xs[i0], Y(ra), xs[i0 + 1], Y(rb), u);
+          const c = cut(xs[i0], yy(it, i0), xs[i0 + 1], yy(it, i0 + 1), u);
           if (s > 0) dpath += c.d;
           hy = c.e[1];
-        } else if (ra && s < 0.5) hy = Y(ra);   // 다음 기간에 값이 없으면 선은 여기서 끝나고 점은 가운데쯤 사라집니다
-        else if (!ra && rb && s >= 0.5) hy = Y(rb);   // 다음 기간에 처음 나오는 항목은 가운데쯤 나타납니다
+        } else if (ra && s < 0.5) hy = yy(it, i0);   // 다음 기간에 값이 없으면 선은 여기서 끝나고 점은 가운데쯤 사라집니다
+        else if (!ra && rb && s >= 0.5) hy = yy(it, i0 + 1);   // 다음 기간에 처음 나오는 항목은 가운데쯤 나타납니다
         const hxi = !ra && rb ? xs[i0 + 1] : ra && !rb ? xs[i0] : hx;
         it.path.setAttribute('d', dpath);
         it.hy = hy;
         const on = hy != null;
-        it.head.style.display = on ? '' : 'none';
-        it.lab.style.display = on ? '' : 'none';
+        vis(it.head, on);
+        vis(it.lab, on);
         if (!on) return;
         it.head.setAttribute('cx', fx(hxi));
         it.head.setAttribute('cy', fx(hy));
         it.lab.setAttribute('x', fx(hxi + 10));
         it.lab.setAttribute('y', fx(hy + 4));
-        const rt = rankText(it.rk[cur] || ra || rb);
+        const rt = it.ghost ? it.labR.textContent : rankText((liveRk && liveRk.get(it)) || it.rk[cur] || ra || rb);
         if (it.labR.textContent !== rt) it.labR.textContent = rt;
       });
       // 앞지르는 동안 두 이름표가 겹치면, 짚을 항목 · 지금 순위가 높은 항목의 이름표를 남기고 다른 쪽은 잠시 옅게 둡니다.
@@ -914,7 +1012,8 @@
     const easeInOut = (k) => (k < 0.5 ? 2 * k * k : 1 - (-2 * k + 2) ** 2 / 2);
     let scan = 0;
     const busy = () => playing || seek || scan || rest > 0;
-    const on = () => busy() && inView && !holds.size && card.isConnected;
+    // 옮겨 가기는 데이터가 바뀐 데 대한 답이라, 마우스가 올라가 있어도 끝까지 갑니다.
+    const on = () => card.isConnected && inView && (moving || (busy() && !holds.size));
     function setBtn() {
       btn.classList.toggle('is-on', playing);
       btn.setAttribute('aria-label', playing ? tx(d, '일시정지') : tx(d, '재생'));
@@ -941,7 +1040,8 @@
       if (!on()) { stamp0 = 0; return; }
       const dt = stamp0 ? Math.min(100, stamp - stamp0) : 16;
       stamp0 = stamp;
-      if (seek) {
+      if (moving) stepMove(dt);
+      if (holds.size) { /* 잠시 멈춤: 기간은 그대로 둡니다 */ } else if (seek) {
         seek.t = Math.min(seek.dur, seek.t + dt);
         p = seek.from + (seek.to - seek.from) * easeInOut(seek.t / seek.dur);
         if (seek.t >= seek.dur) { p = seek.to; const then = seek.then; seek = null; if (then) then(); }
@@ -1080,6 +1180,7 @@
     setBtn();
     const auto = !live;
     if (auto) p = 0;
+    if (scene) inView = !!scene.inView;   // 앞 카드가 화면에 보이고 있었으면 바로 움직입니다
     onSize(plot, layout);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { measure(); if (W) layout(W, H); });
     // 화면에 처음 보일 때 첫 기간에서 잠시 멈췄다가 재생합니다. 화면 밖에 있는 동안은 멈춰 둡니다.
@@ -1088,6 +1189,7 @@
       const io = new IntersectionObserver((es) => {
         if (!card.isConnected) { io.disconnect(); return; }
         inView = es[es.length - 1].isIntersecting;
+        if (!inView && moving) { settle(); render(); }   // 화면 밖에서는 다 옮겨 간 장면으로 둡니다
         if (inView) start();
         kick();
       }, { threshold: 0.3 });

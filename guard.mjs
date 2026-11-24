@@ -3,7 +3,8 @@
 //   1. 자립성: no external resource but the font link (no http(s) URL, <link>, @import, url(), import).
 //   2. 색: raw colors only in tokens.css. White and translucent black (tooltip ink, shadows) are the only exceptions.
 //   3. 토큰: every var(--vzb-*) is declared in tokens.css or set by the card itself; prefix --vzb- on every custom property.
-//   4. 높이: the min-height rule of each chart card (.vzb-card[data-vzb="<id>"]) is one of 1 · 1.5 · 2 units and matches TIER
+//   4. 높이: the min-height rule of each chart card (.vzb-card[data-vzb="<id>"]) is one of 1 · 1.5 · 2 units as a floor
+//      (max(var(--vzb-unit) * N, 100%), so the card fills a taller slot) and matches TIER
 //      (2 when not listed); the controls are drawn bare at the height of the control (min-height: 0), and only they are.
 //   5. 충돌: every selector is scoped (contains "vzb"), no element ids, no globals (window.x =); the code is one IIFE.
 //   6. 접근성: a card that reacts to the pointer also takes the keyboard. Motion plays whatever the reduced-motion setting (v0.59).
@@ -213,10 +214,12 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
 
   // 4. height: the card's own min-height rule must give TIER[id] (default 2) units; a control's must be 0.
   const allCss = files.filter(([f]) => f.endsWith('.css')).map(([f, t]) => [f, t.replace(/\/\*[\s\S]*?\*\//g, '')]);
+  let fill = true;
   const unitOf = (decl) => {
     if (/min-height\s*:\s*0\s*(;|$)/.test(decl)) return 0;
-    const m = decl.match(/min-height\s*:\s*(?:calc\(\s*)?var\(--vzb-unit\)(?:\s*\*\s*([\d.]+))?/);
-    return m ? Number(m[1] || 1) : null;
+    const m = decl.match(/min-height\s*:\s*(max\(\s*)?(?:calc\(\s*)?var\(--vzb-unit\)(?:\s*\*\s*([\d.]+))?(\s*,\s*100%\s*\))?/);
+    if (m && !(m[1] && m[3])) fill = false;   // the unit is a floor: max(var(--vzb-unit) * N, 100%), so the card fills a taller slot
+    return m ? Number(m[2] || 1) : null;
   };
   for (const v of all) {
     let exact = null;
@@ -232,6 +235,7 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
     else if (![0, 1, 1.5, 2].includes(got)) fail(v.id, `높이 ${got}단위는 없다. 1 · 1.5 · 2 중 하나로 둔다`);
     else if (got !== want) fail(v.id, `CSS의 높이는 ${got}단위인데 build.mjs TIER는 ${want}단위다. 둘을 맞춘다`);
   }
+  if (!fill) fail('src', '카드 높이는 min-height: max(var(--vzb-unit) * N, 100%)로 적는다. 단위는 바닥이고, 놓인 자리가 더 높으면 카드가 그 높이를 채운다');
 
   // Snippet checks (1, 5, 7) on the code people copy, in both languages.
   for (const [v, code, where] of [...all.map((v) => [v, snippets[v.id], `ko/cards/${v.id}.txt`]), ...all.map((v) => [v, (snippetsEn || {})[v.id], `cards/${v.id}.txt`])]) {

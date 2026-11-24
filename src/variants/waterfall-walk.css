@@ -4,7 +4,7 @@
    막대 사이는 앞 막대가 끝난 높이를 지름 3px의 점(--vzb-muted)으로 잇습니다. 이름(11px, 옅게)과 값(12px, 굵게)은 막대 끝 바로 밖에 두 줄로 적고,
    칸이 좁으면 10px · 11px로 줄입니다. 글자에는 카드 바탕색 테두리를 둘러 점이나 막대 가까이에서도 읽히게 합니다.
    말풍선은 옅은 회색(--vzb-track) 바탕에 이름 · 끝 값(18px, 굵게) · 증감(좋고 나쁨의 글자색)을 적습니다. 움직임은 스크립트가 그립니다. */
-.vzb-card[data-vzb="waterfall-walk"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-card[data-vzb="waterfall-walk"] { min-height: max(var(--vzb-unit) * 2, 100%); }   /* 2단위가 바닥이고, 놓인 자리가 더 높으면 그 높이를 채웁니다 */
 .vzb-card[data-vzb="waterfall-walk"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
 .vzb-ww.vzb-foot { padding-top: 8px; }
 .vzb-ww-svg { display: block; overflow: visible; font-family: var(--vzb-font); }

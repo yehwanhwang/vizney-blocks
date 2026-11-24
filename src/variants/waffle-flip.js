@@ -129,7 +129,8 @@
     });
     const brace = svgEl('path', { class: 'vzb-wf-br' }), braceText = svgText(0, 0, ppText(diff, 0), 'vzb-wf-brt', 'start');
     svg.append(brace, braceText);
-    const ROWS = 5, COLS = 20, fx = (v) => v.toFixed(1), clamp = (v) => Math.max(0, Math.min(1, v));
+    let ROWS = 5, COLS = 20;   // 칸의 배열: 가로로 긴 20 × 5가 기본이고, 놓인 자리가 높으면 10 × 10(layout이 고릅니다). 칸은 세로줄을 위에서 아래로 채웁니다
+    const fx = (v) => v.toFixed(1), clamp = (v) => Math.max(0, Math.min(1, v));
     const fam = getComputedStyle(card).fontFamily;
     // 시간표(밀리초): 처음 앞 기간을 읽는 시간 · 칸 사이 간격(바뀐 칸이 많으면 짧게) · 한 칸이 뒤집히는 시간 · 괄호가 그어지는 시간
     const M = motion(card);   // 처음의 뜸(Lead) · 차례의 전체 시간(Seq) · 되풀이 전의 쉼(Rest)은 움직임 값에서 읽습니다
@@ -181,17 +182,28 @@
       from = to; t = 0; playing = false; rest = 0;
     }
     const flipX = (k) => (k <= 0 || k >= 1 ? 1 : k < 0.4 ? 1 - easeIn(k / 0.4) : Math.max(0.02, spring((k - 0.4) / 0.6)));
-    // 칸 크기: 카드 높이(2단위) 안에서 큰 숫자 아래 남은 높이와 폭에 맞춰 될 수 있는 만큼 키웁니다(한 변 30px까지).
-    // 넓은 카드(520px 이상)는 범례를 칸 오른쪽에 세로로 두고, 좁으면 범례는 칸 아래입니다.
+    // 칸 크기: 놓인 자리를 채웁니다. 큰 숫자 아래 남은 높이와 폭 안에서 칸이 가장 커지는 쪽으로, 칸의 배열(20 × 5 · 10 × 10)과
+    // 범례의 자리(칸 오른쪽에 세로로 · 칸 아래)를 고릅니다. 2단위 높이의 넓은 카드는 20 × 5에 범례가 오른쪽, 좁은 카드는 범례가 아래이고,
+    // 자리가 높아지면 10 × 10이 됩니다. 칸은 정사각형이라 폭과 높이 가운데 모자란 쪽에 맞고, 남는 자리는 카드 아래 · 오른쪽으로 갑니다.
     function layout(fw) {
-      const side = fw >= 520;
-      foot.classList.toggle('is-side', side);
       if (per) hd.style.paddingRight = `${per.offsetWidth + 12}px`;   // 제목은 기간 단추 왼쪽까지
-      const cs = getComputedStyle(card), H = parseFloat(cs.minHeight) || 336;
-      const top = fig.getBoundingClientRect().bottom - card.getBoundingClientRect().top;
-      const below = parseFloat(cs.paddingBottom) + parseFloat(cs.borderBottomWidth) + parseFloat(getComputedStyle(foot).paddingTop) + (side ? 0 : ctl.offsetHeight + 8) + 22;
-      const byH = (H - top - below + 3) / ROWS, byW = (fw - (side ? Math.max(...items.map((it) => it.li.offsetWidth)) + 28 : 0)) / COLS;
-      pitch = Math.max(8, Math.min(30, byW, byH));
+      // 놓인 자리가 주는 높이: 칸을 빼고(범례는 아래에 둔 채) 잰 카드 높이입니다. 단위 높이가 바닥이고, 자리가 더 높으면 그 높이입니다.
+      foot.classList.remove('is-side');
+      svg.setAttribute('width', 0);
+      svg.setAttribute('height', 0);
+      const cs = getComputedStyle(card), cr = card.getBoundingClientRect(), H = cr.height;
+      const top = fig.getBoundingClientRect().bottom - cr.top;
+      const pad = parseFloat(cs.paddingBottom) + parseFloat(cs.borderBottomWidth) + parseFloat(getComputedStyle(foot).paddingTop) + 22;   // 22: 괄호와 %p의 자리
+      const sideW = Math.max(...items.map((it) => it.li.offsetWidth)) + 28, under = ctl.offsetHeight + 8;
+      let best = null;
+      for (const [r, c] of [[5, 20], [10, 10]]) for (const sd of [true, false]) {
+        const p = Math.min((fw - (sd ? sideW : 0)) / c, (H - top - pad - (sd ? 0 : under) + 3) / r);
+        if (!best || p > best.p + 0.05) best = { p, r, c, sd };
+      }
+      const side = best.sd;
+      ROWS = best.r; COLS = best.c;
+      foot.classList.toggle('is-side', side);
+      pitch = Math.max(8, best.p);
       const gap = pitch >= 14 ? 3 : 2, w = side ? pitch * COLS - gap : fw;
       W = w;
       cell = pitch - gap;
@@ -370,6 +382,7 @@
     if (auto) from = to = 0;
     if (scene) inView = !!scene.inView;   // 앞 카드가 화면에 보이고 있었으면 바로 움직입니다
     onSize(foot, layout);
+    onSize(card, () => { if (foot.clientWidth) layout(foot.clientWidth); });   // 놓인 자리의 높이가 바뀌어도 칸을 다시 맞춥니다
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (W) layout(foot.clientWidth); });
     // 화면에 처음 보일 때 움직입니다. 화면 밖에 있는 동안은 멈춰 둡니다.
     const start = () => { if (!seen) { seen = true; if (auto && !took) go(last, T0); } };

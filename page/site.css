@@ -152,7 +152,11 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
    블록 이름과 바탕 전환 · 복사 단추는 틀 밖, 틀 아래로 이어진 받침(.gt의 회색 바탕) 한 줄에 둡니다. 받침이 틀과 같은 폭 · 같은 모서리로 틀 밑에 물려 있어
    이름과 단추가 그 카드의 것으로 보이고, 카드의 제목(틀 안)과 블록 이름(틀 밖)이 같은 면에 놓이지 않습니다. 받침은 카드의 바탕이 바뀌어도 그대로입니다. */
 .gt .gt-pv > .vzb-card { border-color: transparent; box-shadow: none; }
-.gt-box { grid-column: 1 / -1; position: relative; display: grid; align-content: center; min-width: 0; min-height: 400px; padding: 12px; border: 1px solid var(--line); border-radius: 20px; background: #ffffff; }   /* 틀 안의 칸은 모두 400px로 같습니다. 2단위 차트 카드(336px)와, 가장 긴 펼침인 Date Picker의 단추 + 달력(382px)이 들어가는 높이입니다. 그보다 낮은 카드와 컨트롤은 가운데에 둡니다 */
+.gt-box { box-sizing: border-box; grid-column: 1 / -1; position: relative; display: grid; align-content: center; min-width: 0; min-height: 424px; border: 1px solid var(--line); border-radius: 20px; background: #ffffff; }   /* 틀의 높이는 모두 424px로 같습니다. 가장 긴 펼침인 Date Picker의 단추 + 달력(382px)이 위아래 여유를 두고 들어가는 높이입니다. 컨트롤은 틀 가운데에 둡니다 */
+/* 차트 카드는 틀을 다 채웁니다: 카드가 틀의 폭과 높이까지 늘어나고(카드는 놓인 자리를 채우게 되어 있습니다), 늘어난 높이는 그림이 씁니다. 틀과 카드 사이에 여백을 두지 않아
+   틀 가장자리에서 그림까지가 카드의 안쪽 여백(24px) 그대로입니다. */
+.gt:not(.is-bare) .gt-box { align-content: stretch; }
+.gt:not(.is-bare) .gt-in { display: grid; }
 .gt-in { min-width: 0; }
 .gt.is-bare .gt-in { padding: 0 24px; }   /* 컨트롤은 카드 틀 없이 조작부만 타일 가운데에 둡니다 */
 /* 갤러리에서만 칩 줄은 가운데로 모으고(한 줄로 밀어 보는 때는 왼쪽부터), 내려받기 아이콘은 타일 가운데에 둡니다. 형식은 아이콘 오른쪽으로 펼쳐져
@@ -277,7 +281,6 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
   .gal-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .gal-grid > .gt.is-wide { grid-column: auto; }
   .gt, .gt-box { border-radius: 18px; }
-  .gt-box { padding: 4px; }
   .gt-meta { gap: 2px; padding: 6px 4px 6px 16px; }
   .gt-name { font-size: 14px; }
   .gt-theme { width: 28px; }

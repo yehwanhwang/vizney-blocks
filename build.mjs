@@ -132,7 +132,7 @@ const WORDS = {
     html: 'ko', og: 'ko_KR', other: { lang: 'en', label: 'English' },
     skip: '본문으로 건너뛰기', menu: '주 메뉴', more: '더 보기', find: '카드 찾기', found: '찾은 카드',
     footFont: '글꼴 VZ Sans(Spoqa Han Sans Neo 부분 글꼴)', footNav: '바닥글', footBlog: '블로그', footContact: '문의',
-    copy: '복사', aiLink: 'AI용 링크', close: '닫기', gTitle: 'Blocks', gDesc: GDESC.ko, sponsor: '후원', aiCopy: 'AI용 링크 복사', toLight: '밝은 바탕으로 보기', gAria: '카드 갤러리', tPrompt: '프롬프트 복사', tCode: '코드 복사', codeText: '코드(텍스트)',
+    copy: '복사', aiLink: 'AI용 링크', close: '닫기', gTitle: 'Blocks', gDesc: GDESC.ko, sponsor: '후원', aiCopy: 'AI용 링크 복사', toLight: '밝은 바탕으로 보기', gAria: '카드 갤러리', tPrompt: '프롬프트 복사', tCode: '코드 복사', tPromptS: '프롬프트', tCodeS: '코드', codeText: '코드(텍스트)',
     usageTitle: '쓰는 법', usageSub: '설치할 것은 없습니다. 카드 하나가 스타일, 데이터, 스크립트를 모두 담은 HTML 조각입니다.',
     step1: '복사해서 붙이기', step1p: '카드의 <b>코드 복사</b>를 눌러 HTML의 &lt;body&gt; 안 원하는 자리에 붙여 넣습니다.',
     step2: 'JSON만 바꾸기', step2p: '카드 안 JSON의 값만 바꿉니다. 넘친 양, 비중, 순위는 카드가 계산합니다.', step2code: '"limit": 40000000,\n"labels": ["25.11", …],\n"values": [34200000, …]',
@@ -163,7 +163,7 @@ const WORDS = {
     html: 'en', og: 'en_US', other: { lang: 'ko', label: '한국어' },
     skip: 'Skip to content', menu: 'Main menu', more: 'More', find: 'Find a card', found: 'Cards found',
     footFont: 'Font VZ Sans (a subset of Spoqa Han Sans Neo)', footNav: 'Footer', footBlog: 'Blog', footContact: 'Contact',
-    copy: 'Copy', aiLink: 'AI link', close: 'Close', gTitle: 'Blocks', gDesc: GDESC.en, sponsor: 'Sponsor', aiCopy: 'Copy AI link', toLight: 'Show on light', gAria: 'Card gallery', tPrompt: 'Copy prompt', tCode: 'Copy code', codeText: 'Code (text)',
+    copy: 'Copy', aiLink: 'AI link', close: 'Close', gTitle: 'Blocks', gDesc: GDESC.en, sponsor: 'Sponsor', aiCopy: 'Copy AI link', toLight: 'Show on light', gAria: 'Card gallery', tPrompt: 'Copy prompt', tCode: 'Copy code', tPromptS: 'Prompt', tCodeS: 'Code', codeText: 'Code (text)',
     usageTitle: 'How to use', usageSub: 'Nothing to install. One card is an HTML snippet that carries its own styles, data and script.',
     step1: 'Copy and paste', step1p: 'Press <b>Copy code</b> on a card and paste it anywhere inside the &lt;body&gt; of your HTML.',
     step2: 'Change only the JSON', step2p: 'Edit the values in the card’s JSON. The card computes the amount over the limit, the shares and the ranks.', step2code: '"limit": 40000,\n"labels": ["Nov \'25", …],\n"values": [34200, …]',
@@ -327,7 +327,7 @@ ${ORDER.map((id) => {
 <div class="gt-pv" data-mount="${id}"${LOOP.has(id) ? ' data-vzb-loop' : ''} style="min-height:${tierPx(v)}px"></div>
 </div></div>
 <div class="gt-meta"><span class="gt-name" id="gt-${id}">${h(v.name)}</span><button type="button" class="gt-theme" data-act="theme" data-id="${id}" aria-label="${L.t.toLight}" title="${L.t.toLight}">${IC.sun}${IC.moon}</button></div>
-<div class="gt-acts"><button type="button" class="btn" data-act="copy-prompt" data-id="${id}" aria-label="${h(v.name)} ${L.t.tPrompt}">${IC.prompt}<span>${L.t.tPrompt}</span></button><button type="button" class="btn" data-act="copy-code" data-id="${id}" aria-label="${h(v.name)} ${L.t.tCode}">${IC.copy}<span>${L.t.tCode}</span></button></div>
+<div class="gt-acts"><button type="button" class="btn" data-act="copy-prompt" data-id="${id}" aria-label="${h(v.name)} ${L.t.tPrompt}" title="${L.t.tPrompt}">${IC.copy}<span>${L.t.tPromptS}</span></button><button type="button" class="btn" data-act="copy-code" data-id="${id}" aria-label="${h(v.name)} ${L.t.tCode}" title="${L.t.tCode}">${IC.copy}<span>${L.t.tCodeS}</span></button></div>
 </li>`;
   }).join('\n')}
 </ul>

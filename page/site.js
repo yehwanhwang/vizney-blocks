@@ -158,14 +158,16 @@
     ta.remove();
     return ok;
   }
-  function done(btn, label) {
+  // show: 단추에 적을 말이 알릴 말(label)과 다를 때. 타일의 복사 단추는 짧아서 '복사됨'만 적고, 글자가 바뀌어도 폭이 달라지지 않게 그동안 폭을 묶어 둡니다.
+  function done(btn, label, show) {
     announce(label);
     if (!btn) return;
     if (!btn.dataset.html) btn.dataset.html = btn.innerHTML;
-    btn.textContent = label;
+    if (show) btn.style.width = `${btn.getBoundingClientRect().width}px`;
+    btn.textContent = show || label;
     btn.classList.add('is-done');
     clearTimeout(btn.vzbTimer);
-    btn.vzbTimer = setTimeout(() => { btn.innerHTML = btn.dataset.html; btn.classList.remove('is-done'); }, 1500);
+    btn.vzbTimer = setTimeout(() => { btn.innerHTML = btn.dataset.html; btn.classList.remove('is-done'); btn.style.width = ''; }, 1500);
   }
   const linkOf = (id) => `${SITE}${BASE}/cards/${id}.txt`;
   const nameOf = (id) => (index.find((x) => x.id === id) || {}).name || id;
@@ -229,7 +231,7 @@
     else if (act === 'copy-code' || act === 'copy-prompt') {
       const body = current[id] || code[id];
       const ok = await copyText(act === 'copy-code' ? body : (V.prompt || {})[id] + body);
-      if (ok) done(t, act === 'copy-code' ? T.copied : T.promptCopied);
+      if (ok) done(t, act === 'copy-code' ? T.copied : T.promptCopied, T.copied);
       else if (act === 'copy-code') openCode(id, true);
     } else if (act === 'dlg-copy') {
       if (await copyText(dlgText)) done(t, T.copied);

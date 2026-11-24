@@ -37,4 +37,7 @@
 
 /* 그래픽은 카드 아래쪽에 붙습니다. 같은 줄의 카드 높이가 맞춰져도 그래픽끼리 바닥이 맞습니다. */
 .vzb-foot { margin-top: auto; padding-top: 20px; }
+/* 갤러리 타일(.vzb-poster): 머리와 큰 숫자를 두지 않고 그림이 카드를 채웁니다. */
+.vzb-card.vzb-poster > .vzb-hd, .vzb-card.vzb-poster > .vzb-fig { display: none; }
+.vzb-card.vzb-poster > .vzb-foot { margin-top: 0; padding-top: 0; }
 .vzb-error { margin: 8px 0 0; color: var(--vzb-bad-ink); }

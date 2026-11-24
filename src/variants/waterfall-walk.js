@@ -148,6 +148,7 @@
     // 글자에 적을 값(누계, sn)은 따로 같은 스프링으로 셉니다. 눈금은 y = A - 값 × S, SPAN은 값의 폭, LB는 말풍선과 글자의 치수입니다.
     const [MK, MC] = M.pair('move');
     let from = before(card), moving = false, sb = null, A = 0, S = 1, SPAN = 1, LB = null, bubKey = null;
+    const PS = card.classList.contains('vzb-poster');
     function layout(w, h) {
       W = w; H = h;
       svg.setAttribute('width', w);
@@ -156,7 +157,8 @@
       slot = w / N;
       bw = Math.min(32, slot * 0.62);
       // 글자 크기: 이름 · 값 14px, 칸이 좁으면 12px. LBL은 막대 끝에서 이름 줄 바깥까지, VAL은 값 줄 바깥까지의 길이입니다.
-      const tight = slot < 64, nsz = tight ? 12 : 14, vsz = nsz, LBL = nsz + vsz + 8, VAL = vsz + 6;
+      // 갤러리 타일(.vzb-poster)에서는 끝 막대의 말풍선만 남깁니다: 막대마다 이름과 값의 자리를 두지 않아 막대가 그림 높이를 더 씁니다.
+      const tight = slot < 64, nsz = tight ? 12 : 14, vsz = nsz, LBL = PS ? 0 : nsz + vsz + 8, VAL = PS ? 0 : vsz + 6;
       svg.classList.toggle('is-tight', tight);
       DOT = tight ? 1.25 : 1.5;
       // 말풍선의 크기: 넓으면 이름 아래에 끝 값과 증감을 한 줄로, 좁으면 세 줄로 쌓습니다. 이름은 말풍선 안에 온전히 적습니다(그림 폭을 넘으면 줄입니다).

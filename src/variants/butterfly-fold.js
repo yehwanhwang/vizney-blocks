@@ -129,6 +129,7 @@
     // it.sy가 줄의 높이, it.sl[s]가 막대의 길이, it.sn[s]가 막대 끝에 적는 값이고, lost가 빠져서 흐려지는 항목입니다.
     const [MK, MC] = motion(card).pair('move');
     let scene = before(card), moving = false, lost = [], m0 = 0, sB = null, sH = null, sT = null, T_BODY = 0, T_HH = 0;
+    const PS = card.classList.contains('vzb-poster');   // 갤러리 타일: 가운데 항목 이름만 남깁니다
     function layout(w, h) {
       W = w; H = h;
       svg.setAttribute('width', w);
@@ -138,7 +139,7 @@
       const body = nameW / 2 + 10;
       hl = cx - body;
       hr = cx + body;
-      span = Math.max(12, w / 2 - body - 6 - valW - 2);
+      span = Math.max(12, w / 2 - body - 6 - (PS ? 0 : valW) - 2);   // 갤러리 타일에서는 값을 적지 않아 그 자리까지 날개가 뻗습니다
       pitch = h / N;
       hh0 = Math.max(3, Math.min(16, pitch * 0.36));
       ym = h / 2;

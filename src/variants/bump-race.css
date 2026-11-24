@@ -50,3 +50,4 @@
 .vzb-br-now { font-size: 14px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
 .vzb-br-end { font-size: 12px; fill: var(--vzb-muted); transition: opacity var(--vzb-fade); }
 .vzb-br-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
+.vzb-poster .vzb-br-bar, .vzb-poster .vzb-br-lab:not(.is-focus) { display: none; }   /* 갤러리 타일: 짚을 항목의 이름표만 남깁니다 */

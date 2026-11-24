@@ -183,15 +183,18 @@
     const flipX = (k) => (k <= 0 || k >= 1 ? 1 : k < 0.4 ? 1 - easeIn(k / 0.4) : Math.max(0.02, spring((k - 0.4) / 0.6)));
     // 칸 크기: 카드 높이(2단위) 안에서 큰 숫자 아래 남은 높이와 폭에 맞춰 될 수 있는 만큼 키웁니다(한 변 30px까지).
     // 넓은 카드(520px 이상)는 범례를 칸 오른쪽에 세로로 두고, 좁으면 범례는 칸 아래입니다.
+    // 갤러리 타일(.vzb-poster)에서는 괄호와 바뀐 %p만 남깁니다: 큰 숫자 · 기간 단추 · 범례를 두지 않고, 칸은 그림 폭을 다 쓰도록 30px보다 커질 수 있으며
+    // 칸 묶음은 카드의 가운데 높이에 둡니다.
+    const PS = card.classList.contains('vzb-poster');
     function layout(fw) {
-      const side = fw >= 520;
+      const side = !PS && fw >= 520;
       foot.classList.toggle('is-side', side);
       if (per) hd.style.paddingRight = `${per.offsetWidth + 12}px`;   // 제목은 기간 단추 왼쪽까지
       const cs = getComputedStyle(card), H = parseFloat(cs.minHeight) || 336;
-      const top = fig.getBoundingClientRect().bottom - card.getBoundingClientRect().top;
+      const top = PS ? parseFloat(cs.paddingTop) + parseFloat(cs.borderTopWidth) : fig.getBoundingClientRect().bottom - card.getBoundingClientRect().top;
       const below = parseFloat(cs.paddingBottom) + parseFloat(cs.borderBottomWidth) + parseFloat(getComputedStyle(foot).paddingTop) + (side ? 0 : ctl.offsetHeight + 8) + 22;
       const byH = (H - top - below + 3) / ROWS, byW = (fw - (side ? Math.max(...items.map((it) => it.li.offsetWidth)) + 28 : 0)) / COLS;
-      pitch = Math.max(8, Math.min(30, byW, byH));
+      pitch = Math.max(8, Math.min(PS ? Infinity : 30, byW, byH));
       const gap = pitch >= 14 ? 3 : 2, w = side ? pitch * COLS - gap : fw;
       W = w;
       cell = pitch - gap;

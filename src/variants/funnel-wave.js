@@ -144,6 +144,7 @@
     const winOf = (u) => (u <= 0 || u >= 1 ? 0 : Math.min(1, u / 0.15, (1 - u) / 0.15) ** 2 * (3 - 2 * Math.min(1, u / 0.15, (1 - u) / 0.15)));   // 물결이 이는 폭의 바깥 끝 15%만 부드럽게 0으로
     let M = 0, dx = 3, xs = [], rp = [], dep = [], room = [], hs = new Float32Array(0), us = new Float32Array(0), wet = new Uint8Array(0);
     let acc = 0, calm = true, ripple = 0, hv = [];   // ripple: 물결의 가장 큰 높이, hv: 물결치는 단계 { j(단계), age(밀리초) }
+    const PS = card.classList.contains('vzb-poster');   // 갤러리 타일: 알약만 남깁니다
     function layout(w, h) {
       W = w; H = h;
       svg.setAttribute('width', w);
@@ -152,7 +153,7 @@
       cw = w / N;
       const tight = cw < 84, csz = tight ? 12 : 14, nsz = csz;
       svg.classList.toggle('is-tight', tight);
-      y0 = h - (csz + nsz + 14);   // 물의 바닥. 그 아래에 값과 이름 두 줄
+      y0 = PS ? h : h - (csz + nsz + 14);   // 물의 바닥. 그 아래에 값과 이름 두 줄(갤러리 타일에서는 두지 않고 물이 그림 바닥까지 찹니다)
       // 물의 가장 높은 높이: 그림 높이에서 위 여유(TOP)를 뺀 만큼.
       HM = Math.max(24, y0 - TOP);
       tw = Math.min(cw * 0.86, 170);

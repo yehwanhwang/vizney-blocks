@@ -34,3 +34,4 @@
 .vzb-fw-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
 .vzb-fw-ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .vzb-fw-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
+.vzb-poster .vzb-fw-lab { display: none; }   /* 갤러리 타일: 알약만 남깁니다 */

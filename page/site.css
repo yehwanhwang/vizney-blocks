@@ -149,6 +149,10 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 /* 틀 한 겹: 타일이 곧 카드의 틀입니다. 타일의 바탕을 카드의 바탕과 같은 색으로 두고(밝은 바탕 흰색, 어두운 바탕 Vizney 검정), 갤러리에서만 카드의 테두리와 그림자를 감춥니다.
    타일 안에 테두리 카드가 한 번 더 들어가면 틀이 두 겹이 되어 차트보다 틀이 먼저 보이기 때문입니다. 복사하는 코드는 바꾸지 않습니다. */
 .gt .gt-pv > .vzb-card { border-color: transparent; box-shadow: none; }
+/* 이름 하나: 타일에서는 블록 이름만 두고, 차트 카드의 제목과 부제(예시 데이터의 것)는 감춥니다. 같은 크기의 이름 둘이 한 타일에 있으면 어느 쪽이 블록의 이름인지 헷갈리기 때문입니다.
+   머리에 단추(다시 보기 · 기간)가 있는 카드는 그 단추 높이만큼 머리를 남깁니다. 복사하는 코드와 카드 단독 페이지에는 제목과 부제가 그대로 있습니다. */
+.gt .gt-pv > .vzb-card > .vzb-hd > .vzb-title, .gt .gt-pv > .vzb-card > .vzb-hd > .vzb-sub { display: none; }
+.gt .gt-pv > .vzb-card > .vzb-hd:has(button) { min-height: 28px; }
 .gt-box { position: relative; flex: 1 1 auto; display: grid; align-content: center; min-width: 0; min-height: 400px; }   /* 타일 칸은 모두 400px로 같습니다. 2단위 차트 카드(336px)와, 가장 긴 펼침인 Date Picker의 단추 + 달력(382px)이 다 들어가는 높이입니다. 그보다 낮은 블록은 가운데에 둡니다. 큰 블록과 작은 블록을 어떤 순서로 섞어도 줄이 맞습니다. */
 .gt-in { min-width: 0; }
 .gt.is-bare .gt-in { padding: 0 24px; }   /* 컨트롤은 카드 틀 없이 조작부만 타일 가운데에 둡니다 */

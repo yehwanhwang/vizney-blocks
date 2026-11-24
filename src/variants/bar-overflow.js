@@ -98,9 +98,7 @@
     // 시간표(밀리초): 한도선만 보이는 처음 · 막대 사이 간격 · 한 막대가 차는 시간 · 다 찬 뒤 쉬는 시간 · 깜빡임 한 번 · 깜빡이는 횟수
     // 처음의 뜸(Lead) · 차례의 전체 시간(Seq) · 되풀이 전의 쉼(Rest)과, 막대가 값으로 가는 움직임(Move: 넘치지 않음)은 움직임 값에서 읽습니다.
     const M = motion(card), MOVE = M.curve('move');
-    // 갤러리 타일(.vzb-poster)에서는 넘친 양만 적습니다: 기간 이름 줄과 한도선 이름 자리를 두지 않고 막대와 한도선이 그림 폭을 다 씁니다.
-    const PS = card.classList.contains('vzb-poster');
-    const T0 = M.ms('lead'), STAG = Math.max(60, Math.min(140, M.ms('seq') / N)), DUR = MOVE.dur, WAIT = 260, BLINK = 440, TIMES = 3, GAP = 1.5, NAMEH = PS ? 0 : 22;
+    const T0 = M.ms('lead'), STAG = Math.max(60, Math.min(140, M.ms('seq') / N)), DUR = MOVE.dur, WAIT = 260, BLINK = 440, TIMES = 3, GAP = 1.5, NAMEH = 22;
     let W = 0, H = 0, PW = 0, y0 = 0, s = 1, bw = 0, slot = 1, yl = 0, t = 0, FULL = 0, TOTAL = 0;
     // 옮겨 가기(데이터가 바뀌어 다시 그릴 때): 막대의 높이(sh, px)와 한도선의 높이(sly, px), 막대의 자리(sx)와 굵기(sw)를 스프링(Move)으로 새 자리에 보냅니다.
     // 높이는 화면의 자리(px)로 옮기므로, 눈금이 함께 바뀌어도 막대와 한도선은 있던 자리와 새 자리 사이를 한 방향으로만 움직입니다.
@@ -116,7 +114,7 @@
       y0 = h - NAMEH;
       s = Math.max(1, y0 - 4) / top;
       // 오른쪽 자리: 한도선 이름(12px)과 값(14px 굵게) 가운데 넓은 쪽에 선과의 틈 6px. 막대는 그 왼쪽(PW)에 둡니다.
-      const gut = PS ? 0 : Math.ceil(Math.max(textW(label, 500, fam, 12), textW(limShow, 700, fam, 14))) + 8;
+      const gut = Math.ceil(Math.max(textW(label, 500, fam, 12), textW(limShow, 700, fam, 14))) + 8;
       PW = Math.max(w * 0.6, w - gut);
       slot = PW / N;
       bw = Math.max(4, Math.min(30, slot * 0.62));
@@ -126,7 +124,7 @@
       base.setAttribute('y1', y0 + 0.5);
       base.setAttribute('y2', y0 + 0.5);
       limLine.setAttribute('x1', 0);
-      limLine.setAttribute('x2', fx(PS ? PW : PW + 2));
+      limLine.setAttribute('x2', fx(PW + 2));
       // 기간 이름: 다 들어가면 모두, 모자라면 몇 칸마다 하나씩(마지막 칸은 늘 적습니다)
       const nameW = Math.max(...items.map((it) => textW(it.name, 400, fam, 12))) + 6;
       const every = Math.max(1, Math.ceil(nameW / slot));

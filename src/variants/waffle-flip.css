@@ -42,5 +42,3 @@
 .vzb-wf-key.vzb-wf-c3 { opacity: 0.16; }
 .vzb-wf-in { animation: vzb-wf-in 0.32s ease-out; }
 @keyframes vzb-wf-in { from { opacity: 0; filter: blur(3px); } to { opacity: 1; filter: none; } }
-.vzb-card.vzb-poster[data-vzb="waffle-flip"] { justify-content: center; }   /* 갤러리 타일: 칸 묶음과 괄호만, 카드 가운데 높이에 */
-.vzb-poster .vzb-wf-ctl { display: none; }

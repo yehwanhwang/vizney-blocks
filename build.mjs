@@ -324,7 +324,7 @@ ${ORDER.map((id) => {
     const v = L.byId[id];
     return `<li class="gt is-dark${tierOf(v) === 0 ? ' is-bare' : ''}${wideOf(id) ? ' is-wide' : ''}" id="${id}" data-gal="${id}" aria-labelledby="gt-${id}">
 <div class="gt-box"><div class="gt-in">
-<div class="gt-pv" data-mount="${id}"${LOOP.has(id) ? ' data-vzb-loop' : ''}${tierOf(v) ? ' data-vzb-poster' : ''} style="min-height:${tierOf(v) ? 400 : tierPx(v)}px"></div>
+<div class="gt-pv" data-mount="${id}"${LOOP.has(id) ? ' data-vzb-loop' : ''} style="min-height:${tierPx(v)}px"></div>
 </div></div>
 <div class="gt-meta"><span class="gt-name" id="gt-${id}">${h(v.name)}</span><button type="button" class="gt-theme" data-act="theme" data-id="${id}" aria-label="${L.t.toLight}" title="${L.t.toLight}">${IC.sun}${IC.moon}</button></div>
 <div class="gt-acts"><button type="button" class="btn" data-act="copy-prompt" data-id="${id}" aria-label="${h(v.name)} ${L.t.tPrompt}">${IC.prompt}<span>${L.t.tPrompt}</span></button><button type="button" class="btn" data-act="copy-code" data-id="${id}" aria-label="${h(v.name)} ${L.t.tCode}">${IC.copy}<span>${L.t.tCode}</span></button></div>

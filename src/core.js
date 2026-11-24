@@ -235,9 +235,6 @@
         if (d.title) card.setAttribute('aria-label', d.title);
         // 어두운 바탕: JSON에 "theme": "dark"를 적으면 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다(tokens.css의 .vzb-dark).
         card.classList.toggle('vzb-dark', d.theme === 'dark');
-        // 갤러리 타일: 카드를 감싼 요소에 data-vzb-poster가 있으면 머리 · 큰 숫자 · 범례 · 조작부를 두지 않고, 움직임이 말하는 글자 한 가지만 남겨
-        // 그림이 카드를 채웁니다(무엇을 남기는지는 카드마다 적습니다). 붙여 넣은 카드에는 해당하지 않습니다.
-        card.classList.toggle('vzb-poster', !!card.closest('[data-vzb-poster]'));
         tune(card);
         try { draw(card, d, format(d)); } catch (e) {
           card.append(el('p', 'vzb-error', tx(d, '카드를 그리지 못했습니다: %s', e.message)));

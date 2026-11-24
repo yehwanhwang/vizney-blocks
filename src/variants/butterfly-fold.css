@@ -36,4 +36,3 @@
 .vzb-bf-nm.is-on, .vzb-bf-val.is-on { font-weight: 700; fill: var(--vzb-ink); }
 .vzb-bf-plot { cursor: default; }
 .vzb-bf-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
-.vzb-poster .vzb-bf-keys, .vzb-poster .vzb-bf-val { display: none; }   /* 갤러리 타일: 가운데 항목 이름만 남깁니다 */

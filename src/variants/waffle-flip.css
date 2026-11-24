@@ -7,7 +7,7 @@
 .vzb-wf-fig > [hidden] { display: none; }
 .vzb-wf-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
 .vzb-wf-fig .vzb-num { font-variant-numeric: tabular-nums; }
-.vzb-wf.vzb-foot { margin-top: 0; padding-top: 16px; }   /* 칸은 큰 숫자 바로 아래. 폭이 좁아 칸이 높이를 다 못 채우면 남는 자리는 카드 아래로 갑니다 */
+.vzb-wf.vzb-foot { margin-top: 0; padding-top: 16px; }   /* 칸은 큰 숫자 바로 아래에서 카드 바닥까지, 남은 자리를 다 씁니다(스크립트가 칸의 크기를 정합니다) */
 .vzb-wf-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-wf-cell { transition: opacity var(--vzb-fade); }
 .vzb-wf-c0 { fill: var(--vzb-primary); }

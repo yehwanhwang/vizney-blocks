@@ -6,7 +6,6 @@
 :root {
   --page: #ffffff;
   --soft: #f4f5f7;
-  --tray: #eff0f3;
   --tile: #f6f7f9;
   --ink: #1b1b1b;
   --ink-2: #4a4a4a;
@@ -146,11 +145,12 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 .gal { padding-top: 49px; }
 .gal-grid { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
 .gal-grid > .gt.is-wide { grid-column: span 2; }   /* 가로로 긴 차트는 2칸(3열에서 2칸, 2열에서 한 줄 전체) */
-.gt { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; min-width: 0; border-radius: 20px; background: var(--tray); }
+.gt { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; min-width: 0; border-radius: 20px; background: linear-gradient(transparent calc(100% - 90px), #1b1b1b calc(100% - 90px)); }   /* 밝은 카드 밑의 검정 받침. 틀 위쪽 모서리 뒤로는 칠하지 않습니다 */
 /* 틀은 카드 하나: 틀(.gt-box) 안에 보이는 것이 복사되는 카드 그대로입니다. 틀의 바탕은 카드의 바탕과 같은 색이고(밝은 바탕 흰색, 어두운 바탕 Vizney 검정),
    갤러리에서만 카드의 테두리와 그림자를 지웁니다. 틀 안에 테두리 카드가 한 번 더 들어가면 틀이 두 겹이 되기 때문입니다. 복사하는 코드는 바꾸지 않습니다.
-   블록 이름과 바탕 전환 · 복사 단추는 틀 밖, 틀 아래로 이어진 받침(.gt의 회색 바탕) 한 줄에 둡니다. 받침이 틀과 같은 폭 · 같은 모서리로 틀 밑에 물려 있어
-   이름과 단추가 그 카드의 것으로 보이고, 카드의 제목(틀 안)과 블록 이름(틀 밖)이 같은 면에 놓이지 않습니다. 받침은 카드의 바탕이 바뀌어도 그대로입니다. */
+   블록 이름과 바탕 전환 · 복사 단추는 틀 밖, 틀 아래로 이어진 받침(.gt의 바탕) 한 줄에 둡니다. 받침이 틀과 같은 폭 · 같은 모서리로 틀 밑에 물려 있어
+   이름과 단추가 그 카드의 것으로 보이고, 카드의 제목(틀 안)과 블록 이름(틀 밖)이 같은 면에 놓이지 않습니다.
+   받침은 카드와 반대 바탕입니다: 어두운 카드 밑에는 흰 받침(가는 외곽선), 밝은 카드 밑에는 검정 받침. 어느 바탕에서든 어디까지가 카드인지 색으로 갈립니다. */
 .gt .gt-pv > .vzb-card { border-color: transparent; box-shadow: none; }
 .gt-box { box-sizing: border-box; grid-column: 1 / -1; position: relative; display: grid; align-content: center; min-width: 0; min-height: 424px; border: 1px solid var(--line); border-radius: 20px; background: #ffffff; }   /* 틀의 높이는 모두 424px로 같습니다. 가장 긴 펼침인 Date Picker의 단추 + 달력(382px)이 위아래 여유를 두고 들어가는 높이입니다. 컨트롤은 틀 가운데에 둡니다 */
 /* 차트 카드는 틀을 다 채웁니다: 카드가 틀의 폭과 높이까지 늘어나고(카드는 놓인 자리를 채우게 되어 있습니다), 늘어난 높이는 그림이 씁니다. 틀과 카드 사이에 여백을 두지 않아
@@ -181,19 +181,28 @@ svg.ic { flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke
 .gt.is-bare .vzb-sm.is-up .vzb-sm-pop { top: calc(100% + 8px); bottom: auto; transform-origin: 50% 0; }
 .gt-pv { display: grid; }
 .gt-meta { display: flex; align-items: center; gap: 4px; min-width: 0; padding: 8px 6px 8px 20px; }   /* 받침 왼쪽에 블록 이름, 오른쪽에 바탕 전환 · 복사 단추 */
-.gt-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 700; color: var(--ink); text-decoration: none; }
-.gt-theme { flex: none; margin-left: auto; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 8px; background: none; color: var(--muted); cursor: pointer; }
-.gt-theme:hover { color: var(--ink); background: #e6e8ec; }
+.gt-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 700; color: #f5f5f5; text-decoration: none; }
+.gt-theme { flex: none; margin-left: auto; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 8px; background: none; color: #bdbdbd; cursor: pointer; }
+.gt-theme:hover { color: #ffffff; background: #2c2c2c; }
 .gt-theme .ic { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .gt .ic-sun, .gt.is-dark .ic-moon { display: none; }
 .gt.is-dark .ic-sun { display: block; }
 /* Dark tile (the default): the frame is Vizney black around a card drawn on Vizney black, as in the blog's dark post images. */
 .gt.is-dark .gt-box { background: #1b1b1b; border-color: #1b1b1b; }
-.gt.is-dark .gt-box :focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; box-shadow: none; }
+/* 어두운 카드 밑의 흰 받침: 가는 외곽선으로 틀과 한데 두릅니다(외곽선은 받침에서만 보입니다) */
+.gt.is-dark { background: #ffffff; box-shadow: inset 0 0 0 1px var(--line); }
+.gt.is-dark .gt-name { color: var(--ink); }
+.gt.is-dark .gt-theme { color: var(--muted); }
+.gt.is-dark .gt-theme:hover { color: var(--ink); background: #f1f1f1; }
+/* 어두운 면(어두운 틀 안, 검정 받침) 위의 포커스는 노랑 링만 둡니다 */
+.gt.is-dark .gt-box :focus-visible, .gt:not(.is-dark) :is(.gt-meta, .gt-acts) :focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; box-shadow: none; }
 /* 복사 단추 둘: 프롬프트 · 코드. 한 칸 타일의 받침 한 줄에 이름과 함께 들어가도록 짧게 적고(복사 아이콘 + 무엇을), 화면 낭독기와 툴팁에는 '프롬프트 복사' · '코드 복사'로 알립니다 */
 .gt-acts { display: flex; gap: 6px; padding: 8px 10px 8px 0; }
 .gt-acts .btn { height: 32px; padding: 0 10px; gap: 5px; border-radius: 8px; font-size: 13px; }
 .gt-acts .btn span { white-space: nowrap; }
+.gt:not(.is-dark) .gt-acts .btn { background: #262626; border-color: #3a3a3a; color: #f2f2f2; }   /* 검정 받침 위의 단추 */
+.gt:not(.is-dark) .gt-acts .btn:hover { border-color: #5a5a5a; color: #ffffff; }
+.gt:not(.is-dark) .gt-acts .btn.is-done { border-color: var(--yellow); }
 /* 한 칸 타일이 좁아지는 폭(3열의 1081~1259px, 2열의 721~879px)에서는 받침을 촘촘히 둡니다: 단추는 아이콘 없이 글자만, 이름은 14px.
    가장 긴 이름(Download Button)이 줄지 않고 한 줄에 들어가게 하기 위해서입니다. 좁은 전화 화면(379px 이하)에서도 단추는 글자만 둡니다(아래). */
 @media (min-width: 1081px) and (max-width: 1259px), (min-width: 721px) and (max-width: 879px) {

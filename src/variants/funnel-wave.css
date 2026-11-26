@@ -8,7 +8,7 @@
    물결은 스크립트가 그립니다. 물결이 이는 동안 물 뒤로 같은 톤을 한 겹씩 더 옅게 한 두 겹(--vzb-fw-p의 62% · 38%)이 솟아 세 겹 물결로 보이고,
    잔잔해지면 물 뒤로 숨습니다. 단계를 짚으면 그 칸을 칸 바탕(--vzb-track)으로 두르고, 그 알약은 숨기지 않고 첫째 색으로 채워 살짝 키우며
    (숫자가 사라지면 오류처럼 보이므로), 나머지는 옅게 둡니다. */
-.vzb-card[data-vzb="funnel-wave"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-card[data-vzb="funnel-wave"] { min-height: max(var(--vzb-unit) * 2, 100%); }   /* 2단위가 바닥이고, 놓인 자리가 더 높으면 그 높이를 채웁니다 */
 .vzb-card[data-vzb="funnel-wave"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
 .vzb-fw.vzb-foot { padding-top: 8px; }
 .vzb-fw-svg { display: block; overflow: visible; font-family: var(--vzb-font); }

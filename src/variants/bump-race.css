@@ -7,7 +7,7 @@
    손잡이 아래에 지금 기간을 굵게 적고, 처음과 끝 기간은 옅게 적되 지금 기간과 겹치면 감춥니다.
    구간 막대 오른쪽(이름표 열 아래)에 되감기 · 재생/일시정지(28px 원) · 빨리 감기를 둡니다. 선이나 이름표를 누르면 그 항목이 짚을 항목이 됩니다.
    선이 자라는 움직임은 스크립트가 그립니다. */
-.vzb-card[data-vzb="bump-race"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-card[data-vzb="bump-race"] { min-height: max(var(--vzb-unit) * 2, 100%); }   /* 2단위가 바닥이고, 놓인 자리가 더 높으면 그 높이를 채웁니다 */
 .vzb-br.vzb-foot { padding-top: 14px; }
 .vzb-br-svg, .vzb-br-ssvg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-br-item { --vzb-c: color-mix(in srgb, var(--vzb-ink) 30%, var(--vzb-card)); transition: opacity var(--vzb-fade); }

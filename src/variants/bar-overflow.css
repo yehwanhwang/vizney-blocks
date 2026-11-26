@@ -3,7 +3,7 @@
    선의 오른쪽 끝(막대 칸 밖)에 이름(12px, 옅게)을 선 위에, 값(14px 굵게)을 선 아래에 붙입니다.
    기간 이름은 바닥선 아래 12px, 넘친 양은 넘친 막대 위에 14px 굵은 빨간 글자(--vzb-alert-ink)로 적습니다.
    그래프 아래 줄에는 다시 보기 단추와 카드가 계산한 한 줄(넘친 기간 수와 넘친 양)을 둡니다. 깜빡임은 스크립트가 불투명도로 그립니다. */
-.vzb-card[data-vzb="bar-overflow"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-card[data-vzb="bar-overflow"] { min-height: max(var(--vzb-unit) * 2, 100%); }   /* 2단위가 바닥이고, 놓인 자리가 더 높으면 그 높이를 채웁니다 */
 .vzb-bb.vzb-foot { padding-top: 12px; }
 .vzb-bb-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-bb-base { stroke: var(--vzb-grid); stroke-width: 1; }

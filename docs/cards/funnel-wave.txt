@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.81 · Funnel Chart · Funnel Wave (funnel-wave)
+<!-- Vizney Blocks v0.82 · Funnel Chart · Funnel Wave (funnel-wave)
      https://blocks.vizney.com/cards/funnel-wave.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <style>
@@ -113,13 +113,15 @@
   --vzb-tip-ink: #ffffff;   /* tooltip text */
   --vzb-shadow: none;   /* card shadow */
 }
-/* 카드: 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위 가운데 하나입니다(단위 --vzb-unit, 카드마다 자기 CSS에서 정합니다). */
+/* 카드: 놓인 자리를 채웁니다. 폭은 자리의 폭이고, 높이는 1 · 1.5 · 2단위 가운데 하나를 바닥으로(단위 --vzb-unit, 카드마다 자기 CSS에서 정합니다)
+   자리가 그보다 높으면 그 높이까지 늘어납니다. 높이가 정해진 요소 안에 두든(100%), 격자 · 플렉스 줄에서 옆 카드에 맞춰 늘어나든 같습니다.
+   늘어난 높이는 그림이 씁니다(chart.css의 .vzb-fill). */
 .vzb-card {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   min-width: 0;
-  min-height: calc(var(--vzb-unit) * 1.5);
+  min-height: max(var(--vzb-unit) * 1.5, 100%);
   padding: 24px;
   background: var(--vzb-card);
   color: var(--vzb-ink);
@@ -229,7 +231,7 @@
    물결은 스크립트가 그립니다. 물결이 이는 동안 물 뒤로 같은 톤을 한 겹씩 더 옅게 한 두 겹(--vzb-fw-p의 62% · 38%)이 솟아 세 겹 물결로 보이고,
    잔잔해지면 물 뒤로 숨습니다. 단계를 짚으면 그 칸을 칸 바탕(--vzb-track)으로 두르고, 그 알약은 숨기지 않고 첫째 색으로 채워 살짝 키우며
    (숫자가 사라지면 오류처럼 보이므로), 나머지는 옅게 둡니다. */
-.vzb-card[data-vzb="funnel-wave"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-card[data-vzb="funnel-wave"] { min-height: max(var(--vzb-unit) * 2, 100%); }   /* 2단위가 바닥이고, 놓인 자리가 더 높으면 그 높이를 채웁니다 */
 .vzb-card[data-vzb="funnel-wave"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
 .vzb-fw.vzb-foot { padding-top: 8px; }
 .vzb-fw-svg { display: block; overflow: visible; font-family: var(--vzb-font); }

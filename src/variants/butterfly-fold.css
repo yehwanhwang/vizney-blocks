@@ -13,9 +13,9 @@
 .vzb-tip.vzb-dark .vzb-bf-k1 { --vzb-c: var(--vzb-secondary); }
 .vzb-card[data-vzb="butterfly-fold"] { min-height: max(var(--vzb-unit) * 2, 100%); }   /* 2단위가 바닥이고, 놓인 자리가 더 높으면 그 높이를 채웁니다 */
 .vzb-card[data-vzb="butterfly-fold"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
-.vzb-bf-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
+.vzb-bf-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: var(--vzb-radius-control, 50%); background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
 .vzb-bf-btn:hover { background: var(--vzb-other); }
-.vzb-bf-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
+.vzb-bf-btn:focus-visible { outline: 2px solid var(--vzb-focus, var(--vzb-primary)); outline-offset: 2px; }
 .vzb-bf-ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .vzb-bf.vzb-foot { padding-top: 14px; }
 .vzb-bf-keys { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; column-gap: 24px; row-gap: 2px; margin-bottom: 12px; font-size: 14px; line-height: 20px; color: var(--vzb-ink-2); }

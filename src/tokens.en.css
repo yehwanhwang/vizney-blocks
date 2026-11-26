@@ -1,39 +1,59 @@
-/* Vizney Blocks tokens: re-declare the same variables on your page's :root and they apply to every card.
-   The colors come from Vizney's Figma palette: blue (#007aff), pink-red (#ff2d55) and orange (#ff9500) for data, green (#34c759) and red (#ff3b30)
-   for good and bad, with lighter steps mixed from the same colors and the background. The text is Vizney black (#1b1b1b).
-   With "theme": "dark" in the JSON, the .vzb-dark values below draw the card on Vizney black with yellow as the first color and white as the second.
+/* Vizney Blocks tokens: re-declare the same variables on your page's :root and they apply to every card. The card code stays as it is.
+   To match your screen, set the background (--vzb-card), the text (--vzb-ink), the accent (--vzb-primary), the type (--vzb-font, --vzb-title-*) and the corners (--vzb-radius*).
+   The gray steps (--vzb-ink-2 · muted · grid · track · other · base) and the badge and tooltip colors are mixed from the background, the text and the meaning colors, so they follow. Set one yourself and yours is used.
+   A variable set to initial is empty. Empty, the card uses the Vizney shape it gives each element; set, the whole group uses that value.
+   The colors come from Vizney's Figma palette: blue (#007aff), pink-red (#ff2d55) and orange (#ff9500) for data, green (#34c759) and red (#ff3b30) for good and bad.
+   With "theme": "dark" in the JSON, the .vzb-dark values below draw the card on Vizney black with yellow as the first color.
    List: https://blocks.vizney.com/tokens.css */
 :where(:root) {
-  --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* every word on the card */
-  --vzb-card: #ffffff;   /* card background */
-  --vzb-edge: rgba(17, 24, 39, 0.05);   /* card border */
-  --vzb-ink: #1b1b1b;   /* title and headline figure */
-  --vzb-ink-2: #4a4a4a;   /* body text, the no-change badge */
-  --vzb-muted: #737373;   /* subtitle, units, axis ticks */
-  --vzb-grid: #ebebeb;   /* grid lines and the line under the head: a solid gray one step off the background */
-  --vzb-primary: #007aff;   /* first data color (blue): lines, bars, the largest item */
-  --vzb-primary-tint: #e6f2ff;   /* light blue background: the shade under a line, the radar area */
-  --vzb-primary-soft: #bfdeff;   /* bar-list bars that carry the name */
-  --vzb-secondary: #ff2d55;   /* second data color (pink-red) */
+  /* Type. Vizney Blocks Sans is the name of the @font-face inside the card (the Spoqa Han Sans Neo files). A browser fetches the files only when
+     some text is drawn in that name, so once --vzb-font is changed the card requests nothing from outside. */
+  --vzb-font: 'Vizney Blocks Sans', 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* every word on the card */
+  --vzb-title-font: initial;   /* the font of a chart card's title. Empty: --vzb-font */
+  --vzb-title-size: 17px;   /* title size. Anything under 12px is drawn at 12px */
+  --vzb-title-weight: 500;   /* title weight */
+  --vzb-title-case: none;   /* title case (text-transform): uppercase for capitals */
+  --vzb-title-tracking: normal;   /* title letter-spacing, such as 0.08em */
+  --vzb-sub-font: initial;   /* the font of the subtitle (period and basis). Empty: --vzb-font */
+  --vzb-sub-size: 14px;   /* subtitle size. Anything under 12px is drawn at 12px */
+  --vzb-sub-weight: 400;   /* subtitle weight */
+  --vzb-sub-case: none;   /* subtitle case */
+  --vzb-sub-tracking: normal;   /* subtitle letter-spacing */
+  /* Background and text. The gray steps are the text color mixed into the background (in brackets, the color the defaults give). */
+  --vzb-card: #ffffff;   /* card background; also the background of opened parts (calendar, list, distribution, download menu), the text on a picked chip or day, the outline of bar labels */
+  --vzb-edge: rgba(17, 24, 39, 0.05);   /* border of the card, opened parts and inputs */
+  --vzb-ink: #1b1b1b;   /* titles, values, headline figures. On controls, the fill of a picked chip or day, the thumbs and the download button */
+  --vzb-ink-2: color-mix(in srgb, var(--vzb-ink) 79.39%, var(--vzb-card));   /* (#4a4a4a) names, legends, text of unpicked chips */
+  --vzb-muted: color-mix(in srgb, var(--vzb-ink) 61.4%, var(--vzb-card));   /* (#737373) subtitle, units, axis ticks, light names, the connecting dots of Waterfall */
+  --vzb-grid: color-mix(in srgb, var(--vzb-ink) 8.77%, var(--vzb-card));   /* (#ebebeb) the baseline */
+  --vzb-track: color-mix(in srgb, var(--vzb-ink) 6.14%, var(--vzb-card));   /* (#f1f1f1) light fills: chips, buttons and the date button, the replay button, the bubble, the band of a picked row */
+  --vzb-other: color-mix(in srgb, var(--vzb-ink) 16.67%, var(--vzb-card));   /* (#d9d9d9) hovered fills, the slider rail and distribution bars, the scrubber */
+  --vzb-base: color-mix(in srgb, var(--vzb-ink) 25.88%, var(--vzb-card));   /* (#c4c4c4) reference bars: the totals of Waterfall, the bars under the limit in Bar Overflow */
+  /* Data colors */
+  --vzb-primary: #007aff;   /* first data color (blue): the picked item, the water of Funnel, the picked cells of Waffle, the picked line of Bump. Also the focus ring (when --vzb-focus is empty) */
+  --vzb-secondary: #ff2d55;   /* second data color (pink-red): the left group of Butterfly */
   --vzb-tertiary: #ff9500;   /* third data color (orange) */
-  --vzb-primary-mid: #8cc3ff;     /* one step lighter, for wide areas (treemap cells) */
-  --vzb-secondary-mid: #ff7a93;   /* pink-red for wide areas */
-  --vzb-tertiary-mid: #ffb54d;   /* orange for wide areas */
-  --vzb-other-mid: #e3e3e3;   /* the Other group on wide areas */
-  --vzb-line-3: #ff9500;   /* third line color (orange) */
-  --vzb-base: #c4c4c4;   /* the baseline (last year's line, the radar baseline outline) */
-  --vzb-track: #f1f1f1;   /* track behind the gauge and attainment bars */
-  --vzb-other: #d9d9d9;   /* items folded into Other, items from the fourth on */
-  --vzb-good: #34c759;   /* fill of a good change (increases in a waterfall, met targets). Palette green; 2.2:1 on white, so never for text */
-  --vzb-good-tint: #ebf9ee;   /* background of a good-change badge (green 10%) */
-  --vzb-good-ink: #2a8040;   /* text of a good change (badges): green with 41% black, 4.9:1 on white */
-  --vzb-bad: #ff3b30;   /* fill of a bad change or of the part over a limit. Palette red, 3.6:1 on white */
-  --vzb-bad-tint: #ffebea;   /* background of a bad-change badge (red 10%) */
-  --vzb-bad-ink: #cb342b;   /* text of a bad change and of errors: red with 23% black, 5.2:1 on white */
-  --vzb-tip: #1b1b1b;   /* tooltip background */
-  --vzb-radius: 18px;   /* card corners */
+  /* Meaning colors. good and bad paint only whether a change is good or bad; alert paints only warnings (over a limit, a wrong input, an error message).
+     Turn decreases gray and the part over a limit stays red. -tint (badge background) and -ink (text) mix the fill into the background and the text, so they follow. */
+  --vzb-good: #34c759;   /* fill of a good change: the increases of Waterfall. Palette green; 2.2:1 on white, so never for text */
+  --vzb-good-tint: color-mix(in srgb, var(--vzb-good) 10.04%, var(--vzb-card));   /* (#ebf9ee) background of a good-change badge */
+  --vzb-good-ink: color-mix(in srgb, var(--vzb-good) 58.97%, var(--vzb-ink));   /* (#2a8040) text of a good change (badges, the bubble), 4.9:1 on white */
+  --vzb-bad: #ff3b30;   /* fill of a bad change: the decreases of Waterfall. Palette red */
+  --vzb-bad-tint: color-mix(in srgb, var(--vzb-bad) 10.17%, var(--vzb-card));   /* (#ffebea) background of a bad-change badge */
+  --vzb-bad-ink: color-mix(in srgb, var(--vzb-bad) 77.3%, var(--vzb-ink));   /* (#cb342b) text of a bad change, 5.2:1 on white */
+  --vzb-alert: #ff3b30;   /* fill of a warning: the part over the limit in Bar Overflow and its key, the border of a wrong date. Palette red */
+  --vzb-alert-ink: color-mix(in srgb, var(--vzb-alert) 77.3%, var(--vzb-ink));   /* (#cb342b) text of a warning: the amount over, error messages */
+  /* Tooltip and focus */
+  --vzb-tip: var(--vzb-ink);   /* (#1b1b1b) tooltip background */
+  --vzb-tip-ink: var(--vzb-card);   /* (#ffffff) tooltip text; names and notes are 72% of it */
+  --vzb-focus: initial;   /* keyboard focus ring. Empty: --vzb-primary. Set it when the accent is close to the background (lime on white) */
+  /* Shape */
+  --vzb-radius: 18px;   /* card corners. Floating parts (tooltip 8, calendar and list 16, distribution 12) and the focus outline (4) take the smaller of this and their own */
+  --vzb-radius-mark: initial;   /* corners of data marks: bar ends (4), waffle cells (2), the bubble (7), share pills (12), change badges (7), the band of a picked row (4), legend keys (2 · 3). 0 squares them all */
+  --vzb-radius-control: initial;   /* corners of controls: chips and the date and list buttons (pills), icon buttons and thumbs (circles), inputs (10), period buttons, day cells, list rows. 0 squares them all */
   --vzb-unit: 168px;   /* 1 height unit; a chart card is 1, 1.5 or 2 units tall */
-  --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* card shadow */
+  --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* card shadow; none for no shadow */
+  --vzb-shadow-float: initial;   /* shadow of floating parts (tooltip, calendar, list, distribution, download menu). Empty: the Vizney shadow of each; none for no shadow */
   /* Motion. What moves decides the value. A spring is two numbers, 'stiffness damping' (stiffer is faster; less damping bounces more).
      Things you touch: Follow · Settle · Pop · Fade · Press. Things that carry a value: Move (never overshoots: a height or a position
      is the value, so a bounce shows a wrong value for a moment). Rhythm: Lead · Seq · Rest. Move what sits around the cards
@@ -57,35 +77,32 @@
   --vzb-move-e: linear(0, 0.024, 0.083, 0.161, 0.248, 0.335, 0.419, 0.498, 0.569, 0.633, 0.689, 0.737, 0.78, 0.816, 0.846, 0.872, 0.894, 0.913, 0.928, 0.941, 0.951, 0.96, 0.967, 0.973, 0.978, 0.982, 0.985, 0.988, 0.99, 0.992, 0.994, 0.995, 1);
 }
 
-/* Dark ("theme": "dark"): the same variables, changed inside the card only. One yellow plus white and gray draws in Vizney black, white and yellow.
+/* Dark ("theme": "dark"): it picks the Vizney black background, so the card sets the same variables again inside itself, and colors on :root do not reach it.
+   To match your screen, leave theme empty even on a dark screen and set the background, text and accent on :root. To change this block, write .vzb-dark { … } on your page (it is :where, so yours wins).
    Yellow, white and gray pass a color vision simulation (closest pair ΔE 14.9) and a contrast check against the card.
    Good and bad are the same green (#34c759) and red (#ff3b30) as on white, and on black they serve as text too (7.8:1 and 4.9:1). */
-.vzb-dark {
+:where(.vzb-dark) {
   --vzb-card: #1b1b1b;   /* card background (Vizney black) */
   --vzb-edge: rgba(255, 255, 255, 0.08);   /* card border */
   --vzb-ink: #f5f5f5;   /* title and headline figure */
-  --vzb-ink-2: #cfcfcf;   /* body text */
-  --vzb-muted: #9b9b9b;   /* subtitle, units, axis ticks */
-  --vzb-grid: #2f2f2f;   /* grid lines and the rule under the head */
+  --vzb-ink-2: color-mix(in srgb, var(--vzb-ink) 82.57%, var(--vzb-card));   /* (#cfcfcf) body text */
+  --vzb-muted: color-mix(in srgb, var(--vzb-ink) 58.72%, var(--vzb-card));   /* (#9b9b9b) subtitle, units, axis ticks */
+  --vzb-grid: color-mix(in srgb, var(--vzb-ink) 9.17%, var(--vzb-card));   /* (#2f2f2f) the baseline */
+  --vzb-track: color-mix(in srgb, var(--vzb-ink) 7.8%, var(--vzb-card));   /* (#2c2c2c) light fills */
+  --vzb-other: color-mix(in srgb, var(--vzb-ink) 22.94%, var(--vzb-card));   /* (#4d4d4d) hovered fills, rails */
+  --vzb-base: color-mix(in srgb, var(--vzb-ink) 36.7%, var(--vzb-card));   /* (#6b6b6b) reference bars */
   --vzb-primary: #ffcc00;   /* first data color (Vizney yellow) */
-  --vzb-primary-tint: #362f18;   /* dim yellow background */
-  --vzb-primary-soft: #5f5013;   /* bar-list bars that carry the name */
   --vzb-secondary: #f5f5f5;   /* second data color (white) */
   --vzb-tertiary: #9b9b9b;   /* third data color (gray) */
-  --vzb-primary-mid: #826b0f;   /* wide areas, one step darker so light text sits on them */
-  --vzb-secondary-mid: #5c5c5c;   /* white for wide areas, gray so white text reads on it */
-  --vzb-tertiary-mid: #424242;   /* gray for wide areas */
-  --vzb-other-mid: #3a3a3a;   /* the Other group for wide areas */
-  --vzb-line-3: #9b9b9b;   /* third line color (gray) */
-  --vzb-base: #6b6b6b;   /* comparison baseline */
-  --vzb-track: #2c2c2c;   /* gauge and attainment-bar track */
-  --vzb-other: #4d4d4d;   /* items folded into Other */
   --vzb-good: #34c759;   /* good change (palette green) */
-  --vzb-good-tint: #1f3725;   /* good badge background (green 16%) */
-  --vzb-good-ink: #34c759;   /* text of a good change */
-  --vzb-bad: #ff3b30;   /* bad change, over the limit (palette red) */
-  --vzb-bad-tint: #2d1e1d;   /* bad badge background (red 8%, as much as keeps 4.5:1 for the text) */
-  --vzb-bad-ink: #ff3b30;   /* text of a bad change and of errors */
-  --vzb-tip: #3a3a3a;   /* tooltip background */
+  --vzb-good-tint: color-mix(in srgb, var(--vzb-good) 16.24%, var(--vzb-card));   /* (#1f3725) good badge background */
+  --vzb-good-ink: var(--vzb-good);   /* text of a good change */
+  --vzb-bad: #ff3b30;   /* bad change (palette red) */
+  --vzb-bad-tint: color-mix(in srgb, var(--vzb-bad) 8.07%, var(--vzb-card));   /* (#2d1e1d) bad badge background (as much as keeps 4.5:1 for the text) */
+  --vzb-bad-ink: var(--vzb-bad);   /* text of a bad change */
+  --vzb-alert: #ff3b30;   /* warning (palette red) */
+  --vzb-alert-ink: var(--vzb-alert);   /* text of a warning */
+  --vzb-tip: color-mix(in srgb, var(--vzb-ink) 14.22%, var(--vzb-card));   /* (#3a3a3a) tooltip background */
+  --vzb-tip-ink: #ffffff;   /* tooltip text */
   --vzb-shadow: none;   /* card shadow */
 }

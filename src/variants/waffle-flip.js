@@ -122,7 +122,7 @@
 
     // 칸 100개와 괄호: 칸 하나는 가로 pw · 세로 ph의 자리에서 틈을 뺀 네모입니다(layout이 자리에 맞춰 정합니다).
     const cells = cats0.map((c, i) => {
-      const r = svgEl('rect', { class: `vzb-wf-cell vzb-wf-c${c}`, rx: 2 });
+      const r = svgEl('rect', { class: `vzb-wf-cell vzb-wf-c${c}` });
       r.cat = c;
       svg.append(r);
       return r;
@@ -216,7 +216,10 @@
       svg.setAttribute('width', w);
       svg.setAttribute('height', h);
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      // 칸의 모서리: --vzb-radius-mark(비우면 2px). 짧은 변의 1/4을 넘기지 않아, 큰 값을 적어도 칸이 점으로 읽히지 않습니다.
+      const rc = Math.min(len(card, 'radius-mark', 2), Math.min(cw, ph - gap) / 4);
       cells.forEach((r, i) => {
+        r.setAttribute('rx', rc);
         r.setAttribute('x', fx(Math.floor(i / ROWS) * pw));
         r.setAttribute('y', fx((i % ROWS) * ph));
         r.setAttribute('width', fx(cw));

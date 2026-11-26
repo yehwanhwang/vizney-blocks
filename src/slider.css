@@ -8,30 +8,30 @@
 .vzb-sl { position: relative; }
 .vzb-sl-area { position: relative; padding-top: 1px; cursor: pointer; touch-action: pan-y; -webkit-user-select: none; user-select: none; }
 .vzb-sl-rail { position: relative; height: 22px; }
-.vzb-sl-track { position: absolute; left: 0; right: 0; top: 8px; height: 6px; border-radius: 3px; background: var(--vzb-other); }
+.vzb-sl-track { position: absolute; left: 0; right: 0; top: 8px; height: 6px; border-radius: min(var(--vzb-radius-control, 3px), 3px); background: var(--vzb-other); }
 .vzb-sl-fill { position: absolute; left: 0; top: 8px; width: 1px; height: 6px; background: var(--vzb-ink); transform-origin: 0 50%; }
-.vzb-sl-thumb { position: absolute; left: 0; top: 1px; width: 20px; height: 20px; margin-left: -10px; border-radius: 50%; background: var(--vzb-ink); cursor: grab; outline: none; transition: box-shadow var(--vzb-fade); }
+.vzb-sl-thumb { position: absolute; left: 0; top: 1px; width: 20px; height: 20px; margin-left: -10px; border-radius: var(--vzb-radius-control, 50%); background: var(--vzb-ink); cursor: grab; outline: none; transition: box-shadow var(--vzb-fade); }
 .vzb-sl-area.is-drag, .vzb-sl-area.is-drag .vzb-sl-thumb { cursor: grabbing; }
 .vzb-sl-thumb.is-held { box-shadow: 0 0 0 6px color-mix(in srgb, var(--vzb-ink) 16%, transparent); }   /* 잡고 있는 손잡이: 둘레가 옅게 번집니다 */
-.vzb-sl-thumb:focus-visible { box-shadow: 0 0 0 2px var(--vzb-primary); }
+.vzb-sl-thumb:focus-visible { box-shadow: 0 0 0 2px var(--vzb-focus, var(--vzb-primary)); }
 .vzb-sl-labs { position: relative; height: 18px; margin-top: 6px; }
 .vzb-sl-lab { position: absolute; left: 0; top: 0; white-space: nowrap; font-size: 14px; line-height: 18px; font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; transition: opacity var(--vzb-fade); }
 .vzb-sl-lab.is-off { opacity: 0; pointer-events: none; }   /* 숨긴 값은 누르기를 받지 않아, 보이는 값이 마우스를 받습니다 */
-.vzb-sl-pop { position: absolute; left: 0; right: 0; bottom: calc(100% + 8px); z-index: 3; padding: 10px 0 8px; border: 1px solid var(--vzb-edge); border-radius: 12px; background: var(--vzb-card); box-shadow: 0 10px 28px rgba(27, 27, 27, 0.16); opacity: 0; visibility: hidden; transform: translateY(6px); transform-origin: 50% 100%; pointer-events: none; transition: opacity var(--vzb-fade), transform var(--vzb-settle-t) var(--vzb-settle-e), visibility 0s var(--vzb-settle-t); }
+.vzb-sl-pop { position: absolute; left: 0; right: 0; bottom: calc(100% + 8px); z-index: 3; padding: 10px 0 8px; border: 1px solid var(--vzb-edge); border-radius: min(var(--vzb-radius), 12px); background: var(--vzb-card); box-shadow: var(--vzb-shadow-float, 0 10px 28px rgba(27, 27, 27, 0.16)); opacity: 0; visibility: hidden; transform: translateY(6px); transform-origin: 50% 100%; pointer-events: none; transition: opacity var(--vzb-fade), transform var(--vzb-settle-t) var(--vzb-settle-e), visibility 0s var(--vzb-settle-t); }
 .vzb-sl.is-on .vzb-sl-pop { opacity: 1; visibility: visible; transform: none; transition: opacity var(--vzb-fade), transform var(--vzb-settle-t) var(--vzb-settle-e), visibility 0s; }
 .vzb-sl-pophd { display: flex; align-items: baseline; height: 20px; padding: 0 12px; white-space: pre; font-size: 12px; line-height: 20px; color: var(--vzb-muted); font-variant-numeric: tabular-nums; }
 .vzb-sl-pophd .vzb-rl { font-size: 14px; font-weight: 700; color: var(--vzb-ink); }
 .vzb-sl-hist { display: flex; align-items: flex-end; gap: 2px; height: 84px; margin: 10px 12px 0; transform: scaleY(0.4); transform-origin: 50% 100%; transition: transform var(--vzb-settle-t) var(--vzb-settle-e); }
 .vzb-sl.is-on .vzb-sl-hist { transform: none; }
-.vzb-sl-bar { flex: 1 1 0; min-width: 0; border-radius: 2px 2px 0 0; background: var(--vzb-other); transform-origin: 50% 100%; transition: background-color var(--vzb-fade); }
+.vzb-sl-bar { flex: 1 1 0; min-width: 0; border-radius: min(var(--vzb-radius-mark, 2px), 2px) min(var(--vzb-radius-mark, 2px), 2px) 0 0; background: var(--vzb-other); transform-origin: 50% 100%; transition: background-color var(--vzb-fade); }
 .vzb-sl-bar.is-in { background: var(--vzb-ink); }
-.vzb-sl-labs.is-editable .vzb-sl-lab { cursor: text; text-decoration: underline dotted color-mix(in srgb, var(--vzb-ink) 45%, transparent); text-decoration-thickness: 1.5px; text-underline-offset: 4px; border-radius: 6px; transition: opacity var(--vzb-fade), background-color var(--vzb-fade), box-shadow var(--vzb-fade); }
+.vzb-sl-labs.is-editable .vzb-sl-lab { cursor: text; text-decoration: underline dotted color-mix(in srgb, var(--vzb-ink) 45%, transparent); text-decoration-thickness: 1.5px; text-underline-offset: 4px; border-radius: min(var(--vzb-radius-control, 6px), 6px); transition: opacity var(--vzb-fade), background-color var(--vzb-fade), box-shadow var(--vzb-fade); }
 .vzb-sl-labs.is-editable .vzb-sl-lab:hover { background: var(--vzb-track); box-shadow: 0 0 0 4px var(--vzb-track); }
 .vzb-sl-labs.is-editing .vzb-sl-lab { opacity: 0; pointer-events: none; }
 .vzb-sl-ed { position: absolute; left: 0; top: -7px; z-index: 2; display: flex; align-items: center; gap: 6px; cursor: default; animation: vzb-sl-ed var(--vzb-fade) ease-out; }
 .vzb-sl-ed[hidden] { display: none; }
 @keyframes vzb-sl-ed { from { opacity: 0; transform: translateY(-4px) scale(0.96); } }
-.vzb-sl-field { display: flex; align-items: center; gap: 2px; height: 32px; box-sizing: border-box; padding: 0 10px; border: 1.5px solid var(--vzb-ink); border-radius: 10px; background: var(--vzb-card); cursor: text; }
+.vzb-sl-field { display: flex; align-items: center; gap: 2px; height: 32px; box-sizing: border-box; padding: 0 10px; border: 1.5px solid var(--vzb-ink); border-radius: var(--vzb-radius-control, 10px); background: var(--vzb-card); cursor: text; }
 .vzb-sl-field:focus-within { box-shadow: 0 0 0 3px color-mix(in srgb, var(--vzb-ink) 16%, transparent); }
 .vzb-sl-in { min-width: 0; padding: 0; border: 0; outline: none; background: none; color: var(--vzb-ink); font: 700 14px/1 var(--vzb-font); font-variant-numeric: tabular-nums; }
 .vzb-sl-affix { font-size: 12px; font-weight: 500; color: var(--vzb-muted); }

@@ -23,18 +23,18 @@
 .vzb-wf.is-side .vzb-wf-ctl { margin-top: 0; }
 .vzb-wf.is-side .vzb-wf-legend { flex-direction: column; align-items: flex-start; gap: 6px; }   /* 항목은 글자 폭만큼(칸 크기를 잴 때 범례 폭으로 씁니다) */
 .vzb-card[data-vzb="waffle-flip"] .vzb-hd { position: relative; }
-.vzb-wf-per { position: absolute; top: -4px; right: 0; display: inline-flex; padding: 2px; border-radius: 16px; background: var(--vzb-track); }   /* 제목 오른쪽 자리는 스크립트가 단추 폭만큼 비웁니다 */
-.vzb-wf-pill { position: absolute; top: 2px; bottom: 2px; left: 0; width: 0; border-radius: 14px; background: var(--vzb-ink); pointer-events: none; }
+.vzb-wf-per { position: absolute; top: -4px; right: 0; display: inline-flex; padding: 2px; border-radius: var(--vzb-radius-control, 16px); background: var(--vzb-track); }   /* 제목 오른쪽 자리는 스크립트가 단추 폭만큼 비웁니다 */
+.vzb-wf-pill { position: absolute; top: 2px; bottom: 2px; left: 0; width: 0; border-radius: var(--vzb-radius-control, 14px); background: var(--vzb-ink); pointer-events: none; }
 .vzb-wf-per.is-ready .vzb-wf-pill { transition: transform var(--vzb-settle-t) var(--vzb-settle-e), width var(--vzb-settle-t) var(--vzb-settle-e); }
-.vzb-wf-opt { position: relative; height: 28px; padding: 0 12px; border: 0; border-radius: 14px; background: none; color: var(--vzb-ink-2); font: 500 14px/28px var(--vzb-font); font-variant-numeric: tabular-nums; white-space: nowrap; cursor: pointer; transition: color var(--vzb-fade); }
+.vzb-wf-opt { position: relative; height: 28px; padding: 0 12px; border: 0; border-radius: var(--vzb-radius-control, 14px); background: none; color: var(--vzb-ink-2); font: 500 14px/28px var(--vzb-font); font-variant-numeric: tabular-nums; white-space: nowrap; cursor: pointer; transition: color var(--vzb-fade); }
 .vzb-wf-opt:hover { color: var(--vzb-ink); }
 .vzb-wf-opt.is-on { color: var(--vzb-card); }
-.vzb-wf-opt:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
+.vzb-wf-opt:focus-visible { outline: 2px solid var(--vzb-focus, var(--vzb-primary)); outline-offset: 2px; }
 .vzb-wf-legend { display: flex; flex-wrap: wrap; gap: 2px 14px; min-width: 0; margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 20px; color: var(--vzb-ink-2); }
 .vzb-wf-legend li { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: opacity var(--vzb-fade); }
 .vzb-wf-legend.is-hover li:not(.is-on) { opacity: 0.4; }
 .vzb-wf-legend b { font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }
-.vzb-wf-key { flex: none; width: 10px; height: 10px; border-radius: 2px; }
+.vzb-wf-key { flex: none; width: 10px; height: 10px; border-radius: min(var(--vzb-radius-mark, 2px), 2px); }
 .vzb-wf-key.vzb-wf-c0 { background: var(--vzb-primary); }
 .vzb-wf-key.vzb-wf-c1, .vzb-wf-key.vzb-wf-c2, .vzb-wf-key.vzb-wf-c3 { background: var(--vzb-ink); }
 .vzb-wf-key.vzb-wf-c1 { opacity: 0.5; }

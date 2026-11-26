@@ -29,8 +29,8 @@
 .vzb-fw-svg.is-tight .vzb-fw-cnt, .vzb-fw-svg.is-tight .vzb-fw-name { font-size: 12px; }
 .vzb-fw-lab > text, .vzb-fw-pill > * { transition: opacity var(--vzb-fade); }
 .vzb-fw-svg.is-hover .vzb-fw-lab:not(.is-on) > text, .vzb-fw-svg.is-hover .vzb-fw-pill:not(.is-on) > * { opacity: 0.35; }
-.vzb-fw-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
+.vzb-fw-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: var(--vzb-radius-control, 50%); background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
 .vzb-fw-btn:hover { background: var(--vzb-other); }
-.vzb-fw-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
+.vzb-fw-btn:focus-visible { outline: 2px solid var(--vzb-focus, var(--vzb-primary)); outline-offset: 2px; }
 .vzb-fw-ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .vzb-fw-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }

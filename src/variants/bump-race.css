@@ -27,17 +27,17 @@
 .vzb-br-plot { cursor: pointer; }
 .vzb-br-bar { display: flex; align-items: flex-start; gap: 8px; margin-top: 20px; }   /* 맨 아래 이름표와 재생 단추가 붙어 보이지 않게 띄웁니다 */
 .vzb-br-ctl { flex: none; display: flex; align-items: center; gap: 2px; margin-top: -4px; }
-.vzb-br-btn { display: grid; place-items: center; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--vzb-ink-2); cursor: pointer; touch-action: manipulation; }
+.vzb-br-btn { display: grid; place-items: center; width: 26px; height: 26px; padding: 0; border: 0; border-radius: var(--vzb-radius-control, 50%); background: none; color: var(--vzb-ink-2); cursor: pointer; touch-action: manipulation; }
 .vzb-br-btn:hover { background: var(--vzb-track); color: var(--vzb-ink); }
 .vzb-br-main { width: 28px; height: 28px; background: var(--vzb-track); color: var(--vzb-ink); }
 .vzb-br-main:hover { background: var(--vzb-other); }
 .vzb-br-btn[hidden] { display: none; }
-.vzb-br-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
+.vzb-br-btn:focus-visible { outline: 2px solid var(--vzb-focus, var(--vzb-primary)); outline-offset: 2px; }
 .vzb-br-ic { width: 16px; height: 16px; }
 .vzb-br-play { fill: currentColor; stroke: currentColor; stroke-width: 1.2; stroke-linejoin: round; }
 .vzb-br-pause { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
 .vzb-br-btn.is-on .vzb-br-play, .vzb-br-btn:not(.is-on) .vzb-br-pause { display: none; }
-.vzb-br-scrub { position: relative; flex: 1 1 auto; min-width: 0; height: 34px; border-radius: 4px; outline: none; cursor: pointer; touch-action: pan-y; -webkit-user-select: none; user-select: none; }
+.vzb-br-scrub { position: relative; flex: 1 1 auto; min-width: 0; height: 34px; border-radius: min(var(--vzb-radius), 4px); outline: none; cursor: pointer; touch-action: pan-y; -webkit-user-select: none; user-select: none; }
 .vzb-br-scrub.is-drag { cursor: grabbing; }
 .vzb-br-track { stroke: var(--vzb-other); stroke-width: 2; stroke-linecap: round; }
 .vzb-br-fill { stroke: var(--vzb-ink); stroke-width: 2; stroke-linecap: round; }
@@ -46,7 +46,7 @@
 .vzb-br-thumb { fill: var(--vzb-ink); }
 .vzb-br-halo { fill: var(--vzb-ink); fill-opacity: 0; transition: fill-opacity var(--vzb-fade); }
 .vzb-br-scrub.is-drag .vzb-br-halo { fill-opacity: 0.16; }   /* 잡고 끄는 동안 손잡이 둘레가 옅게 번집니다 */
-.vzb-br-scrub:focus-visible .vzb-br-thumb { stroke: var(--vzb-primary); stroke-width: 2; }
+.vzb-br-scrub:focus-visible .vzb-br-thumb { stroke: var(--vzb-focus, var(--vzb-primary)); stroke-width: 2; }
 .vzb-br-now { font-size: 14px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
 .vzb-br-end { font-size: 12px; fill: var(--vzb-muted); transition: opacity var(--vzb-fade); }
 .vzb-br-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }

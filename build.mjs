@@ -16,7 +16,7 @@ import { guard } from './guard.mjs';
 const root = new URL('.', import.meta.url).pathname;
 const r = (p) => readFileSync(join(root, p), 'utf8');
 const FONT_DIR = process.env.SPOQA_DIR;
-const VERSION = 'v0.80';
+const VERSION = 'v0.81';
 const SITE = 'https://blocks.vizney.com';
 const REPO = 'https://github.com/yehwanhwang/vizney-blocks';
 const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizney.com/chart-guide/' };
@@ -24,7 +24,11 @@ const GUIDE = { ko: 'https://kr.vizney.com/chart-guide/', en: 'https://www.vizne
 const BLOG = { ko: 'https://kr.vizney.com/', en: 'https://www.vizney.com/' };
 const STYLES = 'https://styles.vizney.com/';
 const NOTICE = '© 2026 Vizney · MIT License';
-const FONT_LINK = '<link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">';
+// The card's font (v0.81): an @font-face for the Spoqa Han Sans Neo files on jsDelivr (the same files spoqa.github.io's CSS points to)
+// under the name Vizney Blocks Sans, the first name in --vzb-font. A browser fetches a face only when some text is drawn in it, so a
+// page that changes --vzb-font makes no outside request at all. The earlier <link> to that CSS went out on every page, whatever the font.
+const FONT_SRC = 'https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-';
+const FONT_FACE = [[400, 'Regular'], [500, 'Medium'], [700, 'Bold']].map(([w, n]) => `@font-face { font-family: 'Vizney Blocks Sans'; font-weight: ${w}; src: local('Spoqa Han Sans Neo ${n}'), url(${FONT_SRC}${n}.woff2) format('woff2'), url(${FONT_SRC}${n}.woff) format('woff'); }`).join('\n');
 
 // ---------- Snippets ----------
 // Korean is the source (tokens.css, meta.json, <id>.json). English overlays tokens.en.css (same declarations, English notes),
@@ -74,8 +78,8 @@ function snippet(v, cat, lang = 'ko') {
   return `<!-- Vizney Blocks ${VERSION} · ${cat.name} · ${v.name} (${v.id})
      ${base}/cards/${v.id}.html · ${NOTICE}
      ${PASTE[lang]} -->
-${FONT_LINK}
 <style>
+${FONT_FACE}
 ${css(v, lang)}
 </style>
 ${card(v.id, JSON.parse(r(vp(v.id, lang === 'en' ? 'en.json' : 'json'))))}
@@ -92,7 +96,7 @@ const builtEn = cats.map((cat) => { const c = enCat(cat); return { ...c, variant
 // frame) at the height of the control itself.
 const TIER = {};
 const checked = guard({
-  root, cats, parts, partCss, partJs, tokens, tier: TIER, fontLink: FONT_LINK, en: EN,
+  root, cats, parts, partCss, partJs, tokens, tier: TIER, fontFace: FONT_FACE, en: EN,
   snippets: Object.fromEntries(built.flatMap((c) => c.variants.map((v) => [v.id, v.code]))),
   snippetsEn: Object.fromEntries(builtEn.flatMap((c) => c.variants.map((v) => [v.id, v.code]))),
 });
@@ -151,7 +155,9 @@ const WORDS = {
       ['name', '컨트롤이 보내는 이벤트의 <code>detail.name</code>. 어느 컨트롤이 바뀌었는지 가릅니다.'],
     ],
     grid: '여러 장을 한 줄에', gridp: '카드는 배치를 맡지 않습니다. 감싸는 요소에 격자를 주면 폭에 맞춰 줄이 바뀝니다. 차트 카드의 폭은 340px 이상으로 두고, 가로로 길게 읽는 차트에는 두 칸이나 전체 폭을 주세요. 지금 있는 차트 카드는 높이가 모두 2단위(336px)라 한 줄에 섞어도 높이가 맞습니다. 컨트롤은 틀이 없으므로 차트 위 필터 줄에 그대로 놓습니다.', gridNote: '차트 카드 여러 장',
-    tokensTitle: '색 · 글꼴 · 움직임 · 바탕', tokensP: (tokens) => `색과 글꼴, 움직임(눌린 단추가 튀는 정도, 막대가 차오르는 빠르기, 시작 전의 뜸)은 :root의 변수로 바꿉니다. 모든 카드에 한 번에 적용되고, 변수 목록은 <a href="${tokens}">tokens.css</a>에 있습니다. 어두운 화면에는 카드마다 JSON에 <code>"theme": "dark"</code>를 적습니다.`,
+    tokensTitle: '내 화면에 맞추기', tokensP: (tokens) => `카드 코드는 고치지 않고 :root의 변수만 적으면, 모든 카드가 그 화면의 색 · 서체 · 모서리를 따릅니다. 움직임과 계산, 키보드 조작은 그대로입니다. 변수마다 바뀌는 곳은 <a href="${tokens}">tokens.css</a>에 있습니다.`,
+    fitSteps: ['화면에서 다섯 값을 잽니다: 패널 바탕색, 글자색, 강조색, 서체, 모서리.', '<code>:root</code>에 옮깁니다. 회색 단계와 배지 · 툴팁 색은 바탕 · 글자색에서 따라옵니다. 어두운 화면도 <code>theme</code>은 비웁니다.', '색 바탕 위 컨트롤은 JSON에 <code>"theme": "dark"</code>를 적고, 그 줄의 <code>.vzb-card</code>에 바탕 · 글자색만 적습니다.', '글자 대비가 모자라면 카드가 콘솔에 알립니다. <code>--vzb-font</code>를 바꾸면 밖으로 요청이 나가지 않습니다.'],
+    fitMore: '움직임(튀는 정도, 빠르기, 시작 전의 뜸)도 같은 목록의 변수로 바꿉니다. Vizney 검정 바탕은 카드마다 JSON에 <code>"theme": "dark"</code>를 적습니다.',
     notesTitle: '알아 둘 것',
     notes: ['차트 카드는 화면에 보이면 한 번 재생하고 마지막 장면에서 멈춥니다. 움직임이 데이터의 뜻이라 운영체제의 동작 줄이기 설정과 상관없이 재생합니다.', '카드 안 JSON의 글자가 바뀌면 그 카드만 다시 그립니다. 이때는 처음부터 재생하지 않고, Bar Overflow · Waterfall Walk의 막대와 Funnel Wave의 물은 화면에 있던 자리에서 새 자리로 옮겨 가고, Waffle Flip은 달라진 칸만 뒤집히고, Bump Race는 선이 새 순위 자리로, Butterfly Fold는 막대가 새 길이와 줄로 옮겨 갑니다.', '카드는 HTML에 그대로 붙이는 조각입니다. innerHTML로 넣으면 카드의 스크립트가 실행되지 않습니다.'],
     notesAll: (u) => `카드마다의 규칙과 컨트롤을 잇는 법은 <a href="${u}">llms.txt</a>에 모두 있습니다.`,
@@ -182,7 +188,9 @@ const WORDS = {
       ['name', 'The <code>detail.name</code> of the events a control sends; it tells which control changed.'],
     ],
     grid: 'Several cards in a row', gridp: 'Cards do not lay themselves out. Give the wrapper a grid and the rows wrap to the width. Keep a chart card at least 340px wide, and give a chart that reads along a long axis two columns or the full width. Every chart card is now 2 units tall (336px), so a mixed row lines up. The controls have no frame, so put them as they are in a filter bar above the charts.', gridNote: 'several chart cards',
-    tokensTitle: 'Colors, font, motion and background', tokensP: (tokens) => `Set colors, the font and the motion (how much a pressed button bounces, how fast a bar fills, the wait before a card starts) with :root variables; they apply to every card at once. The list is in <a href="${tokens}">tokens.css</a>. For a dark screen, write <code>"theme": "dark"</code> in each card’s JSON.`,
+    tokensTitle: 'Match your screen', tokensP: (tokens) => `Leave the card code as it is and set :root variables, and every card takes the colors, type and corners of your screen. Motion, the numbers and keyboard use stay. What each variable paints is in <a href="${tokens}">tokens.css</a>.`,
+    fitSteps: ['Measure five values on your screen: panel background, text color, accent, type and corners.', 'Put them on <code>:root</code>. The gray steps and the badge and tooltip colors follow the background and text. Leave <code>theme</code> empty, even on a dark screen.', 'For controls on a colored bar, write <code>"theme": "dark"</code> in their JSON and set only the background and text colors on that bar’s <code>.vzb-card</code>.', 'If text contrast falls short, the card says so in the console. With <code>--vzb-font</code> changed, nothing is requested from outside.'],
+    fitMore: 'The motion (bounce, speed, the wait before a card starts) is set the same way, with variables in the same list. For Vizney’s black background, write <code>"theme": "dark"</code> in each card’s JSON.',
     notesTitle: 'Good to know',
     notes: ['A chart card plays once when it comes into view and stops on its last frame. The motion carries the data, so it plays whatever the reduced-motion setting of the system.', 'When the JSON text inside a card changes, only that card draws again, without playing from the start. The bars of Bar Overflow and Waterfall Walk and the water of Funnel Wave move from where they are on screen to where the new values put them, in Waffle Flip only the cells that changed flip, in Bump Race the lines move to their new ranks, and in Butterfly Fold the bars move to their new lengths and rows.', 'A card is a snippet pasted into the HTML as it is. Inserted with innerHTML, its script does not run.'],
     notesAll: (u) => `Every card’s rules and how to connect the controls are in <a href="${u}">llms.txt</a>.`,
@@ -217,6 +225,72 @@ const tierPx = (v) => Math.round(tierOf(v) * 168);
 
 const h = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const plain = (s) => String(s).replace(/`/g, '');
+// Matching a page (v0.81): only :root variables change the look; motion, the numbers, the keyboard and the screen-reader text stay.
+// One per language; rendered in llms.txt and the skill after CONNECT, and in short on the home page.
+const FIT_CODE = {
+  ko: `<style>
+  :root {
+    --vzb-card: #ffffff;        /* 바탕 */
+    --vzb-ink: #17153a;         /* 글자. 회색 단계가 따라온다 */
+    --vzb-primary: #4338ca;     /* 강조 */
+    --vzb-font: 'Inter', sans-serif;
+    --vzb-title-font: 'IBM Plex Mono', monospace;
+    --vzb-title-case: uppercase;
+    --vzb-radius: 0;            /* 카드 · 떠 있는 창 */
+    --vzb-radius-control: 0;    /* 칩 · 단추 · 입력칸 · 손잡이 */
+    --vzb-radius-mark: 0;       /* 막대 끝 · 와플 칸 · 말풍선 */
+  }
+  /* 인디고 필터 줄 위의 컨트롤: 그 컨트롤의 JSON은 "theme": "dark" */
+  .filters .vzb-card { --vzb-card: #2a2670; --vzb-ink: #ffffff; }
+</style>`,
+  en: `<style>
+  :root {
+    --vzb-card: #ffffff;        /* background */
+    --vzb-ink: #17153a;         /* text; the gray steps follow */
+    --vzb-primary: #4338ca;     /* accent */
+    --vzb-font: 'Inter', sans-serif;
+    --vzb-title-font: 'IBM Plex Mono', monospace;
+    --vzb-title-case: uppercase;
+    --vzb-radius: 0;            /* card, floating parts */
+    --vzb-radius-control: 0;    /* chips, buttons, inputs, thumbs */
+    --vzb-radius-mark: 0;       /* bar ends, waffle cells, bubbles */
+  }
+  /* controls on an indigo filter bar: their JSON has "theme": "dark" */
+  .filters .vzb-card { --vzb-card: #2a2670; --vzb-ink: #ffffff; }
+</style>`,
+};
+const FIT = {
+  ko: {
+    title: '내 화면에 맞추기',
+    intro: `카드 코드는 고치지 않고 :root의 --vzb-* 변수만 적어, 블록이 놓인 화면의 서식을 따르게 한다. 움직임 · 계산 · 키보드 조작 · 낭독 문구는 그대로이고 생김새(색 · 서체 · 모서리 · 그림자)만 바뀐다. 변수마다 칠하는 곳은 ${SITE}/ko/tokens.css 에 있다.`,
+    list: [
+      '화면에서 다섯 값을 잰다: 패널(카드) 바탕색, 본문 글자색, 강조색, 서체(본문과 제목), 모서리(카드 · 단추 · 막대 같은 작은 표시). 브라우저 개발자 도구의 계산된 스타일(background-color, color, font-family, border-radius)에서 읽는다.',
+      '`:root`에 옮긴다: 바탕 `--vzb-card`, 글자 `--vzb-ink`, 강조 `--vzb-primary`, 서체 `--vzb-font`(제목이 다르면 `--vzb-title-font`), 모서리 `--vzb-radius`(카드 · 떠 있는 창) · `--vzb-radius-control`(칩 · 단추 · 입력칸 · 손잡이) · `--vzb-radius-mark`(막대 끝 · 와플 칸 · 말풍선 · 범례 견본). 각진 화면이면 셋 다 0이다.',
+      '회색 단계(`--vzb-ink-2` · `--vzb-muted` · `--vzb-grid` · `--vzb-track` · `--vzb-other` · `--vzb-base`), 배지의 바탕과 글자, 툴팁 색은 바탕 · 글자 · 뜻 색을 섞어 만들어지므로 적지 않아도 따라온다. 화면과 다르게 보이는 것만 따로 적는다.',
+      '필요하면 더한다: 테두리와 그림자(`--vzb-edge` · `--vzb-shadow`, 떠 있는 창은 `--vzb-shadow-float`), 제목 · 부제의 크기 · 굵기 · 대소문자 · 자간(`--vzb-title-size` · `-weight` · `-case` · `-tracking`, `--vzb-sub-*`), 증감 색(`--vzb-good` · `--vzb-bad`, 증감만 칠한다), 주의 색(`--vzb-alert`, 한도 초과 · 입력 오류), 포커스 링(`--vzb-focus`, 강조색이 바탕과 비슷할 때).',
+      '어두운 화면이어도 theme은 비우고 `:root`에 어두운 바탕과 밝은 글자를 적는다. `"theme": "dark"`는 Vizney 검정 바탕을 고르는 값이라, 카드 안에서 같은 변수를 다시 정해 `:root` 값을 가린다.',
+      '색 바탕 위의 컨트롤(인디고 필터 줄 등)은 그 컨트롤의 JSON에 `"theme": "dark"`를 적고, 그 줄의 `.vzb-card`에 바탕(`--vzb-card`, 그 줄의 색)과 글자(`--vzb-ink`), 필요하면 강조(`--vzb-primary`)만 적는다. 회색 단계는 그 두 색에서 따라온다.',
+      '바뀌지 않는 것: 조작부 크기(40 · 44 · 32px, 손잡이 20px)와 글자 크기 단계는 변수로 열지 않는다. 제목 · 부제는 12px 밑으로 내려가지 않는다. 작은 견본(범례 · 체크 상자 · 개수 배지)은 적은 모서리가 커도 제 기본값보다 둥글게 그리지 않고, 와플 칸은 한 변의 1/4을 넘기지 않는다.',
+      '확인: 바꾼 색으로 글자 대비가 4.5:1, 포커스 링이 3:1에 못 미치면 카드가 콘솔에 `Vizney Blocks: low contrast …` 한 줄로 알린다. 알린 변수를 고친다. `--vzb-font`를 바꾸면 카드는 밖으로 아무것도 요청하지 않는다(기본 글꼴일 때만 jsDelivr에서 Spoqa Han Sans Neo 파일을 받는다).',
+    ],
+    code: FIT_CODE.ko,
+  },
+  en: {
+    title: 'Match your screen',
+    intro: `Leave the card code as it is and set only --vzb-* variables on :root, so the blocks take the look of the screen they sit on. Motion, the numbers, keyboard use and the screen-reader text stay; only the look (colors, type, corners, shadows) changes. What each variable paints is in ${SITE}/tokens.css.`,
+    list: [
+      'Measure five values on the screen: the panel (card) background, the body text color, the accent, the type (body and titles), and the corners (cards, buttons, small marks such as bars). Read them from the computed styles in the browser dev tools (background-color, color, font-family, border-radius).',
+      'Put them on `:root`: background `--vzb-card`, text `--vzb-ink`, accent `--vzb-primary`, type `--vzb-font` (and `--vzb-title-font` if titles differ), corners `--vzb-radius` (cards, floating parts) · `--vzb-radius-control` (chips, buttons, inputs, thumbs) · `--vzb-radius-mark` (bar ends, waffle cells, bubbles, legend keys). A square screen sets all three to 0.',
+      'The gray steps (`--vzb-ink-2` · `--vzb-muted` · `--vzb-grid` · `--vzb-track` · `--vzb-other` · `--vzb-base`), badge backgrounds and text, and the tooltip colors are mixed from the background, the text and the meaning colors, so they follow without being set. Set only what still looks off.',
+      'Add what you need: borders and shadows (`--vzb-edge` · `--vzb-shadow`, `--vzb-shadow-float` for floating parts), title and subtitle size, weight, case and letter-spacing (`--vzb-title-size` · `-weight` · `-case` · `-tracking`, `--vzb-sub-*`), change colors (`--vzb-good` · `--vzb-bad`, which paint changes only), the warning color (`--vzb-alert`: over a limit, a wrong input) and the focus ring (`--vzb-focus`, when the accent is close to the background).',
+      'Even on a dark screen leave theme empty and set a dark background and light text on `:root`. `"theme": "dark"` picks the Vizney black background, so the card sets the same variables again inside itself and hides the `:root` values.',
+      'For controls on a colored bar (an indigo filter bar), write `"theme": "dark"` in their JSON and set on that bar\'s `.vzb-card` only the background (`--vzb-card`, the bar\'s color), the text (`--vzb-ink`) and, if needed, the accent (`--vzb-primary`). The gray steps follow those two.',
+      'What does not change: control sizes (40 · 44 · 32px, the 20px thumb) and the text size steps are not variables. Titles and subtitles never go under 12px. Small keys (legend keys, check boxes, count badges) are never drawn rounder than their own default, and waffle cells never past a quarter of their side, however large the corner you set.',
+      'Check: when a color you set leaves text under 4.5:1 or the focus ring under 3:1 against its background, the card says so in one console line, `Vizney Blocks: low contrast …`. Fix the variable it names. With `--vzb-font` changed the card requests nothing from outside (only the default font fetches the Spoqa Han Sans Neo files from jsDelivr).',
+    ],
+    code: FIT_CODE.en,
+  },
+};
 const esc = (o) => JSON.stringify(o).replace(/</g, '\\u003c');
 const ext = (href) => `href="${href}" target="_blank" rel="noopener"`;
 
@@ -364,10 +438,11 @@ ${L.t.fieldList.map(([k, v]) => `<dt><code>${k}</code></dt><dd>${v}</dd>`).join(
 &lt;/div&gt;</pre>
 <h3 class="fields-sub">${L.t.tokensTitle}</h3>
 <p>${L.t.tokensP(m.tokens)}</p>
-<pre class="snip">:root {
-  --vzb-primary: #5856d6;
-  --vzb-font: 'Pretendard';
-}</pre>
+<ol class="fields-rules">
+${L.t.fitSteps.map((x) => `<li>${x}</li>`).join('\n')}
+</ol>
+<pre class="snip">${FIT[L.lang].code.replace(/^<style>\n|\n<\/style>$/g, '').replace(/^  /gm, '')}</pre>
+<p>${L.t.fitMore}</p>
 <h3 class="fields-sub">${L.t.notesTitle}</h3>
 <ul class="fields-rules">
 ${L.t.notes.map((x) => `<li>${x}</li>`).join('\n')}
@@ -658,9 +733,9 @@ const HEIGHTS = (lang) => {
 // from: where the card code came from; at: where each card's own rules are.
 const RULES = (from, at, lang = 'ko') => (lang === 'en' ? [
   `Paste the card code ${from} as it is and change only the JSON values. Do not edit the styles or the script. To use the same card several times, paste the whole card code again and change each JSON.`,
-  `A card fills the width of its slot. A chart card is 1, 1.5 or 2 units tall (1 unit = 168px, --vzb-unit), and ${HEIGHTS('en')}. The controls (${namesOf(ENL.controls)}) draw only the control, with no card head or frame, at the height of the control itself. Their background is left empty, so set "theme" to match where they sit ("dark" on a dark background).`,
+  `A card fills the width of its slot. A chart card is 1, 1.5 or 2 units tall (1 unit = 168px, --vzb-unit), and ${HEIGHTS('en')}. The controls (${namesOf(ENL.controls)}) draw only the control, with no card head or frame, at the height of the control itself. Their background is left empty, so with Vizney's colors set "theme" to match where they sit ("dark" on a dark background); on a colored bar see "${FIT.en.title}".`,
   `For several cards, give the wrapper a grid: ${GRID}. Keep a chart card at least 340px wide. A chart that reads along a long axis (13 months of bars, the 20 cells across a waffle, rank lines) reads better with two columns or the full width. Put the controls as they are in a filter bar above the charts or in the page header.`,
-  `Change colors and the font with the --vzb-* variables on :root (--vzb-primary, --vzb-font, …). The variable list and what each one does are in ${SITE}/tokens.css (the same content as the :where(:root) block in the card code). The background is picked per card with "theme" in its JSON: empty is white with blue as the first data color, "dark" is Vizney black with yellow as the first data color.`,
+  `Match the page with the --vzb-* variables on :root, never by editing the card: background --vzb-card, text --vzb-ink, accent --vzb-primary, type --vzb-font and --vzb-title-*, corners --vzb-radius · --vzb-radius-control · --vzb-radius-mark (steps in "${FIT.en.title}"). The variable list and what each one paints are in ${SITE}/tokens.css (the same content as the :where(:root) block in the card code). "theme" in a card's JSON picks Vizney's own background: empty is white with blue as the first data color, "dark" is Vizney black with yellow. To match your own screen, light or dark, leave it empty.`,
   `The motion has roles, and each role has one value in the same variable list. Things you touch: --vzb-follow (held by the pointer, no overshoot), --vzb-settle (let go, opened or widened: one small overshoot), --vzb-pop (a released button, a picked item, a surfacing label: a clear bounce), --vzb-fade and --vzb-press (times). Things that carry a value: --vzb-move, which never overshoots, because a height or a position is the value and a bounce would show a wrong value for a moment. Rhythm: --vzb-lead (the wait before a card starts), --vzb-seq (the time items share out when they move in turn) and --vzb-rest (the pause before a loop). A spring is written 'stiffness damping'; for CSS transitions use the ready-made time and curve, such as transition: transform var(--vzb-pop-t) var(--vzb-pop-e). When you add elements of your own around the cards (KPI tiles, tables, tabs), move them with the same variables and keep the rule: a value never bounces.`,
   `Common fields: title (what the values are), subtitle (the period and the basis), format (usd dollar amounts, shortened to $745.6K · $1.2M · count a count, with its unit in unit · pct a percentage (3.4 is 3.4%), changes in pp · days a number of days · eok and krw are Korean won notations), decimals (decimal places; empty lets the card decide), better (up · down · neutral), labels (period names, the same length as the values; null for a period without a value), lang (en: the words the card prints itself in English), theme. Controls: label (the name screen readers read; not drawn on screen) and name (detail.name of the control's events). Each card's own fields are in the example JSON of its code and ${at}.`,
   'The amount over a limit, shares, ranks, changes and totals are computed by the card, so do not write them in the JSON. Give amounts as raw values, not rounded or divided into thousands or millions.',
@@ -668,9 +743,9 @@ const RULES = (from, at, lang = 'ko') => (lang === 'en' ? [
   'A card is a snippet pasted into the HTML document as it is. Inserted with innerHTML or React\'s dangerouslySetInnerHTML, the card\'s <script> does not run.',
 ] : [
   `${from} 카드 코드를 그대로 붙여 넣고 JSON 값만 바꾼다. 스타일과 스크립트는 고치지 않는다. 같은 카드를 여러 장 쓸 때는 카드 코드를 통째로 다시 붙여 넣고 각 JSON만 바꾼다.`,
-  `카드는 놓인 자리의 폭을 채운다. 차트 카드의 높이는 1 · 1.5 · 2단위(1단위 168px, --vzb-unit) 가운데 하나이고, ${HEIGHTS('ko')}. 컨트롤(${namesOf(KO.controls)})은 카드 머리와 틀 없이 조작부만 그리고, 높이는 조작부 자체의 높이다. 바탕을 비워 두므로 theme은 놓을 자리의 바탕에 맞춘다(어두운 바탕이면 "dark").`,
+  `카드는 놓인 자리의 폭을 채운다. 차트 카드의 높이는 1 · 1.5 · 2단위(1단위 168px, --vzb-unit) 가운데 하나이고, ${HEIGHTS('ko')}. 컨트롤(${namesOf(KO.controls)})은 카드 머리와 틀 없이 조작부만 그리고, 높이는 조작부 자체의 높이다. 바탕을 비워 두므로 Vizney 색으로 쓸 때는 theme을 놓을 자리의 바탕에 맞춘다(어두운 바탕이면 "dark"). 색 바탕 위라면 "${FIT.ko.title}"을 따른다.`,
   `여러 장은 감싸는 요소에 격자를 준다: ${GRID}. 차트 카드는 340px보다 좁히지 않는다. 가로로 길게 읽는 차트(13개월 막대, 가로 20칸 와플, 순위 선)는 두 칸이나 전체 폭을 주면 더 잘 읽힌다. 컨트롤은 차트 위 필터 줄이나 머리글에 그대로 놓는다.`,
-  `색과 글꼴은 :root의 --vzb-* 변수(--vzb-primary, --vzb-font 등)로 바꾼다. 변수 목록과 쓰임은 ${SITE}/ko/tokens.css 에 있다(카드 코드의 :where(:root) 블록과 같은 내용). 바탕은 카드마다 JSON의 theme으로 고른다. 비우면 흰 바탕에 파랑이 첫째 데이터 색이고, "dark"면 Vizney 검정 바탕에 노랑이 첫째 데이터 색이다.`,
+  `화면의 서식은 카드를 고치지 않고 :root의 --vzb-* 변수로 맞춘다: 바탕 --vzb-card, 글자 --vzb-ink, 강조 --vzb-primary, 서체 --vzb-font와 --vzb-title-*, 모서리 --vzb-radius · --vzb-radius-control · --vzb-radius-mark(순서는 "${FIT.ko.title}"). 변수 목록과 칠하는 곳은 ${SITE}/ko/tokens.css 에 있다(카드 코드의 :where(:root) 블록과 같은 내용). JSON의 theme은 Vizney의 바탕을 고른다. 비우면 흰 바탕에 파랑이 첫째 데이터 색이고, "dark"면 Vizney 검정 바탕에 노랑이다. 내 화면 색에 맞출 때는 밝든 어둡든 비운다.`,
   `움직임에는 역할이 있고, 역할마다 값이 하나씩 같은 변수 목록에 있다. 손이 닿는 것: --vzb-follow(끄는 동안 손에 붙음, 넘침 없음), --vzb-settle(놓이거나 열리거나 넓어질 때 살짝 넘쳤다 자리를 잡음), --vzb-pop(놓인 단추 · 고른 항목 · 떠오르는 말풍선이 뚜렷이 튐), --vzb-fade와 --vzb-press(시간). 값을 나타내는 것: --vzb-move. 넘치지 않는다. 높이나 자리가 곧 값이라, 튀면 잠깐 틀린 값을 보이기 때문이다. 리듬: --vzb-lead(카드가 시작하기 전의 뜸), --vzb-seq(항목이 차례로 움직일 때 나눠 쓰는 전체 시간), --vzb-rest(되풀이 전의 쉼). 스프링은 '세기 잦아듦' 두 숫자로 적고, CSS 전환에는 미리 계산된 시간과 곡선을 쓴다(예: transition: transform var(--vzb-pop-t) var(--vzb-pop-e)). 카드 둘레에 직접 만드는 요소(KPI 타일, 표, 탭)도 같은 변수로 움직이고, '값은 튀지 않는다'는 규칙을 지킨다.`,
   `공통 필드: title(무엇의 값인지), subtitle(기간과 기준), format(krw 원 단위 숫자를 만·억·조로 줄여 적음. 10만 원 미만은 87,324원처럼 원 단위 그대로 · eok 억 단위 숫자 · usd 달러 금액을 $745.6K·$1.2M처럼 · count 개수, 단위는 unit · pct 퍼센트 숫자(3.4는 3.4%), 증감은 %p · days 일수), decimals(소수 자릿수, 비우면 카드가 정함), better(up · down · neutral), labels(기간 이름, 값과 같은 길이. 값이 없는 기간은 값을 null로), lang(en이면 카드가 직접 적는 문구가 영어), theme. 컨트롤: label(화면 낭독기가 읽는 이름. 화면에는 그리지 않음), name(컨트롤이 보내는 이벤트의 detail.name). 카드마다의 필드는 카드 코드의 예시 JSON과 ${at}에 있다.`,
   '넘친 양, 비중, 순위, 증감, 합계는 카드가 계산하므로 JSON에 적지 않는다. 금액은 미리 반올림하거나 천·백만 단위로 나누지 않고 원래 값을 넣는다.',
@@ -742,7 +817,7 @@ document.addEventListener('vzb-change', (e) => {
 const txt = (id, L) => `${SITE}${L.base}/cards/${id}.txt`;
 const cardLine = (v, L) => { const c = L.cat[v.cat]; return `- [${v.name}](${txt(v.id, L)})${isControl(v) ? '' : ` · ${c.name}${c.guide ? ` (${c.guide.url})` : ''}`}: ${plain(v.when)} ${L.lang === 'en' ? 'Rules:' : '규칙:'} ${v.rules.map(plain).join(' ')}`; };
 for (const L of LOCALES) {
-  const en = L.lang === 'en', C = CONNECT[L.lang];
+  const en = L.lang === 'en', C = CONNECT[L.lang], F = FIT[L.lang];
   const llms = en ? `# Vizney Blocks
 
 > Charts you read through their motion and the dashboard controls that go with them, as copy-paste HTML cards: ${L.charts.length} charts and ${L.controls.length} controls (${VERSION}). One card is an HTML snippet that bundles <style>, a JSON data block and <script>; paste it inside <body> and it draws itself. Change only the values in the card's <script type="application/json">. ${NOTICE}.
@@ -774,6 +849,16 @@ ${C.list.map((x) => `- ${plain(x)}`).join('\n')}
 \`\`\`html
 ${C.code}
 \`\`\`
+
+## ${F.title}
+
+${F.intro}
+
+${F.list.map((x) => `- ${plain(x)}`).join('\n')}
+
+\`\`\`html
+${F.code}
+\`\`\`
 ` : `# Vizney Blocks
 
 > 움직임으로 읽는 차트와 대시보드 컨트롤을 담은, 복사해 붙여 쓰는 HTML 카드: 차트 ${L.charts.length}종과 컨트롤 ${L.controls.length}종(${VERSION}). 카드 하나는 <style>, 데이터 JSON, <script>를 한데 묶은 HTML 조각이며, <body> 안에 붙여 넣으면 그려진다. 데이터는 카드 안 <script type="application/json">의 값만 바꾼다. ${NOTICE}.
@@ -804,6 +889,16 @@ ${C.list.map((x) => `- ${plain(x)}`).join('\n')}
 
 \`\`\`html
 ${C.code}
+\`\`\`
+
+## ${F.title}
+
+${F.intro}
+
+${F.list.map((x) => `- ${plain(x)}`).join('\n')}
+
+\`\`\`html
+${F.code}
 \`\`\`
 `;
   writeFileSync(join(docs, L.base, 'llms.txt'), llms);
@@ -918,6 +1013,16 @@ ${CONNECT.ko.list.map((x) => `- ${x}`).join('\n')}
 ${CONNECT.ko.code}
 \`\`\`
 
+## ${FIT.ko.title}
+
+${FIT.ko.intro}
+
+${FIT.ko.list.map((x) => `- ${x}`).join('\n')}
+
+\`\`\`html
+${FIT.ko.code}
+\`\`\`
+
 ## 체크리스트
 
 완성한 파일을 넘기기 전에 하나씩 확인한다. 하나라도 어긋나면 고친 뒤 다시 확인한다.
@@ -948,6 +1053,7 @@ ${CONNECT.ko.code}
 
 - [ ] 브라우저 콘솔에 오류가 없고, 카드 안에 오류 문구(\`.vzb-error\`)가 없다.
 - [ ] 폭 1280px과 390px에서 화면을 캡처해 잘리거나 겹친 글자가 없다.
+- [ ] 화면의 서식에 맞췄다면 카드 코드는 그대로이고 :root(색 바탕 위 컨트롤은 그 줄의 .vzb-card) 변수만 적었으며, 콘솔에 대비 경고가 없다.
 - [ ] 차트 카드는 한 번 재생하고 멈춘다. 계속 되풀이하게 두지 않았다.
 - [ ] 가정 줄을 사용자에게 알렸다.
 
@@ -1018,6 +1124,16 @@ ${CONNECT.en.list.map((x) => `- ${x}`).join('\n')}
 ${CONNECT.en.code}
 \`\`\`
 
+## ${FIT.en.title}
+
+${FIT.en.intro}
+
+${FIT.en.list.map((x) => `- ${x}`).join('\n')}
+
+\`\`\`html
+${FIT.en.code}
+\`\`\`
+
 ## Checklist
 
 Go through it before handing over the file. If anything is off, fix it and check again.
@@ -1048,6 +1164,7 @@ Go through it before handing over the file. If anything is off, fix it and check
 
 - [ ] No errors in the browser console, and no error message (\`.vzb-error\`) inside a card.
 - [ ] Screenshots at 1280px and 390px show no clipped or overlapping text.
+- [ ] If the screen's look was matched, the card code is untouched, only variables on :root (or on a colored bar's .vzb-card) were set, and the console shows no contrast warning.
 - [ ] Chart cards play once and stop. None is left repeating.
 - [ ] The assumptions were shared with the user.
 
@@ -1120,10 +1237,9 @@ const DEMO = {
   budget: { Social: 12000, Search: 11200, Display: 5600, Video: 4800, Affiliate: 3600, Retargeting: 2800 },
 };
 // The card code with some JSON fields changed (the rest of the card untouched), as an agent following the skill would write it.
-const withData = (code, change) => code.replace(/(<script type="application\/json">\n)([\s\S]*?)(\n<\/script>)/, (m, a, body, b) => a + json(change(JSON.parse(body))) + b).replace(`${FONT_LINK}\n`, '');
+const withData = (code, change) => code.replace(/(<script type="application\/json">\n)([\s\S]*?)(\n<\/script>)/, (m, a, body, b) => a + json(change(JSON.parse(body))) + b);
 const demoAll = Object.keys(DEMO.spend);
-const demoPage = `${FONT_LINK}
-<style>body{background:#f4f5f7}.vzb-demo{box-sizing:border-box;max-width:1120px;margin:0 auto;padding:24px}.vzb-demo h1{margin:0;font:700 22px/1.4 var(--vzb-font);color:var(--vzb-ink)}.vzb-demo .vzb-asof{margin:2px 0 16px;font:400 14px/1.5 var(--vzb-font);color:var(--vzb-muted)}.vzb-demo-bar{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:16px 24px;margin-bottom:16px;padding:16px 20px;border-radius:16px;background:#ffffff}.vzb-demo-lab{margin-bottom:8px;font:500 12px/16px var(--vzb-font);color:var(--vzb-muted)}.vzb-demo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px}@media (min-width:760px){.vzb-demo-grid{grid-template-columns:minmax(0,3fr) minmax(0,2fr)}.vzb-demo-grid .is-wide{grid-column:1 / -1}}</style>
+const demoPage = `<style>body{background:#f4f5f7}.vzb-demo{box-sizing:border-box;max-width:1120px;margin:0 auto;padding:24px}.vzb-demo h1{margin:0;font:700 22px/1.4 var(--vzb-font);color:var(--vzb-ink)}.vzb-demo .vzb-asof{margin:2px 0 16px;font:400 14px/1.5 var(--vzb-font);color:var(--vzb-muted)}.vzb-demo-bar{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:16px 24px;margin-bottom:16px;padding:16px 20px;border-radius:16px;background:#ffffff}.vzb-demo-lab{margin-bottom:8px;font:500 12px/16px var(--vzb-font);color:var(--vzb-muted)}.vzb-demo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px}@media (min-width:760px){.vzb-demo-grid{grid-template-columns:minmax(0,3fr) minmax(0,2fr)}.vzb-demo-grid .is-wide{grid-column:1 / -1}}</style>
 <div class="vzb-demo">
 <h1>Ad spend</h1>
 <p class="vzb-asof">Example data · pick channels to redraw Monthly Ad Spend; the download gets what is on screen</p>

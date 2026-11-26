@@ -100,7 +100,7 @@
       // 알약: 바깥 g는 자리(물 위)를, 안쪽 g는 짚었을 때 살짝 커지는 움직임을 맡습니다.
       s.pill = svgEl('g', { class: 'vzb-fw-pill' });
       const pin = svgEl('g', { class: 'vzb-fw-pin' });
-      s.pr = svgEl('rect', { rx: 12, height: 24, y: -12 });
+      s.pr = svgEl('rect', { height: 24, y: -12 });
       s.pt = svgText(0, 5, pct0(s.cum), 'vzb-fw-pt', 'middle');
       pin.append(s.pr, s.pt);
       s.pill.append(pin);
@@ -146,6 +146,7 @@
     let acc = 0, calm = true, ripple = 0, hv = [];   // ripple: 물결의 가장 큰 높이, hv: 물결치는 단계 { j(단계), age(밀리초) }
     function layout(w, h) {
       W = w; H = h;
+      const rp = Math.min(len(card, 'radius-mark', 12), 12);   // 비율 알약의 모서리: --vzb-radius-mark(비우면 12px, 높이 24px의 알약)
       svg.setAttribute('width', w);
       svg.setAttribute('height', h);
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
@@ -182,6 +183,7 @@
         s.pw = pw;
         s.pr.setAttribute('width', pw);
         s.pr.setAttribute('x', fx(-pw / 2));
+        s.pr.setAttribute('rx', rp);
       });
       band.setAttribute('width', fx(cw));
       band.setAttribute('height', fx(y0));

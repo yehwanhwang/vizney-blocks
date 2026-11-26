@@ -23,7 +23,7 @@ Copy-paste HTML cards: charts you read through their motion, and the dashboard c
 </div>
 ```
 
-색과 글꼴, 움직임은 내 페이지 `:root`의 `--vzb-*` 변수로 바꿉니다. 변수 목록과 쓰임은 [tokens.css](https://blocks.vizney.com/ko/tokens.css)에 있습니다. 움직임은 역할마다 값이 하나씩 있습니다(끄는 동안 붙는 Follow, 놓이거나 열릴 때의 Settle, 눌렸다 튀는 Pop, 투명도와 색의 Fade, 값이 제자리로 가는 Move, 시작 전의 뜸 Lead 등). 카드 둘레에 직접 만드는 요소도 같은 변수로 움직이면 화면 전체가 같은 손으로 움직입니다.
+카드를 내 화면의 서식에 맞출 때는 카드 코드를 고치지 않고 내 페이지 `:root`의 `--vzb-*` 변수만 적습니다. 바탕(`--vzb-card`) · 글자(`--vzb-ink`) · 강조(`--vzb-primary`) · 서체(`--vzb-font`, 제목은 `--vzb-title-*`) · 모서리(`--vzb-radius` 카드, `--vzb-radius-control` 조작부, `--vzb-radius-mark` 데이터 표시)를 적으면 회색 단계와 배지 · 툴팁 색은 따라오고, 움직임 · 계산 · 키보드 조작은 그대로입니다. 어두운 화면이어도 `theme`은 비웁니다. 순서는 llms.txt의 '내 화면에 맞추기'에, 변수마다 칠하는 곳은 [tokens.css](https://blocks.vizney.com/ko/tokens.css)에 있습니다. 움직임은 역할마다 값이 하나씩 있습니다(끄는 동안 붙는 Follow, 놓이거나 열릴 때의 Settle, 눌렸다 튀는 Pop, 투명도와 색의 Fade, 값이 제자리로 가는 Move, 시작 전의 뜸 Lead 등). 카드 둘레에 직접 만드는 요소도 같은 변수로 움직이면 화면 전체가 같은 손으로 움직입니다.
 
 ## 카드
 
@@ -118,4 +118,4 @@ Vizney Blocks가 쓸모 있었다면 [GitHub Sponsors](https://github.com/sponso
 ## 라이선스
 
 - 카드 코드와 갤러리: [MIT License](LICENSE)
-- 글꼴: Spoqa Han Sans Neo, [SIL Open Font License 1.1](docs/OFL.txt). 사이트에는 쓰인 글자만 담아 이름을 바꾼 부분 글꼴(VZ Sans)을 넣었고, 복사한 카드는 Spoqa 배포 링크로 글꼴을 불러옵니다.
+- 글꼴: Spoqa Han Sans Neo, [SIL Open Font License 1.1](docs/OFL.txt). 사이트에는 쓰인 글자만 담아 이름을 바꾼 부분 글꼴(VZ Sans)을 넣었고, 복사한 카드는 `@font-face`로 jsDelivr의 Spoqa 파일을 가리키며, 그 글꼴로 그리는 글자가 있을 때만 받습니다(`--vzb-font`를 바꾸면 밖으로 요청하지 않습니다).

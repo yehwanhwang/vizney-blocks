@@ -116,11 +116,13 @@
     });
     svg.append(base, dotsG, colsG);
     const fam = getComputedStyle(card).fontFamily, fx = (v) => v.toFixed(1), clamp = (v) => Math.max(0, Math.min(1, v));
-    // 세로 막대: yA는 출발하는 끝(바닥이나 앞 막대의 높이, 각지게), yB는 도착하는 끝(4px 둥글게)입니다. 올라가면 위가, 내려가면 아래가 둥급니다.
+    // 세로 막대: yA는 출발하는 끝(바닥이나 앞 막대의 높이, 각지게), yB는 도착하는 끝(둥글게)입니다. 올라가면 위가, 내려가면 아래가 둥급니다.
+    // 모서리는 데이터 표시의 모서리(--vzb-radius-mark)를 따르고, 비워 두면 막대 끝 4px · 말풍선 7px입니다(layout에서 읽습니다).
+    let RBAR = 4, RBUB = 7;
     const barPath = (x, yA, yB, w) => {
       const h = Math.abs(yB - yA);
       if (h < 0.5) return '';
-      const r = Math.min(4, w / 2, h), up = yB < yA;
+      const r = Math.min(RBAR, w / 2, h), up = yB < yA;
       return up
         ? `M${fx(x)},${fx(yA)}V${fx(yB + r)}A${r},${r} 0 0 1 ${fx(x + r)},${fx(yB)}H${fx(x + w - r)}A${r},${r} 0 0 1 ${fx(x + w)},${fx(yB + r)}V${fx(yA)}Z`
         : `M${fx(x)},${fx(yA)}V${fx(yB - r)}A${r},${r} 0 0 0 ${fx(x + r)},${fx(yB)}H${fx(x + w - r)}A${r},${r} 0 0 0 ${fx(x + w)},${fx(yB - r)}V${fx(yA)}Z`;
@@ -155,6 +157,9 @@
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
       slot = w / N;
       bw = Math.min(32, slot * 0.62);
+      const rm = len(card, 'radius-mark', null);
+      RBAR = rm == null ? 4 : rm;
+      RBUB = rm == null ? 7 : rm;
       // 글자 크기: 이름 · 값 14px, 칸이 좁으면 12px. LBL은 막대 끝에서 이름 줄 바깥까지, VAL은 값 줄 바깥까지의 길이입니다.
       const tight = slot < 64, nsz = tight ? 12 : 14, vsz = nsz, LBL = nsz + vsz + 8, VAL = vsz + 6;
       svg.classList.toggle('is-tight', tight);
@@ -266,7 +271,7 @@
         c.dy = pick ? dir * pick[1] : 0;
         if (c === end) {
           // 말풍선을 옮겼으면 꼬리를 그만큼 늘여, 꼬리 끝이 늘 막대 끝 4px 앞을 가리키게 합니다.
-          const { bwid, bh, top } = B, x0 = c.off - bwid / 2, r = 7, edge = c.below ? top : top + bh, tipY = (c.below ? 4 : -4) - c.dy;
+          const { bwid, bh, top } = B, x0 = c.off - bwid / 2, r = Math.min(RBUB, bh / 2), edge = c.below ? top : top + bh, tipY = (c.below ? 4 : -4) - c.dy;
           const tx0 = Math.max(x0 + r + 5, Math.min(x0 + bwid - r - 5, -c.dx));
           c.bub.setAttribute('d', `M${fx(x0 + r)},${fx(top)}h${fx(bwid - 2 * r)}a${r},${r} 0 0 1 ${r},${r}v${fx(bh - 2 * r)}a${r},${r} 0 0 1 ${-r},${r}h${fx(-(bwid - 2 * r))}a${r},${r} 0 0 1 ${-r},${-r}v${fx(-(bh - 2 * r))}a${r},${r} 0 0 1 ${r},${-r}Z`
             + `M${fx(tx0 - 5)},${fx(edge)}L${fx(-c.dx)},${fx(tipY)}L${fx(tx0 + 5)},${fx(edge)}Z`);
@@ -319,7 +324,7 @@
         c.chgText.setAttribute('x', fx(cx0 + arw));
         c.chgText.setAttribute('y', fx(cy));
       }
-      const x0 = off - bwid / 2, r = 7, edge = c.below ? top : top + bh, tipY = (c.below ? 4 : -4) - c.dy;
+      const x0 = off - bwid / 2, r = Math.min(RBUB, bh / 2), edge = c.below ? top : top + bh, tipY = (c.below ? 4 : -4) - c.dy;
       const tx0 = Math.max(x0 + r + 5, Math.min(x0 + bwid - r - 5, -c.dx));
       c.bub.setAttribute('d', `M${fx(x0 + r)},${fx(top)}h${fx(bwid - 2 * r)}a${r},${r} 0 0 1 ${r},${r}v${fx(bh - 2 * r)}a${r},${r} 0 0 1 ${-r},${r}h${fx(-(bwid - 2 * r))}a${r},${r} 0 0 1 ${-r},${-r}v${fx(-(bh - 2 * r))}a${r},${r} 0 0 1 ${r},${-r}Z`
         + `M${fx(tx0 - 5)},${fx(edge)}L${fx(-c.dx)},${fx(tipY)}L${fx(tx0 + 5)},${fx(edge)}Z`);

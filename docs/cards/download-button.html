@@ -23,7 +23,7 @@
 </head>
 <body>
 <main style="--w:640px">
-<!-- Vizney Blocks v0.81 · Controls · Download Button (download-button)
+<!-- Vizney Blocks v0.82 · Controls · Download Button (download-button)
      https://blocks.vizney.com/cards/download-button.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <style>
@@ -138,13 +138,15 @@
   --vzb-tip-ink: #ffffff;   /* tooltip text */
   --vzb-shadow: none;   /* card shadow */
 }
-/* 카드: 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위 가운데 하나입니다(단위 --vzb-unit, 카드마다 자기 CSS에서 정합니다). */
+/* 카드: 놓인 자리를 채웁니다. 폭은 자리의 폭이고, 높이는 1 · 1.5 · 2단위 가운데 하나를 바닥으로(단위 --vzb-unit, 카드마다 자기 CSS에서 정합니다)
+   자리가 그보다 높으면 그 높이까지 늘어납니다. 높이가 정해진 요소 안에 두든(100%), 격자 · 플렉스 줄에서 옆 카드에 맞춰 늘어나든 같습니다.
+   늘어난 높이는 그림이 씁니다(chart.css의 .vzb-fill). */
 .vzb-card {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   min-width: 0;
-  min-height: calc(var(--vzb-unit) * 1.5);
+  min-height: max(var(--vzb-unit) * 1.5, 100%);
   padding: 24px;
   background: var(--vzb-card);
   color: var(--vzb-ink);

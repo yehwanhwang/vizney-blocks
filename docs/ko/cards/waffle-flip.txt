@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.81 · 와플 차트 · Waffle Flip (waffle-flip)
+<!-- Vizney Blocks v0.82 · 와플 차트 · Waffle Flip (waffle-flip)
      https://blocks.vizney.com/ko/cards/waffle-flip.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <style>
@@ -111,13 +111,15 @@
   --vzb-tip-ink: #ffffff;   /* 툴팁 글자 */
   --vzb-shadow: none;   /* 카드 그림자 */
 }
-/* 카드: 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위 가운데 하나입니다(단위 --vzb-unit, 카드마다 자기 CSS에서 정합니다). */
+/* 카드: 놓인 자리를 채웁니다. 폭은 자리의 폭이고, 높이는 1 · 1.5 · 2단위 가운데 하나를 바닥으로(단위 --vzb-unit, 카드마다 자기 CSS에서 정합니다)
+   자리가 그보다 높으면 그 높이까지 늘어납니다. 높이가 정해진 요소 안에 두든(100%), 격자 · 플렉스 줄에서 옆 카드에 맞춰 늘어나든 같습니다.
+   늘어난 높이는 그림이 씁니다(chart.css의 .vzb-fill). */
 .vzb-card {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   min-width: 0;
-  min-height: calc(var(--vzb-unit) * 1.5);
+  min-height: max(var(--vzb-unit) * 1.5, 100%);
   padding: 24px;
   background: var(--vzb-card);
   color: var(--vzb-ink);
@@ -222,11 +224,11 @@
    괄호는 바뀐 칸이 든 세로줄들 아래에 글자색보다 옅은 1.25px 선으로 긋고, 바뀐 %p를 굵게 적습니다.
    칸이 뒤집히는 움직임은 스크립트가 그리고, 배지는 흐려졌다 또렷해지며 나옵니다.
    두 기간을 주면 머리 오른쪽 위에 기간 단추를 둡니다: 옅은 바탕 위에서 고른 기간만 글자색 알약(글자는 카드 바탕색)이 미끄러져 옮겨 갑니다. */
-.vzb-card[data-vzb="waffle-flip"] { min-height: calc(var(--vzb-unit) * 2); }
+.vzb-card[data-vzb="waffle-flip"] { min-height: max(var(--vzb-unit) * 2, 100%); }   /* 2단위가 바닥이고, 놓인 자리가 더 높으면 그 높이를 채웁니다 */
 .vzb-wf-fig > [hidden] { display: none; }
 .vzb-wf-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
 .vzb-wf-fig .vzb-num { font-variant-numeric: tabular-nums; }
-.vzb-wf.vzb-foot { margin-top: 0; padding-top: 16px; }   /* 칸은 큰 숫자 바로 아래. 폭이 좁아 칸이 높이를 다 못 채우면 남는 자리는 카드 아래로 갑니다 */
+.vzb-wf.vzb-foot { margin-top: 0; padding-top: 16px; }   /* 칸은 큰 숫자 바로 아래에서 카드 바닥까지, 남은 자리를 다 씁니다(스크립트가 칸의 크기를 정합니다) */
 .vzb-wf-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-wf-cell { transition: opacity var(--vzb-fade); }
 .vzb-wf-c0 { fill: var(--vzb-primary); }
@@ -860,7 +862,7 @@
     sr.append(table);
     card.append(sr, say);
 
-    // 칸 100개와 괄호: 칸 하나는 한 변 pitch에서 틈을 뺀 정사각형입니다.
+    // 칸 100개와 괄호: 칸 하나는 가로 pw · 세로 ph의 자리에서 틈을 뺀 네모입니다(layout이 자리에 맞춰 정합니다).
     const cells = cats0.map((c, i) => {
       const r = svgEl('rect', { class: `vzb-wf-cell vzb-wf-c${c}` });
       r.cat = c;
@@ -869,7 +871,8 @@
     });
     const brace = svgEl('path', { class: 'vzb-wf-br' }), braceText = svgText(0, 0, ppText(diff, 0), 'vzb-wf-brt', 'start');
     svg.append(brace, braceText);
-    const ROWS = 5, COLS = 20, fx = (v) => v.toFixed(1), clamp = (v) => Math.max(0, Math.min(1, v));
+    let ROWS = 5, COLS = 20;   // 칸의 배열: 가로로 긴 20 × 5가 기본이고, 놓인 자리의 비율에 따라 layout이 고릅니다. 칸은 세로줄을 위에서 아래로 채웁니다
+    const fx = (v) => v.toFixed(1), clamp = (v) => Math.max(0, Math.min(1, v));
     const fam = getComputedStyle(card).fontFamily;
     // 시간표(밀리초): 처음 앞 기간을 읽는 시간 · 칸 사이 간격(바뀐 칸이 많으면 짧게) · 한 칸이 뒤집히는 시간 · 괄호가 그어지는 시간
     const M = motion(card);   // 처음의 뜸(Lead) · 차례의 전체 시간(Seq) · 되풀이 전의 쉼(Rest)은 움직임 값에서 읽습니다
@@ -883,7 +886,7 @@
     const endOf = () => lead + Math.max(0, K - 1) * STAG + (K ? FLIP : 0);
     const total = () => (from === to ? 0 : endOf() + (to === last && diff ? OUT + 240 : 160));
     const shownP = () => (from !== to && t < lead ? from : to);
-    let pitch = 0, cell = 0, W = 0;
+    let pw = 0, ph = 0, cw = 0, W = 0;   // 칸 자리의 가로 · 세로, 칸의 폭
     // 옮겨 가기(데이터가 바뀌어 다시 그릴 때): 앞 카드가 넘긴 장면(칸마다 보이던 항목)에서 달라진 칸만 차례로 뒤집습니다. 칸마다 제 출발 시각(t0)을 가지며,
     // 가던 중에 값이 또 바뀌면 뒤집히던 칸은 하던 데서 이어 갑니다. 필터에 대한 답이라 차례의 시간은 짧게(모두 합쳐 0.45초 안) 둡니다.
     // 괄호(바뀐 %p)는 자리나 글자가 달라졌을 때만 칸이 다 뒤집힌 뒤 다시 긋고, 같으면 그대로 둡니다.
@@ -921,37 +924,53 @@
       from = to; t = 0; playing = false; rest = 0;
     }
     const flipX = (k) => (k <= 0 || k >= 1 ? 1 : k < 0.4 ? 1 - easeIn(k / 0.4) : Math.max(0.02, spring((k - 0.4) / 0.6)));
-    // 칸 크기: 카드 높이(2단위) 안에서 큰 숫자 아래 남은 높이와 폭에 맞춰 될 수 있는 만큼 키웁니다(한 변 30px까지).
-    // 넓은 카드(520px 이상)는 범례를 칸 오른쪽에 세로로 두고, 좁으면 범례는 칸 아래입니다.
+    // 칸 크기: 놓인 자리를 다 채웁니다. 큰 숫자 아래 남은 폭과 높이를 칸 100개가 남김없이 나눠 쓰도록, 칸의 배열(25 × 4 · 20 × 5 · 10 × 10 · 5 × 20)과
+    // 범례의 자리(칸 오른쪽에 세로로 · 칸 아래)를 고릅니다. 여덟 가지 가운데 칸이 정사각형에 가장 가깝고 빈자리가 적은 쪽입니다. 자리의 비율이 배열과 꼭 맞지 않으면
+    // 칸은 조금 납작하거나 길쭉한 네모가 됩니다(정사각형만 쓰면 오른쪽이나 아래에 빈자리가 남습니다). 칸 하나가 1%인 것은 그대로입니다.
     function layout(fw) {
-      const side = fw >= 520;
-      foot.classList.toggle('is-side', side);
       if (per) hd.style.paddingRight = `${per.offsetWidth + 12}px`;   // 제목은 기간 단추 왼쪽까지
-      const cs = getComputedStyle(card), H = parseFloat(cs.minHeight) || 336;
-      const top = fig.getBoundingClientRect().bottom - card.getBoundingClientRect().top;
-      const below = parseFloat(cs.paddingBottom) + parseFloat(cs.borderBottomWidth) + parseFloat(getComputedStyle(foot).paddingTop) + (side ? 0 : ctl.offsetHeight + 8) + 22;
-      const byH = (H - top - below + 3) / ROWS, byW = (fw - (side ? Math.max(...items.map((it) => it.li.offsetWidth)) + 28 : 0)) / COLS;
-      pitch = Math.max(8, Math.min(30, byW, byH));
-      const gap = pitch >= 14 ? 3 : 2, w = side ? pitch * COLS - gap : fw;
+      // 놓인 자리가 주는 높이: 칸을 빼고(범례는 아래에 둔 채) 잰 카드 높이입니다. 단위 높이가 바닥이고, 자리가 더 높으면 그 높이입니다.
+      foot.classList.remove('is-side');
+      svg.setAttribute('width', 0);
+      svg.setAttribute('height', 0);
+      const cs = getComputedStyle(card), cr = card.getBoundingClientRect(), H = cr.height;
+      const top = fig.getBoundingClientRect().bottom - cr.top;
+      const pad = parseFloat(cs.paddingBottom) + parseFloat(cs.borderBottomWidth) + parseFloat(getComputedStyle(foot).paddingTop) + 22;   // 22: 괄호와 %p의 자리
+      const sideW = Math.max(...items.map((it) => it.li.offsetWidth)) + 28, under = ctl.offsetHeight + 8;
+      const room = (sd) => H - top - pad - (sd ? 0 : under) + 3;
+      let best = null;
+      for (const [r, c] of [[5, 20], [10, 10], [4, 25], [20, 5]]) for (const sd of [true, false]) {
+        const w = (fw - (sd ? sideW : 0)) / c, h = room(sd) / r;
+        if (w < 8 || h < 8) continue;
+        // 정사각형에서 벗어난 정도에, 범례를 오른쪽에 둘 때 범례 아래로 비는 자리의 몫을 더해 견줍니다(빈자리가 크면 범례를 아래로 보냅니다).
+        const off = Math.abs(Math.log(w / h)) + (sd ? (sideW * Math.max(0, room(true) - (items.length * 26 - 6))) / (fw * room(true)) : 0);
+        if (!best || off < best.off - 0.02) best = { off, w, h, r, c, sd };
+      }
+      // 자리가 너무 낮아 어느 쪽도 들어가지 않으면(칸 8px 미만) 20 × 5를 폭에 맞춘 정사각형으로 두고 카드가 그만큼 길어집니다.
+      if (!best) best = { w: fw / 20, h: Math.max(8, Math.min(fw / 20, room(false) / 5)), r: 5, c: 20, sd: false };
+      const side = best.sd;
+      ROWS = best.r; COLS = best.c; pw = best.w; ph = best.h;
+      foot.classList.toggle('is-side', side);
+      const gap = Math.min(pw, ph) >= 14 ? 3 : 2, w = side ? pw * COLS - gap : fw;
       W = w;
-      cell = pitch - gap;
-      const h = pitch * ROWS - gap + 22;
+      cw = pw - gap;
+      const h = ph * ROWS - gap + 22;
       svg.setAttribute('width', w);
       svg.setAttribute('height', h);
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-      // 칸의 모서리: --vzb-radius-mark(비우면 2px). 한 변의 1/4을 넘기지 않아, 큰 값을 적어도 칸이 점으로 읽히지 않습니다.
-      const rc = Math.min(len(card, 'radius-mark', 2), cell / 4);
+      // 칸의 모서리: --vzb-radius-mark(비우면 2px). 짧은 변의 1/4을 넘기지 않아, 큰 값을 적어도 칸이 점으로 읽히지 않습니다.
+      const rc = Math.min(len(card, 'radius-mark', 2), Math.min(cw, ph - gap) / 4);
       cells.forEach((r, i) => {
         r.setAttribute('rx', rc);
-        r.setAttribute('x', fx(Math.floor(i / ROWS) * pitch));
-        r.setAttribute('y', fx((i % ROWS) * pitch));
-        r.setAttribute('width', fx(cell));
-        r.setAttribute('height', fx(cell));
+        r.setAttribute('x', fx(Math.floor(i / ROWS) * pw));
+        r.setAttribute('y', fx((i % ROWS) * ph));
+        r.setAttribute('width', fx(cw));
+        r.setAttribute('height', fx(ph - gap));
       });
       // 괄호: 짚을 항목에서 바뀐 칸이 든 세로줄들 아래. %p는 괄호 오른쪽, 자리가 모자라면 왼쪽에 적습니다.
       if (diff) {
         const a = Math.min(focus.cells[0], focus.cells[last]), b = Math.max(focus.cells[0], focus.cells[last]) - 1;
-        const x1 = Math.floor(a / ROWS) * pitch, x2 = Math.floor(b / ROWS) * pitch + cell, y = pitch * ROWS - gap + 7;
+        const x1 = Math.floor(a / ROWS) * pw, x2 = Math.floor(b / ROWS) * pw + cw, y = ph * ROWS - gap + 7;
         brace.setAttribute('d', `M${fx(x1)},${fx(y - 4)}V${fx(y)}H${fx(x2)}V${fx(y - 4)}`);
         brace.len = (x2 - x1) + 8;
         brace.setAttribute('stroke-dasharray', fx(brace.len));
@@ -999,7 +1018,7 @@
         }
         cnt[cat]++;
         if (r.cat !== cat) { r.classList.replace(`vzb-wf-c${r.cat}`, `vzb-wf-c${cat}`); r.cat = cat; }
-        const cx = Math.floor(i / ROWS) * pitch + cell / 2;
+        const cx = Math.floor(i / ROWS) * pw + cw / 2;
         r.setAttribute('transform', sx === 1 ? '' : `matrix(${sx.toFixed(3)} 0 0 1 ${fx(cx * (1 - sx))} 0)`);
       });
       // 큰 숫자와 범례는 지금 보이는 칸 수 그대로입니다.
@@ -1085,7 +1104,7 @@
     // 툴팁: 칸을 짚으면 그 항목의 칸만 진하게 남기고 비중(소수 한 자리) · 원래 값 · 앞 기간 대비 %p를 보여 줍니다.
     interact(plot, items.length,
       (cx, cy) => {
-        const r = svg.getBoundingClientRect(), col = Math.floor((cx - r.left) / pitch), row = Math.floor((cy - r.top) / pitch);
+        const r = svg.getBoundingClientRect(), col = Math.floor((cx - r.left) / pw), row = Math.floor((cy - r.top) / ph);
         if (col < 0 || col >= COLS || row < 0 || row >= ROWS) return -1;
         return cells[col * ROWS + row].cat;
       },
@@ -1103,7 +1122,7 @@
         const want = d.better === 'down' ? -1 : d.better === 'neutral' ? 0 : 1, dv = it.share[last] - it.share[0];
         if (P > 1 && p === last) note.push({ text: `${ppText(dv, 1)} ${tx(d, '%s 대비', periods[0])}`, tone: want === 0 || Math.abs(dv) < 1e-9 ? null : Math.sign(dv) === want ? 'good' : 'bad' });
         const tb = tipBody({ value: pctText(it.share[p], 1), note }, it.name);
-        return { x: r.left + (leftHalf ? c1 * pitch : c0 * pitch), y: r.top + (ROWS * pitch) / 2, side: leftHalf ? 'right' : 'left', label: it.name, value: tb.node, text: tb.text };
+        return { x: r.left + (leftHalf ? c1 * pw : c0 * pw), y: r.top + (ROWS * ph) / 2, side: leftHalf ? 'right' : 'left', label: it.name, value: tb.node, text: tb.text };
       },
       () => { svg.classList.remove('is-hover'); legend.classList.remove('is-hover'); items.forEach((x) => x.li.classList.remove('is-on')); cells.forEach((c) => c.classList.remove('is-on')); },
       false, true);
@@ -1113,6 +1132,7 @@
     if (auto) from = to = 0;
     if (scene) inView = !!scene.inView;   // 앞 카드가 화면에 보이고 있었으면 바로 움직입니다
     onSize(foot, layout);
+    onSize(card, () => { if (foot.clientWidth) layout(foot.clientWidth); });   // 놓인 자리의 높이가 바뀌어도 칸을 다시 맞춥니다
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (W) layout(foot.clientWidth); });
     // 화면에 처음 보일 때 움직입니다. 화면 밖에 있는 동안은 멈춰 둡니다.
     const start = () => { if (!seen) { seen = true; if (auto && !took) go(last, T0); } };

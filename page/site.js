@@ -75,12 +75,12 @@
     qdlg.addEventListener('close', () => { const q = $('#q'); q.value = ''; q.dispatchEvent(new Event('input')); if (qbtn) qbtn.focus(); });
   }
 
-  // 카드 그리기: 페이지가 글꼴을 직접 넣으므로 코드의 Spoqa 링크는 빼고 붙입니다.
+  // 카드 그리기: 코드 그대로 붙입니다. 사이트는 --vzb-font를 VZ Sans로 두므로 카드의 @font-face(Spoqa 파일)는 받지 않습니다(v0.81).
   function mount(host, src) {
     host.replaceChildren();
     const range = document.createRange();
     range.selectNodeContents(host);
-    host.append(range.createContextualFragment(src.replace(/<link [^>]*spoqa[^>]*>\n?/, '')));
+    host.append(range.createContextualFragment(src));
   }
 
   // 카드 JSON의 한 필드만 바꿉니다(바탕). 값이 없으면 필드를 빼 기본값으로 둡니다.

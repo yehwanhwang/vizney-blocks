@@ -7,7 +7,7 @@ description: "Add charts read through their motion and dashboard controls to an 
 
 > 한국어로 일할 때(사용자가 한국어로 요청하거나 화면 문구가 한국어일 때)는 같은 폴더의 `SKILL.ko.md`를 읽고 그것을 따른다. Working in Korean? Read `SKILL.ko.md` in this folder and follow it instead; it has the same steps and rules with the Korean card addresses.
 
-Vizney Blocks is a set of copy-paste HTML cards: charts you read through their motion, and dashboard controls (v0.80, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. The card does the arithmetic (the amount over a limit, shares, ranks) and the colors, emphasis and motion, by the rules of the Vizney chart guide. So keep the card code and change only the JSON values. A card decides how to draw its chart correctly; what goes on the screen is up to whoever builds it.
+Vizney Blocks is a set of copy-paste HTML cards: charts you read through their motion, and dashboard controls (v0.81, MIT License). One card is an HTML snippet that bundles `<style>`, a JSON data block and `<script>`, so there is no library to install. The card does the arithmetic (the amount over a limit, shares, ranks) and the colors, emphasis and motion, by the rules of the Vizney chart guide. So keep the card code and change only the JSON values. A card decides how to draw its chart correctly; what goes on the screen is up to whoever builds it.
 
 ## Cards
 
@@ -71,9 +71,9 @@ Each card's rules and fields are in its line of https://blocks.vizney.com/llms.t
 ## Rules
 
 - Paste the card code you downloaded as it is and change only the JSON values. Do not edit the styles or the script. To use the same card several times, paste the whole card code again and change each JSON.
-- A card fills the width of its slot. A chart card is 1, 1.5 or 2 units tall (1 unit = 168px, --vzb-unit), and every chart card is now 2 units (336px). The controls (Date Picker · Range Slider · Filter Chips · Select Menu · Download Button) draw only the control, with no card head or frame, at the height of the control itself. Their background is left empty, so set "theme" to match where they sit ("dark" on a dark background).
+- A card fills the width of its slot. A chart card is 1, 1.5 or 2 units tall (1 unit = 168px, --vzb-unit), and every chart card is now 2 units (336px). The controls (Date Picker · Range Slider · Filter Chips · Select Menu · Download Button) draw only the control, with no card head or frame, at the height of the control itself. Their background is left empty, so with Vizney's colors set "theme" to match where they sit ("dark" on a dark background); on a colored bar see "Match your screen".
 - For several cards, give the wrapper a grid: display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:16px. Keep a chart card at least 340px wide. A chart that reads along a long axis (13 months of bars, the 20 cells across a waffle, rank lines) reads better with two columns or the full width. Put the controls as they are in a filter bar above the charts or in the page header.
-- Change colors and the font with the --vzb-* variables on :root (--vzb-primary, --vzb-font, …). The variable list and what each one does are in https://blocks.vizney.com/tokens.css (the same content as the :where(:root) block in the card code). The background is picked per card with "theme" in its JSON: empty is white with blue as the first data color, "dark" is Vizney black with yellow as the first data color.
+- Match the page with the --vzb-* variables on :root, never by editing the card: background --vzb-card, text --vzb-ink, accent --vzb-primary, type --vzb-font and --vzb-title-*, corners --vzb-radius · --vzb-radius-control · --vzb-radius-mark (steps in "Match your screen"). The variable list and what each one paints are in https://blocks.vizney.com/tokens.css (the same content as the :where(:root) block in the card code). "theme" in a card's JSON picks Vizney's own background: empty is white with blue as the first data color, "dark" is Vizney black with yellow. To match your own screen, light or dark, leave it empty.
 - The motion has roles, and each role has one value in the same variable list. Things you touch: --vzb-follow (held by the pointer, no overshoot), --vzb-settle (let go, opened or widened: one small overshoot), --vzb-pop (a released button, a picked item, a surfacing label: a clear bounce), --vzb-fade and --vzb-press (times). Things that carry a value: --vzb-move, which never overshoots, because a height or a position is the value and a bounce would show a wrong value for a moment. Rhythm: --vzb-lead (the wait before a card starts), --vzb-seq (the time items share out when they move in turn) and --vzb-rest (the pause before a loop). A spring is written 'stiffness damping'; for CSS transitions use the ready-made time and curve, such as transition: transform var(--vzb-pop-t) var(--vzb-pop-e). When you add elements of your own around the cards (KPI tiles, tables, tabs), move them with the same variables and keep the rule: a value never bounces.
 - Common fields: title (what the values are), subtitle (the period and the basis), format (usd dollar amounts, shortened to $745.6K · $1.2M · count a count, with its unit in unit · pct a percentage (3.4 is 3.4%), changes in pp · days a number of days · eok and krw are Korean won notations), decimals (decimal places; empty lets the card decide), better (up · down · neutral), labels (period names, the same length as the values; null for a period without a value), lang (en: the words the card prints itself in English), theme. Controls: label (the name screen readers read; not drawn on screen) and name (detail.name of the control's events). Each card's own fields are in the example JSON of its code and in that card's line in llms.txt.
 - The amount over a limit, shares, ranks, changes and totals are computed by the card, so do not write them in the JSON. Give amounts as raw values, not rounded or divided into thousands or millions.
@@ -114,6 +114,37 @@ document.addEventListener('vzb-change', (e) => {
 </script>
 ```
 
+## Match your screen
+
+Leave the card code as it is and set only --vzb-* variables on :root, so the blocks take the look of the screen they sit on. Motion, the numbers, keyboard use and the screen-reader text stay; only the look (colors, type, corners, shadows) changes. What each variable paints is in https://blocks.vizney.com/tokens.css.
+
+- Measure five values on the screen: the panel (card) background, the body text color, the accent, the type (body and titles), and the corners (cards, buttons, small marks such as bars). Read them from the computed styles in the browser dev tools (background-color, color, font-family, border-radius).
+- Put them on `:root`: background `--vzb-card`, text `--vzb-ink`, accent `--vzb-primary`, type `--vzb-font` (and `--vzb-title-font` if titles differ), corners `--vzb-radius` (cards, floating parts) · `--vzb-radius-control` (chips, buttons, inputs, thumbs) · `--vzb-radius-mark` (bar ends, waffle cells, bubbles, legend keys). A square screen sets all three to 0.
+- The gray steps (`--vzb-ink-2` · `--vzb-muted` · `--vzb-grid` · `--vzb-track` · `--vzb-other` · `--vzb-base`), badge backgrounds and text, and the tooltip colors are mixed from the background, the text and the meaning colors, so they follow without being set. Set only what still looks off.
+- Add what you need: borders and shadows (`--vzb-edge` · `--vzb-shadow`, `--vzb-shadow-float` for floating parts), title and subtitle size, weight, case and letter-spacing (`--vzb-title-size` · `-weight` · `-case` · `-tracking`, `--vzb-sub-*`), change colors (`--vzb-good` · `--vzb-bad`, which paint changes only), the warning color (`--vzb-alert`: over a limit, a wrong input) and the focus ring (`--vzb-focus`, when the accent is close to the background).
+- Even on a dark screen leave theme empty and set a dark background and light text on `:root`. `"theme": "dark"` picks the Vizney black background, so the card sets the same variables again inside itself and hides the `:root` values.
+- For controls on a colored bar (an indigo filter bar), write `"theme": "dark"` in their JSON and set on that bar's `.vzb-card` only the background (`--vzb-card`, the bar's color), the text (`--vzb-ink`) and, if needed, the accent (`--vzb-primary`). The gray steps follow those two.
+- What does not change: control sizes (40 · 44 · 32px, the 20px thumb) and the text size steps are not variables. Titles and subtitles never go under 12px. Small keys (legend keys, check boxes, count badges) are never drawn rounder than their own default, and waffle cells never past a quarter of their side, however large the corner you set.
+- Check: when a color you set leaves text under 4.5:1 or the focus ring under 3:1 against its background, the card says so in one console line, `Vizney Blocks: low contrast …`. Fix the variable it names. With `--vzb-font` changed the card requests nothing from outside (only the default font fetches the Spoqa Han Sans Neo files from jsDelivr).
+
+```html
+<style>
+  :root {
+    --vzb-card: #ffffff;        /* background */
+    --vzb-ink: #17153a;         /* text; the gray steps follow */
+    --vzb-primary: #4338ca;     /* accent */
+    --vzb-font: 'Inter', sans-serif;
+    --vzb-title-font: 'IBM Plex Mono', monospace;
+    --vzb-title-case: uppercase;
+    --vzb-radius: 0;            /* card, floating parts */
+    --vzb-radius-control: 0;    /* chips, buttons, inputs, thumbs */
+    --vzb-radius-mark: 0;       /* bar ends, waffle cells, bubbles */
+  }
+  /* controls on an indigo filter bar: their JSON has "theme": "dark" */
+  .filters .vzb-card { --vzb-card: #2a2670; --vzb-ink: #ffffff; }
+</style>
+```
+
 ## Checklist
 
 Go through it before handing over the file. If anything is off, fix it and check again.
@@ -144,6 +175,7 @@ Go through it before handing over the file. If anything is off, fix it and check
 
 - [ ] No errors in the browser console, and no error message (`.vzb-error`) inside a card.
 - [ ] Screenshots at 1280px and 390px show no clipped or overlapping text.
+- [ ] If the screen's look was matched, the card code is untouched, only variables on :root (or on a colored bar's .vzb-card) were set, and the console shows no contrast warning.
 - [ ] Chart cards play once and stop. None is left repeating.
 - [ ] The assumptions were shared with the user.
 

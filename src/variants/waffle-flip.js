@@ -122,7 +122,7 @@
 
     // 칸 100개와 괄호: 칸 하나는 한 변 pitch에서 틈을 뺀 정사각형입니다.
     const cells = cats0.map((c, i) => {
-      const r = svgEl('rect', { class: `vzb-wf-cell vzb-wf-c${c}`, rx: 2 });
+      const r = svgEl('rect', { class: `vzb-wf-cell vzb-wf-c${c}` });
       r.cat = c;
       svg.append(r);
       return r;
@@ -199,7 +199,10 @@
       svg.setAttribute('width', w);
       svg.setAttribute('height', h);
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      // 칸의 모서리: --vzb-radius-mark(비우면 2px). 한 변의 1/4을 넘기지 않아, 큰 값을 적어도 칸이 점으로 읽히지 않습니다.
+      const rc = Math.min(len(card, 'radius-mark', 2), cell / 4);
       cells.forEach((r, i) => {
+        r.setAttribute('rx', rc);
         r.setAttribute('x', fx(Math.floor(i / ROWS) * pitch));
         r.setAttribute('y', fx((i % ROWS) * pitch));
         r.setAttribute('width', fx(cell));

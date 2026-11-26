@@ -203,6 +203,45 @@
   // 새 요소로 갈아 끼워 새로 그립니다(필터 · 기간 컨트롤과 잇는 길). 갈아 끼운 카드에는 data-vzb-live가 붙어, 움직이는 카드는
   // 처음부터 다시 재생하지 않습니다. 앞 카드가 장면을 맡겨 두었으면(keep) 그 장면에서 새 값으로 옮겨 가고, 아니면 마지막 장면을 바로 그립니다.
   // 예전 요소가 페이지에서 빠지므로 그 카드의 움직임도 함께 끝납니다.
+  // 대비 최소선: 페이지가 바꾼 색으로 글자가 바탕과 4.5:1, 포커스 링이 바탕과 3:1에 못 미치면 콘솔에 한 줄로 알립니다.
+  // 그림은 페이지 값 그대로 둡니다(브랜드 색을 카드가 고치지 않습니다). 색은 1×1 캔버스에 칠해 읽으므로 color-mix · oklch도 읽힙니다.
+  const CHECKS = [['ink', 'card', 4.5], ['ink-2', 'card', 4.5], ['muted', 'card', 4.5], ['good-ink', 'card', 4.5], ['bad-ink', 'card', 4.5],
+    ['alert-ink', 'card', 4.5], ['ink-2', 'track', 4.5], ['card', 'ink', 4.5], ['tip-ink', 'tip', 4.5], ['focus', 'card', 3]];
+  // 같은 알림은 페이지에서 한 번만: 카드마다 core.js가 따로 들어 있으므로, 공유 기호(Symbol.for)로 document에 한 벌만 둡니다.
+  const WARNED = Symbol.for('vizney-blocks.contrast');
+  function checkContrast(card) {
+    let ctx;
+    try { ctx = document.createElement('canvas').getContext('2d', { willReadFrequently: true }); } catch (e) { return; }
+    if (!ctx) return;
+    const probe = el('i');
+    probe.style.cssText = 'position:absolute;visibility:hidden';
+    card.append(probe);
+    const read = (name) => {
+      probe.style.color = name === 'focus' ? 'var(--vzb-focus, var(--vzb-primary))' : `var(--vzb-${name})`;
+      return getComputedStyle(probe).color;
+    };
+    const lum = (bg, fg) => {
+      ctx.clearRect(0, 0, 1, 1);
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, 1, 1);
+      ctx.fillStyle = bg; ctx.fillRect(0, 0, 1, 1);
+      if (fg) { ctx.fillStyle = fg; ctx.fillRect(0, 0, 1, 1); }
+      const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+      const c = (v) => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+      return 0.2126 * c(r) + 0.7152 * c(g) + 0.0722 * c(b);
+    };
+    const low = [];
+    CHECKS.forEach(([fg, bg, need]) => {
+      const B = read(bg), a = lum(B), b = lum(B, read(fg));
+      const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+      if (ratio < need - 0.005) low.push(`${fg === 'focus' ? '--vzb-focus' : `--vzb-${fg}`} on --vzb-${bg} ${ratio.toFixed(2)}:1 (needs ${need}:1)`);
+    });
+    probe.remove();
+    const msg = low.join('; ');
+    const warned = document[WARNED] || (document[WARNED] = new Set());
+    if (!low.length || warned.has(msg)) return;
+    warned.add(msg);
+    console.warn(`Vizney Blocks: low contrast with the page's --vzb-* colors: ${msg}`);
+  }
   function mount(type, draw) {
     const watch = (card, src) => {
       if (!src || !window.MutationObserver) return;
@@ -236,6 +275,7 @@
         // 어두운 바탕: JSON에 "theme": "dark"를 적으면 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다(tokens.css의 .vzb-dark).
         card.classList.toggle('vzb-dark', d.theme === 'dark');
         tune(card);
+        checkContrast(card);
         try { draw(card, d, format(d)); } catch (e) {
           card.append(el('p', 'vzb-error', tx(d, '카드를 그리지 못했습니다: %s', e.message)));
         }
@@ -243,6 +283,17 @@
     };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
     else run();
+  }
+  // 서식 길이: 페이지가 :root에 적은 --vzb-<name>(0 · 4px · 0.5rem 등)을 px 숫자로 읽습니다. 비워 두었으면(initial) fallback을 돌려줍니다.
+  // 스크립트가 그리는 SVG(막대 끝, 말풍선, 칸)가 CSS와 같은 모서리 변수를 읽게 하는 길입니다. 길이는 카드에 잠깐 넣은 요소의 폭으로 재서, rem · calc도 읽힙니다.
+  function len(card, name, fallback) {
+    if (!getComputedStyle(card).getPropertyValue(`--vzb-${name}`).trim()) return fallback;
+    const probe = el('i');
+    probe.style.cssText = `position:absolute;visibility:hidden;width:var(--vzb-${name})`;
+    card.append(probe);
+    const v = parseFloat(getComputedStyle(probe).width);
+    probe.remove();
+    return isFinite(v) && v >= 0 ? v : fallback;
   }
   // 크기가 바뀔 때마다 그래픽을 다시 그립니다. 차트는 카드에 남은 높이를 채웁니다.
   function onSize(node, fn) {

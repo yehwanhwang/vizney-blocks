@@ -4,7 +4,7 @@
 
 > 스킬의 한국어판이다. 영어판은 같은 폴더의 `SKILL.md`다. 순서, 카드 목록, 규칙, 체크리스트는 같은 원본에서 만들어져 내용이 같고, 카드 코드 주소(`/ko/cards/`)와 카드 문구가 한국어다.
 
-Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담은, 복사해 붙여 쓰는 HTML 카드 모음이다(v0.80, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 넘친 양 · 비중 · 순위 같은 계산과 색 · 강조 · 움직임은 카드가 Vizney 차트 가이드의 규칙대로 맡는다. 그래서 카드 코드는 그대로 두고 JSON 값만 바꾼다. 카드가 정하는 것은 그 차트를 바르게 그리는 방법이고, 화면에 무엇을 둘지는 화면을 만드는 쪽이 정한다.
+Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담은, 복사해 붙여 쓰는 HTML 카드 모음이다(v0.81, MIT License). 카드 하나는 `<style>`, 데이터 JSON, `<script>`를 묶은 HTML 조각이라 설치할 라이브러리가 없다. 넘친 양 · 비중 · 순위 같은 계산과 색 · 강조 · 움직임은 카드가 Vizney 차트 가이드의 규칙대로 맡는다. 그래서 카드 코드는 그대로 두고 JSON 값만 바꾼다. 카드가 정하는 것은 그 차트를 바르게 그리는 방법이고, 화면에 무엇을 둘지는 화면을 만드는 쪽이 정한다.
 
 ## 카드
 
@@ -68,9 +68,9 @@ Vizney Blocks는 움직임으로 읽는 차트와 대시보드 컨트롤을 담�
 ## 규칙
 
 - 내려받은 카드 코드를 그대로 붙여 넣고 JSON 값만 바꾼다. 스타일과 스크립트는 고치지 않는다. 같은 카드를 여러 장 쓸 때는 카드 코드를 통째로 다시 붙여 넣고 각 JSON만 바꾼다.
-- 카드는 놓인 자리의 폭을 채운다. 차트 카드의 높이는 1 · 1.5 · 2단위(1단위 168px, --vzb-unit) 가운데 하나이고, 지금 있는 차트 카드는 모두 2단위(336px)다. 컨트롤(Date Picker · Range Slider · Filter Chips · Select Menu · Download Button)은 카드 머리와 틀 없이 조작부만 그리고, 높이는 조작부 자체의 높이다. 바탕을 비워 두므로 theme은 놓을 자리의 바탕에 맞춘다(어두운 바탕이면 "dark").
+- 카드는 놓인 자리의 폭을 채운다. 차트 카드의 높이는 1 · 1.5 · 2단위(1단위 168px, --vzb-unit) 가운데 하나이고, 지금 있는 차트 카드는 모두 2단위(336px)다. 컨트롤(Date Picker · Range Slider · Filter Chips · Select Menu · Download Button)은 카드 머리와 틀 없이 조작부만 그리고, 높이는 조작부 자체의 높이다. 바탕을 비워 두므로 Vizney 색으로 쓸 때는 theme을 놓을 자리의 바탕에 맞춘다(어두운 바탕이면 "dark"). 색 바탕 위라면 "내 화면에 맞추기"을 따른다.
 - 여러 장은 감싸는 요소에 격자를 준다: display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:16px. 차트 카드는 340px보다 좁히지 않는다. 가로로 길게 읽는 차트(13개월 막대, 가로 20칸 와플, 순위 선)는 두 칸이나 전체 폭을 주면 더 잘 읽힌다. 컨트롤은 차트 위 필터 줄이나 머리글에 그대로 놓는다.
-- 색과 글꼴은 :root의 --vzb-* 변수(--vzb-primary, --vzb-font 등)로 바꾼다. 변수 목록과 쓰임은 https://blocks.vizney.com/ko/tokens.css 에 있다(카드 코드의 :where(:root) 블록과 같은 내용). 바탕은 카드마다 JSON의 theme으로 고른다. 비우면 흰 바탕에 파랑이 첫째 데이터 색이고, "dark"면 Vizney 검정 바탕에 노랑이 첫째 데이터 색이다.
+- 화면의 서식은 카드를 고치지 않고 :root의 --vzb-* 변수로 맞춘다: 바탕 --vzb-card, 글자 --vzb-ink, 강조 --vzb-primary, 서체 --vzb-font와 --vzb-title-*, 모서리 --vzb-radius · --vzb-radius-control · --vzb-radius-mark(순서는 "내 화면에 맞추기"). 변수 목록과 칠하는 곳은 https://blocks.vizney.com/ko/tokens.css 에 있다(카드 코드의 :where(:root) 블록과 같은 내용). JSON의 theme은 Vizney의 바탕을 고른다. 비우면 흰 바탕에 파랑이 첫째 데이터 색이고, "dark"면 Vizney 검정 바탕에 노랑이다. 내 화면 색에 맞출 때는 밝든 어둡든 비운다.
 - 움직임에는 역할이 있고, 역할마다 값이 하나씩 같은 변수 목록에 있다. 손이 닿는 것: --vzb-follow(끄는 동안 손에 붙음, 넘침 없음), --vzb-settle(놓이거나 열리거나 넓어질 때 살짝 넘쳤다 자리를 잡음), --vzb-pop(놓인 단추 · 고른 항목 · 떠오르는 말풍선이 뚜렷이 튐), --vzb-fade와 --vzb-press(시간). 값을 나타내는 것: --vzb-move. 넘치지 않는다. 높이나 자리가 곧 값이라, 튀면 잠깐 틀린 값을 보이기 때문이다. 리듬: --vzb-lead(카드가 시작하기 전의 뜸), --vzb-seq(항목이 차례로 움직일 때 나눠 쓰는 전체 시간), --vzb-rest(되풀이 전의 쉼). 스프링은 '세기 잦아듦' 두 숫자로 적고, CSS 전환에는 미리 계산된 시간과 곡선을 쓴다(예: transition: transform var(--vzb-pop-t) var(--vzb-pop-e)). 카드 둘레에 직접 만드는 요소(KPI 타일, 표, 탭)도 같은 변수로 움직이고, '값은 튀지 않는다'는 규칙을 지킨다.
 - 공통 필드: title(무엇의 값인지), subtitle(기간과 기준), format(krw 원 단위 숫자를 만·억·조로 줄여 적음. 10만 원 미만은 87,324원처럼 원 단위 그대로 · eok 억 단위 숫자 · usd 달러 금액을 $745.6K·$1.2M처럼 · count 개수, 단위는 unit · pct 퍼센트 숫자(3.4는 3.4%), 증감은 %p · days 일수), decimals(소수 자릿수, 비우면 카드가 정함), better(up · down · neutral), labels(기간 이름, 값과 같은 길이. 값이 없는 기간은 값을 null로), lang(en이면 카드가 직접 적는 문구가 영어), theme. 컨트롤: label(화면 낭독기가 읽는 이름. 화면에는 그리지 않음), name(컨트롤이 보내는 이벤트의 detail.name). 카드마다의 필드는 카드 코드의 예시 JSON과 llms.txt의 그 카드 줄에 있다.
 - 넘친 양, 비중, 순위, 증감, 합계는 카드가 계산하므로 JSON에 적지 않는다. 금액은 미리 반올림하거나 천·백만 단위로 나누지 않고 원래 값을 넣는다.
@@ -111,6 +111,37 @@ document.addEventListener('vzb-change', (e) => {
 </script>
 ```
 
+## 내 화면에 맞추기
+
+카드 코드는 고치지 않고 :root의 --vzb-* 변수만 적어, 블록이 놓인 화면의 서식을 따르게 한다. 움직임 · 계산 · 키보드 조작 · 낭독 문구는 그대로이고 생김새(색 · 서체 · 모서리 · 그림자)만 바뀐다. 변수마다 칠하는 곳은 https://blocks.vizney.com/ko/tokens.css 에 있다.
+
+- 화면에서 다섯 값을 잰다: 패널(카드) 바탕색, 본문 글자색, 강조색, 서체(본문과 제목), 모서리(카드 · 단추 · 막대 같은 작은 표시). 브라우저 개발자 도구의 계산된 스타일(background-color, color, font-family, border-radius)에서 읽는다.
+- `:root`에 옮긴다: 바탕 `--vzb-card`, 글자 `--vzb-ink`, 강조 `--vzb-primary`, 서체 `--vzb-font`(제목이 다르면 `--vzb-title-font`), 모서리 `--vzb-radius`(카드 · 떠 있는 창) · `--vzb-radius-control`(칩 · 단추 · 입력칸 · 손잡이) · `--vzb-radius-mark`(막대 끝 · 와플 칸 · 말풍선 · 범례 견본). 각진 화면이면 셋 다 0이다.
+- 회색 단계(`--vzb-ink-2` · `--vzb-muted` · `--vzb-grid` · `--vzb-track` · `--vzb-other` · `--vzb-base`), 배지의 바탕과 글자, 툴팁 색은 바탕 · 글자 · 뜻 색을 섞어 만들어지므로 적지 않아도 따라온다. 화면과 다르게 보이는 것만 따로 적는다.
+- 필요하면 더한다: 테두리와 그림자(`--vzb-edge` · `--vzb-shadow`, 떠 있는 창은 `--vzb-shadow-float`), 제목 · 부제의 크기 · 굵기 · 대소문자 · 자간(`--vzb-title-size` · `-weight` · `-case` · `-tracking`, `--vzb-sub-*`), 증감 색(`--vzb-good` · `--vzb-bad`, 증감만 칠한다), 주의 색(`--vzb-alert`, 한도 초과 · 입력 오류), 포커스 링(`--vzb-focus`, 강조색이 바탕과 비슷할 때).
+- 어두운 화면이어도 theme은 비우고 `:root`에 어두운 바탕과 밝은 글자를 적는다. `"theme": "dark"`는 Vizney 검정 바탕을 고르는 값이라, 카드 안에서 같은 변수를 다시 정해 `:root` 값을 가린다.
+- 색 바탕 위의 컨트롤(인디고 필터 줄 등)은 그 컨트롤의 JSON에 `"theme": "dark"`를 적고, 그 줄의 `.vzb-card`에 바탕(`--vzb-card`, 그 줄의 색)과 글자(`--vzb-ink`), 필요하면 강조(`--vzb-primary`)만 적는다. 회색 단계는 그 두 색에서 따라온다.
+- 바뀌지 않는 것: 조작부 크기(40 · 44 · 32px, 손잡이 20px)와 글자 크기 단계는 변수로 열지 않는다. 제목 · 부제는 12px 밑으로 내려가지 않는다. 작은 견본(범례 · 체크 상자 · 개수 배지)은 적은 모서리가 커도 제 기본값보다 둥글게 그리지 않고, 와플 칸은 한 변의 1/4을 넘기지 않는다.
+- 확인: 바꾼 색으로 글자 대비가 4.5:1, 포커스 링이 3:1에 못 미치면 카드가 콘솔에 `Vizney Blocks: low contrast …` 한 줄로 알린다. 알린 변수를 고친다. `--vzb-font`를 바꾸면 카드는 밖으로 아무것도 요청하지 않는다(기본 글꼴일 때만 jsDelivr에서 Spoqa Han Sans Neo 파일을 받는다).
+
+```html
+<style>
+  :root {
+    --vzb-card: #ffffff;        /* 바탕 */
+    --vzb-ink: #17153a;         /* 글자. 회색 단계가 따라온다 */
+    --vzb-primary: #4338ca;     /* 강조 */
+    --vzb-font: 'Inter', sans-serif;
+    --vzb-title-font: 'IBM Plex Mono', monospace;
+    --vzb-title-case: uppercase;
+    --vzb-radius: 0;            /* 카드 · 떠 있는 창 */
+    --vzb-radius-control: 0;    /* 칩 · 단추 · 입력칸 · 손잡이 */
+    --vzb-radius-mark: 0;       /* 막대 끝 · 와플 칸 · 말풍선 */
+  }
+  /* 인디고 필터 줄 위의 컨트롤: 그 컨트롤의 JSON은 "theme": "dark" */
+  .filters .vzb-card { --vzb-card: #2a2670; --vzb-ink: #ffffff; }
+</style>
+```
+
 ## 체크리스트
 
 완성한 파일을 넘기기 전에 하나씩 확인한다. 하나라도 어긋나면 고친 뒤 다시 확인한다.
@@ -141,6 +172,7 @@ document.addEventListener('vzb-change', (e) => {
 
 - [ ] 브라우저 콘솔에 오류가 없고, 카드 안에 오류 문구(`.vzb-error`)가 없다.
 - [ ] 폭 1280px과 390px에서 화면을 캡처해 잘리거나 겹친 글자가 없다.
+- [ ] 화면의 서식에 맞췄다면 카드 코드는 그대로이고 :root(색 바탕 위 컨트롤은 그 줄의 .vzb-card) 변수만 적었으며, 콘솔에 대비 경고가 없다.
 - [ ] 차트 카드는 한 번 재생하고 멈춘다. 계속 되풀이하게 두지 않았다.
 - [ ] 가정 줄을 사용자에게 알렸다.
 

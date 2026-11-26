@@ -1,6 +1,6 @@
 /* 그래프 영역: 마우스를 올리거나, 포커스한 뒤 좌우 화살표로 값을 봅니다. */
-.vzb-plot { position: relative; border-radius: 4px; outline: none; touch-action: pan-y; }
-.vzb-plot:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 4px; }
+.vzb-plot { position: relative; border-radius: min(var(--vzb-radius), 4px); outline: none; touch-action: pan-y; }   /* 포커스 테두리의 모서리: 카드 모서리를 넘지 않게 */
+.vzb-plot:focus-visible { outline: 2px solid var(--vzb-focus, var(--vzb-primary)); outline-offset: 4px; }
 /* 남은 높이를 채우는 차트: 그래프 영역이 늘어나고 그림은 그 크기에 맞춰 다시 그립니다. */
 .vzb-fill { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
 .vzb-fill > .vzb-plot { flex: 1 1 auto; min-height: 72px; }
@@ -12,52 +12,54 @@
   display: flex;
   flex-direction: column;
   padding: 7px 10px;
-  border-radius: 8px;
+  border-radius: min(var(--vzb-radius), 8px);   /* 떠 있는 창: 카드 모서리와 8px 중 작은 쪽 */
   background: var(--vzb-tip);
-  color: #ffffff;
-  box-shadow: 0 10px 24px -8px rgba(27, 27, 27, 0.4);
+  color: var(--vzb-tip-ink);
+  box-shadow: var(--vzb-shadow-float, 0 10px 24px -8px rgba(27, 27, 27, 0.4));
   font: 400 14px/20px var(--vzb-font);
   white-space: nowrap;
   opacity: 0;
   transition: opacity var(--vzb-fade);
 }
 .vzb-tip.is-on { opacity: 1; }
-.vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
+.vzb-tip-label { color: color-mix(in srgb, var(--vzb-tip-ink) 72%, transparent); }
 .vzb-tip-value { font-weight: 700; }
 .vzb-tip-value.is-big { font-size: 18px; line-height: 24px; }   /* 툴팁이 대신 보여 주는 큰 숫자 */
-/* 색 이름: t1 · t2 · t3 선(파랑 · 분홍빨강 · 주황, 어두운 바탕은 노랑 · 흰색 · 회색), f1 · f2 · f3 막대와 면(같은 순서), fs 옅은 첫째 색,
-   t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
+/* 색 이름: t1 · t2 선(파랑 · 분홍빨강, 어두운 바탕은 노랑 · 흰색), f1 · f2 · f3 막대와 면(파랑 · 분홍빨강 · 주황),
+   t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, fa 주의, ti 목표 · 기준 표시 */
 .vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
 .vzb-t2, .vzb-f2 { --vzb-c: var(--vzb-secondary); }
-.vzb-t3 { --vzb-c: var(--vzb-line-3); }
 .vzb-f3 { --vzb-c: var(--vzb-tertiary); }
 .vzb-t0, .vzb-f0 { --vzb-c: var(--vzb-base); }
 .vzb-tx, .vzb-fx { --vzb-c: var(--vzb-other); }
 .vzb-fg { --vzb-c: var(--vzb-good); }
 .vzb-fb { --vzb-c: var(--vzb-bad); }
+.vzb-fa { --vzb-c: var(--vzb-alert); }
 .vzb-ti { --vzb-c: var(--vzb-ink); }
 .vzb-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 10px 0 0; padding: 0; list-style: none; color: var(--vzb-ink-2); }
 .vzb-legend li { display: inline-flex; align-items: center; gap: 6px; }
-.vzb-key, .vzb-tip-key { display: inline-block; flex: none; width: 12px; height: 3px; border-radius: 2px; background: var(--vzb-c); }
-.vzb-key.is-box { width: 10px; height: 10px; border-radius: 3px; }
+/* 견본의 모서리는 --vzb-radius-mark를 따르되 제 기본값보다 둥글게 그리지 않습니다(작은 네모가 동그라미로 읽히지 않게). 점 견본은 늘 동그랗습니다. */
+.vzb-key, .vzb-tip-key { display: inline-block; flex: none; width: 12px; height: 3px; border-radius: min(var(--vzb-radius-mark, 2px), 2px); background: var(--vzb-c); }
+.vzb-key.is-box { width: 10px; height: 10px; border-radius: min(var(--vzb-radius-mark, 3px), 3px); }
 .vzb-key.is-dot { width: 9px; height: 9px; border-radius: 50%; }
 .vzb-key.is-dim { opacity: 0.4; }
 .vzb-tip-body { display: flex; flex-direction: column; }
 .vzb-tip-rows { display: grid; grid-template-columns: auto auto auto; justify-content: start; align-items: center; column-gap: 8px; row-gap: 1px; margin-top: 3px; }
 .vzb-tip-row { display: contents; }
-.vzb-tip-key.is-box { width: 10px; height: 10px; border-radius: 3px; }
+.vzb-tip-key.is-box { width: 10px; height: 10px; border-radius: min(var(--vzb-radius-mark, 3px), 3px); }
 .vzb-tip-row b { font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
-.vzb-tip-row span { color: rgba(255, 255, 255, 0.72); }
-/* flow: 앞에서 뒤로 넘어가는 값을 화살표로 한 줄에 잇습니다. 값은 굵게, 이름은 옅게, 화살표는 값과 같은 흰색으로 둡니다. */
+.vzb-tip-row span { color: color-mix(in srgb, var(--vzb-tip-ink) 72%, transparent); }
+/* flow: 앞에서 뒤로 넘어가는 값을 화살표로 한 줄에 잇습니다. 값은 굵게, 이름은 옅게, 화살표는 값과 같은 글자색으로 둡니다. */
 .vzb-tip-flow { display: flex; align-items: baseline; column-gap: 8px; margin-top: 3px; }
 .vzb-tip-flow-item { display: inline-flex; align-items: baseline; column-gap: 4px; }
 .vzb-tip-flow b { font-weight: 700; font-variant-numeric: tabular-nums; }
-.vzb-tip-flow-item span { color: rgba(255, 255, 255, 0.72); }
+.vzb-tip-flow-item span { color: color-mix(in srgb, var(--vzb-tip-ink) 72%, transparent); }
 .vzb-tip-arrow { font-weight: 700; }
-.vzb-tip-note { margin-top: 3px; color: rgba(255, 255, 255, 0.72); }
+.vzb-tip-note { margin-top: 3px; color: color-mix(in srgb, var(--vzb-tip-ink) 72%, transparent); }
 .vzb-tip-note + .vzb-tip-note { margin-top: 0; }
-/* 툴팁의 증감: 툴팁 바탕이 어두우므로 좋음 · 나쁨 색을 흰색에 조금 섞어 밝게 씁니다(어두운 바탕 툴팁에서도 대비 4.5:1 이상). */
-.vzb-tip .is-good { color: color-mix(in srgb, var(--vzb-good) 82%, #fff); font-weight: 700; }
-.vzb-tip .is-bad { color: color-mix(in srgb, var(--vzb-bad) 68%, #fff); font-weight: 700; }
-.vzb-fs { --vzb-c: var(--vzb-primary-soft); }
-.vzb-key.is-tick { width: 2px; height: 12px; border-radius: 1px; }
+/* 툴팁의 증감과 주의: 좋음 · 나쁨 · 주의 색을 툴팁 글자색에 조금 섞어 씁니다. 기본(어두운 툴팁에 흰 글자)에서는 밝아져 대비 4.5:1 이상이 되고,
+   밝은 툴팁에 어두운 글자를 적으면 어두워져 같은 대비를 지킵니다. */
+.vzb-tip .is-good { color: color-mix(in srgb, var(--vzb-good) 82%, var(--vzb-tip-ink)); font-weight: 700; }
+.vzb-tip .is-bad { color: color-mix(in srgb, var(--vzb-bad) 68%, var(--vzb-tip-ink)); font-weight: 700; }
+.vzb-tip .is-alert { color: color-mix(in srgb, var(--vzb-alert) 68%, var(--vzb-tip-ink)); font-weight: 700; }
+.vzb-key.is-tick { width: 2px; height: 12px; border-radius: min(var(--vzb-radius-mark, 1px), 1px); }

@@ -1,44 +1,66 @@
-<!-- Vizney Blocks v0.80 · 버터플라이 차트 · Butterfly Fold (butterfly-fold)
+<!-- Vizney Blocks v0.81 · 버터플라이 차트 · Butterfly Fold (butterfly-fold)
      https://blocks.vizney.com/ko/cards/butterfly-fold.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
-<link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css">
 <style>
-/* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다.
-   색은 Vizney의 Figma 팔레트에서 고릅니다. 데이터는 파랑(#007aff) · 분홍빨강(#ff2d55) · 주황(#ff9500), 좋고 나쁨은 초록(#34c759) · 빨강(#ff3b30)이고,
-   옅은 단계는 같은 색을 바탕에 섞어 만듭니다. 글자는 Vizney 검정(#1b1b1b)입니다.
-   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색, 흰색을 둘째 색으로 그립니다.
+@font-face { font-family: 'Vizney Blocks Sans'; font-weight: 400; src: local('Spoqa Han Sans Neo Regular'), url(https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Regular.woff2) format('woff2'), url(https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Regular.woff) format('woff'); }
+@font-face { font-family: 'Vizney Blocks Sans'; font-weight: 500; src: local('Spoqa Han Sans Neo Medium'), url(https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Medium.woff2) format('woff2'), url(https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Medium.woff) format('woff'); }
+@font-face { font-family: 'Vizney Blocks Sans'; font-weight: 700; src: local('Spoqa Han Sans Neo Bold'), url(https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Bold.woff2) format('woff2'), url(https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Bold.woff) format('woff'); }
+/* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다. 카드 코드는 고치지 않습니다.
+   내 화면에 맞출 때는 바탕(--vzb-card) · 글자(--vzb-ink) · 강조(--vzb-primary) · 서체(--vzb-font, --vzb-title-*) · 모서리(--vzb-radius*)를 적습니다.
+   회색 단계(--vzb-ink-2 · muted · grid · track · other · base)와 배지 · 툴팁 색은 바탕 · 글자 · 뜻 색을 섞어 만들어 함께 따라옵니다. 따로 적으면 적은 값을 씁니다.
+   initial로 둔 변수는 비어 있는 것입니다. 비어 있으면 카드가 요소마다 정한 Vizney 모양을 쓰고, 적으면 그 묶음 전체가 그 값을 씁니다.
+   색은 Vizney의 Figma 팔레트에서 고릅니다. 데이터는 파랑(#007aff) · 분홍빨강(#ff2d55) · 주황(#ff9500), 좋고 나쁨은 초록(#34c759) · 빨강(#ff3b30)입니다.
+   JSON에 "theme": "dark"를 적으면 아래 .vzb-dark 값으로 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다.
    목록: https://blocks.vizney.com/ko/tokens.css */
 :where(:root) {
-  --vzb-font: 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* 카드의 모든 글자 */
-  --vzb-card: #ffffff;   /* 카드 바탕 */
-  --vzb-edge: rgba(17, 24, 39, 0.05);   /* 카드 테두리 */
-  --vzb-ink: #1b1b1b;   /* 제목과 대표 수치 */
-  --vzb-ink-2: #4a4a4a;   /* 본문 글자, 변화 없음 배지 */
-  --vzb-muted: #737373;   /* 부제, 단위, 축 눈금 */
-  --vzb-grid: #ebebeb;   /* 격자와 머리 아래 선. 바탕에서 한 단계 떨어진 회색 실선 */
-  --vzb-primary: #007aff;   /* 첫째 데이터 색(파랑). 선, 막대, 가장 큰 항목 */
-  --vzb-primary-tint: #e6f2ff;   /* 파랑의 옅은 바탕. 선 아래 음영, 레이더 면 */
-  --vzb-primary-soft: #bfdeff;   /* 이름을 얹는 바 리스트 막대 */
-  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강) */
+  /* 글꼴. Vizney Blocks Sans는 카드에 든 @font-face의 이름입니다(Spoqa Han Sans Neo 파일). 브라우저는 이 이름으로 그리는 글자가 있을 때만 파일을 받으므로,
+     --vzb-font를 바꾸면 카드는 밖으로 아무것도 요청하지 않습니다. */
+  --vzb-font: 'Vizney Blocks Sans', 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;   /* 카드의 모든 글자 */
+  --vzb-title-font: initial;   /* 차트 카드 제목의 글꼴. 비우면 --vzb-font */
+  --vzb-title-size: 17px;   /* 제목 크기. 12px보다 작게 적어도 12px로 그립니다 */
+  --vzb-title-weight: 500;   /* 제목 굵기 */
+  --vzb-title-case: none;   /* 제목 대소문자(text-transform). uppercase면 대문자 */
+  --vzb-title-tracking: normal;   /* 제목 자간(letter-spacing). 예: 0.08em */
+  --vzb-sub-font: initial;   /* 부제(기간 · 기준)의 글꼴. 비우면 --vzb-font */
+  --vzb-sub-size: 14px;   /* 부제 크기. 12px보다 작게 적어도 12px로 그립니다 */
+  --vzb-sub-weight: 400;   /* 부제 굵기 */
+  --vzb-sub-case: none;   /* 부제 대소문자 */
+  --vzb-sub-tracking: normal;   /* 부제 자간 */
+  /* 바탕과 글자. 회색 단계는 글자색을 바탕에 섞은 값입니다(괄호 안은 기본값에서 나오는 색). */
+  --vzb-card: #ffffff;   /* 카드 바탕. 펼친 창(달력 · 목록 · 분포 창 · 내려받기 메뉴)의 바탕, 고른 칩 · 날짜 위의 글자, 막대 글자의 테두리 */
+  --vzb-edge: rgba(17, 24, 39, 0.05);   /* 카드 · 펼친 창 · 입력칸의 테두리 */
+  --vzb-ink: #1b1b1b;   /* 제목 · 값 · 대표 수치. 컨트롤에서는 고른 칩 · 날짜, 손잡이, 내려받기 단추의 면 */
+  --vzb-ink-2: color-mix(in srgb, var(--vzb-ink) 79.39%, var(--vzb-card));   /* (#4a4a4a) 이름 · 범례 · 고르지 않은 칩의 글자 */
+  --vzb-muted: color-mix(in srgb, var(--vzb-ink) 61.4%, var(--vzb-card));   /* (#737373) 부제 · 단위 · 축 눈금 · 옅은 이름, Waterfall의 잇는 점 */
+  --vzb-grid: color-mix(in srgb, var(--vzb-ink) 8.77%, var(--vzb-card));   /* (#ebebeb) 바닥선 */
+  --vzb-track: color-mix(in srgb, var(--vzb-ink) 6.14%, var(--vzb-card));   /* (#f1f1f1) 옅은 면: 칩 · 단추 · 날짜 단추의 면, 다시 보기 단추, 말풍선 바탕, 짚은 줄의 띠 */
+  --vzb-other: color-mix(in srgb, var(--vzb-ink) 16.67%, var(--vzb-card));   /* (#d9d9d9) 마우스를 올린 면, 슬라이더 레일 · 분포 막대, 구간 막대 */
+  --vzb-base: color-mix(in srgb, var(--vzb-ink) 25.88%, var(--vzb-card));   /* (#c4c4c4) 기준 막대: Waterfall 합계 막대, Bar Overflow 한도 아래 막대 */
+  /* 데이터 색 */
+  --vzb-primary: #007aff;   /* 첫째 데이터 색(파랑): 짚을 항목, Funnel의 물, Waffle의 짚을 칸, Bump의 짚을 선. 포커스 링도 이 색(--vzb-focus를 비웠을 때) */
+  --vzb-secondary: #ff2d55;   /* 둘째 데이터 색(분홍빨강): Butterfly의 왼쪽 그룹 */
   --vzb-tertiary: #ff9500;   /* 셋째 데이터 색(주황) */
-  --vzb-primary-mid: #8cc3ff;     /* 넓은 면(트리맵 칸)에 쓰는 한 단계 옅은 색 */
-  --vzb-secondary-mid: #ff7a93;   /* 분홍빨강의 넓은 면 */
-  --vzb-tertiary-mid: #ffb54d;   /* 주황의 넓은 면 */
-  --vzb-other-mid: #e3e3e3;   /* 기타 묶음의 넓은 면 */
-  --vzb-line-3: #ff9500;   /* 선의 셋째 색(주황) */
-  --vzb-base: #c4c4c4;   /* 비교 기준(작년 선, 레이더의 기준 면 테두리) */
-  --vzb-track: #f1f1f1;   /* 게이지 · 달성률 막대의 바탕 */
-  --vzb-other: #d9d9d9;   /* 기타로 묶은 항목, 넷째부터의 항목 */
-  --vzb-good: #34c759;   /* 좋은 증감의 면(워터폴의 늘린 요인, 달성 막대). 팔레트 초록. 흰 바탕 대비 2.2:1로 옅어 글자에는 쓰지 않습니다 */
-  --vzb-good-tint: #ebf9ee;   /* 좋은 증감 배지의 바탕(초록 10%) */
-  --vzb-good-ink: #2a8040;   /* 좋은 증감의 글자(배지). 초록에 검정 41%를 섞어 흰 바탕 대비 4.9:1 */
-  --vzb-bad: #ff3b30;   /* 나쁜 증감, 한도 초과의 면. 팔레트 빨강. 흰 바탕 대비 3.6:1 */
-  --vzb-bad-tint: #ffebea;   /* 나쁜 증감 배지의 바탕(빨강 10%) */
-  --vzb-bad-ink: #cb342b;   /* 나쁜 증감과 오류 문구의 글자. 빨강에 검정 23%를 섞어 흰 바탕 대비 5.2:1 */
-  --vzb-tip: #1b1b1b;   /* 툴팁 바탕 */
-  --vzb-radius: 18px;   /* 카드 모서리 */
+  /* 뜻 색. good · bad는 증감의 좋고 나쁨만, alert는 주의(한도 초과 · 입력 오류 · 오류 문구)만 칠합니다. 감소를 회색으로 바꿔도 한도 초과는 빨강으로 남습니다.
+     -tint(배지 바탕)와 -ink(글자)는 면 색을 바탕 · 글자색에 섞어 따라옵니다. */
+  --vzb-good: #34c759;   /* 좋아진 증감의 면: Waterfall의 늘린 막대. 팔레트 초록. 흰 바탕 대비 2.2:1로 옅어 글자에는 쓰지 않습니다 */
+  --vzb-good-tint: color-mix(in srgb, var(--vzb-good) 10.04%, var(--vzb-card));   /* (#ebf9ee) 좋은 증감 배지의 바탕 */
+  --vzb-good-ink: color-mix(in srgb, var(--vzb-good) 58.97%, var(--vzb-ink));   /* (#2a8040) 좋은 증감의 글자(배지, 말풍선). 흰 바탕 대비 4.9:1 */
+  --vzb-bad: #ff3b30;   /* 나빠진 증감의 면: Waterfall의 줄인 막대. 팔레트 빨강 */
+  --vzb-bad-tint: color-mix(in srgb, var(--vzb-bad) 10.17%, var(--vzb-card));   /* (#ffebea) 나쁜 증감 배지의 바탕 */
+  --vzb-bad-ink: color-mix(in srgb, var(--vzb-bad) 77.3%, var(--vzb-ink));   /* (#cb342b) 나쁜 증감의 글자. 흰 바탕 대비 5.2:1 */
+  --vzb-alert: #ff3b30;   /* 주의의 면: Bar Overflow의 넘친 구간과 견본, 잘못 친 날짜의 테두리. 팔레트 빨강 */
+  --vzb-alert-ink: color-mix(in srgb, var(--vzb-alert) 77.3%, var(--vzb-ink));   /* (#cb342b) 주의의 글자: 넘친 양, 오류 문구 */
+  /* 툴팁과 포커스 */
+  --vzb-tip: var(--vzb-ink);   /* (#1b1b1b) 툴팁 바탕 */
+  --vzb-tip-ink: var(--vzb-card);   /* (#ffffff) 툴팁 글자. 이름과 설명은 이 색의 72% */
+  --vzb-focus: initial;   /* 키보드 포커스 링. 비우면 --vzb-primary. 강조색이 바탕과 비슷하면(흰 바탕의 라임) 따로 적습니다 */
+  /* 모양 */
+  --vzb-radius: 18px;   /* 카드 모서리. 떠 있는 창(툴팁 8 · 달력 · 목록 16 · 분포 창 12)과 포커스 테두리(4)는 이 값과 제 값 중 작은 쪽 */
+  --vzb-radius-mark: initial;   /* 데이터 표시의 모서리: 막대 끝(4), 와플 칸(2), 말풍선(7), 비율 알약(12), 증감 배지(7), 짚은 줄의 띠(4), 범례 견본(2 · 3). 0이면 모두 각지게 */
+  --vzb-radius-control: initial;   /* 조작부의 모서리: 칩 · 날짜 · 목록 단추(알약), 아이콘 단추와 손잡이(원), 입력칸(10), 기간 단추, 날짜 칸, 목록 줄. 0이면 모두 각지게 */
   --vzb-unit: 168px;   /* 높이 1단위. 차트 카드의 높이는 1 · 1.5 · 2단위 가운데 하나입니다 */
-  --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* 카드 그림자 */
+  --vzb-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 18px 40px -22px rgba(17, 24, 39, 0.22);   /* 카드 그림자. none이면 없음 */
+  --vzb-shadow-float: initial;   /* 떠 있는 창(툴팁 · 달력 · 목록 · 분포 창 · 내려받기 메뉴)의 그림자. 비우면 요소마다 Vizney 그림자, none이면 없음 */
   /* 움직임. 무엇이 움직이느냐에 따라 값이 정해집니다. 스프링은 '세기 잦아듦' 두 숫자로 적습니다(세기가 클수록 빠르고, 잦아듦이 작을수록 더 튑니다).
      손이 닿는 것: Follow · Settle · Pop · Fade · Press. 값을 나타내는 것: Move(넘치지 않습니다. 높이나 자리가 곧 값이라, 튀면 잠깐 틀린 값을 보입니다).
      리듬: Lead · Seq · Rest. 카드 밖의 요소(KPI 타일, 표, 탭)도 같은 값으로 움직이면 화면이 한 손으로 만든 것처럼 보입니다. */
@@ -60,36 +82,33 @@
   --vzb-move-e: linear(0, 0.024, 0.083, 0.161, 0.248, 0.335, 0.419, 0.498, 0.569, 0.633, 0.689, 0.737, 0.78, 0.816, 0.846, 0.872, 0.894, 0.913, 0.928, 0.941, 0.951, 0.96, 0.967, 0.973, 0.978, 0.982, 0.985, 0.988, 0.99, 0.992, 0.994, 0.995, 1);
 }
 
-/* 어두운 바탕("theme": "dark"): 같은 변수를 카드 안에서만 바꿉니다. 노랑 하나에 흰색과 회색을 더해 Vizney 검정 · 흰색 · 노랑으로 그립니다.
+/* 어두운 바탕("theme": "dark"): Vizney 검정 바탕을 고르는 값이라, 같은 변수를 카드 안에서 다시 정합니다. 그래서 :root에 적은 색은 이 카드에 닿지 않습니다.
+   내 화면에 맞출 때는 어두운 화면이라도 theme을 비우고 :root에 바탕 · 글자 · 강조색을 적습니다. 이 블록을 고치려면 페이지에 .vzb-dark { … }를 적습니다(:where라 페이지 쪽이 이깁니다).
    노랑 · 흰색 · 회색은 색각 시뮬레이션(가장 가까운 쌍 ΔE 14.9)과 바탕 대비 검사를 통과합니다.
    좋고 나쁨은 밝은 바탕과 같은 초록(#34c759) · 빨강(#ff3b30)이고, 검정 바탕에서는 글자에도 그대로 씁니다(대비 7.8:1 · 4.9:1). */
-.vzb-dark {
+:where(.vzb-dark) {
   --vzb-card: #1b1b1b;   /* 카드 바탕(Vizney 검정) */
   --vzb-edge: rgba(255, 255, 255, 0.08);   /* 카드 테두리 */
   --vzb-ink: #f5f5f5;   /* 제목과 대표 수치 */
-  --vzb-ink-2: #cfcfcf;   /* 본문 글자 */
-  --vzb-muted: #9b9b9b;   /* 부제, 단위, 축 눈금 */
-  --vzb-grid: #2f2f2f;   /* 격자와 머리 아래 선 */
+  --vzb-ink-2: color-mix(in srgb, var(--vzb-ink) 82.57%, var(--vzb-card));   /* (#cfcfcf) 본문 글자 */
+  --vzb-muted: color-mix(in srgb, var(--vzb-ink) 58.72%, var(--vzb-card));   /* (#9b9b9b) 부제, 단위, 축 눈금 */
+  --vzb-grid: color-mix(in srgb, var(--vzb-ink) 9.17%, var(--vzb-card));   /* (#2f2f2f) 바닥선 */
+  --vzb-track: color-mix(in srgb, var(--vzb-ink) 7.8%, var(--vzb-card));   /* (#2c2c2c) 옅은 면 */
+  --vzb-other: color-mix(in srgb, var(--vzb-ink) 22.94%, var(--vzb-card));   /* (#4d4d4d) 마우스를 올린 면, 레일 */
+  --vzb-base: color-mix(in srgb, var(--vzb-ink) 36.7%, var(--vzb-card));   /* (#6b6b6b) 기준 막대 */
   --vzb-primary: #ffcc00;   /* 첫째 데이터 색(Vizney 노랑) */
-  --vzb-primary-tint: #362f18;   /* 노랑의 옅은 바탕 */
-  --vzb-primary-soft: #5f5013;   /* 이름을 얹는 바 리스트 막대 */
   --vzb-secondary: #f5f5f5;   /* 둘째 데이터 색(흰색) */
   --vzb-tertiary: #9b9b9b;   /* 셋째 데이터 색(회색) */
-  --vzb-primary-mid: #826b0f;   /* 넓은 면. 밝은 글자가 올라가도록 한 단계 어둡게 */
-  --vzb-secondary-mid: #5c5c5c;   /* 흰색의 넓은 면. 흰 글자가 올라가도록 회색으로 */
-  --vzb-tertiary-mid: #424242;   /* 회색의 넓은 면 */
-  --vzb-other-mid: #3a3a3a;   /* 기타 묶음의 넓은 면 */
-  --vzb-line-3: #9b9b9b;   /* 선의 셋째 색(회색) */
-  --vzb-base: #6b6b6b;   /* 비교 기준 */
-  --vzb-track: #2c2c2c;   /* 게이지 · 달성률 막대의 바탕 */
-  --vzb-other: #4d4d4d;   /* 기타로 묶은 항목 */
   --vzb-good: #34c759;   /* 좋은 증감(팔레트 초록) */
-  --vzb-good-tint: #1f3725;   /* 좋은 증감 배지의 바탕(초록 16%) */
-  --vzb-good-ink: #34c759;   /* 좋은 증감의 글자 */
-  --vzb-bad: #ff3b30;   /* 나쁜 증감, 한도 초과(팔레트 빨강) */
-  --vzb-bad-tint: #2d1e1d;   /* 나쁜 증감 배지의 바탕(빨강 8%, 글자 대비 4.5:1을 지키는 만큼) */
-  --vzb-bad-ink: #ff3b30;   /* 나쁜 증감과 오류 문구의 글자 */
-  --vzb-tip: #3a3a3a;   /* 툴팁 바탕 */
+  --vzb-good-tint: color-mix(in srgb, var(--vzb-good) 16.24%, var(--vzb-card));   /* (#1f3725) 좋은 증감 배지의 바탕 */
+  --vzb-good-ink: var(--vzb-good);   /* 좋은 증감의 글자 */
+  --vzb-bad: #ff3b30;   /* 나쁜 증감(팔레트 빨강) */
+  --vzb-bad-tint: color-mix(in srgb, var(--vzb-bad) 8.07%, var(--vzb-card));   /* (#2d1e1d) 나쁜 증감 배지의 바탕(글자 대비 4.5:1을 지키는 만큼) */
+  --vzb-bad-ink: var(--vzb-bad);   /* 나쁜 증감의 글자 */
+  --vzb-alert: #ff3b30;   /* 주의(팔레트 빨강) */
+  --vzb-alert-ink: var(--vzb-alert);   /* 주의의 글자 */
+  --vzb-tip: color-mix(in srgb, var(--vzb-ink) 14.22%, var(--vzb-card));   /* (#3a3a3a) 툴팁 바탕 */
+  --vzb-tip-ink: #ffffff;   /* 툴팁 글자 */
   --vzb-shadow: none;   /* 카드 그림자 */
 }
 /* 카드: 놓인 자리의 폭을 채우고, 높이는 1 · 1.5 · 2단위 가운데 하나입니다(단위 --vzb-unit, 카드마다 자기 CSS에서 정합니다). */
@@ -115,14 +134,15 @@
 
 /* 머리: 제목과 기간 부제, 그 아래 대표 수치와 바로 뒤의 증감 배지.
    배지와 비교 문구는 숫자와 같은 줄의 항목이라, 좁으면 비교 문구만 아래 줄로 내려가고 배지는 숫자 뒤에 남습니다. */
-.vzb-title { font-size: 17px; line-height: 24px; font-weight: 500; }
-.vzb-sub { margin-top: 2px; color: var(--vzb-muted); }
+/* 제목과 부제의 글꼴 · 크기 · 굵기 · 대소문자 · 자간은 --vzb-title-* · --vzb-sub-*로 바꿉니다. 크기는 12px 밑으로 내려가지 않고, 줄 높이는 크기에 맞춰 늘어납니다(기본 24px · 20px). */
+.vzb-title { font-family: var(--vzb-title-font, var(--vzb-font)); font-size: max(12px, var(--vzb-title-size)); line-height: max(24px, calc(var(--vzb-title-size) * 1.3)); font-weight: var(--vzb-title-weight); text-transform: var(--vzb-title-case); letter-spacing: var(--vzb-title-tracking); }
+.vzb-sub { margin-top: 2px; color: var(--vzb-muted); font-family: var(--vzb-sub-font, var(--vzb-font)); font-size: max(12px, var(--vzb-sub-size)); line-height: max(20px, calc(var(--vzb-sub-size) * 1.4)); font-weight: var(--vzb-sub-weight); text-transform: var(--vzb-sub-case); letter-spacing: var(--vzb-sub-tracking); }
 .vzb-fig { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; margin-top: 20px; }   /* 숫자 줄은 기준선 아래에 16px이 남아 줄 사이를 따로 두지 않습니다 */
 .vzb-num { margin-right: 4px; font-size: 34px; line-height: 40px; font-weight: 400; letter-spacing: -0.02em; white-space: nowrap; }   /* 숫자와 배지 사이 12px, 배지와 비교 문구 사이 8px */
 .vzb-unit { margin-left: 4px; font-size: 16px; letter-spacing: 0; color: var(--vzb-muted); }
 .vzb-delta { display: contents; color: var(--vzb-muted); white-space: nowrap; }
 .vzb-vs { min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
-.vzb-badge { display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px 3px 6px; border-radius: 7px; font-weight: 500; }
+.vzb-badge { display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px 3px 6px; border-radius: var(--vzb-radius-mark, 7px); font-weight: 500; }
 .vzb-badge.vzb-good { color: var(--vzb-good-ink); background: var(--vzb-good-tint); }
 .vzb-badge.vzb-bad { color: var(--vzb-bad-ink); background: var(--vzb-bad-tint); }
 .vzb-badge.vzb-flat { color: var(--vzb-ink-2); background: var(--vzb-track); padding-left: 8px; }
@@ -131,10 +151,10 @@
 
 /* 그래픽은 카드 아래쪽에 붙습니다. 같은 줄의 카드 높이가 맞춰져도 그래픽끼리 바닥이 맞습니다. */
 .vzb-foot { margin-top: auto; padding-top: 20px; }
-.vzb-error { margin: 8px 0 0; color: var(--vzb-bad-ink); }
+.vzb-error { margin: 8px 0 0; color: var(--vzb-alert-ink); }
 /* 그래프 영역: 마우스를 올리거나, 포커스한 뒤 좌우 화살표로 값을 봅니다. */
-.vzb-plot { position: relative; border-radius: 4px; outline: none; touch-action: pan-y; }
-.vzb-plot:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 4px; }
+.vzb-plot { position: relative; border-radius: min(var(--vzb-radius), 4px); outline: none; touch-action: pan-y; }   /* 포커스 테두리의 모서리: 카드 모서리를 넘지 않게 */
+.vzb-plot:focus-visible { outline: 2px solid var(--vzb-focus, var(--vzb-primary)); outline-offset: 4px; }
 /* 남은 높이를 채우는 차트: 그래프 영역이 늘어나고 그림은 그 크기에 맞춰 다시 그립니다. */
 .vzb-fill { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
 .vzb-fill > .vzb-plot { flex: 1 1 auto; min-height: 72px; }
@@ -146,55 +166,57 @@
   display: flex;
   flex-direction: column;
   padding: 7px 10px;
-  border-radius: 8px;
+  border-radius: min(var(--vzb-radius), 8px);   /* 떠 있는 창: 카드 모서리와 8px 중 작은 쪽 */
   background: var(--vzb-tip);
-  color: #ffffff;
-  box-shadow: 0 10px 24px -8px rgba(27, 27, 27, 0.4);
+  color: var(--vzb-tip-ink);
+  box-shadow: var(--vzb-shadow-float, 0 10px 24px -8px rgba(27, 27, 27, 0.4));
   font: 400 14px/20px var(--vzb-font);
   white-space: nowrap;
   opacity: 0;
   transition: opacity var(--vzb-fade);
 }
 .vzb-tip.is-on { opacity: 1; }
-.vzb-tip-label { color: rgba(255, 255, 255, 0.72); }
+.vzb-tip-label { color: color-mix(in srgb, var(--vzb-tip-ink) 72%, transparent); }
 .vzb-tip-value { font-weight: 700; }
 .vzb-tip-value.is-big { font-size: 18px; line-height: 24px; }   /* 툴팁이 대신 보여 주는 큰 숫자 */
-/* 색 이름: t1 · t2 · t3 선(파랑 · 분홍빨강 · 주황, 어두운 바탕은 노랑 · 흰색 · 회색), f1 · f2 · f3 막대와 면(같은 순서), fs 옅은 첫째 색,
-   t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, ti 목표 · 기준 표시 */
+/* 색 이름: t1 · t2 선(파랑 · 분홍빨강, 어두운 바탕은 노랑 · 흰색), f1 · f2 · f3 막대와 면(파랑 · 분홍빨강 · 주황),
+   t0 · f0 비교 회색, tx · fx 그 밖의 회색, fg · fb 좋음 · 나쁨, fa 주의, ti 목표 · 기준 표시 */
 .vzb-t1, .vzb-f1 { --vzb-c: var(--vzb-primary); }
 .vzb-t2, .vzb-f2 { --vzb-c: var(--vzb-secondary); }
-.vzb-t3 { --vzb-c: var(--vzb-line-3); }
 .vzb-f3 { --vzb-c: var(--vzb-tertiary); }
 .vzb-t0, .vzb-f0 { --vzb-c: var(--vzb-base); }
 .vzb-tx, .vzb-fx { --vzb-c: var(--vzb-other); }
 .vzb-fg { --vzb-c: var(--vzb-good); }
 .vzb-fb { --vzb-c: var(--vzb-bad); }
+.vzb-fa { --vzb-c: var(--vzb-alert); }
 .vzb-ti { --vzb-c: var(--vzb-ink); }
 .vzb-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 10px 0 0; padding: 0; list-style: none; color: var(--vzb-ink-2); }
 .vzb-legend li { display: inline-flex; align-items: center; gap: 6px; }
-.vzb-key, .vzb-tip-key { display: inline-block; flex: none; width: 12px; height: 3px; border-radius: 2px; background: var(--vzb-c); }
-.vzb-key.is-box { width: 10px; height: 10px; border-radius: 3px; }
+/* 견본의 모서리는 --vzb-radius-mark를 따르되 제 기본값보다 둥글게 그리지 않습니다(작은 네모가 동그라미로 읽히지 않게). 점 견본은 늘 동그랗습니다. */
+.vzb-key, .vzb-tip-key { display: inline-block; flex: none; width: 12px; height: 3px; border-radius: min(var(--vzb-radius-mark, 2px), 2px); background: var(--vzb-c); }
+.vzb-key.is-box { width: 10px; height: 10px; border-radius: min(var(--vzb-radius-mark, 3px), 3px); }
 .vzb-key.is-dot { width: 9px; height: 9px; border-radius: 50%; }
 .vzb-key.is-dim { opacity: 0.4; }
 .vzb-tip-body { display: flex; flex-direction: column; }
 .vzb-tip-rows { display: grid; grid-template-columns: auto auto auto; justify-content: start; align-items: center; column-gap: 8px; row-gap: 1px; margin-top: 3px; }
 .vzb-tip-row { display: contents; }
-.vzb-tip-key.is-box { width: 10px; height: 10px; border-radius: 3px; }
+.vzb-tip-key.is-box { width: 10px; height: 10px; border-radius: min(var(--vzb-radius-mark, 3px), 3px); }
 .vzb-tip-row b { font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
-.vzb-tip-row span { color: rgba(255, 255, 255, 0.72); }
-/* flow: 앞에서 뒤로 넘어가는 값을 화살표로 한 줄에 잇습니다. 값은 굵게, 이름은 옅게, 화살표는 값과 같은 흰색으로 둡니다. */
+.vzb-tip-row span { color: color-mix(in srgb, var(--vzb-tip-ink) 72%, transparent); }
+/* flow: 앞에서 뒤로 넘어가는 값을 화살표로 한 줄에 잇습니다. 값은 굵게, 이름은 옅게, 화살표는 값과 같은 글자색으로 둡니다. */
 .vzb-tip-flow { display: flex; align-items: baseline; column-gap: 8px; margin-top: 3px; }
 .vzb-tip-flow-item { display: inline-flex; align-items: baseline; column-gap: 4px; }
 .vzb-tip-flow b { font-weight: 700; font-variant-numeric: tabular-nums; }
-.vzb-tip-flow-item span { color: rgba(255, 255, 255, 0.72); }
+.vzb-tip-flow-item span { color: color-mix(in srgb, var(--vzb-tip-ink) 72%, transparent); }
 .vzb-tip-arrow { font-weight: 700; }
-.vzb-tip-note { margin-top: 3px; color: rgba(255, 255, 255, 0.72); }
+.vzb-tip-note { margin-top: 3px; color: color-mix(in srgb, var(--vzb-tip-ink) 72%, transparent); }
 .vzb-tip-note + .vzb-tip-note { margin-top: 0; }
-/* 툴팁의 증감: 툴팁 바탕이 어두우므로 좋음 · 나쁨 색을 흰색에 조금 섞어 밝게 씁니다(어두운 바탕 툴팁에서도 대비 4.5:1 이상). */
-.vzb-tip .is-good { color: color-mix(in srgb, var(--vzb-good) 82%, #fff); font-weight: 700; }
-.vzb-tip .is-bad { color: color-mix(in srgb, var(--vzb-bad) 68%, #fff); font-weight: 700; }
-.vzb-fs { --vzb-c: var(--vzb-primary-soft); }
-.vzb-key.is-tick { width: 2px; height: 12px; border-radius: 1px; }
+/* 툴팁의 증감과 주의: 좋음 · 나쁨 · 주의 색을 툴팁 글자색에 조금 섞어 씁니다. 기본(어두운 툴팁에 흰 글자)에서는 밝아져 대비 4.5:1 이상이 되고,
+   밝은 툴팁에 어두운 글자를 적으면 어두워져 같은 대비를 지킵니다. */
+.vzb-tip .is-good { color: color-mix(in srgb, var(--vzb-good) 82%, var(--vzb-tip-ink)); font-weight: 700; }
+.vzb-tip .is-bad { color: color-mix(in srgb, var(--vzb-bad) 68%, var(--vzb-tip-ink)); font-weight: 700; }
+.vzb-tip .is-alert { color: color-mix(in srgb, var(--vzb-alert) 68%, var(--vzb-tip-ink)); font-weight: 700; }
+.vzb-key.is-tick { width: 2px; height: 12px; border-radius: min(var(--vzb-radius-mark, 1px), 1px); }
 /* Butterfly Fold: 높이 2단위. 머리 아래에 두 그룹의 이름과 합계 줄, 그 아래 그래프가 남은 높이를 채웁니다. 머리 오른쪽 위에 다시 보기 단추(32px)를 둡니다.
    가운데 열에 항목 이름(14px)만 두고 양쪽으로 막대를 뻗으며, 값(14px)은 제 막대 끝 밖에 적습니다. 막대는 바깥 끝만 4px 둥글고, 두께는 줄 간격의 72%입니다.
    색: 밝은 바탕은 왼쪽 분홍빨강(둘째 데이터 색) · 오른쪽 파랑(첫째 데이터 색), 어두운 바탕은 왼쪽 노랑(첫째) · 오른쪽 흰색(둘째)입니다.
@@ -210,9 +232,9 @@
 .vzb-tip.vzb-dark .vzb-bf-k1 { --vzb-c: var(--vzb-secondary); }
 .vzb-card[data-vzb="butterfly-fold"] { min-height: calc(var(--vzb-unit) * 2); }
 .vzb-card[data-vzb="butterfly-fold"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
-.vzb-bf-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
+.vzb-bf-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: var(--vzb-radius-control, 50%); background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
 .vzb-bf-btn:hover { background: var(--vzb-other); }
-.vzb-bf-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
+.vzb-bf-btn:focus-visible { outline: 2px solid var(--vzb-focus, var(--vzb-primary)); outline-offset: 2px; }
 .vzb-bf-ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .vzb-bf.vzb-foot { padding-top: 14px; }
 .vzb-bf-keys { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; column-gap: 24px; row-gap: 2px; margin-bottom: 12px; font-size: 14px; line-height: 20px; color: var(--vzb-ink-2); }
@@ -461,6 +483,45 @@
   // 새 요소로 갈아 끼워 새로 그립니다(필터 · 기간 컨트롤과 잇는 길). 갈아 끼운 카드에는 data-vzb-live가 붙어, 움직이는 카드는
   // 처음부터 다시 재생하지 않습니다. 앞 카드가 장면을 맡겨 두었으면(keep) 그 장면에서 새 값으로 옮겨 가고, 아니면 마지막 장면을 바로 그립니다.
   // 예전 요소가 페이지에서 빠지므로 그 카드의 움직임도 함께 끝납니다.
+  // 대비 최소선: 페이지가 바꾼 색으로 글자가 바탕과 4.5:1, 포커스 링이 바탕과 3:1에 못 미치면 콘솔에 한 줄로 알립니다.
+  // 그림은 페이지 값 그대로 둡니다(브랜드 색을 카드가 고치지 않습니다). 색은 1×1 캔버스에 칠해 읽으므로 color-mix · oklch도 읽힙니다.
+  const CHECKS = [['ink', 'card', 4.5], ['ink-2', 'card', 4.5], ['muted', 'card', 4.5], ['good-ink', 'card', 4.5], ['bad-ink', 'card', 4.5],
+    ['alert-ink', 'card', 4.5], ['ink-2', 'track', 4.5], ['card', 'ink', 4.5], ['tip-ink', 'tip', 4.5], ['focus', 'card', 3]];
+  // 같은 알림은 페이지에서 한 번만: 카드마다 core.js가 따로 들어 있으므로, 공유 기호(Symbol.for)로 document에 한 벌만 둡니다.
+  const WARNED = Symbol.for('vizney-blocks.contrast');
+  function checkContrast(card) {
+    let ctx;
+    try { ctx = document.createElement('canvas').getContext('2d', { willReadFrequently: true }); } catch (e) { return; }
+    if (!ctx) return;
+    const probe = el('i');
+    probe.style.cssText = 'position:absolute;visibility:hidden';
+    card.append(probe);
+    const read = (name) => {
+      probe.style.color = name === 'focus' ? 'var(--vzb-focus, var(--vzb-primary))' : `var(--vzb-${name})`;
+      return getComputedStyle(probe).color;
+    };
+    const lum = (bg, fg) => {
+      ctx.clearRect(0, 0, 1, 1);
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, 1, 1);
+      ctx.fillStyle = bg; ctx.fillRect(0, 0, 1, 1);
+      if (fg) { ctx.fillStyle = fg; ctx.fillRect(0, 0, 1, 1); }
+      const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+      const c = (v) => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+      return 0.2126 * c(r) + 0.7152 * c(g) + 0.0722 * c(b);
+    };
+    const low = [];
+    CHECKS.forEach(([fg, bg, need]) => {
+      const B = read(bg), a = lum(B), b = lum(B, read(fg));
+      const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+      if (ratio < need - 0.005) low.push(`${fg === 'focus' ? '--vzb-focus' : `--vzb-${fg}`} on --vzb-${bg} ${ratio.toFixed(2)}:1 (needs ${need}:1)`);
+    });
+    probe.remove();
+    const msg = low.join('; ');
+    const warned = document[WARNED] || (document[WARNED] = new Set());
+    if (!low.length || warned.has(msg)) return;
+    warned.add(msg);
+    console.warn(`Vizney Blocks: low contrast with the page's --vzb-* colors: ${msg}`);
+  }
   function mount(type, draw) {
     const watch = (card, src) => {
       if (!src || !window.MutationObserver) return;
@@ -494,6 +555,7 @@
         // 어두운 바탕: JSON에 "theme": "dark"를 적으면 Vizney 검정 바탕에 노랑을 첫째 색으로 그립니다(tokens.css의 .vzb-dark).
         card.classList.toggle('vzb-dark', d.theme === 'dark');
         tune(card);
+        checkContrast(card);
         try { draw(card, d, format(d)); } catch (e) {
           card.append(el('p', 'vzb-error', tx(d, '카드를 그리지 못했습니다: %s', e.message)));
         }
@@ -501,6 +563,17 @@
     };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
     else run();
+  }
+  // 서식 길이: 페이지가 :root에 적은 --vzb-<name>(0 · 4px · 0.5rem 등)을 px 숫자로 읽습니다. 비워 두었으면(initial) fallback을 돌려줍니다.
+  // 스크립트가 그리는 SVG(막대 끝, 말풍선, 칸)가 CSS와 같은 모서리 변수를 읽게 하는 길입니다. 길이는 카드에 잠깐 넣은 요소의 폭으로 재서, rem · calc도 읽힙니다.
+  function len(card, name, fallback) {
+    if (!getComputedStyle(card).getPropertyValue(`--vzb-${name}`).trim()) return fallback;
+    const probe = el('i');
+    probe.style.cssText = `position:absolute;visibility:hidden;width:var(--vzb-${name})`;
+    card.append(probe);
+    const v = parseFloat(getComputedStyle(probe).width);
+    probe.remove();
+    return isFinite(v) && v >= 0 ? v : fallback;
   }
   // 크기가 바뀔 때마다 그래픽을 다시 그립니다. 차트는 카드에 남은 높이를 채웁니다.
   function onSize(node, fn) {
@@ -745,7 +818,8 @@
     card.append(sr);
 
     // 그림(아래부터): 짚은 줄의 띠 · 점선과 그 끝의 마감 · 막대 · 이름과 값
-    const band = svgEl('rect', { class: 'vzb-bf-band', rx: 4 });
+    const band = svgEl('rect', { class: 'vzb-bf-band' });
+    let RBAR = 4;   // 막대 바깥 끝과 띠의 모서리(--vzb-radius-mark)
     const gTail = svgEl('g', {}), gBar = svgEl('g', {}), gTxt = svgEl('g', {});
     const draw = (it) => {
       it.bar = [0, 1].map((s) => svgEl('path', { class: `vzb-bf-bar ${s ? 'is-r' : 'is-l'}` }));
@@ -781,6 +855,8 @@
     let scene = before(card), moving = false, lost = [], m0 = 0, sB = null, sH = null, sT = null, T_BODY = 0, T_HH = 0;
     function layout(w, h) {
       W = w; H = h;
+      RBAR = len(card, 'radius-mark', 4);
+      band.setAttribute('rx', RBAR);
       svg.setAttribute('width', w);
       svg.setAttribute('height', h);
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
@@ -829,11 +905,12 @@
       return [hx + dir * x * g, y];   // 줄마다 제자리에서 가로로만 접힙니다(위아래로 벌어지면 줄마다 각이 달라 비뚤어져 보입니다)
     }
     const angleAt = (r) => TH[Math.max(0, Math.min(S, Math.round((r / span) * S)))];
-    // 날개 위의 막대 한 조각(경첩에서 r0부터 r1까지): 날개가 휘어 있으면 마디마다 꺾어 그리고, 바깥 끝만 4px 둥급니다.
+    // 날개 위의 막대 한 조각(경첩에서 r0부터 r1까지): 날개가 휘어 있으면 마디마다 꺾어 그리고, 바깥 끝만 둥급니다.
+    // 바깥 끝과 짚은 줄의 띠는 --vzb-radius-mark(비우면 4px)를 따릅니다(RBAR, layout에서 읽습니다).
     const pts = (a) => a.map((q) => `${fx(q[0])},${fx(q[1])}`).join('L');
     function slab(hx, dir, r0, r1, yc, ins = 0) {
       if (r1 - r0 < 0.5) return '';
-      const hh = hh0 - ins, rr = Math.min(4, (r1 - r0) / 2, hh), rs = [r0], ds = span / S;
+      const hh = hh0 - ins, rr = Math.min(RBAR, (r1 - r0) / 2, hh), rs = [r0], ds = span / S;
       if (!flat) for (let i = Math.floor(r0 / ds) + 1; i * ds < r1 - rr - 0.5; i++) rs.push(i * ds);
       rs.push(r1 - rr);
       const top = rs.map((r) => proj(hx, dir, r, yc - hh)), bot = rs.map((r) => proj(hx, dir, r, yc + hh)).reverse();

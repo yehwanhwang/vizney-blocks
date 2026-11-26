@@ -1,6 +1,6 @@
 // Guard: the mechanical half of the card checks, run by build.mjs before anything is written (also `node build.mjs --check`).
 // It reads the assembled card code and the sources, and stops the build with one line per failure. What it checks:
-//   1. 자립성: no external resource but the font link (no http(s) URL, <link>, @import, url(), import).
+//   1. 자립성: no external resource but the font files of the card's @font-face block (no http(s) URL, <link>, @import, url(), import).
 //   2. 색: raw colors only in tokens.css. White and translucent black (tooltip ink, shadows) are the only exceptions.
 //   3. 토큰: every var(--vzb-*) is declared in tokens.css or set by the card itself; prefix --vzb- on every custom property.
 //   4. 높이: the min-height rule of each chart card (.vzb-card[data-vzb="<id>"]) is one of 1 · 1.5 · 2 units and matches TIER
@@ -22,11 +22,17 @@
 //      core.js works out from the springs, and the defaults in core.js (MOTION) are the token values.
 //  12. 문법: every script source (core.js, the shared parts and each card) parses (v0.74). The build pastes the sources into the
 //      card code as text, so without this a stray bracket ships a card that draws nothing.
+//  13. 서식: shape follows the page (v0.81). In card CSS every border-radius is 0 or reads a corner token (--vzb-radius for the card
+//      and floating parts, --vzb-radius-mark for data marks, --vzb-radius-control for controls); dots that are round by nature are
+//      listed in ROUND. A focus ring reads var(--vzb-focus, var(--vzb-primary)). A card script sets no rx by hand: it reads the corner
+//      with len(card, 'radius-mark', default), so the SVG it draws follows the same token as the CSS.
 import { readdirSync, existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const HEX = /#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(/;
 const COLOR_OK = /^#f{3}$|^#f{6}$|^rgba\(\s*255\s*,\s*255\s*,\s*255\s*,|^rgba\(\s*(27\s*,\s*27\s*,\s*27|17\s*,\s*24\s*,\s*39)\s*,/i;
+// Selectors whose roundness is the shape itself (a dot, a burst particle, a 1px text mark), not a corner a brand would square.
+const ROUND = new Set(['.vzb-key.is-dot', '.vzb-dl-burst i', '.vzb-sm-hit']);
 const COMPUTED = ['delta', 'change', 'share', 'pct', 'percent', 'ratio', 'rate', 'total', 'sum', 'rank'];
 // Known gaps the guard reports as warnings instead of failing: card id → why, to be fixed as a card change.
 const KNOWN = {};
@@ -68,7 +74,7 @@ export function wordsOf(src) {
   return out;
 }
 
-export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippets, snippetsEn, en, fontLink }) {
+export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippets, snippetsEn, en, fontFace }) {
   const fails = [], warns = [];
   const fail = (where, msg) => fails.push(`${where}: ${msg}`);
   const warn = (msg) => warns.push(msg);
@@ -189,6 +195,20 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
       }
     } else if (file !== 'src/core.js' && /cubic-bezier\(|linear\(/.test(body)) fail(file, '스크립트에 손으로 적은 곡선(cubic-bezier · linear)이 있다. motion(card)의 css() · curve()나 ease-out을 쓴다');
   }
+  // 13. format: corners and focus rings read the tokens, scripts read corners with len()
+  for (const [file, text] of files) {
+    const body = text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+    if (file.endsWith('.css')) {
+      for (const m of body.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+        const sel = m[1].trim().replace(/\s+/g, ' ');
+        for (const r of m[2].matchAll(/(?<![\w-])border-radius\s*:\s*([^;]+)/g)) {
+          const v = r[1].trim();
+          if (v !== '0' && !/var\(--vzb-radius/.test(v) && !ROUND.has(sel)) fail(file, `${sel}의 모서리 ${v}를 손으로 적었다. --vzb-radius(카드 · 떠 있는 창) · --vzb-radius-mark(데이터 표시) · --vzb-radius-control(조작부)을 var(…, 기본값)으로 읽는다`);
+        }
+        if (/:focus/.test(sel) && /var\(--vzb-primary\)/.test(m[2].replace(/var\(--vzb-focus,\s*var\(--vzb-primary\)\)/g, ''))) fail(file, `${sel}의 포커스가 --vzb-primary를 바로 읽는다. var(--vzb-focus, var(--vzb-primary))로 쓴다`);
+      }
+    } else if (/\brx\s*:\s*\d/.test(body)) fail(file, "SVG 모서리(rx)를 손으로 적었다. len(card, 'radius-mark', 기본값)으로 읽는다");
+  }
   {
     const core = src('src/core.js'), fn = (name) => { const i = core.indexOf(`  function ${name}(`), j = core.indexOf('\n  }\n', i); return i < 0 || j < 0 ? '' : core.slice(i, j + 4); };
     const val = (name) => (tokens.match(new RegExp(`--vzb-${name}:\\s*([^;]+);`)) || [])[1]?.trim();
@@ -237,8 +257,8 @@ export function guard({ root, cats, parts, partCss, partJs, tokens, tier, snippe
   for (const [v, code, where] of [...all.map((v) => [v, snippets[v.id], `ko/cards/${v.id}.txt`]), ...all.map((v) => [v, (snippetsEn || {})[v.id], `cards/${v.id}.txt`])]) {
     if (!code) continue;
     // Comments (the header, tokens.css notes, JS notes) may name addresses; only live references count.
-    const body = code.replace(fontLink, '').replace(/<!--[\s\S]*?-->/, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
-    for (const m of body.matchAll(/https?:\/\/[^\s"'`)]+/g)) if (m[0] !== 'http://www.w3.org/2000/svg') fail(where, `외부 주소 ${m[0]}. 카드는 글꼴 링크 말고 아무것도 밖에서 가져오지 않는다`);
+    const body = code.replace(fontFace, '').replace(/<!--[\s\S]*?-->/, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+    for (const m of body.matchAll(/https?:\/\/[^\s"'`)]+/g)) if (m[0] !== 'http://www.w3.org/2000/svg') fail(where, `외부 주소 ${m[0]}. 카드는 @font-face의 글꼴 파일 말고 아무것도 밖에서 가져오지 않는다`);
     if (/<link\b|@import\b|\burl\((?!#)|^\s*import\s/m.test(body)) fail(where, '외부 리소스(<link>, @import, url(), import)를 쓰지 않는다. url(#id)로 카드 안 요소를 가리키는 것은 괜찮다');
     const scripts = [...body.matchAll(/<script(?![^>]*application\/json)[^>]*>/g)].length;
     if (scripts !== 1 || !/<script>\n\(\(\) => \{\n\s+'use strict';/.test(body)) fail(where, '스크립트는 IIFE 하나여야 다른 카드와 변수가 섞이지 않는다');

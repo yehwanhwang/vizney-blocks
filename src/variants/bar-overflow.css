@@ -1,29 +1,29 @@
 /* Bar Overflow: 높이 2단위. 세로 막대는 굵기 30px까지, 위쪽 끝만 4px 둥글게 그리고 한도선에 닿으면 선 아래에서 각지게 끊습니다.
-   선 아래는 회색(--vzb-base), 선 위로 넘친 구간만 빨강(--vzb-bad)입니다. 한도선은 글자색 1.5px 실선으로 막대 위에 긋고,
+   선 아래는 회색(--vzb-base), 선 위로 넘친 구간만 빨강(--vzb-alert)입니다. 한도선은 글자색 1.5px 실선으로 막대 위에 긋고,
    선의 오른쪽 끝(막대 칸 밖)에 이름(12px, 옅게)을 선 위에, 값(14px 굵게)을 선 아래에 붙입니다.
-   기간 이름은 바닥선 아래 12px, 넘친 양은 넘친 막대 위에 14px 굵은 빨간 글자(--vzb-bad-ink)로 적습니다.
+   기간 이름은 바닥선 아래 12px, 넘친 양은 넘친 막대 위에 14px 굵은 빨간 글자(--vzb-alert-ink)로 적습니다.
    그래프 아래 줄에는 다시 보기 단추와 카드가 계산한 한 줄(넘친 기간 수와 넘친 양)을 둡니다. 깜빡임은 스크립트가 불투명도로 그립니다. */
 .vzb-card[data-vzb="bar-overflow"] { min-height: calc(var(--vzb-unit) * 2); }
 .vzb-bb.vzb-foot { padding-top: 12px; }
 .vzb-bb-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-bb-base { stroke: var(--vzb-grid); stroke-width: 1; }
 .vzb-bb-fill { fill: var(--vzb-base); }
-.vzb-bb-over { fill: var(--vzb-bad); }
+.vzb-bb-over { fill: var(--vzb-alert); }
 .vzb-bb-line { stroke: var(--vzb-ink); stroke-width: 1.5; }
 .vzb-bb-lim { font-size: 12px; font-weight: 500; fill: var(--vzb-ink-2); }
 .vzb-bb-limv { font-size: 14px; font-weight: 700; fill: var(--vzb-ink); font-variant-numeric: tabular-nums; }
 .vzb-bb-name { font-size: 12px; fill: var(--vzb-muted); }
-.vzb-bb-ex { font-size: 14px; font-weight: 700; fill: var(--vzb-bad-ink); font-variant-numeric: tabular-nums; }
+.vzb-bb-ex { font-size: 14px; font-weight: 700; fill: var(--vzb-alert-ink); font-variant-numeric: tabular-nums; }
 .vzb-bb-col.is-over .vzb-bb-name { font-weight: 700; fill: var(--vzb-ink); }
 .vzb-bb-col { transition: opacity var(--vzb-fade); }
 .vzb-bb-svg.is-hover .vzb-bb-col:not(.is-on) { opacity: 0.3; }
 .vzb-bb-ctl { display: flex; align-items: center; gap: 10px; min-height: 28px; margin-top: 8px; }
 .vzb-card[data-vzb="bar-overflow"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
-.vzb-bb-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
+.vzb-bb-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: var(--vzb-radius-control, 50%); background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
 .vzb-bb-btn:hover { background: var(--vzb-other); }
 .vzb-bb-btn[hidden] { display: none; }
-.vzb-bb-btn:focus-visible { outline: 2px solid var(--vzb-primary); outline-offset: 2px; }
+.vzb-bb-btn:focus-visible { outline: 2px solid var(--vzb-focus, var(--vzb-primary)); outline-offset: 2px; }
 .vzb-bb-ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .vzb-bb-sum { flex: 1 1 auto; min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }
 .vzb-bb-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
-.vzb-bb-key { display: inline-block; width: 8px; height: 8px; margin-right: 7px; border-radius: 2px; background: var(--vzb-bad); }
+.vzb-bb-key { display: inline-block; width: 8px; height: 8px; margin-right: 7px; border-radius: min(var(--vzb-radius-mark, 2px), 2px); background: var(--vzb-alert); }

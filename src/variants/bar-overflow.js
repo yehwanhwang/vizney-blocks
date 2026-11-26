@@ -88,11 +88,12 @@
     });
     svg.append(base, goneG, barsG, limG);
     const fam = getComputedStyle(card).fontFamily, fx = (v) => v.toFixed(1), clamp = (v) => Math.max(0, Math.min(1, v));
-    // 세로 막대: round가 참이면 위쪽 끝만 둥글게, 아니면 각지게(한도선에 닿는 끝)
+    // 세로 막대: round가 참이면 위쪽 끝만 둥글게, 아니면 각지게(한도선에 닿는 끝). 모서리는 --vzb-radius-mark(비우면 4px)이고 layout에서 읽습니다.
+    let RBAR = 4;
     const col = (x, yTop, w, yBottom, round) => {
       const h = yBottom - yTop;
       if (h < 0.5) return '';
-      const r = round ? Math.min(4, w / 2, h) : 0;
+      const r = round ? Math.min(RBAR, w / 2, h) : 0;
       return `M${fx(x)},${fx(yBottom)}V${fx(yTop + r)}A${r},${r} 0 0 1 ${fx(x + r)},${fx(yTop)}H${fx(x + w - r)}A${r},${r} 0 0 1 ${fx(x + w)},${fx(yTop + r)}V${fx(yBottom)}Z`;
     };
     // 시간표(밀리초): 한도선만 보이는 처음 · 막대 사이 간격 · 한 막대가 차는 시간 · 다 찬 뒤 쉬는 시간 · 깜빡임 한 번 · 깜빡이는 횟수
@@ -108,6 +109,7 @@
     let from = before(card), moving = false, flash = BLINK, sly = null, slv = null, sw = null, gone = [];
     function layout(w, h) {
       W = w; H = h;
+      RBAR = len(card, 'radius-mark', 4);
       svg.setAttribute('width', w);
       svg.setAttribute('height', h);
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
@@ -328,9 +330,9 @@
         if (it.v != null) {
           const gap = show(f, Math.abs(it.v - lim)), share = lim > 0 ? num((it.v / lim) * 100, 0) : null;
           // 한도를 넘친 줄은 막대의 넘친 부분과 같은 빨강으로 적습니다.
-          if (share == null) note.push({ text: tx(d, '%s 초과|한도', gap), tone: it.v > lim ? 'bad' : null });
-          else if (it.v > lim && it.exOn) note.push({ text: tx(d, '%1의 %2', inText, `${share}%`), tone: 'bad' });
-          else note.push(it.v > lim ? { text: tx(d, '%1 초과 · %2의 %3%', gap, inText, share), tone: 'bad' } : it.v < lim ? tx(d, '%1 남음 · %2의 %3%', gap, inText, share) : tx(d, '%1의 %2', inText, `${share}%`));
+          if (share == null) note.push({ text: tx(d, '%s 초과|한도', gap), tone: it.v > lim ? 'alert' : null });
+          else if (it.v > lim && it.exOn) note.push({ text: tx(d, '%1의 %2', inText, `${share}%`), tone: 'alert' });
+          else note.push(it.v > lim ? { text: tx(d, '%1 초과 · %2의 %3%', gap, inText, share), tone: 'alert' } : it.v < lim ? tx(d, '%1 남음 · %2의 %3%', gap, inText, share) : tx(d, '%1의 %2', inText, `${share}%`));
         }
         const tb = tipBody({ value: it.v == null ? tx(d, '데이터 없음') : show(f, it.v), note }, it.name);
         return { x: r.left + it.cx, y: r.top + Math.min(it.yv, yl) - 6, label: it.name, value: tb.node, text: tb.text };

@@ -95,7 +95,8 @@
     card.append(sr);
 
     // 그림(아래부터): 짚은 줄의 띠 · 점선과 그 끝의 마감 · 막대 · 이름과 값
-    const band = svgEl('rect', { class: 'vzb-bf-band', rx: 4 });
+    const band = svgEl('rect', { class: 'vzb-bf-band' });
+    let RBAR = 4;   // 막대 바깥 끝과 띠의 모서리(--vzb-radius-mark)
     const gTail = svgEl('g', {}), gBar = svgEl('g', {}), gTxt = svgEl('g', {});
     const draw = (it) => {
       it.bar = [0, 1].map((s) => svgEl('path', { class: `vzb-bf-bar ${s ? 'is-r' : 'is-l'}` }));
@@ -131,6 +132,8 @@
     let scene = before(card), moving = false, lost = [], m0 = 0, sB = null, sH = null, sT = null, T_BODY = 0, T_HH = 0;
     function layout(w, h) {
       W = w; H = h;
+      RBAR = len(card, 'radius-mark', 4);
+      band.setAttribute('rx', RBAR);
       svg.setAttribute('width', w);
       svg.setAttribute('height', h);
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
@@ -179,11 +182,12 @@
       return [hx + dir * x * g, y];   // 줄마다 제자리에서 가로로만 접힙니다(위아래로 벌어지면 줄마다 각이 달라 비뚤어져 보입니다)
     }
     const angleAt = (r) => TH[Math.max(0, Math.min(S, Math.round((r / span) * S)))];
-    // 날개 위의 막대 한 조각(경첩에서 r0부터 r1까지): 날개가 휘어 있으면 마디마다 꺾어 그리고, 바깥 끝만 4px 둥급니다.
+    // 날개 위의 막대 한 조각(경첩에서 r0부터 r1까지): 날개가 휘어 있으면 마디마다 꺾어 그리고, 바깥 끝만 둥급니다.
+    // 바깥 끝과 짚은 줄의 띠는 --vzb-radius-mark(비우면 4px)를 따릅니다(RBAR, layout에서 읽습니다).
     const pts = (a) => a.map((q) => `${fx(q[0])},${fx(q[1])}`).join('L');
     function slab(hx, dir, r0, r1, yc, ins = 0) {
       if (r1 - r0 < 0.5) return '';
-      const hh = hh0 - ins, rr = Math.min(4, (r1 - r0) / 2, hh), rs = [r0], ds = span / S;
+      const hh = hh0 - ins, rr = Math.min(RBAR, (r1 - r0) / 2, hh), rs = [r0], ds = span / S;
       if (!flat) for (let i = Math.floor(r0 / ds) + 1; i * ds < r1 - rr - 0.5; i++) rs.push(i * ds);
       rs.push(r1 - rr);
       const top = rs.map((r) => proj(hx, dir, r, yc - hh)), bot = rs.map((r) => proj(hx, dir, r, yc + hh)).reverse();

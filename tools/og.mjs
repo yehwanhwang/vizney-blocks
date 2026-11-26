@@ -12,9 +12,8 @@ const { chromium } = require('playwright');
 const root = new URL('..', import.meta.url).pathname;
 const BASE = process.env.OG_BASE || 'http://localhost:8765';
 
-// The card code as published, without the CDN font link (the page loads VZ Sans from docs/assets instead).
-const card = (lang, id) => readFileSync(join(root, `docs${lang === 'ko' ? '/ko' : ''}/cards/${id}.txt`), 'utf8')
-  .replace(/<link rel="stylesheet"[^>]*>\n?/, '');
+// The card code as published. The page sets --vzb-font to VZ Sans (docs/assets), so the card's own @font-face is never fetched (v0.81).
+const card = (lang, id) => readFileSync(join(root, `docs${lang === 'ko' ? '/ko' : ''}/cards/${id}.txt`), 'utf8');
 // Only JSON values change, as when a card is used. At the 400px of this image the English subtitle of Bar Overflow would
 // leave one word on a second line (the head keeps room for the replay button), so the image gives it a shorter one.
 const SHORT = ['against a $40K monthly budget', '$40K monthly budget'];

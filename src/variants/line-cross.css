@@ -1,0 +1,33 @@
+/* Line Cross: 높이 2단위. 머리(제목 · 부제, 큰 숫자와 배지) 아래 남은 높이를 그래프가 채웁니다.
+   선은 2px 곧은 선이고, 짚을 항목만 첫째 데이터 색, 다른 선은 회색(--vzb-base)입니다. 선 끝 점(지름 8px · 짚을 항목 10px)과 짚은 기간의 점은
+   카드 바탕색 2px 테두리로 겹친 선과 떼어 냅니다. 선 끝 오른쪽에 이름(14px, 짚을 항목은 굵게)을 적어 범례를 대신합니다.
+   가로 눈금선은 옅은 선 두세 줄이고 눈금 값(12px)은 왼쪽에 적습니다. 기간 이름(12px)은 아래에 적고, 머리의 숫자가 가리키는 기간은 굵게 적습니다.
+   엇갈린 자리의 고리(지름 10px)와 알약 · 이음선은 글자색입니다. 데이터 색과 겨루지 않게 하기 위해서입니다. 알약은 그래프 위쪽 빈자리에 12px 굵은 글자로 적습니다.
+   선이 그어지는 움직임과 고리 · 알약 · 이름의 움직임은 스크립트가 그립니다. */
+.vzb-card[data-vzb="line-cross"] { min-height: max(var(--vzb-unit) * 2, 100%); }   /* 2단위가 바닥이고, 놓인 자리가 더 높으면 그 높이를 채웁니다 */
+.vzb-card[data-vzb="line-cross"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
+.vzb-lc-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: var(--vzb-radius-control, 50%); background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
+.vzb-lc-btn:hover { background: var(--vzb-other); }
+.vzb-lc-btn:focus-visible { outline: 2px solid var(--vzb-focus, var(--vzb-primary)); outline-offset: 2px; }
+.vzb-lc-ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-lc-num { font-variant-numeric: tabular-nums; }   /* 선을 따라 세는 동안 숫자 폭이 흔들리지 않게 */
+.vzb-lc.vzb-foot { padding-top: 12px; }
+.vzb-lc-plot { cursor: pointer; }
+.vzb-lc-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
+.vzb-lc-grid { stroke: var(--vzb-grid); stroke-width: 1; }
+.vzb-lc-tick { font-size: 12px; fill: var(--vzb-muted); font-variant-numeric: tabular-nums; }
+.vzb-lc-name { font-size: 12px; fill: var(--vzb-muted); }
+.vzb-lc-name.is-now, .vzb-lc-name.is-on { font-weight: 700; fill: var(--vzb-ink); }
+.vzb-lc-guide { stroke: var(--vzb-other); stroke-width: 1; }
+.vzb-lc-item { --vzb-c: var(--vzb-base); }
+.vzb-lc-item.is-focus, .vzb-lc-gone.is-focus { --vzb-c: var(--vzb-primary); }
+.vzb-lc-line { fill: none; stroke: var(--vzb-c, var(--vzb-base)); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-lc-head, .vzb-lc-dot { fill: var(--vzb-c); stroke: var(--vzb-card); stroke-width: 2; }
+.vzb-lc-lab { font-size: 14px; font-weight: 500; fill: var(--vzb-ink-2); paint-order: stroke; stroke: var(--vzb-card); stroke-width: 3px; stroke-linejoin: round; cursor: pointer; }   /* 눈금선이나 다른 선 위에서도 읽히게 카드 바탕색 테두리를 두릅니다 */
+.vzb-lc-item.is-focus .vzb-lc-lab { font-weight: 700; fill: var(--vzb-ink); }
+.vzb-lc-ring { fill: var(--vzb-card); stroke: var(--vzb-ink); stroke-width: 2; }
+.vzb-lc-pulse { fill: none; stroke: var(--vzb-ink); stroke-width: 1.5; }
+.vzb-lc-lead { stroke: var(--vzb-ink); stroke-width: 1; stroke-dasharray: 2 3; }
+.vzb-lc-pill { fill: var(--vzb-ink); }
+.vzb-lc-pillt { font-size: 12px; font-weight: 700; fill: var(--vzb-card); }
+.vzb-lc-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }

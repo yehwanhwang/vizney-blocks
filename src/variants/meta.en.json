@@ -49,6 +49,13 @@
     "url": "https://www.vizney.com/donut-chart-in-tableau/"
    }
   },
+  "line": {
+   "name": "Line Chart",
+   "guide": {
+    "name": "Line chart",
+    "url": "https://www.vizney.com/line-chart-in-tableau/"
+   }
+  },
   "control": {
    "name": "Controls",
    "intro": "Controls set the period, the ranges and the items of a screen, and download its data. They draw only the control, with no card head or frame, so you can put them anywhere, such as a filter bar above the charts or a page header. They fill the width of their slot and are as tall as the control itself. Their background is left empty, so pick `theme` to match the background they sit on (`dark` on a dark one), and write the name screen readers read in `label`. When the value changes, the card sends a `vzb-change` event (`detail: { name, value }`), and the current value is also written on the card as `data-vzb-value`. Listen for the event and change the text of the JSON inside a chart card, and that card draws again with the new data. The selected span and the thumbs are drawn in the text color so they do not compete with the data colors of the charts."
@@ -171,6 +178,17 @@
     "Typing in the search field keeps only the matching items (the rest fold away), and the matching letters turn bold with an underline that draws in. Case does not matter, and Korean names also match by initial consonants (ㄱ finds 경기, 강원, 경남…). A long list is hard to scan by eye. Select all and Clear act on the matches while you search. The list shows up to six rows and scrolls inside for more.",
     "Each change sends a `vzb-change` event. `detail.name` is `name` and `detail.value` is the picked items in `options` order (one name when `mode` is one). The current value is also in the card's `data-vzb-value`. The button and the list always share one width (300px, or the slot when it is narrower); the list floats over the content beside it instead of pushing it away, and opens upward when there is no room below. Set `\"align\": \"end\"` at the right end of the screen.",
     "Everything works from the keyboard. Enter, Space or the down arrow on the button opens the list with the focus in the search field; the up and down arrows (Page Up/Down for five rows) move between items and Enter picks. Esc clears the search, or closes the list when the search is empty. A picked row fills its box in the text color and draws a check, so it does not compete with the data colors of the charts."
+   ]
+  },
+  "line-cross": {
+   "when": "A card that draws the values of two items over time as two lines and points at the place where the lines cross. Use it to compare two things, such as app and web, your product and a competitor, or this year and last year, and to say when the order flipped and how far apart they are now. With several items where the ranking is the question, use Bump Race.",
+   "rules": [
+    "Put the period names in `labels` and 2 items in `items`, each with the value of every period in `values`. The card draws two lines only: a crossover happens between two lines, and with more lines it is no longer clear which crossover is being pointed at (when a filter leaves one item, that line is drawn alone). A null value breaks the line. Draw 13 months for a monthly trend.",
+    "Name the item to follow in `focus` (empty means the first item). Only that line takes the first data color and the other stays gray, with the names written at the line ends in place of a legend. The large number in the header is the last value of that item, and the badge right after it is how far it is above or below the other item, computed by the card (percentage points for a rate). The badge color follows `better` (up, down or neutral; up when empty). Click a line or the name at its end (on the keyboard, press Enter on the chart) to make that item the one in color with its number in the header, so the comparison can be read from either side.",
+    "The vertical scale does not start at zero: it fits the range of the values and leaves 25% of that range empty above and below, so the movement shows without being exaggerated. When every value is 0 or more the scale never goes below 0. The tick values on the left tell the reader the scale does not start at zero.",
+    "Every place the two lines cross gets a ring, and the last crossover also gets a pill in the empty band at the top that says when it happened (the first period after the lines crossed). The ring and the pill are in the text color so they do not compete with the data color. With no crossover the card draws the two lines without a ring.",
+    "When the card comes into view the two lines are drawn together in time order, and the names at the line ends, the number and the badge in the header follow them. At the last crossover the drawing pauses for a moment while the ring pops and the two names swap places, then it runs to the end. It stops on the last period, and the still frame reads as an ordinary line chart. It plays once; the replay button at the top right plays it again. When the data changes and the card redraws, it does not play from the start: the lines on screen move to their new places without overshooting, because a chart that is swapped whole cannot show which line changed and by how much. While they move, the ring follows the place where the two lines actually meet on screen, and a crossover that is new pops once after the lines arrive. Items with the same name are the same line. When `labels` change the card draws the new frame at once.",
+    "Hover the chart, or focus it and press the left and right arrow keys, to see both values of that period and the difference. The color of the difference means the same as the badge in the header. Playback pauses while the pointer is over the chart or it has keyboard focus."
    ]
   }
  }

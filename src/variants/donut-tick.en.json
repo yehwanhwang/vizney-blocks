@@ -1,0 +1,15 @@
+{
+  "title": "Revenue by Channel",
+  "subtitle": "Share of revenue, October 2026",
+  "lang": "en",
+  "format": "usd",
+  "focus": "Email",
+  "items": [
+    { "name": "Organic", "value": 182400 },
+    { "name": "Paid ads", "value": 120000 },
+    { "name": "Email", "value": 76800 },
+    { "name": "Social", "value": 52800 },
+    { "name": "Referral", "value": 28800 },
+    { "name": "Others", "value": 19200 }
+  ]
+}

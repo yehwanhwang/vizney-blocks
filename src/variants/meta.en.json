@@ -42,12 +42,29 @@
     "url": "https://www.vizney.com/butterfly-chart-in-tableau/"
    }
   },
+  "donut": {
+   "name": "Donut Chart",
+   "guide": {
+    "name": "Donut chart",
+    "url": "https://www.vizney.com/donut-chart-in-tableau/"
+   }
+  },
   "control": {
    "name": "Controls",
    "intro": "Controls set the period, the ranges and the items of a screen, and download its data. They draw only the control, with no card head or frame, so you can put them anywhere, such as a filter bar above the charts or a page header. They fill the width of their slot and are as tall as the control itself. Their background is left empty, so pick `theme` to match the background they sit on (`dark` on a dark one), and write the name screen readers read in `label`. When the value changes, the card sends a `vzb-change` event (`detail: { name, value }`), and the current value is also written on the card as `data-vzb-value`. Listen for the event and change the text of the JSON inside a chart card, and that card draws again with the new data. The selected span and the thumbs are drawn in the text color so they do not compete with the data colors of the charts."
   }
  },
  "cards": {
+  "donut-tick": {
+   "when": "Draws the make-up of a whole at one point in time as a donut, turns the picked slice to 12 o'clock and prints its share large in the middle. Use it to see how a total splits, such as revenue by channel or orders by payment method, and to point at one item at a time. For how much a share changed between two periods, use Waffle Flip.",
+   "rules": [
+    "List 2 to 6 items in `items`, largest first, each with `name` and `value` (the raw value, such as revenue or orders). The card computes the shares. Past six slices the thin ones become hard to tell apart, so group the small items as 'Others' and put it last.",
+    "Put the name of the item to point at in `focus` (the first item when empty). Only that slice takes the first data color; the rest run from dark gray to light gray in the order of `items`. Color on one slice only makes the picked slice read first.",
+    "The picked slice always starts at 12 o'clock and runs clockwise, because a slice is easiest to size when it starts there (like the minute hand: 25% ends at 3 o'clock, 50% at 6). Ticks every 5% run around the ring, longer at 25, 50 and 75%, so the end of the slice reads against them.",
+    "Pressing a legend row or a slice (or using the keyboard) turns the ring the short way until that slice stands at 12 o'clock. It ticks over one slice at a time, and the marker at 12 o'clock flicks at each tick. The number in the middle is the share of the slice at the marker, so the slices passing by show theirs for a moment. Only the position of the ring turns; the size of each slice stays the same.",
+    "When it comes into view it turns once from the first item to the `focus` item and stops. The stopped picture alone gives the share of the picked item (in the middle) and of every item (in the legend). The tooltip of a slice gives its raw value and what share of the total that is, to one decimal."
+   ]
+  },
   "date-picker": {
    "when": "A control that picks a period (a start and an end date), or a single date, on a calendar. Use it to filter a screen by a date, such as the order date or a reference date. At rest it is one button with the current period and its number of days; press it and fields to type the dates and a month calendar rise below it.",
    "rules": [

@@ -1,4 +1,4 @@
-/* Vizney Blocks v0.82 · © 2026 Vizney · MIT License · 카드 코드 안의 :where(:root) 블록과 같은 내용 */
+/* Vizney Blocks v0.83 · © 2026 Vizney · MIT License · 카드 코드 안의 :where(:root) 블록과 같은 내용 */
 /* Vizney Blocks 토큰: 내 페이지의 :root에 같은 변수를 다시 적으면 모든 카드에 적용됩니다. 카드 코드는 고치지 않습니다.
    내 화면에 맞출 때는 바탕(--vzb-card) · 글자(--vzb-ink) · 강조(--vzb-primary) · 서체(--vzb-font, --vzb-title-*) · 모서리(--vzb-radius*)를 적습니다.
    회색 단계(--vzb-ink-2 · muted · grid · track · other · base)와 배지 · 툴팁 색은 바탕 · 글자 · 뜻 색을 섞어 만들어 함께 따라옵니다. 따로 적으면 적은 값을 씁니다.

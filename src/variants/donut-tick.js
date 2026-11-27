@@ -48,11 +48,12 @@
     const legend = el('div', 'vzb-dk-legend');
     legend.setAttribute('role', 'radiogroup');
     legend.setAttribute('aria-label', d.title || tx(d, '항목'));
+    const ints0 = whole(items.map((it) => it.share));
     items.forEach((it) => {
       const b = el('button', 'vzb-dk-row');
       b.type = 'button';
       b.setAttribute('role', 'radio');
-      it.val = el('b');
+      it.val = el('b', null, `${ints0[it.k]}%`);   // 처음부터 적어 둡니다: 범례의 폭을 재서 도넛의 크기를 정하기 때문입니다
       b.append(el('i', `vzb-dk-key vzb-dk-c${it.k}`), el('span', null, it.name), it.val);
       b.addEventListener('click', () => choose(it.k));
       it.row = b;
@@ -181,6 +182,7 @@
       card.setAttribute('data-vzb-pick', items[k].name);
       say.textContent = `${items[k].name}: ${pct1(items[k].share)} (${show(f, items[k].value)})`;
       if (k !== goal || k !== shown) go(k);
+      label();
     }
 
     // 옮겨 가기(데이터가 바뀌어 다시 그릴 때): 앞 카드가 넘긴 조각의 크기와 고리의 자리에서 새 크기로 갑니다. 같은 이름의 항목이 같은 순서일 때만 잇습니다.
@@ -188,6 +190,7 @@
     function begin(prev) {
       if (!prev || !prev.inView || !Array.isArray(prev.names) || prev.names.length !== N || prev.names.some((n, k) => n !== items[k].name)) return;
       prev.sizes.forEach((x, k) => { sz[k].x = x; sz[k].v = prev.vel[k] || 0; });
+      { const t = prev.sizes.reduce((p, c) => p + Math.max(0, c), 0) || 1; sizes = prev.sizes.map((x) => Math.max(0, x) / t); }   // 넘어갈 조각의 폭은 지금 화면의 크기로 잽니다
       if (prev.shown >= 0 && prev.shown < N) { shown = prev.shown; off.x = prev.off; off.v = prev.offV; }
       moving = true;
       if (shown !== goal) go(goal);
@@ -256,7 +259,8 @@
     // 조각을 누르면 그 조각을 짚습니다. 키보드는 화살표로 조각을 옮겨 본 뒤 Enter나 스페이스로 짚습니다.
     plot.addEventListener('click', (e) => { const k = hit(e.clientX, e.clientY); if (k >= 0) choose(k); });
     plot.addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && tips.at() >= 0) { e.preventDefault(); choose(tips.at()); } });
-    plot.setAttribute('aria-label', tx(d, '%1. %2의 비중은 %3입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.', d.title || '', items[goal].name, pct1(items[goal].share)));
+    const label = () => plot.setAttribute('aria-label', tx(d, '%1. %2의 비중은 %3입니다. 좌우 화살표로 항목을 옮깁니다. 모든 값은 이어지는 표에 있습니다.', d.title || '', items[goal].name, pct1(items[goal].share)));
+    label();
 
     if (scene) { inView = !!scene.inView; begin(scene); scene = null; }
     onSize(foot, layout);

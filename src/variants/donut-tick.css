@@ -1,0 +1,46 @@
+/* Donut Tick: 높이 2단위. 머리 아래 남은 자리에 도넛과 범례를 둡니다. 도넛이 더 커지는 쪽으로 범례를 오른쪽(세로)이나 아래(가로)에 놓습니다.
+   도넛: 짚은 조각은 12시에서 시작하고, 첫째 데이터 색입니다. 나머지는 글자색을 50 · 40 · 31 · 23 · 16 · 10% 깐 회색 단계이고(항목마다 제 단계), 조각 사이는 카드 바탕색 2px 선으로 끊습니다.
+   고리 바깥에 5%마다 눈금을 긋고(25 · 50 · 75%는 길고 진하게), 12시에는 글자색 세모 표시를 둡니다. 가운데에는 12시에 걸린 조각의 비중(34px, 구멍이 작으면 18px)과 이름(12px)을 적습니다.
+   범례의 줄은 그 항목을 짚는 단추입니다(높이 32px, 머리 안 조작부와 같은 크기). 짚은 줄은 옅은 바탕을 깔고 견본이 첫째 색이 됩니다.
+   고리가 도는 움직임과 표시가 튕기는 움직임은 스크립트가 그립니다. */
+.vzb-card[data-vzb="donut-tick"] { min-height: max(var(--vzb-unit) * 2, 100%); }   /* 2단위가 바닥이고, 놓인 자리가 더 높으면 그 높이를 채웁니다 */
+.vzb-dk-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
+.vzb-dk.vzb-foot { flex: 1 1 0; display: flex; align-items: center; justify-content: center; gap: 12px; min-width: 0; min-height: 128px; margin-top: 0; padding-top: 16px; }   /* 도넛의 크기는 스크립트가 이 자리에 맞춰 정합니다 */
+.vzb-dk.is-stack { flex-direction: column; gap: 12px; }
+.vzb-dk-plot { flex: none; }
+.vzb-dk-svg { display: block; overflow: visible; }
+.vzb-dk-arc { fill: var(--vzb-ink); stroke: var(--vzb-card); stroke-width: 2; stroke-linejoin: round; cursor: pointer; transition: opacity var(--vzb-fade); }   /* 색은 째깍 넘어가는 순간에 바로 바뀝니다(서서히 바뀌면 지나가는 조각마다 탁한 중간색이 남습니다) */
+.vzb-dk-arc.vzb-dk-c0 { fill-opacity: 0.5; }
+.vzb-dk-arc.vzb-dk-c1 { fill-opacity: 0.4; }
+.vzb-dk-arc.vzb-dk-c2 { fill-opacity: 0.31; }
+.vzb-dk-arc.vzb-dk-c3 { fill-opacity: 0.23; }
+.vzb-dk-arc.vzb-dk-c4 { fill-opacity: 0.16; }
+.vzb-dk-arc.vzb-dk-c5 { fill-opacity: 0.1; }
+.vzb-dk-arc.is-pick { fill: var(--vzb-primary); fill-opacity: 1; }
+.vzb-dk-svg.is-hover .vzb-dk-arc:not(.is-on) { opacity: 0.35; }
+.vzb-dk-tick { stroke: var(--vzb-ink); stroke-opacity: 0.3; stroke-width: 1; stroke-linecap: round; }
+.vzb-dk-tick.is-major { stroke-opacity: 0.7; stroke-width: 1.5; }
+.vzb-dk-mark { fill: var(--vzb-ink); stroke: var(--vzb-ink); stroke-width: 1; stroke-linejoin: round; }
+.vzb-dk-mid { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; text-align: center; }
+.vzb-dk-num { font-size: 34px; line-height: 40px; letter-spacing: -0.02em; white-space: nowrap; }
+.vzb-dk-num .vzb-unit { margin-left: 2px; }
+.vzb-dk-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; line-height: 16px; color: var(--vzb-muted); }
+.vzb-dk-mid.is-small .vzb-dk-num { font-size: 18px; line-height: 24px; font-weight: 700; letter-spacing: 0; }
+.vzb-dk-mid.is-small .vzb-unit { margin-left: 1px; font-size: 12px; }
+.vzb-dk-legend { flex: 0 1 auto; display: flex; flex-direction: column; min-width: 0; }
+.vzb-dk.is-stack .vzb-dk-legend { display: grid; justify-content: center; column-gap: 4px; max-width: 100%; }   /* 아래에 둘 때는 줄을 맞춘 격자(칸 수는 스크립트가 폭에 맞춰 정합니다) */
+.vzb-dk-row { display: flex; align-items: center; gap: 6px; min-width: 0; height: 32px; padding: 0 8px 0 6px; border: 0; border-radius: var(--vzb-radius-control, 8px); background: none; color: var(--vzb-ink-2); font: 400 14px/20px var(--vzb-font); text-align: left; white-space: nowrap; cursor: pointer; transition: background-color var(--vzb-fade), color var(--vzb-fade), opacity var(--vzb-fade); }
+.vzb-dk-row > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.vzb-dk-row b { margin-left: auto; padding-left: 8px; font-weight: 700; color: var(--vzb-ink); font-variant-numeric: tabular-nums; }
+.vzb-dk-row:hover, .vzb-dk-row.is-hot { color: var(--vzb-ink); }
+.vzb-dk-row.is-on { color: var(--vzb-ink); background: var(--vzb-track); }
+.vzb-dk-row:focus-visible { outline: 2px solid var(--vzb-focus, var(--vzb-primary)); outline-offset: 2px; }
+.vzb-dk-legend.is-hover .vzb-dk-row:not(.is-hot) { opacity: 0.45; }
+.vzb-dk-key { flex: none; width: 10px; height: 10px; border-radius: min(var(--vzb-radius-mark, 2px), 2px); background: var(--vzb-ink); }
+.vzb-dk-key.vzb-dk-c0 { opacity: 0.5; }
+.vzb-dk-key.vzb-dk-c1 { opacity: 0.4; }
+.vzb-dk-key.vzb-dk-c2 { opacity: 0.31; }
+.vzb-dk-key.vzb-dk-c3 { opacity: 0.23; }
+.vzb-dk-key.vzb-dk-c4 { opacity: 0.16; }
+.vzb-dk-key.vzb-dk-c5 { opacity: 0.1; }
+.vzb-dk-row.is-on .vzb-dk-key { background: var(--vzb-primary); opacity: 1; }

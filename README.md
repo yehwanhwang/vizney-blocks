@@ -43,11 +43,12 @@ Copy-paste HTML cards: charts you read through their motion, and the dashboard c
 | [Range Slider](https://blocks.vizney.com/ko/cards/range-slider.html) | 컨트롤 | 주문 금액이나 수량처럼 이어지는 값으로 화면을 거를 때. 끄는 동안 범위에 드는 분포가 레일 위에 뜨고, 값을 눌러 금액을 직접 칠 수 있습니다 |
 | [Filter Chips](https://blocks.vizney.com/ko/cards/filter-chips.html) | 컨트롤 | 채널이나 지역처럼 몇 개 안 되는 이름으로 화면을 거를 때. 전체 칩이 지금 몇 개를 골랐는지 보여 줍니다 |
 | [Select Menu](https://blocks.vizney.com/ko/cards/select-menu.html) | 컨트롤 | 국가 · 지역 · 매장처럼 이름이 수십 개인 필터. 검색하면 맞는 항목만 남고(한글 초성 검색), 항목마다 데이터 양을 막대로 보여 줍니다 |
+| [Segment Toggle](https://blocks.vizney.com/ko/cards/segment-toggle.html) | 컨트롤 | 일 · 주 · 월 같은 단위나 매출 · 주문 수 · 고객 수 같은 지표처럼 둘에서 다섯 가운데 하나만 고를 때. 알약이 고른 자리로 미끄러져 가고, 잡고 끌어도 됩니다 |
 | [Download Button](https://blocks.vizney.com/ko/cards/download-button.html) | 컨트롤 | 화면에 있는 차트 카드의 지금 데이터를 CSV · JSON · PNG로 받을 때 |
 
 카드마다의 규칙과 필드는 [llms.txt](https://blocks.vizney.com/ko/llms.txt)의 그 카드 줄에 있습니다.
 
-v0.56에서 이전 방향의 카드와 차트 페이지를 모두 지웠습니다. 지금 있는 열세 장이 전부이고, 카드는 하나씩 다시 더해 갑니다. 갤러리를 다시 채우는 동안에는 카드 이름이 바뀌면 id와 주소도 함께 바뀌고, 예전 주소는 남기지 않습니다(없는 주소는 첫 화면으로 안내하는 404 화면이 받습니다). 지운 내용은 [releases/v0.56.md](releases/v0.56.md)에 있습니다.
+v0.56에서 이전 방향의 카드와 차트 페이지를 모두 지웠습니다. 지금 있는 열네 장이 전부이고, 카드는 하나씩 다시 더해 갑니다. 갤러리를 다시 채우는 동안에는 카드 이름이 바뀌면 id와 주소도 함께 바뀌고, 예전 주소는 남기지 않습니다(없는 주소는 첫 화면으로 안내하는 404 화면이 받습니다). 지운 내용은 [releases/v0.56.md](releases/v0.56.md)에 있습니다.
 
 ## 컨트롤과 차트 잇기
 

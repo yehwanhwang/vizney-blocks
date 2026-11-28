@@ -1,4 +1,4 @@
-/* Vizney Blocks v0.85 · © 2026 Vizney · MIT License · the same content as the :where(:root) block in the card code */
+/* Vizney Blocks v0.86 · © 2026 Vizney · MIT License · the same content as the :where(:root) block in the card code */
 /* Vizney Blocks tokens: re-declare the same variables on your page's :root and they apply to every card. The card code stays as it is.
    To match your screen, set the background (--vzb-card), the text (--vzb-ink), the accent (--vzb-primary), the type (--vzb-font, --vzb-title-*) and the corners (--vzb-radius*).
    The gray steps (--vzb-ink-2 · muted · grid · track · other · base) and the badge and tooltip colors are mixed from the background, the text and the meaning colors, so they follow. Set one yourself and yours is used.

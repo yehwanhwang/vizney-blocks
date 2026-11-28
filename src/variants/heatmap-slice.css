@@ -1,22 +1,20 @@
 /* Heatmap Slice: 높이 2단위. 머리(제목 · 부제, 큰 숫자와 평균 대비 · 칸 이름) 아래 남은 높이를 위 막대 · 칸 · 오른쪽 막대가 나눠 씁니다.
-   칸은 글자색을 값만큼 카드 바탕색에 섞은 회색 단계이고(스크립트가 칸마다 진하기를 --vzb-u · --vzb-t로 적습니다), 칸 사이는 2px입니다. 값이 없는 칸은 트랙 회색 테두리만 둡니다.
-   짚은 칸의 행과 열만 같은 진하기의 첫째 데이터 색(--vzb-primary)으로 칠합니다. 강조는 색 하나로 하기 때문입니다.
-   위 막대(짚은 행)와 오른쪽 막대(짚은 열)는 회색(--vzb-base)이고, 짚은 칸의 막대만 첫째 데이터 색입니다. 짚은 칸에는 글자색 2px 테두리를 두릅니다.
-   행 이름(왼쪽) · 열 이름(아래) · 범례는 12px 보조 글자이고, 짚은 행 · 열의 이름은 굵게 적습니다. 테두리와 막대의 움직임은 스크립트가 그립니다. */
+   칸은 첫째 데이터 색(--vzb-primary)을 단계의 몫(--vzb-p, 스크립트가 9 · 29 · 51 · 75 · 100%로 적습니다)만큼 카드 바탕색에 섞어 칠하고, 칸 사이는 2px입니다.
+   짚은 칸의 행과 열(.is-on)은 그 몫 그대로, 나머지 칸은 몫의 42%만 섞어 옅게 깝니다. 모든 칸에 색이 있으면서 짚은 줄이 또렷하게 하기 위해서입니다.
+   값이 없는 칸은 트랙 회색 테두리만 둡니다. 위 막대(짚은 행)와 오른쪽 막대(짚은 열)는 그 막대가 나타내는 칸과 같은 색입니다.
+   짚은 칸과 그 칸의 막대에는 글자색 테두리를 두릅니다. 행 이름(왼쪽) · 열 이름(아래) · 범례는 12px 보조 글자이고, 짚은 행 · 열의 이름은 굵게 적습니다.
+   테두리와 막대의 움직임은 스크립트가 그립니다. */
 .vzb-card[data-vzb="heatmap-slice"] { min-height: max(var(--vzb-unit) * 2, 100%); }   /* 2단위가 바닥이고, 놓인 자리가 더 높으면 그 높이를 채웁니다 */
 .vzb-hl-num { font-variant-numeric: tabular-nums; }
 .vzb-hl.vzb-foot { padding-top: 12px; }
 .vzb-hl-plot { cursor: crosshair; touch-action: pan-y; }
 .vzb-hl-plot:focus-visible { outline: 2px solid var(--vzb-focus, var(--vzb-primary)); outline-offset: 4px; border-radius: min(var(--vzb-radius), 4px); }
 .vzb-hl-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
-/* 칸: 글자색을 진하기(--vzb-u)만큼 카드 바탕색에 섞은 회색 단계. 짚은 행과 열(.is-on)만 첫째 데이터 색을 진하기(--vzb-t)만큼 섞어 칠합니다. */
-.vzb-hl-cell { fill: color-mix(in srgb, var(--vzb-ink) calc(var(--vzb-u, 0) * 100%), var(--vzb-card)); }
-.vzb-hl-cell.is-on { fill: color-mix(in srgb, var(--vzb-primary) calc(var(--vzb-t, 0) * 100%), var(--vzb-card)); }
-/* 어두운 바탕(Vizney 노랑): 노랑을 검정에 옅게 섞으면 올리브색으로 탁해지므로, 낮은 값은 회색으로 두고 노랑은 높은 값에서만 진하게 올립니다(회색 → 금색 → 노랑). */
-:where(.vzb-dark) .vzb-hl-cell.is-on { fill: color-mix(in srgb, var(--vzb-primary) calc(var(--vzb-t2, 0) * 100%), color-mix(in srgb, var(--vzb-ink) calc(var(--vzb-u, 0) * 100%), var(--vzb-card))); }
+.vzb-hl-cell { fill: color-mix(in srgb, var(--vzb-primary) max(6%, calc(var(--vzb-p, 0%) * var(--vzb-k, 0.42))), var(--vzb-card)); }   /* 가장 옅은 칸도 바탕에 묻히지 않게 6% 밑으로는 내리지 않습니다 */
+.vzb-hl-cell.is-on { --vzb-k: 1; }
 .vzb-hl-cell.is-null { fill: none; stroke: var(--vzb-track); stroke-width: 1; }
-.vzb-hl-bar { fill: var(--vzb-base); }
-.vzb-hl-bar.is-on { fill: var(--vzb-primary); }
+.vzb-hl-bar { fill: color-mix(in srgb, var(--vzb-primary) var(--vzb-p, 29%), var(--vzb-card)); }
+.vzb-hl-bar.is-on { stroke: var(--vzb-ink); stroke-width: 3; paint-order: stroke; stroke-linejoin: round; }   /* 바깥으로 1.5px만 보입니다 */
 .vzb-hl-base { stroke: var(--vzb-grid); stroke-width: 1; }
 .vzb-hl-box { fill: none; stroke: var(--vzb-ink); stroke-width: 2; }
 .vzb-hl-name { font-size: 12px; fill: var(--vzb-muted); }

@@ -1,7 +1,8 @@
   // Heatmap Slice: 두 갈래(요일 × 시간대 같은 rows × cols)로 나눈 값을 칸의 진하기로 그리고, 짚은 칸의 행과 열을 막대로 세워 보여 주는 히트맵입니다.
-  // 칸은 값만큼 진한 회색 단계로 칠하고(0에서 가장 큰 값까지), 짚은 칸의 행과 열만 같은 진하기의 첫째 데이터 색으로 칠합니다. 진하기로는 어디에 몰리는지를 읽고, 크기는 막대로 견줍니다.
+  // 칸은 첫째 데이터 색의 다섯 단계로 칠합니다(0에서 가장 큰 값까지를 같은 폭으로 끊습니다). 짚은 칸의 행과 열은 단계 그대로, 나머지 칸은 같은 색을 옅게 깔아 짚은 줄이 또렷합니다.
+  // 색으로는 어디에 몰리는지를 읽고, 크기는 막대로 견줍니다.
   // 짚은 칸의 행은 그리드 위에 열마다 세로 막대로, 짚은 칸의 열은 그리드 오른쪽에 행마다 가로 막대로 섭니다. 두 막대는 같은 눈금(0에서 가장 큰 값)을 써서 서로 견줄 수 있습니다.
-  // 짚은 칸에는 글자색 테두리를 두르고, 막대 가운데 짚은 칸의 막대만 첫째 데이터 색으로 칠합니다. 처음에는 focus(["행 이름", "열 이름"], 비우면 가장 높은 칸)가 짚여 있습니다.
+  // 막대는 그 막대가 나타내는 칸과 같은 색이고, 짚은 칸과 그 칸의 막대에는 글자색 테두리를 두릅니다. 처음에는 focus(["행 이름", "열 이름"], 비우면 가장 높은 칸)가 짚여 있습니다.
   // 머리의 큰 숫자는 짚은 칸의 값이고, 뒤에 그 값이 전체 평균의 몇 배인지와 어느 칸인지(행 · 열 이름)를 적습니다(카드가 계산합니다).
   // 움직임: 칸에 마우스를 올리면 그 칸을 잠시 짚어 보이고, 누르거나(터치 포함) 포커스한 뒤 화살표를 누르면 그 칸에 짚은 자리가 머뭅니다. 마우스가 그래프를 벗어나면 머물던 칸으로 돌아갑니다. 색이 그 행과 열로 옮겨 가고 테두리가 그 칸으로 미끄러져 가며(Settle),
   // 막대는 새 행 · 열의 값으로 옮겨 갑니다(Move: 넘치지 않음). 행을 옮기면 위 막대가, 열을 옮기면 오른쪽 막대가 바뀌어 줄마다 모양이 어떻게 다른지 보입니다.
@@ -21,9 +22,9 @@
     if (!nums.length) throw new Error(tx(d, 'rows · cols와 values를 확인하세요.'));
     const vmax = Math.max(...nums), avg = nums.reduce((a, b) => a + b, 0) / nums.length;
     const frac = (v) => (v == null || vmax <= 0 ? 0 : v / vmax);
-    const tone = (v) => (v == null ? 0 : 0.08 + 0.92 * Math.pow(frac(v), 0.9));   // 칸의 진하기(0~1). 색으로 바꾸는 식은 heatmap-slice.css에 있습니다
-    // 칸에 진하기를 적습니다: --vzb-t는 진하기 그대로, --vzb-t2와 --vzb-u는 어두운 바탕(Vizney 노랑)에서 쓰는 첫째 색과 회색의 몫입니다.
-    const shade = (node, a) => { node.style.setProperty('--vzb-t', a.toFixed(3)); node.style.setProperty('--vzb-t2', Math.pow(a, 2.2).toFixed(3)); node.style.setProperty('--vzb-u', (0.06 + 0.5 * a).toFixed(3)); };
+    // 칸의 단계: 0에서 가장 큰 값까지를 같은 폭의 다섯 단계로 끊습니다. 단계마다 첫째 데이터 색을 섞는 몫(STEPS)이 칸의 진하기입니다.
+    const STEPS = [0.09, 0.29, 0.51, 0.75, 1], stepOf = (v) => Math.min(4, Math.floor(frac(v) * 5)), tone = (v) => (v == null ? 0 : STEPS[stepOf(v)]);
+    const shade = (node, a) => node.style.setProperty('--vzb-p', `${(a * 100).toFixed(1)}%`);   // 색으로 바꾸는 식은 heatmap-slice.css에 있습니다
     const toneTo = vals.map(tone), key = `${rows.join('\n')}\t${cols.join('\n')}`;
     const peak = vals.reduce((b, v, i) => (v != null && (b < 0 || v > vals[b]) ? i : b), -1), where = (i) => `${rows[Math.floor(i / C)]} · ${cols[i % C]}`;
     // 짚은 칸: 보는 사람이 짚던 칸(카드 요소의 data-vzb-focus)이 있으면 그것, 없으면 focus, 그것도 없으면 가장 높은 칸
@@ -90,8 +91,8 @@
     const box = svgEl('rect', { class: 'vzb-hl-box' });
     const rowT = rows.map((name) => svgText(0, 0, name, 'vzb-hl-name', 'end')), colT = cols.map((name) => svgText(0, 0, name, 'vzb-hl-name', 'middle'));
     const topCap = svgText(0, 0, '', 'vzb-hl-name is-on', 'end'), sideCap = svgText(0, 0, '', 'vzb-hl-name is-on', 'middle');
-    const STEPS = [0.08, 0.31, 0.54, 0.77, 1], legG = svgEl('g', {}), legLo = svgText(0, 0, tx(d, '적음'), 'vzb-hl-name', 'end'), legHi = svgText(0, 0, tx(d, '많음'), 'vzb-hl-name', 'start');
-    const legB = STEPS.map((a) => { const b = svgEl('rect', { class: 'vzb-hl-cell', width: 10, height: 10 }); shade(b, a); return b; });
+    const legG = svgEl('g', {}), legLo = svgText(0, 0, tx(d, '적음'), 'vzb-hl-name', 'end'), legHi = svgText(0, 0, tx(d, '많음'), 'vzb-hl-name', 'start');
+    const legB = STEPS.map((a) => { const b = svgEl('rect', { class: 'vzb-hl-cell is-on', width: 10, height: 10 }); shade(b, a); return b; });
     legG.append(legLo, ...legB, legHi);
     svg.append(baseT, baseR, cellsG, ...topB, ...sideB, box, ...rowT, ...colT, topCap, sideCap, legG);
 
@@ -113,8 +114,10 @@
         tn.classList.toggle('is-on', c === pc);
         tn.setAttribute('opacity', c === pc || (c % every === 0 && Math.abs(c - pc) >= every) ? 1 : 0);
       });
-      topB.forEach((b, c) => b.classList.toggle('is-on', c === pc));
-      sideB.forEach((b, r) => b.classList.toggle('is-on', r === pr));
+      // 막대는 그 막대가 나타내는 칸과 같은 단계의 색입니다(가장 낮은 단계는 바탕에 묻히므로 둘째 단계로 칠합니다).
+      const barTone = (i) => STEPS[Math.max(1, vals[i] == null ? 1 : stepOf(vals[i]))];
+      topB.forEach((b, c) => { b.classList.toggle('is-on', c === pc); shade(b, barTone(pr * C + c)); });
+      sideB.forEach((b, r) => { b.classList.toggle('is-on', r === pr); shade(b, barTone(r * C + pc)); });
       topCap.textContent = rows[pr];
       sideCap.textContent = cols[pc];
     }

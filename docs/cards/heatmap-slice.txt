@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.87 · Heatmap · Heatmap Slice (heatmap-slice)
+<!-- Vizney Blocks v0.88 · Heatmap · Heatmap Slice (heatmap-slice)
      https://blocks.vizney.com/cards/heatmap-slice.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <style>

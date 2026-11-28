@@ -362,12 +362,12 @@ const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 // v0.52: the controls are drawn bare (no head, no frame) in the middle of the tile, like the units of a motion gallery.
 // v0.49: the gallery is built one block at a time. v0.56: the gallery is the whole list; a card that is not here does not exist.
 // Blocks that move (data-vzb-loop) replay on the first screen instead of stopping at the end.
-const GALLERY = ['bar-overflow', 'waffle-flip', 'bump-race', 'waterfall-walk', 'funnel-wave', 'butterfly-fold', 'date-picker', 'range-slider', 'filter-chips', 'select-menu', 'download-button', 'donut-tick', 'line-cross', 'segment-toggle'];
+const GALLERY = ['bar-overflow', 'waffle-flip', 'bump-race', 'waterfall-walk', 'funnel-wave', 'butterfly-fold', 'date-picker', 'range-slider', 'filter-chips', 'select-menu', 'download-button', 'donut-tick', 'line-cross', 'segment-toggle', 'heatmap-slice'];
 const LOOP = new Set(GALLERY);
 // v0.53: tile widths follow the block. On the 3-column gallery a chart that reads along a long axis (13 months, a 5 × 20 waffle)
 // takes 2 columns; a chart that reads better compact (a donut, a single figure) and every control take 1. The tiles are laid out
 // so that rows alternate 2 + 1 and 1 + 2. A wide block left without a partner sits alone; narrow blocks left over go three to a row.
-const SPAN = { 'bar-overflow': 2, 'waffle-flip': 2, 'bump-race': 2, 'waterfall-walk': 2, 'funnel-wave': 2, 'butterfly-fold': 2, 'line-cross': 2 };
+const SPAN = { 'bar-overflow': 2, 'waffle-flip': 2, 'bump-race': 2, 'waterfall-walk': 2, 'funnel-wave': 2, 'butterfly-fold': 2, 'line-cross': 2, 'heatmap-slice': 2 };
 const wideOf = (id) => SPAN[id] === 2;
 const ORDER = (() => {
   const wide = GALLERY.filter(wideOf), narrow = GALLERY.filter((id) => !wideOf(id)), out = [];
@@ -498,6 +498,10 @@ const FIELD_OVERRIDE = {
   'donut-tick': {
     ko: { title: '무엇의 구성비인지(예: 채널별 매출 비중)', subtitle: '기준과 시점(예: 매출 기준, 2026년 10월)', items: '항목 2~6개를 큰 순서로. 항목마다 name과 value(매출 · 주문 수 같은 원래 값, 0 이상). 비중은 카드가 계산한다. 작은 항목은 기타로 묶어 마지막에', focus: '짚을 항목의 name. 그 조각이 12시에 서고 첫째 데이터 색이 된다. 비우면 첫 항목', unit: '값 뒤에 붙는 말(예: 건). 툴팁과 표에 쓴다' },
     en: { title: 'what the whole is (e.g. Revenue by Channel)', subtitle: 'the basis and the point in time (e.g. Share of revenue, October 2026)', items: '2 to 6 items, largest first, each with name and value (the raw value such as revenue or orders, 0 or more); the card computes the shares. Group small items as Others and put it last', focus: 'the name of the item to point at: its slice stands at 12 o\'clock in the first data color. The first item when empty', unit: 'the word after a value (e.g. orders), used in the tooltip and the table' },
+  },
+  'heatmap-slice': {
+    ko: { title: '무엇의 값인지(예: 요일 · 시간대별 주문)', subtitle: '값의 뜻과 기간(예: 시간당 주문 수, 최근 13주)', rows: '행 이름(예: 요일)', cols: '열 이름(예: 시간대)', values: '행마다 열 순서대로 적은 값의 배열(0 이상, 없는 칸은 null). 막대의 길이와 평균 대비는 카드가 계산한다', focus: '처음 짚을 칸. ["행 이름", "열 이름"]. 비우면 가장 높은 칸' },
+    en: { title: 'what the values are (e.g. Orders by Hour)', subtitle: 'what a value means and the period (e.g. Orders per hour by weekday, last 13 weeks)', rows: 'the row names (e.g. weekdays)', cols: 'the column names (e.g. hours)', values: 'one array per row with the value of each column in order (0 or more, null for a missing cell); the card works out the bars and the comparison with the average', focus: 'the cell picked at first, as ["row name", "column name"]; the highest cell when empty' },
   },
   'line-cross': {
     ko: { title: '무엇의 값인지(예: 월별 주문 수)', subtitle: '견주는 두 항목과 기간(예: 앱 · 웹, 2025년 11월 – 2026년 11월)', labels: '기간 이름. 월별 추이는 13개월', focus: '짚을 항목의 name. 그 선이 첫째 데이터 색이 되고 머리의 큰 숫자가 그 항목의 마지막 값이 된다. 비우면 첫 항목', items: '항목 2개. 항목마다 name과 values(기간마다의 값, labels와 같은 개수, 없는 기간은 null). 엇갈린 자리와 차이는 카드가 계산한다', better: '배지와 툴팁의 차이 색: up(비우면, 많을수록 좋음) · down(적을수록 좋음) · neutral(회색)' },

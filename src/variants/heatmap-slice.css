@@ -1,0 +1,22 @@
+/* Heatmap Slice: 높이 2단위. 머리(제목 · 부제, 큰 숫자와 평균 대비 · 칸 이름) 아래 남은 높이를 위 막대 · 칸 · 오른쪽 막대가 나눠 씁니다.
+   칸은 첫째 데이터 색(--vzb-primary)을 값만큼 카드 바탕색에 섞어 칠하고(스크립트가 칸마다 진하기를 --vzb-t로 적습니다), 칸 사이는 2px입니다. 값이 없는 칸은 트랙 회색 테두리만 둡니다.
+   위 막대(짚은 행)와 오른쪽 막대(짚은 열)는 회색(--vzb-base)이고, 짚은 칸의 막대만 글자색입니다. 색은 칸이, 크기는 막대가 맡습니다.
+   짚은 행과 열에는 글자색 1.5px 테두리를 두릅니다. 행 이름(왼쪽) · 열 이름(아래) · 범례는 12px 보조 글자이고, 짚은 행 · 열의 이름은 굵게 적습니다.
+   테두리와 막대의 움직임은 스크립트가 그립니다. */
+.vzb-card[data-vzb="heatmap-slice"] { min-height: max(var(--vzb-unit) * 2, 100%); }   /* 2단위가 바닥이고, 놓인 자리가 더 높으면 그 높이를 채웁니다 */
+.vzb-hl-num { font-variant-numeric: tabular-nums; }
+.vzb-hl.vzb-foot { padding-top: 12px; }
+.vzb-hl-plot { cursor: crosshair; touch-action: pan-y; }
+.vzb-hl-plot:focus-visible { outline: 2px solid var(--vzb-focus, var(--vzb-primary)); outline-offset: 4px; border-radius: min(var(--vzb-radius), 4px); }
+.vzb-hl-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
+.vzb-hl-cell { fill: color-mix(in srgb, var(--vzb-primary) calc(var(--vzb-t, 0) * 100%), var(--vzb-card)); }
+/* 어두운 바탕(Vizney 노랑): 노랑을 검정에 옅게 섞으면 올리브색으로 탁해지므로, 낮은 값은 회색 단계로 밝히고 노랑은 높은 값에서만 진하게 올립니다(회색 → 금색 → 노랑). */
+:where(.vzb-dark) .vzb-hl-cell { fill: color-mix(in srgb, var(--vzb-primary) calc(var(--vzb-t2, 0) * 100%), color-mix(in srgb, var(--vzb-ink) calc(var(--vzb-u, 0) * 100%), var(--vzb-card))); }
+.vzb-hl-cell.is-null { fill: none; stroke: var(--vzb-track); stroke-width: 1; }
+.vzb-hl-bar { fill: var(--vzb-base); }
+.vzb-hl-bar.is-on { fill: var(--vzb-ink); }
+.vzb-hl-base { stroke: var(--vzb-grid); stroke-width: 1; }
+.vzb-hl-box { fill: none; stroke: var(--vzb-ink); stroke-width: 1.5; }
+.vzb-hl-name { font-size: 12px; fill: var(--vzb-muted); }
+.vzb-hl-name.is-on { font-weight: 700; fill: var(--vzb-ink); }
+.vzb-hl-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }

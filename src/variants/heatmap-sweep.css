@@ -1,0 +1,21 @@
+/* Heatmap Sweep: 높이 2단위. 머리(제목 · 부제, 큰 숫자와 평균 대비 · 칸 이름) 아래 남은 높이를 칸이 나눠 씁니다.
+   칸은 글자색(--vzb-ink)을 값만큼 진하게 깐 회색 단계이고(스크립트가 fill-opacity로 적습니다), 칸 사이는 2px입니다. 가장 높은 칸만 첫째 데이터 색입니다.
+   값이 없는 칸은 트랙 회색 테두리만 둡니다. 행 이름(왼쪽)과 열 이름(아래), 범례는 12px 보조 글자입니다.
+   짚은 칸에는 글자색 2px 테두리를 두르고 그 행 · 열 이름을 굵게 적습니다. 쓸고 지나가는 움직임과 가장 높은 칸의 튐은 스크립트가 그립니다. */
+.vzb-card[data-vzb="heatmap-sweep"] { min-height: max(var(--vzb-unit) * 2, 100%); }   /* 2단위가 바닥이고, 놓인 자리가 더 높으면 그 높이를 채웁니다 */
+.vzb-card[data-vzb="heatmap-sweep"] .vzb-hd { position: relative; padding-right: 40px; }   /* 오른쪽 위 다시 보기 단추 자리 */
+.vzb-hs-btn { position: absolute; top: -4px; right: 0; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: var(--vzb-radius-control, 50%); background: var(--vzb-track); color: var(--vzb-ink); cursor: pointer; }
+.vzb-hs-btn:hover { background: var(--vzb-other); }
+.vzb-hs-btn:focus-visible { outline: 2px solid var(--vzb-focus, var(--vzb-primary)); outline-offset: 2px; }
+.vzb-hs-ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.vzb-hs.vzb-foot { padding-top: 12px; }
+.vzb-hs-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
+.vzb-hs-cell { fill: var(--vzb-ink); }
+.vzb-hs-cell.is-null { fill: none; stroke: var(--vzb-track); stroke-width: 1; }
+.vzb-hs-cell.is-peak { fill: var(--vzb-primary); fill-opacity: 1; }
+.vzb-hs-scan { fill: var(--vzb-ink); fill-opacity: 0.06; }
+.vzb-hs-ring { fill: none; stroke: var(--vzb-ink); stroke-width: 2; }
+.vzb-hs-pulse { fill: none; stroke: var(--vzb-primary); stroke-width: 1.5; }
+.vzb-hs-name { font-size: 12px; fill: var(--vzb-muted); }
+.vzb-hs-name.is-on { font-weight: 700; fill: var(--vzb-ink); }
+.vzb-hs-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }

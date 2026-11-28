@@ -56,6 +56,13 @@
     "url": "https://www.vizney.com/line-chart-in-tableau/"
    }
   },
+  "heatmap": {
+   "name": "Heatmap",
+   "guide": {
+    "name": "Heatmap",
+    "url": "https://www.vizney.com/heatmap-in-tableau/"
+   }
+  },
   "control": {
    "name": "Controls",
    "intro": "Controls set the period, the ranges and the items of a screen, and download its data. They draw only the control, with no card head or frame, so you can put them anywhere, such as a filter bar above the charts or a page header. They fill the width of their slot and are as tall as the control itself. Their background is left empty, so pick `theme` to match the background they sit on (`dark` on a dark one), and write the name screen readers read in `label`. When the value changes, the card sends a `vzb-change` event (`detail: { name, value }`), and the current value is also written on the card as `data-vzb-value`. Listen for the event and change the text of the JSON inside a chart card, and that card draws again with the new data. The selected span and the thumbs are drawn in the text color so they do not compete with the data colors of the charts."
@@ -198,6 +205,17 @@
     "Every change sends a `vzb-change` event: `detail.name` is `name` and `detail.value` is the name of the picked item. The current value is also in `data-vzb-value` on the card. A drag sends the event once, on release.",
     "The picked item sits under a pill in the text color, so it does not compete with the data color of the charts. Pick another item and the pill slides there, and the labels it passes turn only as far as the pill covers them, so the change shows where it came from and where it went. The pill can also be dragged.",
     "Tab stops on the picked item; the left and right arrow keys pick the next one, and Home and End the first and last. Put the name screen readers read in `label`."
+   ]
+  },
+  "heatmap-sweep": {
+   "when": "A card that shows where values pile up across two dimensions, such as weekday by hour, as the shade of each cell, and points at the highest cell with color. Use it to scan a distribution with too many cells to read as a table, such as the hours when orders or visits peak, or region by product line. When every cell's exact value matters, a table is better.",
+   "rules": [
+    "Put the row names in `rows`, the column names in `cols`, and in `values` one array per row with the value of each column in order (0 or more; null for a missing cell). The columns are swept from left to right, so put the ordered dimension, such as the hour, in `cols`. Weekday by hour is 7 by 24 cells.",
+    "A cell is the text color laid on as heavily as its value, from 0 to the largest value, so the cells are steps of gray. Color goes to the highest cell alone: one scale of lightness is easier to compare than steps of several hues, and the highest cell stands out only when color is spared. The legend at the bottom right says darker means more.",
+    "The large number in the header is the value of the highest cell, followed by how many times the overall average it is and which cell it is (row and column name). The card computes all of it, so none of it goes in the JSON.",
+    "When the card comes into view the cells are painted column by column from the left. The highest cell so far takes the first data color, and when a higher one appears the color jumps to it and the number in the header rolls up, so the reader sees in turn where the day heats up and where it peaks. At the end the color rests on the highest cell of all, and the still frame reads as an ordinary heatmap. It plays once; the replay button at the top right plays it again.",
+    "When the data changes and the card redraws, it does not sweep from the start: every cell moves from the shade on screen to its new shade without overshooting. When the highest cell changes, the color jumps to it at once and pops once. When `rows` or `cols` change the card draws the new frame at once.",
+    "Hover a cell, or focus the chart and press the arrow keys (up and down for rows, left and right for columns), to see that cell's value and how it compares with the average. Playback pauses while the pointer is over the chart or it has keyboard focus."
    ]
   }
  }

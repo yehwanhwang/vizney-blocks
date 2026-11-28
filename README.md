@@ -39,7 +39,7 @@ Copy-paste HTML cards: charts you read through their motion, and the dashboard c
 | [Butterfly Fold](https://blocks.vizney.com/ko/cards/butterfly-fold.html) | 버터플라이 차트 | 여성 · 남성, 온라인 · 오프라인처럼 대비되는 두 그룹의 값을 항목마다 양쪽 막대로 견줄 때. 두 날개가 접혔다 펼쳐지고, 항목을 짚으면 적은 쪽에 반대쪽 색의 점선이 많은 쪽 길이까지 그어져 차이가 보입니다 |
 | [Donut Tick](https://blocks.vizney.com/ko/cards/donut-tick.html) | 도넛 차트 | 채널별 매출이나 결제 수단별 주문처럼 한 시점의 구성비에서 항목 하나씩 짚어 볼 때. 짚은 조각이 조각 하나씩 째깍 넘어가며 12시에 서고, 가운데에 그 비중을 크게 적습니다 |
 | [Line Cross](https://blocks.vizney.com/ko/cards/line-cross.html) | 라인 차트 | 앱과 웹, 자사와 경쟁사처럼 두 항목의 추이를 견주면서 언제 앞뒤가 바뀌었고 지금 얼마나 벌어졌는지 전할 때. 두 선이 시간 순서로 그어지다가 엇갈리는 자리에서 고리가 튀어 오르고, 머리의 숫자와 배지가 선을 따라 셉니다. |
-| [Heatmap Slice](https://blocks.vizney.com/ko/cards/heatmap-slice.html) | 히트맵 | 요일 × 시간대별 주문처럼 두 갈래로 나눈 값에서 어디에 몰리는지 보고, 한 줄 안에서 크기를 견줄 때. 칸을 짚으면 그 행과 열이 막대로 서고, 머리의 숫자가 그 칸의 값과 평균 대비를 적습니다. |
+| [Heatmap Slice](https://blocks.vizney.com/ko/cards/heatmap-slice.html) | 히트맵 | 요일 × 시간대별 주문처럼 두 갈래로 나눈 값에서 어디에 몰리는지 보고, 한 줄 안에서 크기를 견줄 때. 처음에는 열 · 행마다의 평균이 막대로 서고, 칸을 짚으면 그 행과 열이 막대로 서며 머리의 숫자가 그 칸의 값과 평균 대비를 적습니다. |
 | [Date Picker](https://blocks.vizney.com/ko/cards/date-picker.html) | 컨트롤 | 주문일이나 기준일처럼 날짜로 화면을 거를 때. 날짜 둘을 고르는 동안 기간과 일수가 따라오고, 고르면 띠가 시작일에서 끝일까지 그어집니다. 날짜를 직접 치거나 연월 제목을 눌러 먼 달 · 해로 바로 갈 수 있습니다 |
 | [Range Slider](https://blocks.vizney.com/ko/cards/range-slider.html) | 컨트롤 | 주문 금액이나 수량처럼 이어지는 값으로 화면을 거를 때. 끄는 동안 범위에 드는 분포가 레일 위에 뜨고, 값을 눌러 금액을 직접 칠 수 있습니다 |
 | [Filter Chips](https://blocks.vizney.com/ko/cards/filter-chips.html) | 컨트롤 | 채널이나 지역처럼 몇 개 안 되는 이름으로 화면을 거를 때. 전체 칩이 지금 몇 개를 골랐는지 보여 줍니다 |

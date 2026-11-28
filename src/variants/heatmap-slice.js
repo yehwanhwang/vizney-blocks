@@ -1,9 +1,9 @@
   // Heatmap Slice: 두 갈래(요일 × 시간대 같은 rows × cols)로 나눈 값을 칸의 진하기로 그리고, 짚은 칸의 행과 열을 막대로 세워 보여 주는 히트맵입니다.
-  // 칸은 첫째 데이터 색을 값만큼 진하게 칠합니다(0에서 가장 큰 값까지). 색으로는 어디에 몰리는지를 읽고, 크기는 막대로 견줍니다.
+  // 칸은 값만큼 진한 회색 단계로 칠하고(0에서 가장 큰 값까지), 짚은 칸의 행과 열만 같은 진하기의 첫째 데이터 색으로 칠합니다. 진하기로는 어디에 몰리는지를 읽고, 크기는 막대로 견줍니다.
   // 짚은 칸의 행은 그리드 위에 열마다 세로 막대로, 짚은 칸의 열은 그리드 오른쪽에 행마다 가로 막대로 섭니다. 두 막대는 같은 눈금(0에서 가장 큰 값)을 써서 서로 견줄 수 있습니다.
-  // 짚은 행과 열에는 글자색 테두리를 두르고, 막대 가운데 짚은 칸의 막대만 글자색으로 칠합니다. 처음에는 focus(["행 이름", "열 이름"], 비우면 가장 높은 칸)가 짚여 있습니다.
+  // 짚은 칸에는 글자색 테두리를 두르고, 막대 가운데 짚은 칸의 막대만 첫째 데이터 색으로 칠합니다. 처음에는 focus(["행 이름", "열 이름"], 비우면 가장 높은 칸)가 짚여 있습니다.
   // 머리의 큰 숫자는 짚은 칸의 값이고, 뒤에 그 값이 전체 평균의 몇 배인지와 어느 칸인지(행 · 열 이름)를 적습니다(카드가 계산합니다).
-  // 움직임: 칸에 마우스를 올리면 그 칸을 잠시 짚어 보이고, 누르거나(터치 포함) 포커스한 뒤 화살표를 누르면 그 칸에 짚은 자리가 머뭅니다. 마우스가 그래프를 벗어나면 머물던 칸으로 돌아갑니다. 테두리가 그 행과 열로 미끄러져 가고(Settle),
+  // 움직임: 칸에 마우스를 올리면 그 칸을 잠시 짚어 보이고, 누르거나(터치 포함) 포커스한 뒤 화살표를 누르면 그 칸에 짚은 자리가 머뭅니다. 마우스가 그래프를 벗어나면 머물던 칸으로 돌아갑니다. 색이 그 행과 열로 옮겨 가고 테두리가 그 칸으로 미끄러져 가며(Settle),
   // 막대는 새 행 · 열의 값으로 옮겨 갑니다(Move: 넘치지 않음). 행을 옮기면 위 막대가, 열을 옮기면 오른쪽 막대가 바뀌어 줄마다 모양이 어떻게 다른지 보입니다.
   // 화면에 보이면 막대가 바닥에서 한 번 자랍니다. 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 칸의 진하기와 막대가 화면에 있던 값에서 새 값으로 옮겨 가고, 짚은 칸은 이어 갑니다.
   // rows · cols나 카드 크기가 달라지면 옮겨 가지 않고 바로 그립니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 손을 대기 전까지 행마다 가장 높은 칸을 차례로 짚어 보입니다.
@@ -87,13 +87,13 @@
     const baseT = svgEl('line', { class: 'vzb-hl-base' }), baseR = svgEl('line', { class: 'vzb-hl-base' }), cellsG = svgEl('g', {});
     const cells = vals.map((v) => { const c = svgEl('rect', { class: `vzb-hl-cell${v == null ? ' is-null' : ''}` }); cellsG.append(c); return c; });
     const topB = cols.map(() => svgEl('path', { class: 'vzb-hl-bar' })), sideB = rows.map(() => svgEl('path', { class: 'vzb-hl-bar' }));
-    const rowBox = svgEl('rect', { class: 'vzb-hl-box' }), colBox = svgEl('rect', { class: 'vzb-hl-box' });
+    const box = svgEl('rect', { class: 'vzb-hl-box' });
     const rowT = rows.map((name) => svgText(0, 0, name, 'vzb-hl-name', 'end')), colT = cols.map((name) => svgText(0, 0, name, 'vzb-hl-name', 'middle'));
     const topCap = svgText(0, 0, '', 'vzb-hl-name is-on', 'end'), sideCap = svgText(0, 0, '', 'vzb-hl-name is-on', 'middle');
     const STEPS = [0.08, 0.31, 0.54, 0.77, 1], legG = svgEl('g', {}), legLo = svgText(0, 0, tx(d, '적음'), 'vzb-hl-name', 'end'), legHi = svgText(0, 0, tx(d, '많음'), 'vzb-hl-name', 'start');
     const legB = STEPS.map((a) => { const b = svgEl('rect', { class: 'vzb-hl-cell', width: 10, height: 10 }); shade(b, a); return b; });
     legG.append(legLo, ...legB, legHi);
-    svg.append(baseT, baseR, cellsG, ...topB, ...sideB, rowBox, colBox, ...rowT, ...colT, topCap, sideCap, legG);
+    svg.append(baseT, baseR, cellsG, ...topB, ...sideB, box, ...rowT, ...colT, topCap, sideCap, legG);
 
     const fx = (v) => v.toFixed(1);
     foot.style.minHeight = `${R * 14 + 96}px`;   // 행 이름(12px)이 겹치지 않게 한 행은 14px 밑으로 내려가지 않습니다. 자리가 모자라면 카드가 그만큼 길어집니다
@@ -108,6 +108,7 @@
     function names() {
       const pr = Math.floor(at / C), pc = at % C;
       rowT.forEach((tn, r) => tn.classList.toggle('is-on', r === pr));
+      cells.forEach((c, i) => c.classList.toggle('is-on', Math.floor(i / C) === pr || i % C === pc));   // 짚은 행과 열의 칸만 첫째 색으로 칠합니다
       colT.forEach((tn, c) => {
         tn.classList.toggle('is-on', c === pc);
         tn.setAttribute('opacity', c === pc || (c % every === 0 && Math.abs(c - pc) >= every) ? 1 : 0);
@@ -141,8 +142,7 @@
       });
       baseT.setAttribute('x1', GL); baseT.setAttribute('x2', fx(GL + C * cw)); baseT.setAttribute('y1', TOPH + 0.5); baseT.setAttribute('y2', TOPH + 0.5);
       baseR.setAttribute('x1', fx(sx - 0.5)); baseR.setAttribute('x2', fx(sx - 0.5)); baseR.setAttribute('y1', gy); baseR.setAttribute('y2', fx(gy + R * ch));
-      rowBox.setAttribute('x', fx(GL - 1)); rowBox.setAttribute('width', fx(C * cw + 2)); rowBox.setAttribute('height', fx(ch + 2)); rowBox.setAttribute('rx', fx(RC + 1));
-      colBox.setAttribute('y', fx(gy - 1)); colBox.setAttribute('width', fx(cw + 2)); colBox.setAttribute('height', fx(R * ch + 2)); colBox.setAttribute('rx', fx(RC + 1));
+      box.setAttribute('width', fx(cw)); box.setAttribute('height', fx(ch)); box.setAttribute('rx', fx(RC + 1));
       rowT.forEach((tn, r) => { tn.setAttribute('x', GL - 8); tn.setAttribute('y', fx(gy + r * ch + ch / 2 + 4)); });
       every = Math.max(1, Math.ceil((colW + 10) / cw));
       colT.forEach((tn, c) => { tn.setAttribute('x', fx(GL + c * cw + cw / 2)); tn.setAttribute('y', fx(gy + R * ch + 15)); });
@@ -205,8 +205,7 @@
         const wid = Math.max(0, sb[k].x) * SIDEW, y = gy + k * ch + (ch - bh) / 2, r = Math.min(RB, bh / 2, wid);
         b.setAttribute('d', wid < 0.3 ? '' : `M${fx(sx)},${fx(y)}H${fx(sx + wid - r)}a${fx(r)},${fx(r)} 0 0 1 ${fx(r)},${fx(r)}V${fx(y + bh - r)}a${fx(r)},${fx(r)} 0 0 1 ${fx(-r)},${fx(r)}H${fx(sx)}Z`);
       });
-      rowBox.setAttribute('y', fx(by.x - 1));
-      colBox.setAttribute('x', fx(bx.x - 1));
+      box.setAttribute('x', fx(bx.x)); box.setAttribute('y', fx(by.x));
       setFig(kv.x);
     }
     // 지금 화면의 장면: 데이터가 바뀌어 카드를 갈아 끼울 때 새 카드에 넘깁니다.

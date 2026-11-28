@@ -1,0 +1,14 @@
+/* Segment Toggle: 카드 틀 없이 조작부만 그립니다. 트랙은 높이 40px, 모서리 20px(--vzb-radius-control), 14px 글자이고(컨트롤 크기 기준: 글자가 있는 조작부는 높이 40px · 글자 14px),
+   항목은 같은 폭으로 나란히 놓입니다. 폭은 가장 긴 이름에 맞추고(항목마다 좌우 18px 여백, 최소 56px), 놓인 자리가 더 좁으면 자리에 맞춰 줄이고 이름을 말줄임합니다.
+   트랙은 회색(--vzb-track), 고른 자리의 알약은 글자색입니다. 차트의 데이터 색과 겨루지 않게 하기 위해서입니다.
+   알약은 같은 이름을 카드 바탕색으로 적은 겹(.vzb-sg-top)을 스크립트가 알약 모양(트랙 안쪽 3px)으로 잘라 보여 줍니다. 알약의 움직임도 스크립트가 그립니다. */
+.vzb-card[data-vzb="segment-toggle"] { min-height: 0; padding: 0; background: none; border: 0; border-radius: 0; box-shadow: none; }
+.vzb-sg { display: flex; }
+.vzb-sg-track { position: relative; display: inline-grid; grid-template-columns: repeat(var(--vzb-sg-n, 3), minmax(0, 1fr)); min-width: 0; max-width: 100%; height: 40px; border-radius: var(--vzb-radius-control, 20px); background: var(--vzb-track); cursor: pointer; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.vzb-sg-track.is-drag { cursor: grabbing; }
+.vzb-sg-track:has(:focus-visible) { outline: 2px solid var(--vzb-focus, var(--vzb-primary)); outline-offset: 2px; }
+.vzb-sg-seg { display: flex; align-items: center; justify-content: center; min-width: 56px; height: 100%; margin: 0; padding: 0 18px; border: 0; border-radius: 0; background: none; color: var(--vzb-ink-2); font: 500 14px/1 var(--vzb-font); cursor: inherit; outline: 0; transition: color var(--vzb-fade); -webkit-tap-highlight-color: transparent; }
+button.vzb-sg-seg:hover { color: var(--vzb-ink); }
+.vzb-sg-tx { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.3; }
+.vzb-sg-top { position: absolute; inset: 0; display: grid; grid-template-columns: inherit; background: var(--vzb-ink); clip-path: inset(0 100% 0 0); pointer-events: none; }
+.vzb-sg-top .vzb-sg-seg { color: var(--vzb-card); }

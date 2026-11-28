@@ -1,0 +1,11 @@
+{
+  "lang": "en",
+  "label": "Unit",
+  "name": "unit",
+  "options": [
+    "Day",
+    "Week",
+    "Month"
+  ],
+  "value": "Week"
+}

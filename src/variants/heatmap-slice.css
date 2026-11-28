@@ -2,12 +2,13 @@
    칸은 첫째 데이터 색(--vzb-primary)을 단계의 몫(--vzb-p, 스크립트가 9 · 29 · 51 · 75 · 100%로 적습니다)만큼 카드 바탕색에 섞어 칠하고, 칸 사이는 2px입니다.
    짚은 칸의 행과 열(.is-on)은 그 몫 그대로, 나머지 칸은 몫의 42%만 섞어 옅게 깝니다. 모든 칸에 색이 있으면서 짚은 줄이 또렷하게 하기 위해서입니다.
    값이 없는 칸은 트랙 회색 테두리만 둡니다. 위 막대(짚은 행)와 오른쪽 막대(짚은 열)는 그 막대가 나타내는 칸과 같은 색입니다.
-   짚은 칸과 그 칸의 막대에는 글자색 테두리를 두릅니다. 행 이름(왼쪽) · 열 이름(아래) · 범례는 12px 보조 글자이고, 짚은 행 · 열의 이름은 굵게 적습니다.
+   짚은 칸과 그 칸의 막대에는 글자색 테두리를 두릅니다. 아무 칸도 짚지 않은 전체 장면에서는 모든 칸이 몫 그대로이고 테두리는 흐려져 사라집니다. 행 이름(왼쪽) · 열 이름(아래) · 범례는 12px 보조 글자이고, 짚은 행 · 열의 이름은 굵게 적습니다.
    테두리와 막대의 움직임은 스크립트가 그립니다. */
 .vzb-card[data-vzb="heatmap-slice"] { min-height: max(var(--vzb-unit) * 2, 100%); }   /* 2단위가 바닥이고, 놓인 자리가 더 높으면 그 높이를 채웁니다 */
 .vzb-hl-num { font-variant-numeric: tabular-nums; }
 .vzb-hl.vzb-foot { padding-top: 12px; }
-.vzb-hl-plot { cursor: crosshair; touch-action: pan-y; }
+.vzb-hl-plot { touch-action: pan-y; }
+.vzb-hl-plot.is-over { cursor: pointer; }   /* 누를 수 있는 칸 위에서만 손 모양입니다 */
 .vzb-hl-plot:focus-visible { outline: 2px solid var(--vzb-focus, var(--vzb-primary)); outline-offset: 4px; border-radius: min(var(--vzb-radius), 4px); }
 .vzb-hl-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-hl-cell { fill: color-mix(in srgb, var(--vzb-primary) max(6%, calc(var(--vzb-p, 0%) * var(--vzb-k, 0.42))), var(--vzb-card)); }   /* 가장 옅은 칸도 바탕에 묻히지 않게 6% 밑으로는 내리지 않습니다 */
@@ -16,7 +17,8 @@
 .vzb-hl-bar { fill: color-mix(in srgb, var(--vzb-primary) var(--vzb-p, 29%), var(--vzb-card)); }
 .vzb-hl-bar.is-on { stroke: var(--vzb-ink); stroke-width: 3; paint-order: stroke; stroke-linejoin: round; }   /* 바깥으로 1.5px만 보입니다 */
 .vzb-hl-base { stroke: var(--vzb-grid); stroke-width: 1; }
-.vzb-hl-box { fill: none; stroke: var(--vzb-ink); stroke-width: 2; }
+.vzb-hl-box { fill: none; stroke: var(--vzb-ink); stroke-width: 2; transition: opacity var(--vzb-fade); }
+.vzb-hl-box.is-off { opacity: 0; }
 .vzb-hl-name { font-size: 12px; fill: var(--vzb-muted); }
 .vzb-hl-name.is-on { font-weight: 700; fill: var(--vzb-ink); }
 .vzb-hl-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }

@@ -23,7 +23,7 @@
 </head>
 <body>
 <main style="--w:640px">
-<!-- Vizney Blocks v0.86 · Heatmap · Heatmap Slice (heatmap-slice)
+<!-- Vizney Blocks v0.87 · Heatmap · Heatmap Slice (heatmap-slice)
      https://blocks.vizney.com/cards/heatmap-slice.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <style>
@@ -250,12 +250,13 @@
    칸은 첫째 데이터 색(--vzb-primary)을 단계의 몫(--vzb-p, 스크립트가 9 · 29 · 51 · 75 · 100%로 적습니다)만큼 카드 바탕색에 섞어 칠하고, 칸 사이는 2px입니다.
    짚은 칸의 행과 열(.is-on)은 그 몫 그대로, 나머지 칸은 몫의 42%만 섞어 옅게 깝니다. 모든 칸에 색이 있으면서 짚은 줄이 또렷하게 하기 위해서입니다.
    값이 없는 칸은 트랙 회색 테두리만 둡니다. 위 막대(짚은 행)와 오른쪽 막대(짚은 열)는 그 막대가 나타내는 칸과 같은 색입니다.
-   짚은 칸과 그 칸의 막대에는 글자색 테두리를 두릅니다. 행 이름(왼쪽) · 열 이름(아래) · 범례는 12px 보조 글자이고, 짚은 행 · 열의 이름은 굵게 적습니다.
+   짚은 칸과 그 칸의 막대에는 글자색 테두리를 두릅니다. 아무 칸도 짚지 않은 전체 장면에서는 모든 칸이 몫 그대로이고 테두리는 흐려져 사라집니다. 행 이름(왼쪽) · 열 이름(아래) · 범례는 12px 보조 글자이고, 짚은 행 · 열의 이름은 굵게 적습니다.
    테두리와 막대의 움직임은 스크립트가 그립니다. */
 .vzb-card[data-vzb="heatmap-slice"] { min-height: max(var(--vzb-unit) * 2, 100%); }   /* 2단위가 바닥이고, 놓인 자리가 더 높으면 그 높이를 채웁니다 */
 .vzb-hl-num { font-variant-numeric: tabular-nums; }
 .vzb-hl.vzb-foot { padding-top: 12px; }
-.vzb-hl-plot { cursor: crosshair; touch-action: pan-y; }
+.vzb-hl-plot { touch-action: pan-y; }
+.vzb-hl-plot.is-over { cursor: pointer; }   /* 누를 수 있는 칸 위에서만 손 모양입니다 */
 .vzb-hl-plot:focus-visible { outline: 2px solid var(--vzb-focus, var(--vzb-primary)); outline-offset: 4px; border-radius: min(var(--vzb-radius), 4px); }
 .vzb-hl-svg { display: block; overflow: visible; font-family: var(--vzb-font); }
 .vzb-hl-cell { fill: color-mix(in srgb, var(--vzb-primary) max(6%, calc(var(--vzb-p, 0%) * var(--vzb-k, 0.42))), var(--vzb-card)); }   /* 가장 옅은 칸도 바탕에 묻히지 않게 6% 밑으로는 내리지 않습니다 */
@@ -264,7 +265,8 @@
 .vzb-hl-bar { fill: color-mix(in srgb, var(--vzb-primary) var(--vzb-p, 29%), var(--vzb-card)); }
 .vzb-hl-bar.is-on { stroke: var(--vzb-ink); stroke-width: 3; paint-order: stroke; stroke-linejoin: round; }   /* 바깥으로 1.5px만 보입니다 */
 .vzb-hl-base { stroke: var(--vzb-grid); stroke-width: 1; }
-.vzb-hl-box { fill: none; stroke: var(--vzb-ink); stroke-width: 2; }
+.vzb-hl-box { fill: none; stroke: var(--vzb-ink); stroke-width: 2; transition: opacity var(--vzb-fade); }
+.vzb-hl-box.is-off { opacity: 0; }
 .vzb-hl-name { font-size: 12px; fill: var(--vzb-muted); }
 .vzb-hl-name.is-on { font-weight: 700; fill: var(--vzb-ink); }
 .vzb-hl-none { margin: auto 0; color: var(--vzb-muted); text-align: center; }
@@ -325,7 +327,8 @@
     '%1. %2 %3에서 %4 %5까지, 첫 단계 대비 %6. 좌우 화살표로 단계를 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. From %2 %3 to %4 %5, %6 of the first stage. Use the left and right arrows to move between the stages. Every value is in the table that follows.',
     'options에 항목을 2~5개 적으세요.': 'List 2 to 5 items in options.',
     'rows · cols와 values를 확인하세요.': 'Check rows, cols and values.', '평균의 %s배': '%s× the average', '적음': 'Low', '많음': 'High',
-    '%1. %2. 화살표로 칸을 옮기면 그 행과 열의 값이 막대로 바뀝니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2. Use the arrow keys to move between cells; the bars show the values of that row and column. Every value is in the table that follows.',
+    '%1. %2. 화살표로 칸을 옮기면 그 행과 열의 값이 막대로 바뀌고, Esc를 누르면 전체로 돌아갑니다. 모든 값은 이어지는 표에 있습니다.': '%1. %2. Use the arrow keys to move between cells; the bars show the values of that row and column. Press Escape to go back to all cells. Every value is in the table that follows.',
+    '전체 평균': 'Overall average',
     '%s 역전': 'Crossed in %s', 'items에 항목을 1~2개 적으세요.': 'List 1 or 2 items in items.',
     '%1. %2 %3 %4, %5 %6. 좌우 화살표로 기간을 옮기고 Enter로 짚을 선을 바꿉니다. 모든 값은 이어지는 표에 있습니다.': '%1. In %2, %3 %4 and %5 %6. Use the left and right arrows to move between periods and Enter to switch the highlighted line. Every value is in the table that follows.',
     '%1. %2 %3 %4. 좌우 화살표로 기간을 옮깁니다. 모든 값은 이어지는 표에 있습니다.': '%1. In %2, %3 %4. Use the left and right arrows to move between periods. Every value is in the table that follows.',
@@ -747,12 +750,13 @@
   // 칸은 첫째 데이터 색의 다섯 단계로 칠합니다(0에서 가장 큰 값까지를 같은 폭으로 끊습니다). 짚은 칸의 행과 열은 단계 그대로, 나머지 칸은 같은 색을 옅게 깔아 짚은 줄이 또렷합니다.
   // 색으로는 어디에 몰리는지를 읽고, 크기는 막대로 견줍니다.
   // 짚은 칸의 행은 그리드 위에 열마다 세로 막대로, 짚은 칸의 열은 그리드 오른쪽에 행마다 가로 막대로 섭니다. 두 막대는 같은 눈금(0에서 가장 큰 값)을 써서 서로 견줄 수 있습니다.
-  // 막대는 그 막대가 나타내는 칸과 같은 색이고, 짚은 칸과 그 칸의 막대에는 글자색 테두리를 두릅니다. 처음에는 focus(["행 이름", "열 이름"], 비우면 가장 높은 칸)가 짚여 있습니다.
-  // 머리의 큰 숫자는 짚은 칸의 값이고, 뒤에 그 값이 전체 평균의 몇 배인지와 어느 칸인지(행 · 열 이름)를 적습니다(카드가 계산합니다).
-  // 움직임: 칸에 마우스를 올리면 그 칸을 잠시 짚어 보이고, 누르거나(터치 포함) 포커스한 뒤 화살표를 누르면 그 칸에 짚은 자리가 머뭅니다. 마우스가 그래프를 벗어나면 머물던 칸으로 돌아갑니다. 색이 그 행과 열로 옮겨 가고 테두리가 그 칸으로 미끄러져 가며(Settle),
+  // 막대는 그 막대가 나타내는 칸과 같은 색이고, 짚은 칸과 그 칸의 막대에는 글자색 테두리를 두릅니다.
+  // 처음에는 아무 칸도 짚지 않은 전체 장면입니다: 모든 칸을 단계 그대로 칠하고, 위 막대는 열마다의 평균, 오른쪽 막대는 행마다의 평균, 머리의 큰 숫자는 전체 평균입니다.
+  // focus(["행 이름", "열 이름"])를 적으면 그 칸을 짚은 채로 시작합니다. 칸을 짚으면 머리의 큰 숫자는 그 칸의 값이 되고, 뒤에 그 값이 전체 평균의 몇 배인지와 어느 칸인지(행 · 열 이름)를 적습니다(카드가 계산합니다).
+  // 움직임: 칸에 마우스를 올리면 그 칸을 잠시 짚어 보이고, 누르거나(터치 포함) 포커스한 뒤 화살표를 누르면 그 칸에 짚은 자리가 머뭅니다. 마우스가 그래프를 벗어나면 머물던 칸으로(없으면 전체로) 돌아갑니다. 머물던 칸을 다시 누르거나 Esc를 누르면 전체로 돌아갑니다. 색이 그 행과 열로 옮겨 가고 테두리가 그 칸으로 미끄러져 가며(Settle),
   // 막대는 새 행 · 열의 값으로 옮겨 갑니다(Move: 넘치지 않음). 행을 옮기면 위 막대가, 열을 옮기면 오른쪽 막대가 바뀌어 줄마다 모양이 어떻게 다른지 보입니다.
   // 화면에 보이면 막대가 바닥에서 한 번 자랍니다. 데이터가 바뀌어 다시 그릴 때(data-vzb-live)는 칸의 진하기와 막대가 화면에 있던 값에서 새 값으로 옮겨 가고, 짚은 칸은 이어 갑니다.
-  // rows · cols나 카드 크기가 달라지면 옮겨 가지 않고 바로 그립니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 손을 대기 전까지 행마다 가장 높은 칸을 차례로 짚어 보입니다.
+  // rows · cols나 카드 크기가 달라지면 옮겨 가지 않고 바로 그립니다. 카드를 감싼 요소에 data-vzb-loop가 있으면(갤러리) 손을 대기 전까지 전체에서 시작해 행마다 가장 높은 칸을 차례로 짚어 보입니다.
   mount('heatmap-slice', (card, d, f) => {
     // 걸러서 남은 것이 없을 때(rows · cols · values가 빈 배열)는 오류가 아니라 빈 화면입니다.
     const empty = (a) => Array.isArray(a) && !a.length;
@@ -771,17 +775,20 @@
     const STEPS = [0.09, 0.29, 0.51, 0.75, 1], stepOf = (v) => Math.min(4, Math.floor(frac(v) * 5)), tone = (v) => (v == null ? 0 : STEPS[stepOf(v)]);
     const shade = (node, a) => node.style.setProperty('--vzb-p', `${(a * 100).toFixed(1)}%`);   // 색으로 바꾸는 식은 heatmap-slice.css에 있습니다
     const toneTo = vals.map(tone), key = `${rows.join('\n')}\t${cols.join('\n')}`;
+    // 전체 장면의 막대: 열마다 · 행마다의 평균(없는 칸은 빼고 셉니다). 칸과 같은 단위라 칸의 눈금과 색 단계를 그대로 씁니다.
+    const mean = (a) => { const n = a.filter((v) => v != null); return n.length ? n.reduce((x, y) => x + y, 0) / n.length : null; };
+    const rowAvg = rows.map((_, r) => mean(vals.slice(r * C, r * C + C))), colAvg = cols.map((_, c) => mean(rows.map((_, r) => vals[r * C + c])));
     const peak = vals.reduce((b, v, i) => (v != null && (b < 0 || v > vals[b]) ? i : b), -1), where = (i) => `${rows[Math.floor(i / C)]} · ${cols[i % C]}`;
-    // 짚은 칸: 보는 사람이 짚던 칸(카드 요소의 data-vzb-focus)이 있으면 그것, 없으면 focus, 그것도 없으면 가장 높은 칸
+    // 짚은 칸(at): 보는 사람이 짚던 칸(카드 요소의 data-vzb-focus)이 있으면 그것, 없으면 focus. 둘 다 없으면 -1, 아무 칸도 짚지 않은 전체 장면입니다.
     const find = (p) => { const r = Array.isArray(p) ? rows.indexOf(String(p[0])) : -1, c = Array.isArray(p) ? cols.indexOf(String(p[1])) : -1; return r < 0 || c < 0 ? -1 : r * C + c; };
-    let saved = null;
-    try { saved = JSON.parse(card.getAttribute('data-vzb-focus') || 'null'); } catch (e) { saved = null; }
-    let at = find(saved);
-    if (at < 0) at = find(d.focus);
-    if (at < 0) at = Math.max(0, peak);
-    let pin = at;   // 머무는 칸: 마우스를 올려 잠시 짚은 칸(at)은 그래프를 벗어나면 여기로 돌아옵니다
+    const savedAttr = card.getAttribute('data-vzb-focus');
+    let at = -1;
+    if (savedAttr != null) { try { at = find(JSON.parse(savedAttr)); } catch (e) { at = -1; } } else at = find(d.focus);
+    let pin = at;   // 머무는 칸: 마우스를 올려 잠시 짚은 칸(at)은 그래프를 벗어나면 여기로 돌아옵니다(-1이면 전체로)
+    const rowOf = () => (at < 0 ? -1 : Math.floor(at / C)), colOf = () => (at < 0 ? -1 : at % C);
+    const valAt = () => (at < 0 ? avg : vals[at] || 0);   // 머리의 숫자가 가는 값
 
-    // 머리: 제목 · 부제, 그 아래 짚은 칸의 값 · 평균 대비 · 어느 칸인지
+    // 머리: 제목 · 부제, 그 아래 짚은 칸의 값 · 평균 대비 · 어느 칸인지(전체 장면에서는 전체 평균)
     head(card, d, f, null);
     const fig = el('div', 'vzb-fig'), numEl = el('div', 'vzb-num vzb-hl-num'), numT = document.createTextNode(''), unitEl = el('span', 'vzb-unit');
     const dl = el('span', 'vzb-delta'), bd = el('span', 'vzb-badge vzb-flat'), vs = el('span', 'vzb-vs');
@@ -792,7 +799,7 @@
     const whole = nums.every(Number.isInteger);
     let figKey = '';
     function setFig(v) {
-      const none = vals[at] == null, [a, u] = none ? [tx(d, '데이터 없음'), ''] : f.parts(whole ? Math.round(v) : v), times = none || avg <= 0 ? '' : tx(d, '평균의 %s배', num(v / avg, 1));
+      const none = at >= 0 && vals[at] == null, [a, u] = none ? [tx(d, '데이터 없음'), ''] : f.parts(whole ? Math.round(v) : v), times = at < 0 || none || avg <= 0 ? '' : tx(d, '평균의 %s배', num(v / avg, 1));
       const k = `${a}|${u}|${times}|${at}`;
       if (k === figKey) return;
       figKey = k;
@@ -801,7 +808,7 @@
       unitEl.style.display = u ? '' : 'none';
       bd.textContent = times;
       bd.style.display = times ? '' : 'none';
-      vs.textContent = where(at);
+      vs.textContent = at < 0 ? tx(d, '전체 평균') : where(at);
     }
 
     const foot = el('div', 'vzb-foot vzb-fill vzb-hl');
@@ -815,8 +822,8 @@
     const say = el('span', 'vzb-sr');
     say.setAttribute('aria-live', 'polite');
     card.append(say);
-    const told = (i) => (vals[i] == null ? `${where(i)} ${tx(d, '데이터 없음')}` : `${where(i)} ${show(f, vals[i])}${avg > 0 ? `, ${tx(d, '평균의 %s배', num(vals[i] / avg, 1))}` : ''}`);
-    const describe = () => plot.setAttribute('aria-label', tx(d, '%1. %2. 화살표로 칸을 옮기면 그 행과 열의 값이 막대로 바뀝니다. 모든 값은 이어지는 표에 있습니다.', d.title || '', told(at)));
+    const told = (i) => (i < 0 ? `${tx(d, '전체 평균')} ${show(f, whole ? Math.round(avg) : avg)}` : vals[i] == null ? `${where(i)} ${tx(d, '데이터 없음')}` : `${where(i)} ${show(f, vals[i])}${avg > 0 ? `, ${tx(d, '평균의 %s배', num(vals[i] / avg, 1))}` : ''}`);
+    const describe = () => plot.setAttribute('aria-label', tx(d, '%1. %2. 화살표로 칸을 옮기면 그 행과 열의 값이 막대로 바뀌고, Esc를 누르면 전체로 돌아갑니다. 모든 값은 이어지는 표에 있습니다.', d.title || '', told(at)));
     // 화면 낭독기용 표
     const sr = el('div', 'vzb-sr'), table = el('table'), hr = el('tr');
     hr.append(el('th', null, ''), ...cols.map((c) => el('th', null, c)));
@@ -847,24 +854,25 @@
     const M = motion(card), [MK, MC] = M.pair('move'), [SK, SC] = M.pair('settle'), NAMEH = 20, LEGH = 20, GAP = 2;
     let W = 0, H = 0, GL = 0, cw = 1, ch = 1, RC = 2, RB = 3, every = 1, TOPH = 40, SIDEW = 60, gy = 0, sx = 0, wait = 0, idle = 0;
     // 스프링: 위 막대(열마다) · 오른쪽 막대(행마다)의 길이(0~1), 테두리의 자리(px), 머리의 숫자(값). 다시 그릴 때는 칸의 진하기(sa)도 옮깁니다.
-    const tb = cols.map(() => ({ x: 0, v: 0 })), sb = rows.map(() => ({ x: 0, v: 0 })), bx = { x: 0, v: 0 }, by = { x: 0, v: 0 }, kv = { x: vals[at] || 0, v: 0 };
+    const tb = cols.map(() => ({ x: 0, v: 0 })), sb = rows.map(() => ({ x: 0, v: 0 })), bx = { x: 0, v: 0 }, by = { x: 0, v: 0 }, kv = { x: valAt(), v: 0 };
     let from = before(card), sa = null, grown = false, placed = false;
-    const tbTo = (c) => (grown ? frac(vals[Math.floor(at / C) * C + c]) : 0), sbTo = (r) => (grown ? frac(vals[r * C + (at % C)]) : 0);
+    const tbTo = (c) => (grown ? frac(at < 0 ? colAvg[c] : vals[rowOf() * C + c]) : 0), sbTo = (r) => (grown ? frac(at < 0 ? rowAvg[r] : vals[r * C + colOf()]) : 0);
     // 열 이름: 몇 칸마다 하나씩 적되, 짚은 열의 이름은 늘 굵게 적고 그와 겹칠 이웃 이름은 뺍니다.
     function names() {
-      const pr = Math.floor(at / C), pc = at % C;
+      const all = at < 0, pr = rowOf(), pc = colOf();
       rowT.forEach((tn, r) => tn.classList.toggle('is-on', r === pr));
-      cells.forEach((c, i) => c.classList.toggle('is-on', Math.floor(i / C) === pr || i % C === pc));   // 짚은 행과 열의 칸만 첫째 색으로 칠합니다
+      cells.forEach((c, i) => c.classList.toggle('is-on', all || Math.floor(i / C) === pr || i % C === pc));   // 짚은 행과 열의 칸만 단계 그대로 칠합니다. 전체 장면에서는 모든 칸이 단계 그대로입니다
       colT.forEach((tn, c) => {
         tn.classList.toggle('is-on', c === pc);
-        tn.setAttribute('opacity', c === pc || (c % every === 0 && Math.abs(c - pc) >= every) ? 1 : 0);
+        tn.setAttribute('opacity', c === pc || (c % every === 0 && (all || Math.abs(c - pc) >= every)) ? 1 : 0);
       });
-      // 막대는 그 막대가 나타내는 칸과 같은 단계의 색입니다(가장 낮은 단계는 바탕에 묻히므로 둘째 단계로 칠합니다).
-      const barTone = (i) => STEPS[Math.max(1, vals[i] == null ? 1 : stepOf(vals[i]))];
-      topB.forEach((b, c) => { b.classList.toggle('is-on', c === pc); shade(b, barTone(pr * C + c)); });
-      sideB.forEach((b, r) => { b.classList.toggle('is-on', r === pr); shade(b, barTone(r * C + pc)); });
-      topCap.textContent = rows[pr];
-      sideCap.textContent = cols[pc];
+      // 막대는 그 막대가 나타내는 값(짚은 줄의 칸, 전체 장면에서는 평균)과 같은 단계의 색입니다(가장 낮은 단계는 바탕에 묻히므로 둘째 단계로 칠합니다).
+      const barTone = (v) => STEPS[Math.max(1, v == null ? 1 : stepOf(v))];
+      topB.forEach((b, c) => { b.classList.toggle('is-on', c === pc); shade(b, barTone(all ? colAvg[c] : vals[pr * C + c])); });
+      sideB.forEach((b, r) => { b.classList.toggle('is-on', r === pr); shade(b, barTone(all ? rowAvg[r] : vals[r * C + pc])); });
+      topCap.textContent = all ? tx(d, '전체') : rows[pr];
+      sideCap.textContent = all ? tx(d, '전체') : cols[pc];
+      box.classList.toggle('is-off', all);   // 전체 장면에서는 테두리를 흐려 지웁니다
     }
     function layout(w, h) {
       W = w; H = h;
@@ -904,7 +912,7 @@
       legHi.setAttribute('x', x + 4); legHi.setAttribute('y', y + 9);
       if (from) { begin(from); from = null; }
       if (!placed && grown) { tb.forEach((sp, c) => { sp.x = tbTo(c); }); sb.forEach((sp, r) => { sp.x = sbTo(r); }); }   // 다시 그린 카드가 앞 장면을 못 받았으면 마지막 장면을 바로 그립니다
-      if (!placed || !busy()) { bx.x = GL + (at % C) * cw; by.x = gy + Math.floor(at / C) * ch; bx.v = by.v = 0; placed = true; }
+      if (!placed || !busy()) { if (at >= 0) { bx.x = GL + colOf() * cw; by.x = gy + rowOf() * ch; } bx.v = by.v = 0; placed = true; }
       names();
       render();
       kick();
@@ -921,19 +929,18 @@
     }
     const near = (sp, to, eps, veps) => Math.abs(sp.x - to) <= eps && Math.abs(sp.v) <= veps;
     function busy() {
-      const pr = Math.floor(at / C), pc = at % C;
-      return wait > 0 || !!sa || !near(bx, GL + pc * cw, 0.2, 4) || !near(by, gy + pr * ch, 0.2, 4) || !near(kv, vals[at] || 0, (vmax || 1) * 0.0006, (vmax || 1) * 0.01)
+      const pr = rowOf(), pc = colOf();
+      return wait > 0 || !!sa || (at >= 0 && (!near(bx, GL + pc * cw, 0.2, 4) || !near(by, gy + pr * ch, 0.2, 4))) || !near(kv, valAt(), (vmax || 1) * 0.0006, (vmax || 1) * 0.01)
         || tb.some((sp, c) => !near(sp, tbTo(c), 0.002, 0.02)) || sb.some((sp, r) => !near(sp, sbTo(r), 0.002, 0.02));
     }
     function step(dt) {
-      const pr = Math.floor(at / C), pc = at % C;
+      const pr = rowOf(), pc = colOf();
       if (wait > 0) { wait -= dt; if (wait <= 0) grown = true; }
       tb.forEach((sp, c) => { springTo(sp, tbTo(c), MK, MC, dt); if (near(sp, tbTo(c), 0.002, 0.02)) { sp.x = tbTo(c); sp.v = 0; } });
       sb.forEach((sp, r) => { springTo(sp, sbTo(r), MK, MC, dt); if (near(sp, sbTo(r), 0.002, 0.02)) { sp.x = sbTo(r); sp.v = 0; } });
       const land = (sp, to, k, c, eps, veps) => { springTo(sp, to, k, c, dt); if (near(sp, to, eps, veps)) { sp.x = to; sp.v = 0; } };
-      land(bx, GL + pc * cw, SK, SC, 0.2, 4);
-      land(by, gy + pr * ch, SK, SC, 0.2, 4);
-      land(kv, vals[at] || 0, MK, MC, (vmax || 1) * 0.0006, (vmax || 1) * 0.01);
+      if (at >= 0) { land(bx, GL + pc * cw, SK, SC, 0.2, 4); land(by, gy + pr * ch, SK, SC, 0.2, 4); } else { bx.v = by.v = 0; }   // 전체 장면에서는 테두리가 있던 자리에서 흐려집니다
+      land(kv, valAt(), MK, MC, (vmax || 1) * 0.0006, (vmax || 1) * 0.01);
       if (sa) {
         let moving = false;
         sa.forEach((sp, i) => { springTo(sp, toneTo[i], MK, MC, dt); if (near(sp, toneTo[i], 0.002, 0.02)) { sp.x = toneTo[i]; sp.v = 0; } else moving = true; });
@@ -979,12 +986,15 @@
     }
     function kick() { if (!raf && W && inView && busy()) raf = requestAnimationFrame(tick); }
     // 칸 짚기: 테두리와 막대가 그 칸의 행과 열로 옮겨 갑니다. 짚은 칸은 카드 요소에 적어 두어, 데이터가 바뀌어 다시 그려도 이어 갑니다.
+    // i가 -1이면 아무 칸도 짚지 않은 전체 장면으로 돌아갑니다.
     function pick(i, quiet, stay) {
-      if (i < 0 || i >= N) return;
-      if (stay && i !== pin) { pin = i; card.setAttribute('data-vzb-focus', JSON.stringify([rows[Math.floor(i / C)], cols[i % C]])); }
+      if (i < -1 || i >= N) return;
+      if (stay && i !== pin) { pin = i; card.setAttribute('data-vzb-focus', i < 0 ? 'null' : JSON.stringify([rows[Math.floor(i / C)], cols[i % C]])); }
       if (i === at) return;
+      const was = at;
       at = i;
-      kv.x = vals[at] || 0; kv.v = 0;   // 다른 칸의 값이므로 세지 않고 바로 적습니다
+      if (was < 0 && W) { bx.x = GL + colOf() * cw; by.x = gy + rowOf() * ch; bx.v = by.v = 0; }   // 전체에서 처음 짚을 때는 테두리가 미끄러져 오지 않고 그 칸에서 나타납니다
+      kv.x = valAt(); kv.v = 0;   // 다른 칸의 값이므로 세지 않고 바로 적습니다
       names();
       describe();
       if (!quiet) say.textContent = told(at);
@@ -996,12 +1006,25 @@
       return c < 0 || c >= C || w < 0 || w >= R ? -1 : w * C + c;
     };
     const touch = () => { idle = performance.now() + 6000; };
-    plot.addEventListener('pointermove', (e) => { if (e.pointerType !== 'touch') { touch(); pick(cellAt(e), true); } });
-    plot.addEventListener('pointerdown', (e) => { touch(); pick(cellAt(e), true, true); });
-    plot.addEventListener('pointerleave', (e) => { if (e.pointerType !== 'touch') pick(pin, true); });
+    // 칸 위에서만 누를 수 있다는 것을 포인터로 알립니다(칸 사이 틈도 칸으로 봅니다).
+    plot.addEventListener('pointermove', (e) => { const i = cellAt(e); plot.classList.toggle('is-over', i >= 0); if (e.pointerType !== 'touch' && i >= 0) { touch(); pick(i, true); } });
+    // 누른 칸에 머뭅니다. 머물던 칸을 다시 누르면 풀려 전체로 돌아갑니다(마우스는 그 칸에 올라가 있으므로 그래프를 벗어날 때 돌아갑니다).
+    plot.addEventListener('pointerdown', (e) => {
+      const i = cellAt(e);
+      if (i < 0) return;
+      touch();
+      if (i !== pin) { pick(i, true, true); return; }
+      pin = -1;
+      card.setAttribute('data-vzb-focus', 'null');
+      if (e.pointerType === 'touch') pick(-1, true);
+    });
+    plot.addEventListener('pointerleave', (e) => { plot.classList.remove('is-over'); if (e.pointerType !== 'touch') pick(pin, true); });
     plot.addEventListener('keydown', (e) => {
-      const pr = Math.floor(at / C), pc = at % C;
-      const to = { ArrowLeft: pc > 0 ? at - 1 : -1, ArrowRight: pc < C - 1 ? at + 1 : -1, ArrowUp: pr > 0 ? at - C : -1, ArrowDown: pr < R - 1 ? at + C : -1, Home: pr * C, End: pr * C + C - 1 }[e.key];
+      if (e.key === 'Escape') { if (at < 0 && pin < 0) return; e.preventDefault(); touch(); pick(-1, false, true); return; }
+      const pr = rowOf(), pc = colOf();
+      // 전체 장면에서 처음 누른 화살표는 가장 높은 칸을 짚습니다.
+      const to = at < 0 ? { ArrowLeft: peak, ArrowRight: peak, ArrowUp: peak, ArrowDown: peak, Home: peak, End: peak }[e.key]
+        : { ArrowLeft: pc > 0 ? at - 1 : -2, ArrowRight: pc < C - 1 ? at + 1 : -2, ArrowUp: pr > 0 ? at - C : -2, ArrowDown: pr < R - 1 ? at + C : -2, Home: pr * C, End: pr * C + C - 1 }[e.key];
       if (to === undefined) return;
       e.preventDefault();
       touch();
@@ -1024,16 +1047,17 @@
       }, { threshold: 0.3 });
       io.observe(card);
     } else { inView = true; }
-    // 갤러리(data-vzb-loop): 화면에 보이는 동안, 손을 대기 전과 손을 뗀 지 6초 뒤부터 행마다 가장 높은 칸을 차례로 짚어 보입니다.
+    // 갤러리(data-vzb-loop): 화면에 보이는 동안, 손을 대기 전과 손을 뗀 지 6초 뒤부터 전체 장면에서 시작해 행마다 가장 높은 칸을 차례로 짚어 보이고 전체로 돌아옵니다.
     if (card.closest('[data-vzb-loop]')) {
       const tops = rows.map((_, r) => { let b = -1; for (let c = 0; c < C; c++) { const i = r * C + c; if (vals[i] != null && (b < 0 || vals[i] > vals[b])) b = i; } return b; }).filter((i) => i >= 0);
-      let k = Math.max(0, tops.indexOf(at));
+      const tour = [-1, ...tops];
+      let k = Math.max(0, tour.indexOf(at));
       const timer = setInterval(() => {
         if (!card.isConnected) { clearInterval(timer); return; }
-        if (!inView || !grown || performance.now() < idle || tops.length < 2) return;
-        k = (k + 1) % tops.length;
-        pin = tops[k];   // 갤러리의 둘러보기는 카드 요소에 적지 않습니다
-        pick(tops[k], true);
+        if (!inView || !grown || performance.now() < idle || tour.length < 2) return;
+        k = (k + 1) % tour.length;
+        pin = tour[k];   // 갤러리의 둘러보기는 카드 요소에 적지 않습니다
+        pick(tour[k], true);
       }, M.ms('rest') || 2600);
     }
   });

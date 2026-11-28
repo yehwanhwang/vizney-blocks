@@ -362,7 +362,7 @@ const skip = (L) => `<a class="skip" href="#main">${L.t.skip}</a>`;
 // v0.52: the controls are drawn bare (no head, no frame) in the middle of the tile, like the units of a motion gallery.
 // v0.49: the gallery is built one block at a time. v0.56: the gallery is the whole list; a card that is not here does not exist.
 // Blocks that move (data-vzb-loop) replay on the first screen instead of stopping at the end.
-const GALLERY = ['bar-overflow', 'waffle-flip', 'bump-race', 'waterfall-walk', 'funnel-wave', 'butterfly-fold', 'date-picker', 'range-slider', 'filter-chips', 'select-menu', 'download-button', 'donut-tick', 'line-cross'];
+const GALLERY = ['bar-overflow', 'waffle-flip', 'bump-race', 'waterfall-walk', 'funnel-wave', 'butterfly-fold', 'date-picker', 'range-slider', 'filter-chips', 'select-menu', 'download-button', 'donut-tick', 'line-cross', 'segment-toggle'];
 const LOOP = new Set(GALLERY);
 // v0.53: tile widths follow the block. On the 3-column gallery a chart that reads along a long axis (13 months, a 5 × 20 waffle)
 // takes 2 columns; a chart that reads better compact (a donut, a single figure) and every control take 1. The tiles are laid out
@@ -514,6 +514,10 @@ const FIELD_OVERRIDE = {
   'filter-chips': {
     ko: { label: '화면 낭독기가 읽는 칩 묶음의 이름(예: 채널). 화면에는 그리지 않는다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', options: '고를 항목의 이름들. 8개 안팎', value: '처음 고른 항목들. 비우면 모두', all: '전체 칩의 이름. 비우면 전체, 빈 글자면 전체 칩을 두지 않는다' },
     en: { label: 'the name screen readers read for the chips (e.g. Channel); not drawn on screen', name: 'detail.name of the vzb-change event sent when the value changes', options: 'the names of the items to pick, about 8', value: 'the items picked at first; empty picks all', all: 'the name of the All chip; empty means All, an empty string leaves the chip out' },
+  },
+  'segment-toggle': {
+    ko: { label: '화면 낭독기가 읽는 이름(예: 단위). 화면에는 그리지 않는다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', options: '고를 항목의 이름들. 2~5개, 한두 낱말로 짧게', value: '처음 고른 항목의 이름. 비우면 첫 항목' },
+    en: { label: 'the name screen readers read (e.g. Unit); not drawn on screen', name: 'detail.name of the vzb-change event sent when the value changes', options: 'the names of the items to pick: 2 to 5, a word or two each', value: 'the name of the item picked at first; the first item when empty' },
   },
   'select-menu': {
     ko: { label: '화면 낭독기가 읽는 이름(예: 지역). 화면에는 그리지 않는다', name: '값이 바뀔 때 보내는 vzb-change 이벤트의 detail.name', options: '고를 항목들. 이름 글자나 { "name", "count" }(count는 그 항목의 데이터 양, 줄마다 막대로 보인다). 수십 개까지', value: '처음 고른 항목들. 비우면 모두(mode가 one이면 이름 하나)', all: '모두 골랐을 때 단추에 적는 말. 비우면 전체', noun: '화면 낭독기가 count 뒤에 읽는 말(예: 건)', mode: '하나만 고를 때만 "one"', align: '화면 오른쪽 끝에 둘 때 "end"' },

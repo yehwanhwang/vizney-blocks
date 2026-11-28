@@ -190,6 +190,15 @@
     "When the card comes into view the two lines are drawn together in time order, and the names at the line ends, the number and the badge in the header follow them. At the last crossover the drawing pauses for a moment while the ring pops and the two names swap places, then it runs to the end. It stops on the last period, and the still frame reads as an ordinary line chart. It plays once; the replay button at the top right plays it again. When the data changes and the card redraws, it does not play from the start: the lines on screen move to their new places without overshooting, because a chart that is swapped whole cannot show which line changed and by how much. While they move, the ring follows the place where the two lines actually meet on screen, and a crossover that is new pops once after the lines arrive. Items with the same name are the same line. When `labels` change the card draws the new frame at once.",
     "Hover the chart, or focus it and press the left and right arrow keys, to see both values of that period and the difference. The color of the difference means the same as the badge in the header. Playback pauses while the pointer is over the chart or it has keyboard focus."
    ]
+  },
+  "segment-toggle": {
+   "when": "A control that picks exactly one of two to five items. Use it to switch what the screen shows, such as the unit (day, week, month) or the metric (revenue, orders, customers). Every choice stays visible and one is always picked.",
+   "rules": [
+    "Put 2 to 5 items in `options` and the name of the one picked at first in `value` (empty means the first). One item is always picked. The items sit side by side at the same width, so keep each name to a word or two. For more items, or to pick several at once, use Filter Chips or Select Menu.",
+    "Every change sends a `vzb-change` event: `detail.name` is `name` and `detail.value` is the name of the picked item. The current value is also in `data-vzb-value` on the card. A drag sends the event once, on release.",
+    "The picked item sits under a pill in the text color, so it does not compete with the data color of the charts. Pick another item and the pill slides there, and the labels it passes turn only as far as the pill covers them, so the change shows where it came from and where it went. The pill can also be dragged.",
+    "Tab stops on the picked item; the left and right arrow keys pick the next one, and Home and End the first and last. Put the name screen readers read in `label`."
+   ]
   }
  }
 }

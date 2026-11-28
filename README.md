@@ -27,7 +27,7 @@ Copy-paste HTML cards: charts you read through their motion, and the dashboard c
 
 ## 카드
 
-차트 카드의 이름은 차트 종류 뒤에 그 카드의 움직임을 붙여 짓고(Bar Overflow: 막대가 한도를 넘침, Waffle Flip: 와플 칸이 뒤집힘, Bump Race: 범프 차트의 순위 다툼, Waterfall Walk: 워터폴의 단계를 한 걸음씩 걸어감, Funnel Wave: 퍼널의 단계를 물결처럼 흘러내림, Butterfly Fold: 버터플라이의 두 날개를 접었다 펼침, Donut Tick: 도넛이 조각 하나씩 째깍 넘어감, Line Cross: 라인 차트의 두 선이 엇갈림), 컨트롤은 찾는 말 그대로 짓습니다. 카드 id는 카드 이름을 소문자와 하이픈으로 적은 것입니다(Bump Race → `bump-race`). 카드 코드는 `https://blocks.vizney.com/ko/cards/<id>.txt`(영어는 `/cards/<id>.txt`)에, 그 카드만 그린 페이지는 같은 자리의 `.html`에 있습니다.
+차트 카드의 이름은 차트 종류 뒤에 그 카드의 움직임을 붙여 짓고(Bar Overflow: 막대가 한도를 넘침, Waffle Flip: 와플 칸이 뒤집힘, Bump Race: 범프 차트의 순위 다툼, Waterfall Walk: 워터폴의 단계를 한 걸음씩 걸어감, Funnel Wave: 퍼널의 단계를 물결처럼 흘러내림, Butterfly Fold: 버터플라이의 두 날개를 접었다 펼침, Donut Tick: 도넛이 조각 하나씩 째깍 넘어감, Line Cross: 라인 차트의 두 선이 엇갈림, Heatmap Slice: 히트맵을 짚은 칸에서 가로세로로 잘라 봄), 컨트롤은 찾는 말 그대로 짓습니다. 카드 id는 카드 이름을 소문자와 하이픈으로 적은 것입니다(Bump Race → `bump-race`). 카드 코드는 `https://blocks.vizney.com/ko/cards/<id>.txt`(영어는 `/cards/<id>.txt`)에, 그 카드만 그린 페이지는 같은 자리의 `.html`에 있습니다.
 
 | 카드 | 종류 | 쓰는 때 |
 |---|---|---|
@@ -39,6 +39,7 @@ Copy-paste HTML cards: charts you read through their motion, and the dashboard c
 | [Butterfly Fold](https://blocks.vizney.com/ko/cards/butterfly-fold.html) | 버터플라이 차트 | 여성 · 남성, 온라인 · 오프라인처럼 대비되는 두 그룹의 값을 항목마다 양쪽 막대로 견줄 때. 두 날개가 접혔다 펼쳐지고, 항목을 짚으면 적은 쪽에 반대쪽 색의 점선이 많은 쪽 길이까지 그어져 차이가 보입니다 |
 | [Donut Tick](https://blocks.vizney.com/ko/cards/donut-tick.html) | 도넛 차트 | 채널별 매출이나 결제 수단별 주문처럼 한 시점의 구성비에서 항목 하나씩 짚어 볼 때. 짚은 조각이 조각 하나씩 째깍 넘어가며 12시에 서고, 가운데에 그 비중을 크게 적습니다 |
 | [Line Cross](https://blocks.vizney.com/ko/cards/line-cross.html) | 라인 차트 | 앱과 웹, 자사와 경쟁사처럼 두 항목의 추이를 견주면서 언제 앞뒤가 바뀌었고 지금 얼마나 벌어졌는지 전할 때. 두 선이 시간 순서로 그어지다가 엇갈리는 자리에서 고리가 튀어 오르고, 머리의 숫자와 배지가 선을 따라 셉니다. |
+| [Heatmap Slice](https://blocks.vizney.com/ko/cards/heatmap-slice.html) | 히트맵 | 요일 × 시간대별 주문처럼 두 갈래로 나눈 값에서 어디에 몰리는지 보고, 한 줄 안에서 크기를 견줄 때. 칸을 짚으면 그 행과 열이 막대로 서고, 머리의 숫자가 그 칸의 값과 평균 대비를 적습니다. |
 | [Date Picker](https://blocks.vizney.com/ko/cards/date-picker.html) | 컨트롤 | 주문일이나 기준일처럼 날짜로 화면을 거를 때. 날짜 둘을 고르는 동안 기간과 일수가 따라오고, 고르면 띠가 시작일에서 끝일까지 그어집니다. 날짜를 직접 치거나 연월 제목을 눌러 먼 달 · 해로 바로 갈 수 있습니다 |
 | [Range Slider](https://blocks.vizney.com/ko/cards/range-slider.html) | 컨트롤 | 주문 금액이나 수량처럼 이어지는 값으로 화면을 거를 때. 끄는 동안 범위에 드는 분포가 레일 위에 뜨고, 값을 눌러 금액을 직접 칠 수 있습니다 |
 | [Filter Chips](https://blocks.vizney.com/ko/cards/filter-chips.html) | 컨트롤 | 채널이나 지역처럼 몇 개 안 되는 이름으로 화면을 거를 때. 전체 칩이 지금 몇 개를 골랐는지 보여 줍니다 |
@@ -48,14 +49,14 @@ Copy-paste HTML cards: charts you read through their motion, and the dashboard c
 
 카드마다의 규칙과 필드는 [llms.txt](https://blocks.vizney.com/ko/llms.txt)의 그 카드 줄에 있습니다.
 
-v0.56에서 이전 방향의 카드와 차트 페이지를 모두 지웠습니다. 지금 있는 열네 장이 전부이고, 카드는 하나씩 다시 더해 갑니다. 갤러리를 다시 채우는 동안에는 카드 이름이 바뀌면 id와 주소도 함께 바뀌고, 예전 주소는 남기지 않습니다(없는 주소는 첫 화면으로 안내하는 404 화면이 받습니다). 지운 내용은 [releases/v0.56.md](releases/v0.56.md)에 있습니다.
+v0.56에서 이전 방향의 카드와 차트 페이지를 모두 지웠습니다. 지금 있는 열다섯 장이 전부이고, 카드는 하나씩 다시 더해 갑니다. 갤러리를 다시 채우는 동안에는 카드 이름이 바뀌면 id와 주소도 함께 바뀌고, 예전 주소는 남기지 않습니다(없는 주소는 첫 화면으로 안내하는 404 화면이 받습니다). 지운 내용은 [releases/v0.56.md](releases/v0.56.md)에 있습니다.
 
 ## 컨트롤과 차트 잇기
 
 컨트롤과 차트는 서로를 모릅니다. 페이지의 짧은 스크립트가 컨트롤의 이벤트를 받아 차트 카드의 JSON을 바꿔 적습니다.
 
 - 컨트롤은 값이 바뀌면 카드에서 `vzb-change` 이벤트(`detail: { name, value }`)를 보내고, 지금 값을 `data-vzb-value`에 적습니다. 처음 그릴 때는 이벤트를 보내지 않습니다.
-- 차트 카드는 안의 JSON 글자가 바뀌면 그 카드만 다시 그립니다. 처음부터 재생하지 않고, 보는 사람이 고른 기간과 항목은 그대로 둡니다. Bar Overflow · Waterfall Walk의 막대와 Funnel Wave의 물은 화면에 있던 자리에서 새 자리로 옮겨 가고, Waffle Flip은 달라진 칸만 뒤집히고, Bump Race는 선이 새 순위 자리로, Butterfly Fold는 막대가 새 길이와 줄로, Donut Tick은 조각이 새 크기로, Line Cross는 선이 새 높이로 옮겨 갑니다.
+- 차트 카드는 안의 JSON 글자가 바뀌면 그 카드만 다시 그립니다. 처음부터 재생하지 않고, 보는 사람이 고른 기간과 항목은 그대로 둡니다. Bar Overflow · Waterfall Walk의 막대와 Funnel Wave의 물은 화면에 있던 자리에서 새 자리로 옮겨 가고, Waffle Flip은 달라진 칸만 뒤집히고, Bump Race는 선이 새 순위 자리로, Butterfly Fold는 막대가 새 길이와 줄로, Donut Tick은 조각이 새 크기로, Line Cross는 선이 새 높이로, Heatmap Slice는 막대가 새 길이로 옮겨 갑니다.
 - Download Button은 `target`에 적은 종류(`data-vzb`)의 카드 가운데 페이지에서 처음 만나는 카드의 지금 JSON을 받습니다. 받기 전에 `vzb-download` 이벤트를 보내고, 페이지가 `preventDefault()`를 부르면 파일을 만들지 않습니다.
 
 ```html

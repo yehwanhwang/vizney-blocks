@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.87 · 컨트롤 · Segment Toggle (segment-toggle)
+<!-- Vizney Blocks v0.88 · 컨트롤 · Segment Toggle (segment-toggle)
      https://blocks.vizney.com/ko/cards/segment-toggle.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <style>

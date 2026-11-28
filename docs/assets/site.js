@@ -134,8 +134,11 @@
       } else host.style.removeProperty('--gt-dp-pad');
       if (menu) tile.style.setProperty('--gt-dl-shift', `${Math.max(0, menu.scrollWidth - menu.offsetHeight) / 2}px`);
     };
-    requestAnimationFrame(fit);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    // 문서를 읽는 동안에는 카드가 그리기를 DOMContentLoaded까지 미루므로(core.js의 mount), 그 뒤에 잽니다.
+    // 읽는 중에 재면 달력 · 분포 창이 아직 없어 비울 높이가 비고, 달력이 타일 밖으로 넘칩니다.
+    const later = () => (document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(fit), { once: true }) : requestAnimationFrame(fit));
+    later();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(later);
   }
   $$('.gt[data-gal]').forEach((tile) => {
     if (!code[tile.dataset.gal]) return;

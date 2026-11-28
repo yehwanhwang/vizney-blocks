@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.87 · Funnel Chart · Funnel Wave (funnel-wave)
+<!-- Vizney Blocks v0.88 · Funnel Chart · Funnel Wave (funnel-wave)
      https://blocks.vizney.com/cards/funnel-wave.html · © 2026 Vizney · MIT License
      Paste anywhere inside <body> and it draws itself. Change only the JSON below ("lang": "en" keeps the card's own words in English). -->
 <style>

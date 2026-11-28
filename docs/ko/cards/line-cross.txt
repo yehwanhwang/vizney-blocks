@@ -1,4 +1,4 @@
-<!-- Vizney Blocks v0.87 · 라인 차트 · Line Cross (line-cross)
+<!-- Vizney Blocks v0.88 · 라인 차트 · Line Cross (line-cross)
      https://blocks.vizney.com/ko/cards/line-cross.html · © 2026 Vizney · MIT License
      <body> 안 원하는 자리에 붙여 넣으면 그려집니다. 데이터는 아래 JSON만 바꾸세요. -->
 <style>
